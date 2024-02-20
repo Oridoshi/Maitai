@@ -62,6 +62,7 @@ CLE PRIMAIRE : idCateg.
 - idCateg  [ INTEGER      ] : Catégorie du produit.                       (**NOT NULL**)
 
 CLE PRIMAIRE : idProd.
+
 CLE ETRANGERE : idCateg --> idCateg(CategProd)
 
 
@@ -80,6 +81,7 @@ CLE ETRANGERE : idCateg --> idCateg(CategProd)
 - qaComm  [ INTEGER ] : Quantite commandé                           (**[0;+inf] | NOT NULL | DEFAULT 1**)
 
 CLE PRIMAIRE : idComm
+
 CLE ETRANGERE : idProd --> idProd(Produit)
                 idCli  -->  idCli(Client )
 
@@ -98,4 +100,5 @@ CLE ETRANGERE : idProd --> idProd(Produit)
 - dateTicket [ DATE    ] : Catégorie du produit.
 
 CLE PRIMAIRE  : (idTicket, idComm)
+
 CLE ETRANGERE : idComm --> idComm(Commande)
