@@ -14,91 +14,77 @@ Tous droits sont résérvés à ses créateurs et au groupes de plongés.
 **Description :** Table contenant les informations sur les utilisateurs du site.
 
 **Données :**
-- emailUser  [ VARCHAR (40) ] : Email de récupération du compte.                                          (**UNIQUE | NOT NULL**)
-- loginUser  [ VARCHAR (20) ] : Login de l'utilisateur.                                                   (**NOT NULL**)
-- pwdUser    [ VARCHAR (20) ] : Mot de passe encrypté de l'utilisateur.                                   (**NOT NULL**)
-- adminUser  [ BOOLEAN      ] : Si l'utilisateur est administrateur ou non.                               (**DEFAULT true | NOT NULL**)
-- activeUser [ BOOLEAN      ] : Si le compte est actif ou non. Peut être activer ou désactiver à volonter (**DEFAULT true | NOT NULL**)
+- login  [ VARCHAR (20) ] : Login de l'utilisateur.                                                   (**NOT NULL**)
+- mdp    [ VARCHAR (20) ] : Mot de passe encrypté de l'utilisateur.                                   (**NOT NULL**)
+- email  [ VARCHAR (40) ] : Email de récupération du compte (encryptès).                              (**UNIQUE | NOT NULL**)
+- actif  [ BOOLEAN      ] : Si le compte est actif ou non. Peut être activer ou désactiver à volonter (**DEFAULT true | NOT NULL**)
 
-CLE PRIMAIRE : emailUser.
+CLE PRIMAIRE : (login,pwd)
+UNIQUE       : email
+
+
+### Table : Droit
+**Description :** Table contenant les différent droit disponible du site.
+
+**Données :**
+- idDroit  [ INTEGER ] : Numéro d'identification du droit.                    (**NOT NULL**)
+- libDroit [ INTEGER ] : Libellé du droit afin de faciliter l'identification. (**NOT NULL**)
+
+CLE PRIMAIRE : idDroit
 
 
 ### Table : Client
-**Description :** Table des catégories des produits.
+**Description :** Table contenant les différent clients stockés dans l'application.
 
-**Données :** 
-- idCli     [ INTEGER      ] : Numéro d'identification (auto incrémenter). (**NOT NULL | UNIQUE**) 
-- nomCli    [ VARCHAR (20) ] : Nom du client.                              (**NOT NULL**)
-- prenomCli [ VARCHAR (50) ] : Prénom du client.                           (**NOT NULL**)
+**Données :**
+- idClient  [ INTEGER      ] : Numéro d'identification du client.                        (**NOT NULL**)
+- prenom    [ VARCHAR (30) ] : Prenom du client.                                         (**NOT NULL**)
+- nom       [ VARCHAR (30) ] : Nom du client.                                            (**NOT NULL**)
+- email     [ VARCHAR (60) ] : Email du client (encryptés).                              (**NOT NULL**)
+- telephone [ VARCHAR (60) ] : Telephone du client (encryptés).                          (**NOT NULL**)
+- present   [ BOOLEAN      ] : Si le client est actuellement present sur le site ou non. (**DEFAULT FALSE | NOT NULL**)
 
-CLE PRIMAIRE : idCli.
-
-
-### Table : CategProd
-**Description :** Table des catégories des produits.
-
-**Données :** 
-- idCateg   [ INTEGER      ] : Numéro d'identification (auto incrémenter). (**NOT NULL | UNIQUE**) 
-- nomCateg  [ VARCHAR (20) ] : Nom de la catégorie.                        (**NOT NULL**)
-- descCateg [ VARCHAR (50) ] : Descriptions de la catégorie.               (**NOT NULL**)
-
-CLE PRIMAIRE : idCateg.
-
-
-
-
-## Table de Liaison 1 (Dépendant)
+CLE PRIMAIRE : idClient
 
 
 ### Table : Produit
-**Description :** Table contenant les informations sur les diFférents produit.
+**Description :** Table contenant les différent produits stockés dans l'application.
 
 **Données :**
-- idProd   [ INTEGER      ] : Numéro d'identification (auto incrémenter). (**NOT NULL | UNIQUE**) 
-- libProd  [ VARCHAR (20) ] : Libéllé du produit.                         (**NOT NULL**)
-- descProd [ VARCHAR (20) ] : Description du produit.                     (**NOT NULL**)
-- qsProd   [ INTEGER      ] : Quantite en stock                           (**[0;+inf] | NOT NULL**)
-- prix     [ FLOAT        ] : Prix à l'unité du produit.                  (**[0;+inf] | NOT NULL**)
-- idCateg  [ INTEGER      ] : Catégorie du produit.                       (**NOT NULL**)
+- idProd    [ INTEGER      ] : Numéro d'identification du produit. (**NOT NULL**)
+- libProd   [ VARCHAR (30) ] : Libellé du produit.                 (**NOT NULL**)
+- prixUni   [ VARCHAR (30) ] : Prix unitaire du produit.           (**NOT NULL**)
+- categorie [ VARCHAR (30) ] : Categorie du produit.               (**NOT NULL**)
 
-CLE PRIMAIRE : idProd.
-
-CLE ETRANGERE : idCateg --> idCateg(CategProd)
+CLE PRIMAIRE : idProd
 
 
 
 
-## Table de Liaison 2 (Dépendant)
+## Table de Liaison 1 (Dépendante)
 
 
-### Table : Commande
-**Description :** Table contenant les informations sur les différentes commandes passé par les clients.
+### Table : Historique
+**Description :** Table contenant les différentes fichiers (pour l'instant uniquement Ticket) exporter précédemment.
 
 **Données :**
-- idComm  [ INTEGER ] : Numéro d'identification (auto incrémenter). (**NOT NULL | UNIQUE**) 
-- idProd  [ INTEGER ] : Numéro du produit.                          (**NOT NULL**) 
-- idCli   [ INTEGER ] : Numéro du client.                           (**NOT NULL**) 
-- qaComm  [ INTEGER ] : Quantite commandé                           (**[0;+inf] | NOT NULL | DEFAULT 1**)
+- idHis  [ INTEGER      ] : Numéro d'identification du fichier stockés. (**NOT NULL**)
+- date   [ DATE         ] : Date a laquelle le fichier a était généré.  (**NOT NULL**)
+- chemin [ VARCHAR (60) ] : Chemin pour retrouver le fichier.           (**NOT NULL**)
+- idCli  [ INTEGER      ] : Client attachés au fichiers générés.        (**NOT NULL**)
 
-CLE PRIMAIRE : idComm
-
-CLE ETRANGERE : idProd --> idProd(Produit)
-                idCli  -->  idCli(Client )
-
-
-
-
-## Table de Liaison 3 (Dépendant)
+CLE PRIMAIRE : idHis
+CLE ETRANGERE : idClient (Client)
 
 
 ### Table : Ticket
-**Description :** Table contenant les informations sur les différents produit..
+**Description :** Table contenant les différentes commandes fait par l'utilisateur.
 
 **Données :**
-- idTicket   [ INTEGER ] : Numéro d'identification (auto incrémenter). (**NOT NULL | UNIQUE**) 
-- idComm     [ INTEGER ] : Numéro de la commande                       (**NOT NULL**)
-- dateTicket [ DATE    ] : Catégorie du produit.
+- idProd   [ INTEGER      ] : Numéro d'identification du produits commandés.   (**NOT NULL**)
+- idClient [ INTEGER      ] : Numéro d'identification du client qui commande.  (**NOT NULL**)
+- qa       [ INTEGER      ] : Quantité du produit acheté.                      (**NOT NULL | qa > 0**)
+- prixTot  [ INTEGER      ] : Prix totaux de la commande (car certain produit) (**NOT NULL | DEFAULT qa * idProd.prixUni**)
 
-CLE PRIMAIRE  : (idTicket, idComm)
-
-CLE ETRANGERE : idComm --> idComm(Commande)
+CLE PRIMAIRE : idProd, idClient
+CLE ETRANGERE : idClient (Client), idProd (Produit)
