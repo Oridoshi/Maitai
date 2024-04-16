@@ -27,8 +27,8 @@ UNIQUE       : email
 **Description :** Table contenant les différent droit disponible du site.
 
 **Données :**
-- idDroit  [ INTEGER ] : Numéro d'identification du droit.                    (**NOT NULL**)
-- libDroit [ INTEGER ] : Libellé du droit afin de faciliter l'identification. (**NOT NULL**)
+- idDroit  [ INTEGER      ] : Numéro d'identification du droit.                    (**NOT NULL**)
+- libDroit [ VARCHAR (30) ] : Libellé du droit afin de faciliter l'identification. (**NOT NULL**)
 
 CLE PRIMAIRE : idDroit
 
@@ -37,7 +37,7 @@ CLE PRIMAIRE : idDroit
 **Description :** Table contenant les différent clients stockés dans l'application.
 
 **Données :**
-- idClient  [ INTEGER      ] : Numéro d'identification du client.                        (**NOT NULL**)
+- idCli     [ INTEGER      ] : Numéro d'identification du client.                        (**NOT NULL**)
 - prenom    [ VARCHAR (30) ] : Prenom du client.                                         (**NOT NULL**)
 - nom       [ VARCHAR (30) ] : Nom du client.                                            (**NOT NULL**)
 - email     [ VARCHAR (60) ] : Email du client (encryptés).                              (**NOT NULL**)
@@ -53,7 +53,7 @@ CLE PRIMAIRE : idClient
 **Données :**
 - idProd    [ INTEGER      ] : Numéro d'identification du produit. (**NOT NULL**)
 - libProd   [ VARCHAR (30) ] : Libellé du produit.                 (**NOT NULL**)
-- prixUni   [ VARCHAR (30) ] : Prix unitaire du produit.           (**NOT NULL**)
+- prixUni   [ FLOAT        ] : Prix unitaire du produit.
 - categorie [ VARCHAR (30) ] : Categorie du produit.               (**NOT NULL**)
 
 CLE PRIMAIRE : idProd
@@ -68,10 +68,10 @@ CLE PRIMAIRE : idProd
 **Description :** Table contenant les différentes fichiers (pour l'instant uniquement Ticket) exporter précédemment.
 
 **Données :**
-- idHis  [ INTEGER      ] : Numéro d'identification du fichier stockés. (**NOT NULL**)
-- date   [ DATE         ] : Date a laquelle le fichier a était généré.  (**NOT NULL**)
-- chemin [ VARCHAR (60) ] : Chemin pour retrouver le fichier.           (**NOT NULL**)
-- idCli  [ INTEGER      ] : Client attachés au fichiers générés.        (**NOT NULL**)
+- idHis  [ INTEGER       ] : Numéro d'identification du fichier stockés. (**NOT NULL**)
+- date   [ DATE          ] : Date a laquelle le fichier a était généré.  (**NOT NULL**)
+- chemin [ VARCHAR (255) ] : Chemin pour retrouver le fichier.           (**NOT NULL**)
+- idCli  [ INTEGER       ] : Client attachés au fichiers générés.        (**NOT NULL**)
 
 CLE PRIMAIRE : idHis
 CLE ETRANGERE : idClient (Client)
@@ -88,3 +88,15 @@ CLE ETRANGERE : idClient (Client)
 
 CLE PRIMAIRE : idProd, idClient
 CLE ETRANGERE : idClient (Client), idProd (Produit)
+
+
+### Table : UtilisateursDroit
+**Description :** Table contenant les différentes commandes fait par l'utilisateur.
+
+**Données :**
+- login   [ VARCHAR(20) ] : Login de l'utilisateur.           (**NOT NULL**)
+- mdp     [ VARCHAR(20) ] : Mots de passe de l'utilisateur.   (**NOT NULL**)
+- idDroit [ INTEGER     ] : Numéro d'identification du droit. (**NOT NULL**)
+
+CLE PRIMAIRE : login, mdp, idDroit
+CLE ETRANGERE : idDroit (Droit), login (Utlisateur), mdp (Utlisateur)
