@@ -21,8 +21,6 @@ class DB {
 	/************************************************************************/	
 	private function __construct() {
 
-
-		// MODIFIER SES INFOS DE CONNECTIONS SI BESOINS :D
 		global $dbName, $login, $password, $port, $host;
 
 
@@ -142,9 +140,14 @@ class DB {
 		return $this->execQuery($requete,null,'Utilisateur');
 	}
 
-	public function updateUtilisateurs($utilisateur) {
+	public function updateUtilisateur($utilisateur) {
 		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
 		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
+	}
+
+	public function insertUtilisateur($utilisateur) {
+		$requete = 'INSERT INTO Utilisateur (login,mdp,email,actif) VALUES (?,?,?,?)';
+		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif()),'Utilisateur');
 	}
 
 	public function suppUtilisateur($utilisateur) {
@@ -154,51 +157,99 @@ class DB {
 
 
 
-	/*** METHODES POUR LES UTILISATEURS ****/
+	/*** METHODES POUR LES PRODUITS ****/
 	public function getProduits() {
 		$requete = 'SELECT * FROM Produit ORDER BY categorie';
 		return $this->execQuery($requete,null,'Produit');
 	}
 
-	public function updateProduits($produits) {
+	public function updateProduit($produits) {
 		$requete = 'UPDATE Produits SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
 		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdUti()),'Produit');
 	}
 
-	public function suppProduits($produits) {
+	public function insertProduit($produits) {
+		$requete = 'INSERT INTO Produits (libProd, prixUni, categorie) SET (?,?,?)';
+		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
+	}
+
+	public function suppProduit($produits) {
 		$requete = 'DELETE FROM Produit WHERE idProd = ?';
 		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Produit');
 	}
 
 
 
-
-	public function getClientsAdr($adr) {
-			$requete = 'select * from client where ville = ?';
-		return $this->execQuery($requete,array($adr),'Client');
+	/*** METHODES POUR LES CLIENTS ****/
+	public function getClients($client) {
+		$requete = 'SELECT * FROM Client';
+		return $this->execQuery($requete,null,'Client');
 	}
 
-	public function getClient($idcli) {
-			$requete = 'select * from client where ncli = ?';
-		return $this->execQuery($requete,array($idcli),'Client');
+	public function getClientsPresent($client) {
+		$requete = 'SELECT * FROM Client WHERE present = 1';
+		return $this->execQuery($requete,null,'Client');
 	}
 
-	public function insertClient($idcli,$nom,$adr) {
-			$requete = 'insert into client values(?,?,?)';
-		$tparam = array($idcli,$nom,$adr);
-		return $this->execMaj($requete,$tparam);
+	public function updateClient($client) {
+		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
+		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
 	}
 
-	public function updateAdrClient($idcli,$adr) {
-			$requete = 'update client set ville = ? where ncli = ?';
-		$tparam = array($adr,$idcli);
-		return $this->execMaj($requete,$tparam);
+	public function insertClient($client) {
+		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) SET (?, ?, ?, ?)';
+		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
 	}
 
-	public function deleteClient($idcli) {
-			$requete = 'delete from client where ncli = ?';
-		$tparam = array($idcli);
-		return $this->execMaj($requete,$tparam);
+	public function suppClient($client) {
+		$requete = 'DELETE FROM Client WHERE idCli = ?';
+		return $this->execQuery($requete,array($client->getIdCli()),'Client');
+	}
+
+
+
+	/*** METHODES POUR LES TICKETS ****/
+	public function getTicketClient($client) {
+		$requete = 'SELECT * FROM Ticket WHERE idCli = ?';
+		return $this->execQuery($requete,array($client->getIdCli()),'Ticket');
+	}
+
+	public function updateTicket($ticket) {
+		$requete = 'UPDATE Ticket SET qa = ?, prixTot = ? WHERE idCli = ? AND idProd = ?';
+		return $this->execQuery($requete,array($ticket->getQa(),$ticket->getPrixTot(),$ticket->getIdCli(),$ticket->getIdProd()),'Ticket');
+	}
+
+	public function insertTicket($client) {
+		$requete = 'INSERT INTO Ticket SET (?, ?, ?, ?)';
+		return $this->execQuery($requete,array($produits->getIdCli(),$produits->getIdProd(),$produits->getQa(),$produits->getPrixTot()),'Ticket');
+	}
+
+	public function suppTicket($client) {
+		$requete = 'DELETE FROM Ticket WHERE idCli = ?';
+		return $this->execQuery($requete,array($produits->getIdCli()),'Ticket');
+	}
+
+
+
+	/*** METHODES POUR L'HISTORIQUE ****/
+	public function getHistoriqueSecu() {
+		$requete = 'SELECT * FROM Historique WHERE categorie = \'SECU\'';
+		return $this->execQuery($requete,null,'Historique');
+	}
+
+	public function getHistoriqueTicket() {
+		$requete = 'SELECT * FROM Historique WHERE categorie = \'TICKET\'';
+		return $this->execQuery($requete,null,'Historique');
+	}
+
+	public function getHistoriqueTicketClient($client) {
+		$requete = 'SELECT * FROM Historique WHERE categorie = \'TICKET\' AND idCli = ?';
+		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
+	}
+
+	public function getHistoriqueSecuClient($client) {
+		$requete = 'SELECT * FROM Historique WHERE categorie = \'SECU\' AND idCli = ?';
+		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
 	}
 
 } //fin classe DB
