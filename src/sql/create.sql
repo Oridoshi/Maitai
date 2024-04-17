@@ -10,7 +10,8 @@ DROP TABLE IF EXISTS Produit    ;
 
 CREATE TABLE Utilisateur
 (
-	login VARCHAR(20) NOT NULL PRIMARY KEY,
+	idUti SERIAL      PRIMARY KEY,
+	login VARCHAR(20) NOT NULL UNIQUE,
 	mdp   VARCHAR(20) NOT NULL,
 	email VARCHAR(60) UNIQUE,
 	actif BOOLEAN     NOT NULL DEFAULT 1
@@ -59,7 +60,7 @@ CREATE TABLE Ticket
 
 CREATE TABLE UtilisateurDroit
 (
-	login   VARCHAR(20) REFERENCES Utilisateur(login)  ,
-	idDroit INTEGER     REFERENCES Droit      (idDroit),
-	PRIMARY KEY (login,idDroit)
+	idUti   INTEGER REFERENCES Utilisateur(idUti)  ,
+	idDroit INTEGER REFERENCES Droit      (idDroit),
+	PRIMARY KEY (idUti,idDroit)
 );

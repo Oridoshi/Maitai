@@ -9,11 +9,12 @@ BEGIN
     DECLARE admin_count INT;
     SELECT COUNT(*) INTO admin_count
     FROM Utilisateur u
-    JOIN UtilisateurDroit ud ON u.login = ud.login
-    WHERE u.actif = true AND ud.idDroit = 1 AND OLD.login != u.login;
+    JOIN UtilisateurDroit ud ON u.idUti = ud.idUti
+    WHERE u.actif = true AND ud.idDroit = 1 AND OLD.idUti != u.idUti;
     
-    IF admin_count = 0 THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de désactiver le dernier compte actif';
+    IF admin_count = 0 THEN        
+        SET @message = CONCAT('Impossible de désactiver le dernier compte actif (idUti: ', OLD.idUti, ') : ', admin_count, ' !');
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @message;
     END IF;
 END;//
 

@@ -29,17 +29,17 @@ VALUES ('admin1', 'mdp1', 'admin1@example.com', true),
        ('user10', 'mdp10', 'user10@example.com', true);
 
 -- Associer des droits aux utilisateurs
-INSERT INTO UtilisateurDroit (login, idDroit)
-VALUES ('admin1', 1), -- admin1 a le droit d'administrateur
-       ('admin2', 1), -- admin2 a le droit d'administrateur
-       ('user3' , 2),
-       ('user4' , 2),
-       ('user5' , 3),
-       ('user6' , 3),
-       ('user7' , 4),
-       ('user8' , 4),
-       ('user9' , 5),
-       ('user10', 5);
+INSERT INTO UtilisateurDroit (idUti, idDroit)
+VALUES ( 1, 1), -- admin1 a le droit d'administrateur
+       ( 2, 1), -- admin2 a le droit d'administrateur
+       ( 3, 2),
+       ( 4, 2),
+       ( 5, 3),
+       ( 6, 3),
+       ( 7, 4),
+       ( 8, 4),
+       ( 9, 5),
+       (10, 5);
 
 
 
