@@ -136,15 +136,38 @@ class DB {
 	* Fonctions qui peuvent être utilisées dans les scripts PHP
 	*************************************************************************/
 
-	// Récupérer tous les utilisateurs 
+	/*** METHODES POUR LES UTILISATEURS ****/
 	public function getUtilisateurs() {
 		$requete = 'SELECT * FROM Utilisateur';
 		return $this->execQuery($requete,null,'Utilisateur');
 	}
 
-	public function updateUtilisateurs() {
-		$requete = 'UPDATE Utilisateur SET mdp = ?, actif = ? WHERE login = ';
-		return $this->execQuery($requete,array($idcli),'Client');
+	public function updateUtilisateurs($utilisateur) {
+		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
+		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
+	}
+
+	public function suppUtilisateur($utilisateur) {
+		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
+		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Utilisateur');
+	}
+
+
+
+	/*** METHODES POUR LES UTILISATEURS ****/
+	public function getProduits() {
+		$requete = 'SELECT * FROM Produit ORDER BY categorie';
+		return $this->execQuery($requete,null,'Produit');
+	}
+
+	public function updateProduits($produits) {
+		$requete = 'UPDATE Produits SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdUti()),'Produit');
+	}
+
+	public function suppProduits($utilisateur) {
+		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
+		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Produit');
 	}
 
 
