@@ -84,7 +84,7 @@ CLE ETRANGERE : idClient (Client)
 - idProd   [ INTEGER        ] : Numéro d'identification du produits commandés.   (**NOT NULL**)
 - idCli    [ INTEGER        ] : Numéro d'identification du client qui commande.  (**NOT NULL**)
 - qa       [ INTEGER        ] : Quantité du produit acheté.                      (**NOT NULL | qa > 0**)
-- prixTot  [ DECIMAL (12,2) ] : Prix totaux de la commande (car certain produit) (** DEFAULT qa * idProd.prixUni**)
+- prixTot  [ DECIMAL (12,2) ] : Prix totaux de la commande (car certain produit) (** DEFAULT qa * idProd.prixUni **)
 
 CLE PRIMAIRE : idProd, idCli
 CLE ETRANGERE : idCli (Client), idProd (Produit)
