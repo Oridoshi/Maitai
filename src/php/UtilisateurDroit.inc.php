@@ -30,8 +30,3 @@ class UtilisateurDroit {
     /** Setter du numéro d'identification du droit */
     public function setIdDroit(int $idDroit): void {$this->idDroit = $idDroit;}
 }
-
-$utilisateurDroit = new UtilisateurDroit();
-$utilisateurDroit->setIdUti(1);
-$utilisateurDroit->setIdDroit(1);
-echo "L'utilisateur d'ID " . $utilisateurDroit->getIdUti() . " a le droit d'ID " . $utilisateurDroit->getIdDroit() . ".";
