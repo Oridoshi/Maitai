@@ -25,8 +25,8 @@ CREATE TABLE Droit
 CREATE TABLE Client
 (
 	idCli     SERIAL      PRIMARY KEY,
-	nomClub   VARCHAR(30) NOT NULL   ,
-	email     VARCHAR(30) NOT NULL   ,
+	nomClub   VARCHAR(30) UNIQUE NOT NULL,
+	email     VARCHAR(60) NOT NULL   ,
 	telephone VARCHAR(10) NOT NULL   ,
 	present   BOOLEAN     DEFAULT 1
 );
@@ -44,7 +44,7 @@ CREATE TABLE Historique
 	idHis  SERIAL       PRIMARY KEY,
 	date   DATE         DEFAULT CURRENT_DATE NOT NULL,
 	chemin VARCHAR(255) NOT NULL,
-	type   VARCHAR(255) NOT NULL CHECK (type IN ('TICKET', 'SECU')),
+	type   VARCHAR(6)   NOT NULL CHECK (type IN ('TICKET', 'SECU')),
 	idCli  INTEGER      NOT NULL REFERENCES Client(idCli)
 );
 
