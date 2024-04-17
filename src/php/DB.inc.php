@@ -1,17 +1,24 @@
 <?php
 
 //Mettre les objet a require ici /!\
+include 'Client.inc.php';
+include 'Droit.inc.php';
+include 'Historique.inc.php';
+include 'Produit.inc.php';
+include 'Ticket.inc.php';
+include 'Utilisateur.inc.php';
+include 'UtilisateurDroit.inc.php';
 
 class DB {
 
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private string $dbName   = "Maitai";
-	private string $login    = "hs220880";
-	private string $password = "SAHAU2004";
-	private string $port     = "3306";
-	private string $host     = "localhost";
+	private static string $dbName   = "Maitai";
+	private static string $login    = "hs220880";
+	private static string $password = "SAHAU2004";
+	private static string $port     = "3306";
+	private static string $host     = "localhost";
 
 
 
@@ -21,14 +28,11 @@ class DB {
 	/************************************************************************/	
 	private function __construct() {
 
-		global $dbName, $login, $password, $port, $host;
-
-
 		// Connexion à la base de données
-		$connStr = 'mysql:host='.$host.' port='.$port.' dbname='.$dbName.''; 
 		try {
 			// Connexion à la base
-			$this->connect = new PDO($connStr, $login, $password);
+
+    		$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
 
 			// Configuration facultative de la connexion
 			$this->connect->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER); 
@@ -142,16 +146,31 @@ class DB {
 		return $this->execQuery($requete,null,'Utilisateur');
 	}
 
+	public function getUtilisateursLogin($login) {
+		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
+		return $this->execQuery($requete,array($login),'Utilisateur');
+	}
+
 	/** Modifier les données d'un utilisateur. */
 	public function updateUtilisateur($utilisateur) {
 		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
-		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
+
+		echo 'UPDATE Utilisateur SET login = ' . $utilisateur->getLogin() . ', mdp = ?, email = ?, actif = ? WHERE idUti = ' . $utilisateur->getIdUti();
+		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getLogin(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
 	}
 
-	/** Ajouter un utilisateur. */
+	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
 	public function insertUtilisateur($utilisateur) {
-		$requete = 'INSERT INTO Utilisateur (login,mdp,email,actif) VALUES (?,?,?,?)';
-		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif()),'Utilisateur');
+		// Vérifier si le nom d'utilisateur existe déjà
+		$existingUser = $this->getUtilisateursLogin($utilisateur->getLogin());
+		if ($existingUser) {
+			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+		
+		// Insérer l'utilisateur s'il n'existe pas déjà
+		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
+		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
 	}
 
 	/** Supprimer un utilisateur. */

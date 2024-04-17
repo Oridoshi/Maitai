@@ -7,10 +7,10 @@
 	$db = DB::getInstance();
 
 	// Tester les méthodes pour les utilisateurs
-	echo "Liste des utilisateurs :\n";
+	echo "Liste des utilisateurs :<br>";
 	$utilisateurs = $db->getUtilisateurs();
 	foreach ($utilisateurs as $utilisateur) {
-		echo $utilisateur->getLogin() . "\n";
+		echo $utilisateur->getLogin() . "<br>";
 	}
 
 	// Créer un nouvel utilisateur
@@ -22,22 +22,24 @@
 	$db->insertUtilisateur($newUser);
 
 	// Afficher la liste des utilisateurs après l'ajout
-	echo "\nListe des utilisateurs après ajout :\n";
+	echo "<br>Liste des utilisateurs après ajout :<br>";
 	$utilisateurs = $db->getUtilisateurs();
 	foreach ($utilisateurs as $utilisateur) {
-		echo $utilisateur->getLogin() . "\n";
+		echo $utilisateur->getLogin() . "<br>";
 	}
 
 	// Modifier les données d'un utilisateur existant
-	$utilisateurToModify = $utilisateurs[0];
+	$utilisateurToModify = $utilisateurs[1];
 	$utilisateurToModify->setEmail('nouvelle_adresse@example.com');
+
+	var_dump ($utilisateurToModify);
 	$db->updateUtilisateur($utilisateurToModify);
 
 	// Afficher la liste des utilisateurs après la modification
-	echo "\nListe des utilisateurs après modification :\n";
+	echo "<br>Liste des utilisateurs après modification :<br>";
 	$utilisateurs = $db->getUtilisateurs();
 	foreach ($utilisateurs as $utilisateur) {
-		echo $utilisateur->getEmail() . "\n";
+		echo $utilisateur->getEmail() . "<br>";
 	}
 
 	// Supprimer un utilisateur
@@ -45,10 +47,10 @@
 	$db->suppUtilisateur($utilisateurToDelete);
 
 	// Afficher la liste des utilisateurs après la suppression
-	echo "\nListe des utilisateurs après suppression :\n";
+	echo "<br>Liste des utilisateurs après suppression :<br>";
 	$utilisateurs = $db->getUtilisateurs();
 	foreach ($utilisateurs as $utilisateur) {
-		echo $utilisateur->getLogin() . "\n";
+		echo $utilisateur->getLogin() . "<br>";
 	}
 
 	?>
