@@ -135,44 +135,61 @@ class DB {
 	*************************************************************************/
 
 	/*** METHODES POUR LES UTILISATEURS ****/
+
+	/** Récupérer tous les utilisateurs. */
 	public function getUtilisateurs() {
 		$requete = 'SELECT * FROM Utilisateur';
 		return $this->execQuery($requete,null,'Utilisateur');
 	}
 
+	/** Modifier les données d'un utilisateur. */
 	public function updateUtilisateur($utilisateur) {
 		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
 		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
 	}
 
+	/** Ajouter un utilisateur. */
 	public function insertUtilisateur($utilisateur) {
 		$requete = 'INSERT INTO Utilisateur (login,mdp,email,actif) VALUES (?,?,?,?)';
 		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif()),'Utilisateur');
 	}
 
+	/** Supprimer un utilisateur. */
 	public function suppUtilisateur($utilisateur) {
 		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
 		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Utilisateur');
 	}
 
+	/** Récupérer les droits d'un utilisateur. */
+	public function getDroitUtilisateurs($utilisateur) {
+		$requete = 'SELECT * FROM UtilisateurDroit WHERE idUti = ?';
+		return $this->execQuery($requete,array($utilisateur->getIdUti()),'UtilisateurDroit');
+	}
+
+
 
 
 	/*** METHODES POUR LES PRODUITS ****/
+
+	/** Récuperer les produits. Trier par categorie. */
 	public function getProduits() {
 		$requete = 'SELECT * FROM Produit ORDER BY categorie';
 		return $this->execQuery($requete,null,'Produit');
 	}
 
+	/** Modifier les données d'un produit. */
 	public function updateProduit($produits) {
 		$requete = 'UPDATE Produits SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
 		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdUti()),'Produit');
 	}
 
+	/** Ajouter un produit. */
 	public function insertProduit($produits) {
 		$requete = 'INSERT INTO Produits (libProd, prixUni, categorie) SET (?,?,?)';
 		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
 	}
 
+	/** Supprimer un produit. */
 	public function suppProduit($produits) {
 		$requete = 'DELETE FROM Produit WHERE idProd = ?';
 		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Produit');
@@ -181,26 +198,32 @@ class DB {
 
 
 	/*** METHODES POUR LES CLIENTS ****/
+
+	/** Récuperer les clients. */
 	public function getClients($client) {
 		$requete = 'SELECT * FROM Client';
 		return $this->execQuery($requete,null,'Client');
 	}
 
+	/** Récuperer les clients présents. */
 	public function getClientsPresent($client) {
 		$requete = 'SELECT * FROM Client WHERE present = 1';
 		return $this->execQuery($requete,null,'Client');
 	}
 
+	/** Modifier les données d'un client. */
 	public function updateClient($client) {
 		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
 		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
 	}
 
+	/** Ajouter un client. */
 	public function insertClient($client) {
 		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) SET (?, ?, ?, ?)';
 		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
 	}
 
+	/** Supprimer un client. */
 	public function suppClient($client) {
 		$requete = 'DELETE FROM Client WHERE idCli = ?';
 		return $this->execQuery($requete,array($client->getIdCli()),'Client');
@@ -209,21 +232,26 @@ class DB {
 
 
 	/*** METHODES POUR LES TICKETS ****/
+
+	/** Récuperer les tickets/commande d'un client. */
 	public function getTicketClient($client) {
 		$requete = 'SELECT * FROM Ticket WHERE idCli = ?';
 		return $this->execQuery($requete,array($client->getIdCli()),'Ticket');
 	}
 
+	/** Modifier la quantité et le prix total d'un des tickets/commande */
 	public function updateTicket($ticket) {
 		$requete = 'UPDATE Ticket SET qa = ?, prixTot = ? WHERE idCli = ? AND idProd = ?';
 		return $this->execQuery($requete,array($ticket->getQa(),$ticket->getPrixTot(),$ticket->getIdCli(),$ticket->getIdProd()),'Ticket');
 	}
 
+	/** Ajouter un ticket/commande. */
 	public function insertTicket($client) {
 		$requete = 'INSERT INTO Ticket SET (?, ?, ?, ?)';
 		return $this->execQuery($requete,array($produits->getIdCli(),$produits->getIdProd(),$produits->getQa(),$produits->getPrixTot()),'Ticket');
 	}
 
+	/** Supprimer un ticket/commande. */
 	public function suppTicket($client) {
 		$requete = 'DELETE FROM Ticket WHERE idCli = ?';
 		return $this->execQuery($requete,array($produits->getIdCli()),'Ticket');
@@ -232,21 +260,26 @@ class DB {
 
 
 	/*** METHODES POUR L'HISTORIQUE ****/
+
+	/** Récuperer l'historique des fiches de securité. */
 	public function getHistoriqueSecu() {
 		$requete = 'SELECT * FROM Historique WHERE categorie = \'SECU\'';
 		return $this->execQuery($requete,null,'Historique');
 	}
 
+	/** Récuperer l'historique des ticket. */
 	public function getHistoriqueTicket() {
 		$requete = 'SELECT * FROM Historique WHERE categorie = \'TICKET\'';
 		return $this->execQuery($requete,null,'Historique');
 	}
 
+	/** Récuperer l'historique des tickets d'un client. */
 	public function getHistoriqueTicketClient($client) {
 		$requete = 'SELECT * FROM Historique WHERE categorie = \'TICKET\' AND idCli = ?';
 		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
 	}
 
+	/** Récuperer l'historique des fiche de sécurité d'un client. */
 	public function getHistoriqueSecuClient($client) {
 		$requete = 'SELECT * FROM Historique WHERE categorie = \'SECU\' AND idCli = ?';
 		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
