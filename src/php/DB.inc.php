@@ -165,8 +165,8 @@ class DB {
 		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdUti()),'Produit');
 	}
 
-	public function suppProduits($utilisateur) {
-		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
+	public function suppProduits($produits) {
+		$requete = 'DELETE FROM Produit WHERE idProd = ?';
 		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Produit');
 	}
 
