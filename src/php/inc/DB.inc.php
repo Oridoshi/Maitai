@@ -146,6 +146,11 @@ class DB {
 		return $this->execQuery($requete,null,'Utilisateur');
 	}
 
+	public function getUtilisateur($login) {
+		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
+		return $this->execQuery($requete,$login,'Utilisateur');
+	}
+
 	public function getUtilisateursLogin($utilisateur) {
 		$requete = 'SELECT * FROM Utilisateur WHERE login = ? AND idUti != ?';
 		return $this->execQuery($requete,array($utilisateur->getLogin(), $utilisateur->getIdUti()),'Utilisateur');
@@ -177,6 +182,11 @@ class DB {
 
 		echo 'UPDATE Utilisateur SET login = ' . $utilisateur->getLogin() . ', mdp = ?, email = ?, actif = ? WHERE idUti = ' . $utilisateur->getIdUti();
 		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
+	}
+
+	public function updateUtilisateurDroit($droituti) {
+		$this->suppDroitUtilisateur($droituti->getIdUti());
+		$this->insertDroitUtilisateur($droituti);
 	}
 
 	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
@@ -219,9 +229,9 @@ class DB {
 	}
 
 	/** Supprimer les droits d'un utilisateur. */
-	public function suppDroitUtilisateur($droituti) {
-		$requete = 'DELETE FROM UtilisateurDroit WHERE idUti = ? AND idDroit = ?';
-		return $this->execQuery($requete,array($droituti->getIdUti(),$droituti->getIdDroit()),'UtilisateurDroit');
+	public function suppDroitUtilisateur($iduti) {
+		$requete = 'DELETE FROM UtilisateurDroit WHERE idUti = ?';
+		return $this->execQuery($requete,array($iduti),'UtilisateurDroit');
 	}
 
 
