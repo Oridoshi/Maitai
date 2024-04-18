@@ -15,8 +15,8 @@ class DB {
 	private $connect=null; //connexion PDO à la base
 
 	private static string $dbName   = "maitai";
-	private static string $login    = "Admin";
-	private static string $password = "maitai";
+	private static string $login    = "hs220880";
+	private static string $password = "SAHAU2004";
 	private static string $port     = "3306";
 	private static string $host     = "localhost";
 
@@ -245,12 +245,12 @@ class DB {
 	/** Modifier les données d'un produit. */
 	public function updateProduit($produits) {
 		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdUti()),'Produit');
+		return $this->execQuery($requete,array($produits->getLibProd(),floatval($produits->getPrixUni()),$produits->getCategorie(),$produits->getIdUti()),'Produit');
 	}
 
 	/** Ajouter un produit. */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit (libProd, prixUni, categorie) SET (?,?,?)';
+		$requete = 'INSERT INTO Produit (libProd, prixUni, categorie) VALUES (?,?,?)';
 		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
 	}
 
@@ -305,7 +305,7 @@ class DB {
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
 		}
 
-		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) SET (?, ?, ?, ?)';
+		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) VALUES (?, ?, ?, ?)';
 		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
 	}
 
@@ -333,7 +333,7 @@ class DB {
 
 	/** Ajouter un ticket/commande. */
 	public function insertTicket($client) {
-		$requete = 'INSERT INTO Ticket SET (?, ?, ?, ?)';
+		$requete = 'INSERT INTO Ticket VALUES (?, ?, ?, ?)';
 		return $this->execQuery($requete,array($client->getIdCli(),$client->getIdProd(),$client->getQa(),$client->getPrixTot()),'Ticket');
 	}
 
@@ -373,7 +373,7 @@ class DB {
 
 	/** Inserer un fichier dans l'historique. */
 	public function insertHistorique($historique) {
-		$requete = 'INSERT INTO Historique (chemin, type, idCli) SET (?, ?, ?)';
+		$requete = 'INSERT INTO Historique (chemin, type, idCli) VALUES (?, ?, ?)';
 		return $this->execQuery($requete,array($historique->getChemin(),$historique->getType(),$historique->getIdCli()),'Historique');
 	}
 
