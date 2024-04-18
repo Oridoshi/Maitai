@@ -15,22 +15,22 @@ class Historique {
     private string $type;
 
     /** Client attachés au fichiers générés. */
-    private int $idCli;
+    private int $idcli;
 
     /**
      * @var int $idhis Numéro d'identification du fichier stockés.
      * @var string $date Date a laquelle le fichier a été généré.
      * @var string $chemin Chemin pour retrouver le fichier.
      * @var string $type Type de fichier (Ticket ou fiche de secu).
-     * @var int $idCli Client attachés au fichiers générés.
+     * @var int $idcli Client attachés au fichiers générés.
      * Constructeur de la classe Historique.
      */
-    public function __construct(int $idhis = 0, string $date = "", string $chemin = "", string $type = "", int $idCli = 0) {
+    public function __construct(int $idhis = 0, string $date = "", string $chemin = "", string $type = "", int $idcli = 0) {
         $this->idhis = $idhis;
         $this->date = $date;
         $this->chemin = $chemin;
         $this->type = $type;
-        $this->idCli = $idCli;
+        $this->idcli = $idcli;
     }
 
     /** Getter de l'id du fichier stockés */
@@ -46,7 +46,8 @@ class Historique {
     public function getType(): string {return $this->type;}
 
     /** Getter de l'id du client attachés au fichiers générés */
-    public function getIdCli(): int {return $this->idCli;}
+    public function getIdCli(): int {return $this->idcli;}
+
 
     /** Setter de l'id du fichier stockés */
     public function setIdHis(int $idhis): void {$this->idhis = $idhis;}
@@ -61,5 +62,5 @@ class Historique {
     public function setType(string $type): void {$this->type = $type;}
 
     /** Setter de l'id du client attachés au fichiers générés */
-    public function setIdCli(int $idCli): void {$this->idCli = $idCli;}
+    public function setIdCli(int $idcli): void {$this->idcli = $idcli;}
 }

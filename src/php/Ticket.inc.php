@@ -12,20 +12,20 @@ class Ticket {
     private int $qa;
 
     /** Prix total de la commande */
-    private float $prixTot;
+    private ?float $prixtot;
 
     /**
      * @var int $idprod Numéro d'identification du produits commandés.
      * @var int $idcli Numéro d'identification du client qui commande.
      * @var int $qa Quantité du produit acheté.
-     * @var float $prixTot Prix total de la commande
+     * @var ?float $prixtot Prix total de la commande
      * Constructeur de la classe Ticket.
      */
-    public function __construct(int $idprod = 0, int $idcli = 0, int $qa = 0, float $prixTot = 0.0) {
+    public function __construct(int $idprod = 0, int $idcli = 0, int $qa = 0, ?float $prixtot = null) {
         $this->idprod = $idprod;
         $this->idcli = $idcli;
         $this->qa = $qa;
-        $this->prixTot = $prixTot;
+        $this->prixtot = $prixtot;
     }
 
     /** Getter de l'id du produits commandés */
@@ -38,7 +38,7 @@ class Ticket {
     public function getQa(): int {return $this->qa;}
 
     /** Getter du prix total de la commande */
-    public function getPrixTot(): float {return $this->prixTot;}
+    public function getPrixTot(): ?float {return $this->prixtot;}
 
     /** Setter de l'id du produits commandés */
     public function setIdProd(int $idprod): void {$this->idprod = $idprod;}
@@ -50,5 +50,5 @@ class Ticket {
     public function setQa(int $qa): void {$this->qa = $qa;}
 
     /** Setter du prix total de la commande */
-    public function setPrixTot(float $prixTot): void {$this->prixTot = $prixTot;}
+    public function setPrixTot(?float $prixtot): void {$this->prixtot = $prixtot;}
 }
