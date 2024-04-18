@@ -251,6 +251,12 @@ class DB {
 		return $this->execQuery($requete,null,'Client');
 	}
 
+	/** Récuperer le client d'un nom de club. */
+	public function getClient($nomClub) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
+		return $this->execQuery($requete,array($nomClub),'Client');
+	}
+
 	/** Récuperer les clients présents. */
 	public function getClientsPresent($client) {
 		$requete = 'SELECT * FROM Client WHERE present = 1';
@@ -259,12 +265,27 @@ class DB {
 
 	/** Modifier les données d'un client. */
 	public function updateClient($client) {
+
+
+		$existingClient = $this->getUtilisateursEmail($client->getNomClub());
+		if ($existingClient) {
+			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+
 		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
 		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
 	}
 
 	/** Ajouter un client. */
 	public function insertClient($client) {
+
+		$existingClient = $this->getUtilisateursEmail($client->getNomClub());
+		if ($existingClient) {
+			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+
 		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) SET (?, ?, ?, ?)';
 		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
 	}
