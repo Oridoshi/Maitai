@@ -1,6 +1,6 @@
 <?php
 
-include_once 'CreationProduit.php';
+include_once '../inc/DB.inc.php';
 
 /**
  * Vérifie si les données POST sont bien définies
