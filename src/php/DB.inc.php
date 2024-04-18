@@ -15,8 +15,8 @@ class DB {
 	private $connect=null; //connexion PDO à la base
 
 	private static string $dbName   = "maitai";
-	private static string $login    = "hs220880";
-	private static string $password = "SAHAU2004";
+	private static string $login    = "Admin";
+	private static string $password = "maitai";
 	private static string $port     = "3306";
 	private static string $host     = "localhost";
 
