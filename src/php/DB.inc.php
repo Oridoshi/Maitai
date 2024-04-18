@@ -267,7 +267,7 @@ class DB {
 	public function updateClient($client) {
 
 
-		$existingClient = $this->getUtilisateursEmail($client->getNomClub());
+		$existingClient = $this->getClient($client->getNomClub());
 		if ($existingClient) {
 			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
@@ -280,7 +280,7 @@ class DB {
 	/** Ajouter un client. */
 	public function insertClient($client) {
 
-		$existingClient = $this->getUtilisateursEmail($client->getNomClub());
+		$existingClient = $this->getClient($client->getNomClub());
 		if ($existingClient) {
 			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
