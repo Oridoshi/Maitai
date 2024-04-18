@@ -225,6 +225,13 @@ class DB {
 	}
 
 
+	/** Supprimer les droits d'un utilisateur. */
+	public function getDroits() {
+		$requete = 'SELECT * FROM Droit';
+		return $this->execQuery($requete,null,'Droit');
+	}
+
+
 
 
 	/*** METHODES POUR LES PRODUITS ****/
