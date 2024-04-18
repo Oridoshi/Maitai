@@ -1,7 +1,6 @@
 <?php
 
-include_once 'src/php/inc/Utilisateur.inc.php';
-include_once 'src/php/inc/DB.inc.php';
+include_once '../inc/DB.inc.php';
 
 if(!isset($_POST['login']) || !isset($_POST['email'])) exit;
 
