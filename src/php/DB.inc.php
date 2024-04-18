@@ -14,9 +14,9 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "Maitai";
-	private static string $login    = "hs220880";
-	private static string $password = "SAHAU2004";
+	private static string $dbName   = "maitai";
+	private static string $login    = "Admin";
+	private static string $password = "maitai";
 	private static string $port     = "3306";
 	private static string $host     = "localhost";
 
@@ -146,27 +146,27 @@ class DB {
 		return $this->execQuery($requete,null,'Utilisateur');
 	}
 
-	public function getUtilisateursLogin($login) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
-		return $this->execQuery($requete,array($login),'Utilisateur');
+	public function getUtilisateursLogin($utilisateur) {
+		$requete = 'SELECT * FROM Utilisateur WHERE login = ? AND idUti != ?';
+		return $this->execQuery($requete,array($utilisateur->getLogin(), $utilisateur->getIdUti()),'Utilisateur');
 	}
 
-	public function getUtilisateursEmail($email) {
-		$requete = 'SELECT * FROM Utilisateur WHERE email = ?';
-		return $this->execQuery($requete,array($email),'Utilisateur');
+	public function getUtilisateursEmail($utilisateur) {
+		$requete = 'SELECT * FROM Utilisateur WHERE email = ? AND idUti != ?';
+		return $this->execQuery($requete,array($utilisateur->getEmail(), $utilisateur->getIdUti()),'Utilisateur');
 	}
 
 	/** Modifier les données d'un utilisateur. */
 	public function updateUtilisateur($utilisateur) {
 
-		$existingUser = $this->getUtilisateursLogin($utilisateur->getLogin());
+		$existingUser = $this->getUtilisateursLogin($utilisateur);
 		if ($existingUser) {
 			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
 		}
 
 		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->getUtilisateursEmail($utilisateur->getEmail());
+		$existingUser = $this->getUtilisateursEmail($utilisateur);
 		if ($existingUser) {
 			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
@@ -182,14 +182,14 @@ class DB {
 	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
 	public function insertUtilisateur($utilisateur) {
 		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->getUtilisateursLogin($utilisateur->getLogin());
+		$existingUser = $this->getUtilisateursLogin($utilisateur);
 		if ($existingUser) {
 			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
 		}
 
 		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->getUtilisateursEmail($utilisateur->getEmail());
+		$existingUser = $this->getUtilisateursEmail($utilisateur);
 		if ($existingUser) {
 			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
@@ -244,20 +244,20 @@ class DB {
 
 	/** Modifier les données d'un produit. */
 	public function updateProduit($produits) {
-		$requete = 'UPDATE Produits SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
 		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdUti()),'Produit');
 	}
 
 	/** Ajouter un produit. */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produits (libProd, prixUni, categorie) SET (?,?,?)';
+		$requete = 'INSERT INTO Produit (libProd, prixUni, categorie) SET (?,?,?)';
 		return $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
 	}
 
 	/** Supprimer un produit. */
 	public function suppProduit($produits) {
 		$requete = 'DELETE FROM Produit WHERE idProd = ?';
-		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Produit');
+		return $this->execQuery($requete,array($produits->getIdUti()),'Produit');
 	}
 
 
@@ -271,9 +271,9 @@ class DB {
 	}
 
 	/** Récuperer le client d'un nom de club. */
-	public function getClient($nomClub) {
-		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
-		return $this->execQuery($requete,array($nomClub),'Client');
+	public function getClient($client) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ? AND idCli != ?';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getIdCli()),'Client');
 	}
 
 	/** Récuperer les clients présents. */
@@ -286,27 +286,27 @@ class DB {
 	public function updateClient($client) {
 
 
-		$existingClient = $this->getClient($client->getNomClub());
+		$existingClient = $this->getClient($client);
 		if ($existingClient) {
 			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
 		}
 
 		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
-		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
 	}
 
 	/** Ajouter un client. */
 	public function insertClient($client) {
 
-		$existingClient = $this->getClient($client->getNomClub());
+		$existingClient = $this->getClient($client);
 		if ($existingClient) {
 			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
 		}
 
 		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) SET (?, ?, ?, ?)';
-		return $this->execQuery($requete,array($client->getNomClub(),$produits->getEmail(),$produits->getTelephone(),$produits->getPresent(),$produits->getIdCli()),'Client');
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
 	}
 
 	/** Supprimer un client. */
@@ -334,13 +334,13 @@ class DB {
 	/** Ajouter un ticket/commande. */
 	public function insertTicket($client) {
 		$requete = 'INSERT INTO Ticket SET (?, ?, ?, ?)';
-		return $this->execQuery($requete,array($produits->getIdCli(),$produits->getIdProd(),$produits->getQa(),$produits->getPrixTot()),'Ticket');
+		return $this->execQuery($requete,array($client->getIdCli(),$client->getIdProd(),$client->getQa(),$client->getPrixTot()),'Ticket');
 	}
 
 	/** Supprimer un ticket/commande. */
 	public function suppTicket($client) {
 		$requete = 'DELETE FROM Ticket WHERE idCli = ?';
-		return $this->execQuery($requete,array($produits->getIdCli()),'Ticket');
+		return $this->execQuery($requete,array($client->getIdCli()),'Ticket');
 	}
 
 
@@ -384,5 +384,3 @@ class DB {
 	}
 
 } //fin classe DB
-
-?>
