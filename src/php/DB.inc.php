@@ -212,6 +212,12 @@ class DB {
 		return $this->execQuery($requete,array($utilisateur->getIdUti()),'UtilisateurDroit');
 	}
 
+	/** Récupérer les droits d'un utilisateur. */
+	public function insertDroitUtilisateur($droituti) {
+		$requete = 'INSERT INTO UtilisateurDroit VALUES (?,?)';
+		return $this->execQuery($requete,array($droituti->getIdUti(),$droituti->getIdDroit()),'UtilisateurDroit');
+	}
+
 
 
 
@@ -350,6 +356,18 @@ class DB {
 	public function getHistoriqueSecuClient($client) {
 		$requete = 'SELECT * FROM Historique WHERE categorie = \'SECU\' AND idCli = ?';
 		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
+	}
+
+	/** Inserer un fichier dans l'historique. */
+	public function insertHistorique($historique) {
+		$requete = 'INSERT INTO Historique (chemin, type, idCli) SET (?, ?, ?)';
+		return $this->execQuery($requete,array($historique->getChemin(),$historique->getType(),$historique->getIdCli()),'Historique');
+	}
+
+	/** Inserer un fichier dans l'historique. */
+	public function suppHistorique($historique) {
+		$requete = 'DELETE FROM Historique WHERE idHis = ?';
+		return $this->execQuery($requete,array($historique->getIdHis()),'Historique');
 	}
 
 } //fin classe DB

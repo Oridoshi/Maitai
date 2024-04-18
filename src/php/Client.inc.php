@@ -3,7 +3,7 @@
 class Client {
 
     /** Numéro d'identification du client. */
-    private int $idCli;
+    private int $idcli;
     
     /** Nom du client. */
     private string $nomclub;
@@ -18,15 +18,15 @@ class Client {
     private bool $present;
 
     /**
-     * @var int $idCli Numéro d'identification du client.
+     * @var int $idcli Numéro d'identification du client.
      * @var string $nomclub Nom du client.
      * @var string $email Email du client.
      * @var string $telephone Telephone du client.
      * @var bool $present Si le client est actuellement present sur le site ou non.
      * Constructeur de la classe Client.
      */
-    public function __construct(int $idCli = 0, string $nomclub = "", string $email = "", string $telephone = "", bool $present = true) {
-        $this->idCli = $idCli;
+    public function __construct(int $idcli = 0, string $nomclub = "", string $email = "", string $telephone = "", bool $present = true) {
+        $this->idcli = $idcli;
         $this->nomclub = $nomclub;
         $this->email = $email;
         $this->telephone = $telephone;
@@ -34,7 +34,7 @@ class Client {
     }
 
     /** Getter de l'id du Client */
-    public function getIdCli(): int {return $this->idCli;}
+    public function getIdCli(): int {return $this->idcli;}
 
     /** Getter du nom du Client */
     public function getNomClub(): string {return $this->nomclub;}
@@ -49,7 +49,7 @@ class Client {
     public function getPresent(): bool {return $this->present;}
 
     /** Setter de l'id du Client */
-    public function setIdCli(int $idCli): void {$this->idCli = $idCli;}
+    public function setIdCli(int $idcli): void {$this->idcli = $idcli;}
 
     /** Setter du nom du Client */
     public function setNomClub(string $nomclub): void {$this->nomclub = $nomclub;}
