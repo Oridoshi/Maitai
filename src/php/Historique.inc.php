@@ -3,7 +3,7 @@
 class Historique {
 
     /** Numéro d'identification du fichier stockés. */
-    private int $idHis;
+    private int $idhis;
 
     /** Date a laquelle le fichier a été généré. */
     private string $date;
@@ -18,15 +18,15 @@ class Historique {
     private int $idCli;
 
     /**
-     * @var int $idHis Numéro d'identification du fichier stockés.
+     * @var int $idhis Numéro d'identification du fichier stockés.
      * @var string $date Date a laquelle le fichier a été généré.
      * @var string $chemin Chemin pour retrouver le fichier.
      * @var string $type Type de fichier (Ticket ou fiche de secu).
      * @var int $idCli Client attachés au fichiers générés.
      * Constructeur de la classe Historique.
      */
-    public function __construct(int $idHis = 0, string $date = "", string $chemin = "", string $type = "", int $idCli = 0) {
-        $this->idHis = $idHis;
+    public function __construct(int $idhis = 0, string $date = "", string $chemin = "", string $type = "", int $idCli = 0) {
+        $this->idhis = $idhis;
         $this->date = $date;
         $this->chemin = $chemin;
         $this->type = $type;
@@ -34,7 +34,7 @@ class Historique {
     }
 
     /** Getter de l'id du fichier stockés */
-    public function getIdHis(): int {return $this->idHis;}
+    public function getIdHis(): int {return $this->idhis;}
 
     /** Getter de la date du fichier stockés */
     public function getDate(): string {return $this->date;}
@@ -49,7 +49,7 @@ class Historique {
     public function getIdCli(): int {return $this->idCli;}
 
     /** Setter de l'id du fichier stockés */
-    public function setIdHis(int $idHis): void {$this->idHis = $idHis;}
+    public function setIdHis(int $idhis): void {$this->idhis = $idhis;}
 
     /** Setter de la date du fichier stockés */
     public function setDate(string $date): void {$this->date = $date;}

@@ -3,7 +3,7 @@
 class Utilisateur {
 
     /** Numéro d'identification de l'utilisateur. */
-    private int $idUti;
+    private int $iduti;
 
     /** Login de l'utilisateur. */
     private string $login;
@@ -18,15 +18,15 @@ class Utilisateur {
     private bool $actif;
 
     /**
-     * @var int $idUti Numéro d'identification de l'utilisateur.
+     * @var int $iduti Numéro d'identification de l'utilisateur.
      * @var string $login Login de l'utilisateur.
      * @var string $mdp Mot de passe encrypté de l'utilisateur.
      * @var string $email Email de récupération du compte
      * @var bool $actif Si le compte est actif ou non. Peut être activer ou désactiver à volonter
      * Constructeur de la classe Utilisateur.
      */
-    public function __construct(int $idUti = 0, string $login = "", string $mdp = "", string $email = "", bool $actif = true) {
-        $this->idUti = $idUti;
+    public function __construct(int $iduti = 0, string $login = "", string $mdp = "", string $email = "", bool $actif = true) {
+        $this->iduti = $iduti;
         $this->login = $login;
         $this->mdp = $mdp;
         $this->email = $email;
@@ -34,7 +34,7 @@ class Utilisateur {
     }
 
     /** Getter de l'id de l'utilisateur */
-    public function getIdUti(): int {return $this->idUti;}
+    public function getIdUti(): int {return $this->iduti;}
 
     /** Getter du login de l'utilisateur */
     public function getLogin(): string {return $this->login;}
@@ -49,7 +49,7 @@ class Utilisateur {
     public function getActif(): bool {return $this->actif;}
 
     /** Setter de l'id de l'utilisateur */
-    public function setIdUti(int $idUti): void {$this->idUti = $idUti;}
+    public function setIdUti(int $iduti): void {$this->iduti = $iduti;}
 
     /** Setter du login de l'utilisateur */
     public function setLogin(string $login): void {$this->login = $login;}

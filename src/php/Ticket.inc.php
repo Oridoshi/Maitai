@@ -3,10 +3,10 @@
 class Ticket {
 
     /** Numéro d'identification du produits commandés. */
-    private int $idProd;
+    private int $idprod;
 
     /** Numéro d'identification du client qui commande. */
-    private int $idCli;
+    private int $idcli;
 
     /** Quantité du produit acheté. */
     private int $qa;
@@ -15,24 +15,24 @@ class Ticket {
     private float $prixTot;
 
     /**
-     * @var int $idProd Numéro d'identification du produits commandés.
-     * @var int $idCli Numéro d'identification du client qui commande.
+     * @var int $idprod Numéro d'identification du produits commandés.
+     * @var int $idcli Numéro d'identification du client qui commande.
      * @var int $qa Quantité du produit acheté.
      * @var float $prixTot Prix total de la commande
      * Constructeur de la classe Ticket.
      */
-    public function __construct(int $idProd = 0, int $idCli = 0, int $qa = 0, float $prixTot = 0.0) {
-        $this->idProd = $idProd;
-        $this->idCli = $idCli;
+    public function __construct(int $idprod = 0, int $idcli = 0, int $qa = 0, float $prixTot = 0.0) {
+        $this->idprod = $idprod;
+        $this->idcli = $idcli;
         $this->qa = $qa;
         $this->prixTot = $prixTot;
     }
 
     /** Getter de l'id du produits commandés */
-    public function getIdProd(): int {return $this->idProd;}
+    public function getIdProd(): int {return $this->idprod;}
 
     /** Getter de l'id du client qui commande */
-    public function getIdCli(): int {return $this->idCli;}
+    public function getIdCli(): int {return $this->idcli;}
 
     /** Getter de la quantité du produit acheté */
     public function getQa(): int {return $this->qa;}
@@ -41,10 +41,10 @@ class Ticket {
     public function getPrixTot(): float {return $this->prixTot;}
 
     /** Setter de l'id du produits commandés */
-    public function setIdProd(int $idProd): void {$this->idProd = $idProd;}
+    public function setIdProd(int $idprod): void {$this->idprod = $idprod;}
 
     /** Setter de l'id du client qui commande */
-    public function setIdCli(int $idCli): void {$this->idCli = $idCli;}
+    public function setIdCli(int $idcli): void {$this->idcli = $idcli;}
 
     /** Setter de la quantité du produit acheté */
     public function setQa(int $qa): void {$this->qa = $qa;}

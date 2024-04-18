@@ -3,30 +3,30 @@
 class UtilisateurDroit {
     
     /** Numéro d'identification de l'utilisateur */
-    private int $idUti;
+    private int $iduti;
 
     /** Numéro d'identification du droit */
-    private int $idDroit;
+    private int $iddroit;
 
     /**
-     * @var int $idUti Numéro d'identification de l'utilisateur
-     * @var int $idDroit Numéro d'identification du droit
+     * @var int $iduti Numéro d'identification de l'utilisateur
+     * @var int $iddroit Numéro d'identification du droit
      * Constructeur de la classe UtilisateurDroit.
      */
-    public function __construct(int $idUti = 0, int $idDroit = 0) {
-        $this->iduti = $idUti;
-        $this->idDroit = $idDroit;
+    public function __construct(int $iduti = 0, int $iddroit = 0) {
+        $this->iduti = $iduti;
+        $this->iddroit = $iddroit;
     }
 
     /** Getter du numéto d'identification de l'utilisateur */
-    public function getIdUti(): int {return $this->idUti;}
+    public function getIdUti(): int {return $this->iduti;}
     
     /** Getter du numéro d'identification du droit */
-    public function getIdDroit(): int {return $this->idDroit;}
+    public function getIdDroit(): int {return $this->iddroit;}
 
     /** Setter du numéro d'identification de l'utilisateur */
-    public function setIdUti(int $idUti): void {$this->idUti = $idUti;}
+    public function setIdUti(int $iduti): void {$this->iduti = $iduti;}
 
     /** Setter du numéro d'identification du droit */
-    public function setIdDroit(int $idDroit): void {$this->idDroit = $idDroit;}
+    public function setIdDroit(int $iddroit): void {$this->iddroit = $iddroit;}
 }
