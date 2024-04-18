@@ -212,9 +212,15 @@ class DB {
 		return $this->execQuery($requete,array($utilisateur->getIdUti()),'UtilisateurDroit');
 	}
 
-	/** Récupérer les droits d'un utilisateur. */
+	/** Ajouter les droits d'un utilisateur. */
 	public function insertDroitUtilisateur($droituti) {
 		$requete = 'INSERT INTO UtilisateurDroit VALUES (?,?)';
+		return $this->execQuery($requete,array($droituti->getIdUti(),$droituti->getIdDroit()),'UtilisateurDroit');
+	}
+
+	/** Supprimer les droits d'un utilisateur. */
+	public function suppDroitUtilisateur($droituti) {
+		$requete = 'DELETE FROM UtilisateurDroit WHERE idUti = ? AND idDroit = ?';
 		return $this->execQuery($requete,array($droituti->getIdUti(),$droituti->getIdDroit()),'UtilisateurDroit');
 	}
 
