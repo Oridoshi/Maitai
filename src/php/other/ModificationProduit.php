@@ -1,6 +1,6 @@
 <?php
 
-include_once 'CreationProduit.php';
+include_once '../inc/DB.inc.php';
 
 /**
  * Vérifie si les données POST sont bien définies
@@ -19,4 +19,4 @@ $newProd->setCategorie($_POST['categorie']);
 /**
  * Insère le produit dans la base de données
  */
-DB::getInstance()->insertProduit($newProd);
+DB::getInstance()->updateProduit($newProd);
