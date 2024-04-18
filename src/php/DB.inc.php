@@ -158,6 +158,21 @@ class DB {
 
 	/** Modifier les données d'un utilisateur. */
 	public function updateUtilisateur($utilisateur) {
+
+		$existingUser = $this->getUtilisateursLogin($utilisateur->getLogin());
+		if ($existingUser) {
+			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+
+		// Vérifier si le nom d'utilisateur existe déjà
+		$existingUser = $this->getUtilisateursEmail($utilisateur->getEmail());
+		if ($existingUser) {
+			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+		
+
 		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
 
 		echo 'UPDATE Utilisateur SET login = ' . $utilisateur->getLogin() . ', mdp = ?, email = ?, actif = ? WHERE idUti = ' . $utilisateur->getIdUti();
