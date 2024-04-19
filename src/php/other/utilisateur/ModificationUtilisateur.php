@@ -3,6 +3,7 @@
 include_once '../inc/DB.inc.php';
 
 // initialisations des variables à null
+$prevLogin = null;
 $login = null;
 $mdp = null;
 $email = null;
@@ -10,6 +11,8 @@ $actif = null;
 $iddroit = null;
 
 // récupération des données du formulaire si elles sont renseignées
+if(isset($_POST['prevLogin'])) {$prevLogin = $_POST['prevLogin'];}
+
 if(isset($_POST['login'])) {$login = $_POST['login'];}
 
 if(isset($_POST['mdp'])) {$mdp = $_POST['mdp'];}
@@ -24,7 +27,7 @@ if(isset($_POST['iddroit'])) {$iddroit = $_POST['iddroit'];}
 $pdo = DB::getInstance();
 
 // récupération de l'utilisateur à modifier
-$utilisateur = $pdo->getUtilisateur($login)[0];
+$utilisateur = $pdo->getUtilisateur($prevLogin)[0];
 
 // modification des données de l'utilisateur si non null
 if($login != null)
