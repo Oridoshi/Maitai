@@ -211,9 +211,9 @@ class DB {
 	}
 
 	/** Supprimer un utilisateur. */
-	public function suppUtilisateur($utilisateur) {
+	public function suppUtilisateur($idUti) {
 		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
-		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Utilisateur');
+		return $this->execQuery($requete,$idUti,'Utilisateur');
 	}
 
 	/** Récupérer les droits d'un utilisateur. */
