@@ -217,9 +217,9 @@ class DB {
 	}
 
 	/** Récupérer les droits d'un utilisateur. */
-	public function getDroitUtilisateur($utilisateur) {
+	public function getDroitUtilisateur($idUti) {
 		$requete = 'SELECT * FROM UtilisateurDroit WHERE idUti = ?';
-		return $this->execQuery($requete,array($utilisateur->getIdUti()),'UtilisateurDroit');
+		return $this->execQuery($requete,$idUti,'UtilisateurDroit');
 	}
 
 	/** Ajouter les droits d'un utilisateur. */
