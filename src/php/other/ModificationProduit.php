@@ -17,6 +17,6 @@ $newProd->setPrixUni($_POST['prixUni']);
 $newProd->setCategorie($_POST['categorie']);
 
 /**
- * Insère le produit dans la base de données
+ * Modifie le produit dans la base de données
  */
 DB::getInstance()->updateProduit($newProd);
