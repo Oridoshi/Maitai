@@ -2,29 +2,14 @@
 
 include_once '../inc/DB.inc.php';
 
-// initialisations des variables à null
-$nomClub = null;
-$email = null;
-$telephone = null;
-
-// récupération des données du formulaire si elles sont renseignées
-if(isset($_POST['nomClub'])) {$nomClub = $_POST['nomClub'];}
-
-if(isset($_POST['email'])) {$email = $_POST['email'];}
-
-if(isset($_POST['telephone'])) {$telephone = $_POST['telephone'];}
-
-
-$pdo = DB::getInstance();
+// vérification des données POST
+if(!isset($_POST['nomClub']) || !isset($_POST['email']) || !isset($_POST['telephone'])) exit;
 
 // création du client
 $client = new Client();
-if($nomClub != null)
-    $client->setNomClub($nomClub);
-if($email != null)
-    $client->setEmail($email);
-if($telephone != null)
-    $client->setTelephone($telephone);
+$client->setNomClub($_POST['nomClub']);
+$client->setEmail($_POST['email']);
+$client->setTelephone($_POST['telephone']);
 
 // insertion du client
-$pdo->insertClient($client);
+DB::getInstance()->insertClient($client);
