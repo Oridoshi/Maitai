@@ -4,8 +4,7 @@ Projet de Stage de 2eme année de BUT Informatique.
 
 
 ## Description
-L'objectif de cette branche est de pouvoir supprimer un utilisateur. Pour cela le fichier SuppressionUtilisateur.php récupère les informations à envoyé en POST sous 'iduti'.
-Si les informations sont renseigné alors elles sont supprimer de la base de données. Ici je ne vérifie pas que la demande de suppression viens d'un compte administrateur. Je pars du principe que seul un administrateur peut accéder à cette page.
+L'objectif de cette branche est de retourner tout les utilisateurs de la base de données sous format json, afin que du côté du js lors du fetch, on puisse afficher les données dans un tableau. Il y a aussi une méthode qui permet de récupérer le libellé et l'id de tous les droits référencées dans la base de données.
 
 ## Developpeur
 - [**Hugo Vicente** ]
