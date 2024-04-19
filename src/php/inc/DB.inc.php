@@ -184,6 +184,7 @@ class DB {
 		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
 	}
 
+	/** Modifier les droits d'un utilisateur. */
 	public function updateUtilisateurDroit($droituti) {
 		$this->suppDroitUtilisateur($droituti->getIdUti());
 		$this->insertDroitUtilisateur($droituti);
