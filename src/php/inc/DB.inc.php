@@ -241,7 +241,7 @@ class DB {
 		return $this->execQuery($requete,null,'Droit');
 	}
 
-
+	/** Récupérer le login, mdp, email, libdroit et actif d'un utilisateur */
 	public function getUtilisateursEtDroit() {
 		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit';
 		$stmt = $this->connect->prepare($requete);
