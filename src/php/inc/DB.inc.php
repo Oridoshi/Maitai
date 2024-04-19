@@ -242,6 +242,12 @@ class DB {
 		return $this->execQuery($requete,null,'Produit');
 	}
 
+	/** Récuperer les produits par rapport catégorie. */
+	public function getProduitsParCateg($categorie) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
+		return $this->execQuery($requete,array($categorie),'Produit');
+	}
+
 	/** Modifier les données d'un produit. */
 	public function updateProduit($produits) {
 		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
