@@ -271,9 +271,9 @@ class DB {
 	}
 
 	/** Récuperer le client d'un nom de club. */
-	public function getClient($client) {
-		$requete = 'SELECT * FROM Client WHERE nomClub = ? AND idCli != ?';
-		return $this->execQuery($requete,array($client->getNomClub(),$client->getIdCli()),'Client');
+	public function getClient($nomClub) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
+		return $this->execQuery($requete,$nomClub,'Client');
 	}
 
 	/** Récuperer les clients présents. */
