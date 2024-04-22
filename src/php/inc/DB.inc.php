@@ -14,10 +14,10 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "maitai";
-	private static string $login    = "Admin";
-	private static string $password = "maitai";
-	private static string $port     = "3306";
+	private static string $dbName   = "hugo";
+	private static string $login    = "hugo";
+	private static string $password = "hugo";
+	private static string $port     = "5432";
 	private static string $host     = "localhost";
 
 
@@ -32,7 +32,7 @@ class DB {
 		try {
 			// Connexion à la base
 
-    		$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
+    		$this->connect = new PDO("pgsql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
 
 			// Configuration facultative de la connexion
 			$this->connect->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER); 

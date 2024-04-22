@@ -14,7 +14,7 @@ CREATE TABLE Utilisateur
 	login VARCHAR(20) NOT NULL UNIQUE,
 	mdp   VARCHAR(20) NOT NULL,
 	email VARCHAR(60) UNIQUE,
-	actif BOOLEAN     NOT NULL DEFAULT 1
+	actif BOOLEAN     NOT NULL DEFAULT false
 );
 
 CREATE TABLE Droit
@@ -29,7 +29,7 @@ CREATE TABLE Client
 	nomClub   VARCHAR(30) UNIQUE NOT NULL,
 	email     VARCHAR(60) NOT NULL   ,
 	telephone VARCHAR(10) NOT NULL   ,
-	present   BOOLEAN     DEFAULT 1
+	present   BOOLEAN     DEFAULT false
 );
 
 CREATE TABLE Produit
