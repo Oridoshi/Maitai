@@ -1,5 +1,5 @@
 <h1>Formulaire de Modification de produits</h1><br><br><br>
-<form action="../src/php/other/ModificationProduit.php" method="POST">
+<form action="../src/php/other/produit/ModificationProduit.php" method="POST">
 	<label for="idProd">idProd :</label>
 	<input type="text" id="idProd" name="idProd" required><br><br>
 	
