@@ -1,6 +1,6 @@
 <?php
 
-include_once '../inc/DB.inc.php';
+include_once '../../inc/DB.inc.php';
 
 /**
  * Récupère les produits de la base de donnée en fonction de la catégorie si une catégorie est passée en paramètre
