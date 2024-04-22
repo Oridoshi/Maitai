@@ -3,16 +3,16 @@
 class Produit {
 
     /** Numéro d'identification du produit. */
-    private int $idprod;
+    public int $idprod;
 
     /** Libellé du produit. */
-    private string $libprod;
+    public string $libprod;
 
     /** Prix unitaire du produit. */
-    private float $prixuni;
+    public ?float $prixuni;
 
     /** Categorie du produit. */
-    private string $categorie;
+    public string $categorie;
 
     /**
      * @var int $idprod Numéro d'identification du produit.
@@ -21,7 +21,7 @@ class Produit {
      * @var string $categorie Categorie du produit.
      * Constructeur de la classe Produit.
      */
-    public function __construct(int $idprod = 0, string $libprod = "", float $prixuni = 0.0, string $categorie = "") {
+    public function __construct(int $idprod = 0, string $libprod = "", ?float $prixuni = 0.0, string $categorie = "") {
         $this->idprod = $idprod;
         $this->libprod = $libprod;
         $this->prixuni = $prixuni;
@@ -35,7 +35,7 @@ class Produit {
     public function getLibProd(): string {return $this->libprod;}
 
     /** Getter du prix unitaire du produit */
-    public function getPrixUni(): float {return $this->prixuni;}
+    public function getPrixUni(): ?float {return $this->prixuni;}
 
     /** Getter de la categorie du produit */
     public function getCategorie(): string {return $this->categorie;}
@@ -47,7 +47,7 @@ class Produit {
     public function setLibProd(string $libprod): void {$this->libprod = $libprod;}
 
     /** Setter du prix unitaire du produit */
-    public function setPrixUni(float $prixuni): void {$this->prixuni = $prixuni;}
+    public function setPrixUni(?float $prixuni): void {$this->prixuni = $prixuni;}
 
     /** Setter de la categorie du produit */
     public function setCategorie(string $categorie): void {$this->categorie = $categorie;}
