@@ -3,10 +3,10 @@
 class UtilisateurDroit {
     
     /** Numéro d'identification de l'utilisateur */
-    private int $iduti;
+    public int $iduti;
 
     /** Numéro d'identification du droit */
-    private int $iddroit;
+    public int $iddroit;
 
     /**
      * @var int $iduti Numéro d'identification de l'utilisateur

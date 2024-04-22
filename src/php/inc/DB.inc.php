@@ -130,47 +130,4 @@ class DB {
 		$res = $stmt->execute($tparam); //execution de l'ordre SQL      	     
 		return $stmt->rowCount();
 	}
-
-
-
-
-	/*************************************************************************
-	* Fonctions qui peuvent être utilisées dans les scripts PHP
-	*************************************************************************/
-
-	/*** METHODES POUR LES UTILISATEURS ****/
-
-	/** retourne vrai si un utilisateur avec le même login existe déjà dans la base */
-	public function loginEstEnBase($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getLogin(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	/** retourne vrai si un utilisateur avec le même email existe déjà dans la base */
-	public function emailEstEnBase($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE email = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getEmail(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	
-	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
-	public function insertUtilisateur($utilisateur) {
-		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->loginEstEnBase($utilisateur);
-		if ($existingUser) {
-			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		// Vérifier si l'email existe déjà
-		$existingUser = $this->emailEstEnBase($utilisateur);
-		if ($existingUser) {
-			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-		
-		// Insérer l'utilisateur s'il n'existe pas déjà
-		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
-	}
 } //fin classe DB
