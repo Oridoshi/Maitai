@@ -135,7 +135,7 @@ class DB {
 	/*** METHODES POUR LES PRODUITS ***/
 
 	/** Modifier les données d'un produit.
-	 * @param Produit $produits : le produit à modifier.
+	 * @param Produit $produits le produit à modifier.
 	 */
 	public function updateProduit($produits) {
 		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
