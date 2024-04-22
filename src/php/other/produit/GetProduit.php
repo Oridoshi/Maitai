@@ -1,11 +1,11 @@
 <?php
-
+header('Access-Control-Allow-Origin: *');
 include_once '../../inc/DB.inc.php';
 
 /**
  * Récupère les produits de la base de donnée en fonction de la catégorie si une catégorie est passée en paramètre
  */
-if(isset($_POST['categ']))
+if(isset($_POST['categ']) && $_POST['categ'] != "")
 {
 	$prods=DB::getInstance()->getProduitsParCateg($_POST['categ']);
 }
