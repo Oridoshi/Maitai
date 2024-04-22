@@ -136,7 +136,7 @@ class DB {
 
 	/**
 	 * Créer un produit.
-	 * @param Produit $produits : le produit à créer.
+	 * @param Produit $produits le produit à créer.
 	 */
 	public function insertProduit($produits) {
 		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
