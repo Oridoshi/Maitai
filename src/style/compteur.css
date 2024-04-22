@@ -1,0 +1,36 @@
+.compteur{
+	display: flex;
+}
+
+.inc {
+	width: 30px;
+	height: 30px;
+	background-color: #006DAA;
+	color: #FFFFFF;
+	font-size: 20px;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	border-radius: 12px;
+	border-color: transparent;
+}
+
+.inc:focus{
+	background-color: #006DAA !important;
+	color: #FFFFFF !important;
+}
+
+.inc:hover,
+.inc:active{
+	background-color: #00476E !important;
+	color: #FFFFFF ;
+}
+
+.valeur{
+	width: 40px;
+	height: 30px;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	font-size: 20px;
+}
