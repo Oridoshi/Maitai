@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 
 include_once '../inc/DB.inc.php';
 
@@ -27,7 +28,7 @@ if(isset($_POST['iddroit'])) {$iddroit = $_POST['iddroit'];}
 $pdo = DB::getInstance();
 
 // récupération de l'utilisateur à modifier
-$utilisateur = $pdo->getUtilisateur($prevLogin)[0];
+$utilisateur = $pdo->getUtilisateur($prevLogin);
 
 // modification des données de l'utilisateur si non null
 if($login != null)
