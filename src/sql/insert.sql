@@ -13,11 +13,9 @@ ALTER TABLE Droit            AUTO_INCREMENT = 1;
 
 -- Insérer des droits
 INSERT INTO Droit (libDroit)
-VALUES ('Administrateur'),
-       ('Présent'),
-       ('Créer Utilisateur'),
-       ('Créer Client'),
-       ('Historique Ticket');
+VALUES ('Admin'),
+       ('Maitai'),
+       ('Client');
 
 -- Insérer des utilisateurs
 INSERT INTO Utilisateur (login, mdp, email, actif)
