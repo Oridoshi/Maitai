@@ -1,11 +1,11 @@
 <?php
 
-include_once 'CreationProduit.php';
+include_once '../inc/DB.inc.php';
 
 /**
  * Vérifie si les données POST sont bien définies
  */
-if(!isset($_POST['idProd']) || !isset($_POST['libProd']) || !isset($_POST['prixUni']) || !isset($_POST['categorie'])) exit;
+if(!isset($_POST['idProd']) || !isset($_POST['libProd']) || !isset($_POST['categorie'])) exit;
 
 /**
  * Crée un nouveau produit
@@ -13,7 +13,11 @@ if(!isset($_POST['idProd']) || !isset($_POST['libProd']) || !isset($_POST['prixU
 $newProd = new Produit();
 $newProd->setIdProd($_POST['idProd']);
 $newProd->setLibProd($_POST['libProd']);
-$newProd->setPrixUni($_POST['prixUni']);
+
+if($_POST['prixUni'] != ""){
+    $newProd->setPrixUni($_POST['prixUni']);
+}
+
 $newProd->setCategorie($_POST['categorie']);
 
 /**

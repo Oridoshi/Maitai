@@ -17,11 +17,11 @@ class Produit {
     /**
      * @var int $idprod Numéro d'identification du produit.
      * @var string $libprod Libellé du produit.
-     * @var float $prixuni Prix unitaire du produit.
+     * @var ?float $prixuni Prix unitaire du produit.
      * @var string $categorie Categorie du produit.
      * Constructeur de la classe Produit.
      */
-    public function __construct(int $idprod = 0, string $libprod = "", ?float $prixuni = 0.0, string $categorie = "") {
+    public function __construct(int $idprod = 0, string $libprod = "", ?float $prixuni = null, string $categorie = "") {
         $this->idprod = $idprod;
         $this->libprod = $libprod;
         $this->prixuni = $prixuni;
