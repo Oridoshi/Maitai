@@ -1,8 +1,8 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include 'Utilisateur.inc.php';
-include 'UtilisateurDroit.inc.php';
+include_once 'Utilisateur.inc.php';
+include_once 'UtilisateurDroit.inc.php';
 
 class DB {
 
