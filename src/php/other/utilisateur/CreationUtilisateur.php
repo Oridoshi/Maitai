@@ -2,9 +2,6 @@
 
 include_once '../inc/DB.inc.php';
 
-// vérifie si les données sont renseignées dans le formulaire
-if(!isset($_POST['login']) || !isset($_POST['email'])) exit;
-
 // récupération des données du formulaire
 $login = $_POST['login'];
 $email = $_POST['email'];
