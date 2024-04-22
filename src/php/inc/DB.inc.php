@@ -1,13 +1,7 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include 'Client.inc.php';
-include 'Droit.inc.php';
-include 'Historique.inc.php';
-include 'Produit.inc.php';
-include 'Ticket.inc.php';
-include 'Utilisateur.inc.php';
-include 'UtilisateurDroit.inc.php';
+include_once 'Produit.inc.php';
 
 class DB {
 
@@ -32,7 +26,7 @@ class DB {
 		try {
 			// Connexion à la base
 
-    		$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
+			$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
 
 			// Configuration facultative de la connexion
 			$this->connect->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER); 
@@ -40,7 +34,7 @@ class DB {
 		}
 		catch (PDOException $e) {
 					echo "probleme de connexion :".$e->getMessage();
-			return null;    
+			return null;
 		}
 	}
 
@@ -138,255 +132,14 @@ class DB {
 	* Fonctions qui peuvent être utilisées dans les scripts PHP
 	*************************************************************************/
 
-	/*** METHODES POUR LES UTILISATEURS ****/
+	/*** METHODES POUR LES PRODUITS ***/
 
-	/** Récupérer tous les utilisateurs. */
-	public function getUtilisateurs() {
-		$requete = 'SELECT * FROM Utilisateur';
-		return $this->execQuery($requete,null,'Utilisateur');
-	}
-
-	public function getUtilisateursLogin($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getLogin(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	public function getUtilisateursEmail($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE email = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getEmail(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	/** Modifier les données d'un utilisateur. */
-	public function updateUtilisateur($utilisateur) {
-
-		$existingUser = $this->getUtilisateursLogin($utilisateur);
-		if ($existingUser) {
-			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->getUtilisateursEmail($utilisateur);
-		if ($existingUser) {
-			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-		
-
-		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
-
-		echo 'UPDATE Utilisateur SET login = ' . $utilisateur->getLogin() . ', mdp = ?, email = ?, actif = ? WHERE idUti = ' . $utilisateur->getIdUti();
-		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
-	public function insertUtilisateur($utilisateur) {
-		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->getUtilisateursLogin($utilisateur);
-		if ($existingUser) {
-			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->getUtilisateursEmail($utilisateur);
-		if ($existingUser) {
-			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-		
-		// Insérer l'utilisateur s'il n'existe pas déjà
-		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
-	}
-
-	/** Supprimer un utilisateur. */
-	public function suppUtilisateur($utilisateur) {
-		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
-		return $this->execQuery($requete,array($utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	/** Récupérer les droits d'un utilisateur. */
-	public function getDroitUtilisateur($utilisateur) {
-		$requete = 'SELECT * FROM UtilisateurDroit WHERE idUti = ?';
-		return $this->execQuery($requete,array($utilisateur->getIdUti()),'UtilisateurDroit');
-	}
-
-	/** Ajouter les droits d'un utilisateur. */
-	public function insertDroitUtilisateur($droituti) {
-		$requete = 'INSERT INTO UtilisateurDroit VALUES (?,?)';
-		return $this->execQuery($requete,array($droituti->getIdUti(),$droituti->getIdDroit()),'UtilisateurDroit');
-	}
-
-	/** Supprimer les droits d'un utilisateur. */
-	public function suppDroitUtilisateur($droituti) {
-		$requete = 'DELETE FROM UtilisateurDroit WHERE idUti = ? AND idDroit = ?';
-		return $this->execQuery($requete,array($droituti->getIdUti(),$droituti->getIdDroit()),'UtilisateurDroit');
-	}
-
-
-	/** Supprimer les droits d'un utilisateur. */
-	public function getDroits() {
-		$requete = 'SELECT * FROM Droit';
-		return $this->execQuery($requete,null,'Droit');
-	}
-
-
-
-
-	/*** METHODES POUR LES PRODUITS ****/
-
-	/** Récuperer les produits. Trier par categorie. */
-	public function getProduits() {
-		$requete = 'SELECT * FROM Produit ORDER BY categorie';
-		return $this->execQuery($requete,null,'Produit');
-	}
-
-	/** Récuperer les produits par rapport catégorie. */
-	public function getProduitsParCateg($categorie) {
-		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
-		return $this->execQuery($requete,array($categorie),'Produit');
-	}
-
-	/** Modifier les données d'un produit. */
-	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		return $this->execQuery($requete,array($produits->getLibProd(),floatval($produits->getPrixUni()),$produits->getCategorie(),$produits->getIdProd()),'Produit');
-	}
-
-	/** Ajouter un produit. */
-	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
-		return $this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
-	}
-
-	/** Supprimer un produit. */
+	/** Supprimer un produit.
+	 * @param Produit $produits le produit à supprimer
+	 */
 	public function suppProduit($produits) {
 		$requete = 'DELETE FROM Produit WHERE idProd = ?';
-		return $this->execQuery($requete,array($produits->getIdProd()),'Produit');
-	}
-
-
-
-	/*** METHODES POUR LES CLIENTS ****/
-
-	/** Récuperer les clients. */
-	public function getClients() {
-		$requete = 'SELECT * FROM Client';
-		return $this->execQuery($requete,null,'Client');
-	}
-
-	/** Récuperer le client d'un nom de club. */
-	public function getClient($client) {
-		$requete = 'SELECT * FROM Client WHERE nomClub = ? AND idCli != ?';
-		return $this->execQuery($requete,array($client->getNomClub(),$client->getIdCli()),'Client');
-	}
-
-	/** Récuperer les clients présents. */
-	public function getClientsPresent($client) {
-		$requete = 'SELECT * FROM Client WHERE present = 1';
-		return $this->execQuery($requete,null,'Client');
-	}
-
-	/** Modifier les données d'un client. */
-	public function updateClient($client) {
-
-
-		$existingClient = $this->getClient($client);
-		if ($existingClient) {
-			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
-		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
-	}
-
-	/** Ajouter un client. */
-	public function insertClient($client) {
-
-		$existingClient = $this->getClient($client);
-		if ($existingClient) {
-			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
-	}
-
-	/** Supprimer un client. */
-	public function suppClient($client) {
-		$requete = 'DELETE FROM Client WHERE idCli = ?';
-		return $this->execQuery($requete,array($client->getIdCli()),'Client');
-	}
-
-
-
-	/*** METHODES POUR LES TICKETS ****/
-
-	/** Récuperer les tickets/commande d'un client. */
-	public function getTicketClient($ticket) {
-		$requete = 'SELECT * FROM Ticket WHERE idCli = ?';
-		return $this->execQuery($requete,array($ticket->getIdCli()),'Ticket');
-	}
-
-	/** Modifier la quantité et le prix total d'un des tickets/commande */
-	public function updateTicket($ticket) {
-		$requete = 'UPDATE Ticket SET qa = ?, prixTot = ? WHERE idCli = ? AND idProd = ?';
-		return $this->execQuery($requete,array($ticket->getQa(),floatval($ticket->getPrixTot()),$ticket->getIdCli(),$ticket->getIdProd()),'Ticket');
-	}
-
-	/** Ajouter un ticket/commande. */
-	public function insertTicket($ticket) {
-		$requete = 'INSERT INTO Ticket VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete,array($ticket->getIdProd(),$ticket->getIdCli(),$ticket->getQa(),floatval($ticket->getPrixTot())),'Ticket');
-	}
-
-	/** Supprimer un ticket/commande. */
-	public function suppTicket($ticket) {
-		$requete = 'DELETE FROM Ticket WHERE idCli = ?';
-		return $this->execQuery($requete,array($ticket->getIdCli()),'Ticket');
-	}
-
-
-
-	/*** METHODES POUR L'HISTORIQUE ****/
-
-	/** Récuperer l'historique des fiches de securité. */
-	public function getHistoriqueSecu() {
-		$requete = 'SELECT * FROM Historique WHERE type = \'SECU\'';
-		return $this->execQuery($requete,null,'Historique');
-	}
-
-	/** Récuperer l'historique des ticket. */
-	public function getHistoriqueTicket() {
-		$requete = 'SELECT * FROM Historique WHERE type = \'TICKET\'';
-		return $this->execQuery($requete,null,'Historique');
-	}
-
-	/** Récuperer l'historique des tickets d'un client. */
-	public function getHistoriqueTicketClient($client) {
-		$requete = 'SELECT * FROM Historique WHERE type = \'TICKET\' AND idCli = ?';
-		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
-	}
-
-	/** Récuperer l'historique des fiche de sécurité d'un client. */
-	public function getHistoriqueSecuClient($client) {
-		$requete = 'SELECT * FROM Historique WHERE type = \'SECU\' AND idCli = ?';
-		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
-	}
-
-	/** Inserer un fichier dans l'historique. */
-	public function insertHistorique($historique) {
-		$requete = 'INSERT INTO Historique (chemin, type, idCli) VALUES (?, ?, ?)';
-		return $this->execQuery($requete,array($historique->getChemin(),$historique->getType(),$historique->getIdCli()),'Historique');
-	}
-
-	/** Inserer un fichier dans l'historique. */
-	public function suppHistorique($historique) {
-		$requete = 'DELETE FROM Historique WHERE idHis = ?';
-		return $this->execQuery($requete,array($historique->getIdHis()),'Historique');
+		$this->execQuery($requete,array($produits->getIdProd()),'Produit');
 	}
 
 } //fin classe DB
