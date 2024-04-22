@@ -1,7 +1,7 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include 'Produit.inc.php';
+include_once 'Produit.inc.php';
 
 class DB {
 
