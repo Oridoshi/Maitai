@@ -1,16 +1,24 @@
-<h1>Formulaire de Création de produits</h1><br><br><br>
-<form action="../src/php/other/CreationProduit.php" method="POST">
-	<label for="idProd">idProd :</label>
-	<input type="text" id="idProd" name="idProd" required><br><br>
-	
-	<label for="libProd">libProd :</label>
-	<input type="libProd" id="libProd" name="libProd" required><br><br>
+<?php
+include_once '../src/php/inc/Produit.inc.php';
 
-	<label for="prixUni">prixUni :</label>
-	<input type="prixUni" id="prixUni" name="prixUni"><br><br>
+//Création produit
+$produit = new Produit();
+$produit->setIdProd(1);                //Vous pouvez mettre n'importe quel nombre entier qui n'est pas déjà utilisé
+$produit->setLibProd("Produit 1");     //Vous pouvez mettre n'importe quel libellé entre ""
+$produit->setPrixUni(10.0);            //Vous pouvez mettre n'importe quel nombre décimal
+$produit->setCategorie("Catégorie 1"); //Vous pouvez mettre n'importe quelle catégorie entre ""
 
-	<label for="categorie">categorie :</label>
-	<input type="categorie" id="categorie" name="categorie" required><br><br>
-	
-	<input type="submit" value="Créa produits">
-</form>
+//Affichage des informations du produit
+echo "Id du produit : " . $produit->getIdProd() . "<br>";
+echo "Libellé du produit : " . $produit->getLibProd() . "<br>";
+echo "Prix unitaire du produit : " . $produit->getPrixUni() . "<br>";
+echo "Catégorie du produit : " . $produit->getCategorie() . "<br>";
+
+//Création d'un autre produit avec prix unitaire null
+$produit2 = new Produit(2, "Produit 2", null, "Catégorie 2");
+
+//Affichage des informations du produit
+echo "Id du produit : " . $produit2->getIdProd() . "<br>";
+echo "Libellé du produit : " . $produit2->getLibProd() . "<br>";
+echo "Prix unitaire du produit : " . $produit2->getPrixUni() . "<br>";
+echo "Catégorie du produit : " . $produit2->getCategorie() . "<br>";
