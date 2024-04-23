@@ -161,38 +161,16 @@ class DB {
 
 	
 	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
-	public function insertUtilisateur($utilisateur) {
-		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->loginEstEnBase($utilisateur);
-		if ($existingUser) {
-			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		// Vérifier si l'email existe déjà
-		$existingUser = $this->emailEstEnBase($utilisateur);
-		if ($existingUser) {
-			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-		
+	public function insertUtilisateur($utilisateur) {		
 		// Insérer l'utilisateur s'il n'existe pas déjà
 		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
-		$this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
-		return true;
+		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
 	}
 
 	/** Ajouter un UtilisateurDroit si l'utilisateur n'a pas déjà de droit */
 	public function insertUtilisateurDroit($idUti, $droit) {
-		$requete = 'SELECT * FROM UtilisateurDroit WHERE idUti = ?';
-		$existingUser = $this->execQuery($requete, array($idUti), 'UtilisateurDroit');
-		if ($existingUser) {
-			echo "L'utilisateur a déjà un droit. <br>";
-			return false; // Sortir de la fonction si l'utilisateur a déjà un droit
-		}
-
 		$requete = 'INSERT INTO UtilisateurDroit (idUti, idDroit) VALUES (?, ?)';
-		$this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
-		return true;
+		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
+		
 	}
 } //fin classe DB

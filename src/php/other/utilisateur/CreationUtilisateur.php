@@ -17,17 +17,8 @@ $utilisateur->setEmail($email);
 $utilisateur->setActif($actif);
 
 // insertion de l'utilisateur dans la base de données
-$valide = $pdo->insertUtilisateur($utilisateur);
+$pdo->insertUtilisateur($utilisateur);
 
-if($valide == false) {
-    echo "Erreur lors de la création de l'utilisateur";
-    return;
-}
 $uti = $pdo->getUtilisateur($login);
 
-$valide = $pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
-
-if($valide == false) {
-    echo "Erreur lors de la création du droit de l'utilisateur";
-    return;
-}
+$pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
