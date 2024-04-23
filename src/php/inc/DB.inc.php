@@ -1,13 +1,7 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include 'Client.inc.php';
-include 'Droit.inc.php';
-include 'Historique.inc.php';
-include 'Produit.inc.php';
-include 'Ticket.inc.php';
-include 'Utilisateur.inc.php';
-include 'UtilisateurDroit.inc.php';
+include_once 'Client.inc.php';
 
 class DB {
 
