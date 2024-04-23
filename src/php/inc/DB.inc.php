@@ -164,18 +164,6 @@ class DB {
 		return $this->execQuery($requete,array($login),'Utilisateur')[0];
 	}
 
-	/** retourne vrai si un utilisateur avec le même login existe déjà dans la base */
-	public function loginEstEnBase($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getLogin(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	/** retourne vrai si un utilisateur avec le même email existe déjà dans la base */
-	public function emailEstEnBase($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE email = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getEmail(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
 	/** Modifier les données d'un utilisateur. */
 	public function updateUtilisateur($utilisateur) {
 		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
@@ -184,7 +172,7 @@ class DB {
 
 	public function updateUtilisateurDroit($droituti) {
 		$this->suppDroitUtilisateur($droituti->getIdUti());
-		$this->insertDroitUtilisateur($droituti);
+		$this->insertUtilisateurDroit($droituti->getIdUti(), $droituti->getIdDroit());
 	}
 
 
@@ -192,6 +180,12 @@ class DB {
 	public function suppDroitUtilisateur($iduti) {
 		$requete = 'DELETE FROM UtilisateurDroit WHERE idUti = ?';
 		return $this->execQuery($requete,array($iduti),'UtilisateurDroit');
+	}
+
+	/** Supprimer un utilisateur. */
+	public function suppUtilisateur($iduti) {
+		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
+		return $this->execQuery($requete,array($iduti),'Utilisateur');
 	}
 	
 	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
