@@ -140,6 +140,12 @@ class DB {
 
 	/*** METHODES POUR LES UTILISATEURS ****/
 
+	/** Obtenir un utilisateur à partir de son login */
+	public function getUtilisateur($login) {
+		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
+		return $this->execQuery($requete,array($login),'Utilisateur');
+	}
+
 	/** Modifier les données d'un utilisateur. */
 	public function updateUtilisateur($utilisateur) {
 		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
