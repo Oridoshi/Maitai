@@ -61,7 +61,7 @@ public function setCategorie(string $categorie): void
 ```
 Définit la catégorie du produit.
 
-## Méthode BD
+## Méthodes BD
 ```php
 /*** METHODES POUR LES PRODUITS ***/
 
@@ -107,6 +107,111 @@ public function suppProduit($produits) {
   $this->execQuery($requete,array($produits->getIdProd()),'Produit');
 }
 ```
+## Class utilisable via fetch en JS
 
+### CreationProduit.php
+```php
+<?php
+header('Access-Control-Allow-Origin: *');
+include_once '../../inc/DB.inc.php';
+
+/**
+ * Crée un nouveau produit
+ */
+$newProd = new Produit();
+$newProd->setIdProd($_POST['idProd']);
+$newProd->setLibProd($_POST['libProd']);
+
+if($_POST['prixUni'] != ""){
+    $newProd->setPrixUni($_POST['prixUni']);
+}
+
+$newProd->setCategorie($_POST['categorie']);
+
+/**
+ * Insère le produit dans la base de données
+ */
+DB::getInstance()->insertProduit($newProd);
+```
+
+### GetProduit.php
+```php
+<?php
+header('Access-Control-Allow-Origin: *');
+include_once '../../inc/DB.inc.php';
+
+/**
+ * Récupère les produits de la base de donnée en fonction de la catégorie si une catégorie est passée en paramètre
+ */
+if(isset($_POST['categ']) && $_POST['categ'] != "")
+{
+	$prods=DB::getInstance()->getProduitsParCateg($_POST['categ']);
+}
+/**
+ * Récupère tout les produit de la base de donnée trié par catégorie
+ */
+else
+{
+	$prods = DB::getInstance()->getProduits();
+}
+
+/**
+ * Retourne les produits récupéré au format JSON
+ */
+echo json_encode($prods);
+```
+
+### ModificationProduit.php
+```php
+<?php
+header('Access-Control-Allow-Origin: *');
+include_once '../../inc/DB.inc.php';
+
+/**
+ * Vérifie si les données POST sont bien définies
+ */
+if(!isset($_POST['idProd']) || !isset($_POST['libProd']) || !isset($_POST['prixUni']) || !isset($_POST['categorie'])) exit;
+
+/**
+ * Crée un nouveau produit avec les données POST
+ */
+$Prod = new Produit();
+$Prod->setIdProd($_POST['idProd']);
+$Prod->setLibProd($_POST['libProd']);
+if($_POST['prixUni'] != ""){
+    $Prod->setPrixUni($_POST['prixUni']);
+} 
+
+$Prod->setCategorie($_POST['categorie']);
+
+/**
+ * Modifie le produit avec le même ID dans la base de données
+ */
+DB::getInstance()->updateProduit($Prod);
+```
+
+### SuppressionProduit.php
+```php
+<?php
+header('Access-Control-Allow-Origin: *');
+include_once '../../inc/DB.inc.php';
+
+/**
+ * Vérifie si les données POST sont bien définies
+ */
+if(!isset($_POST['idProd'])) exit;
+
+/**
+ * Crée un nouveau produit avec les données POST
+ * la méthode suppProduit() de DB.inc.php attend un objet de type Produit et n'utilise que l'id du produit
+ */
+$suppProd = new Produit();
+$suppProd->setIdProd($_POST['idProd']);
+
+/**
+ * Supprime le produit avec les même donnés dans la DB
+ */
+DB::getInstance()->suppProduit($suppProd);
+```
 # Dev
 - [**Tom Dunet**    ](https://github.com/Oridoshi)
