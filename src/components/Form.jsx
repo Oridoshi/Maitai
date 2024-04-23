@@ -18,6 +18,7 @@ const Form = ({ etat }) =>
 {
 	//stock l'etat et recharge le menu quand on change d'etat
 	const [formEtat, setFormEtat] = useState(etat);
+	let logUser = "";//stocke le login du user pour le mettre en session storage
 
 	//recharge le form avec le nouvel etat
 	const changeEtat = (nouvelEtat) =>
@@ -69,6 +70,7 @@ const Log = ({ changeEtat }) =>
 		//test avec la bd si le login existe bien
 		if (logExist())
 		{
+			logUser = login;
 			changeEtat('mdp');//passe sur la page de mdp
 		}
 		else
@@ -156,6 +158,7 @@ const Mdp = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire quand on a un chargement de page
 		if (verifMdp())
 		{
+			sessionStorage.setItem('login', logUser);
 			window.location.href = "/";//lien de l'accueil
 		}
 		else

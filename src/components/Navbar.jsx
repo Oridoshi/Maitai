@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { useState } from 'react';
 import { Link } from "react-router-dom";
 
 //import des pages pour les routes
@@ -8,13 +9,17 @@ import FicheSecu from "../pages/FicheSecu";
 import Produits from "../pages/Produits";
 import Tickets from "../pages/Tickets";
 import Utilisateurs from "../pages/Utilisateurs";
+import Form from "../components/Form";
 
 import '../style/nav.css';
-
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 function Navbar({ role })
 {
 	let navLinks = [];
+	let connect = false;
+	const [showModal, setShowModal] = useState(false);
 
 	switch (role)
 	{
@@ -25,6 +30,7 @@ function Navbar({ role })
 		default: navLinks = ['Fiche de sécurité'];
 			break;
 	}
+
 	const getUrl = (link) =>
 	{
 		return '/' + link;
@@ -36,6 +42,25 @@ function Navbar({ role })
 			<Link key={ index } className="nav-link elt" to={ getUrl(link).toLowerCase().replace(/ /g, '-') }> { link } </Link>
 		))
 	}
+
+	const getConnexion = () =>
+	{
+		if (connect)
+		{
+			connect = !connect;
+			return <Link className="navbar-brand btnLogout" to="/"></Link>
+		}
+		else
+		{
+			connect = !connect;
+			return <Button className="navbar-brand btnLog" onClick={ toggleModal } > Connexion </Button>
+		}
+	}
+
+	const toggleModal = () =>
+	{
+		setShowModal(!showModal);
+	};
 
 	return (
 		<div className="navbar">
@@ -49,7 +74,7 @@ function Navbar({ role })
 					<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 						{ getItem() }
 					</div>
-					<Link className="navbar-brand btnLogout" to="/"></Link>
+					{ getConnexion() }
 				</div>
 			</nav>
 			<Routes>
@@ -60,6 +85,11 @@ function Navbar({ role })
 				<Route path="/tickets" element={ <Tickets /> } />
 				<Route path="/fiche-de-sécurité" element={ <FicheSecu /> } />
 			</Routes>
+			<Modal className ="popup d-flex justify-content-center align-items-center" show={ showModal } onHide={ toggleModal }>
+				<Modal.Body>
+					<Form />
+				</Modal.Body>
+			</Modal>
 		</div>
 	);
 }

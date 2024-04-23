@@ -64,3 +64,20 @@
 .btnLogout:hover{
 	background-color: #DD6565;
 }
+.btnLog{
+	background-color: #005C8F;
+	border-color: transparent;
+	color: #FFFFFF;
+}
+.btnLog:hover,
+.btnLog:focus,
+.btnLog:active{
+	background-color: #006DAA !important;
+	border-color: transparent !important;
+	color: #FFFFFF !important;
+}
+
+.popup .modal-content{
+	background-color: transparent;
+	border-color: transparent;
+}
