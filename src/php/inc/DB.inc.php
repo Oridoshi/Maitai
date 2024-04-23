@@ -178,7 +178,8 @@ class DB {
 		
 		// Insérer l'utilisateur s'il n'existe pas déjà
 		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
+		$this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
+		return true;
 	}
 
 	/** Ajouter un UtilisateurDroit si l'utilisateur n'a pas déjà de droit */
@@ -190,7 +191,8 @@ class DB {
 			return false; // Sortir de la fonction si l'utilisateur a déjà un droit
 		}
 
-		$requete = 'INSERT INTO UtilisateurDroit (idUti, droit) VALUES (?, ?)';
-		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
+		$requete = 'INSERT INTO UtilisateurDroit (idUti, idDroit) VALUES (?, ?)';
+		$this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
+		return true;
 	}
 } //fin classe DB
