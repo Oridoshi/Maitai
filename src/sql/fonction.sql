@@ -16,6 +16,8 @@ END; //
 
 DROP TRIGGER IF EXISTS verifDesactivation_update;//
 DROP TRIGGER IF EXISTS verifDesactivation_delete;//
+DROP TRIGGER IF EXISTS verifRetrograde_update;//
+DROP TRIGGER IF EXISTS verifRetrograde_delete;//
 
 
 CREATE TRIGGER verifDesactivation_update BEFORE UPDATE ON Utilisateur FOR EACH ROW
@@ -25,8 +27,21 @@ BEGIN
     END IF;
 END //
 
-
 CREATE TRIGGER verifDesactivation_delete BEFORE DELETE ON Utilisateur FOR EACH ROW
+BEGIN
+    IF isLastActiveAdmin(OLD.idUti) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de supprimer le dernier compte admin actif !';
+    END IF;
+END //
+
+CREATE TRIGGER verifRetrograde_update BEFORE UPDATE ON UtilisateurDroit FOR EACH ROW
+BEGIN
+    IF isLastActiveAdmin(OLD.idUti) THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de désactiver le dernier compte admin actif !';
+    END IF;
+END //
+
+CREATE TRIGGER verifRetrograde_delete BEFORE DELETE ON UtilisateurDroit FOR EACH ROW
 BEGIN
     IF isLastActiveAdmin(OLD.idUti) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de supprimer le dernier compte admin actif !';
