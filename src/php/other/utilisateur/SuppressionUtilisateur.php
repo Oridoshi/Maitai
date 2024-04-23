@@ -1,6 +1,6 @@
 <?php
 
-include_once "../inc/DB.inc.php";
+include_once "../../inc/DB.inc.php";
 
 //vérification de la présence des données POST
 if (!isset($_POST['login'])) exit;

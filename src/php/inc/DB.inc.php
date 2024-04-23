@@ -1,11 +1,6 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include 'Client.inc.php';
-include 'Droit.inc.php';
-include 'Historique.inc.php';
-include 'Produit.inc.php';
-include 'Ticket.inc.php';
 include 'Utilisateur.inc.php';
 include 'UtilisateurDroit.inc.php';
 
@@ -143,13 +138,13 @@ class DB {
 	/** Récupérer l'utilisateur avec le login passer. */
 	public function getUtilisateur($login) {
 		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
-		return $this->execQuery($requete,$login,'Utilisateur');
+		return $this->execQuery($requete,array($login),'Utilisateur');
 	}
 
 	/** Supprimer un utilisateur. */
 	public function suppUtilisateur($idUti) {
 		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
-		return $this->execQuery($requete,$idUti,'Utilisateur');
+		return $this->execQuery($requete,array($idUti),'Utilisateur');
 	}
 
 
