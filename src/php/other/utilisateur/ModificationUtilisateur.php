@@ -3,26 +3,13 @@ header('Access-Control-Allow-Origin: *');
 
 include_once '../inc/DB.inc.php';
 
-// initialisations des variables à null
-$prevLogin = null;
-$login = null;
-$mdp = null;
-$email = null;
-$actif = null;
-$iddroit = null;
-
-// récupération des données du formulaire si elles sont renseignées
-if(isset($_POST['prevLogin'])) {$prevLogin = $_POST['prevLogin'];}
-
-if(isset($_POST['login'])) {$login = $_POST['login'];}
-
-if(isset($_POST['mdp'])) {$mdp = $_POST['mdp'];}
-
-if(isset($_POST['email'])) {$email = $_POST['email'];}
-
-if(isset($_POST['actif'])) {$actif = $_POST['actif'];}
-
-if(isset($_POST['iddroit'])) {$iddroit = $_POST['iddroit'];}
+// initialisations des variables
+$prevLogin = $_POST['prevLogin'];
+$login = $_POST['login'];
+$mdp = $_POST['mdp'];
+$email = $_POST['email'];
+$actif = $_POST['actif'];
+$iddroit = $_POST['iddroit'];
 
 
 $pdo = DB::getInstance();
@@ -31,14 +18,14 @@ $pdo = DB::getInstance();
 $utilisateur = $pdo->getUtilisateur($prevLogin);
 
 // modification des données de l'utilisateur si non null
-if($login != null)
+if($login != "")
     $utilisateur->setLogin($login);
-if($mdp != null)
+if($mdp != "")
     $utilisateur->setMdp($mdp);
-if($email != null)
+if($email != "")
     $utilisateur->setEmail($email);
-if($actif != null)
-    $utilisateur->setActif($actif);
+
+$utilisateur->setActif($actif);
 
 // mise à jour de l'utilisateur
 $pdo->updateUtilisateur($utilisateur);
