@@ -1,10 +1,16 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include_once 'Utilisateur.inc.php';
-include_once 'UtilisateurDroit.inc.php';
+include 'Client.inc.php';
+include 'Droit.inc.php';
+include 'Historique.inc.php';
+include 'Produit.inc.php';
+include 'Ticket.inc.php';
+include 'Utilisateur.inc.php';
+include 'UtilisateurDroit.inc.php';
 
 class DB {
+
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
@@ -134,48 +140,12 @@ class DB {
 
 	/*** METHODES POUR LES UTILISATEURS ****/
 
-	/** retourne l'utilisateur avec le login passer en paramètres */
-	public function getUtilisateur($login) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
-		return $this->execQuery($requete,$login,'Utilisateur')[0];
-	}
-
-	/** retourne vrai si le login est déjà en base. */
-	public function loginEstEnBase($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getLogin(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
-	/** retourne vrai si l'email est déjà en base. */
-	public function emailEstEnBase($utilisateur) {
-		$requete = 'SELECT * FROM Utilisateur WHERE email = ? AND idUti != ?';
-		return $this->execQuery($requete,array($utilisateur->getEmail(), $utilisateur->getIdUti()),'Utilisateur');
-	}
-
 	/** Modifier les données d'un utilisateur. */
 	public function updateUtilisateur($utilisateur) {
-
-		$existingUser = $this->loginEstEnBase($utilisateur);
-		if ($existingUser) {
-			echo "Le nom d'utilisateur '{$utilisateur->getLogin()}' existe déjà. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		// Vérifier si le nom d'utilisateur existe déjà
-		$existingUser = $this->emailEstEnBase($utilisateur);
-		if ($existingUser) {
-			echo "L'email '{$utilisateur->getEmail()}' est déjà utiliser. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-		
-
 		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
-
-		echo 'UPDATE Utilisateur SET login = ' . $utilisateur->getLogin() . ', mdp = ?, email = ?, actif = ? WHERE idUti = ' . $utilisateur->getIdUti();
-		return $this->execQuery($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()),'Utilisateur');
+		return $this->execMaj($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()));
 	}
 
-	/** Modifier les droits d'un utilisateur. */
 	public function updateUtilisateurDroit($droituti) {
 		$this->suppDroitUtilisateur($droituti->getIdUti());
 		$this->insertDroitUtilisateur($droituti);
