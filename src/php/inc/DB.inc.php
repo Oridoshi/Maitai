@@ -1,7 +1,7 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include 'Produit.inc.php';
+include_once 'Produit.inc.php';
 
 class DB {
 
@@ -166,6 +166,14 @@ class DB {
 	public function insertProduit($produits) {
 		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
 		$this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
+	}
+
+	/** Supprimer un produit.
+	 * @param Produit $produits le produit à supprimer
+	 */
+	public function suppProduit($produits) {
+		$requete = 'DELETE FROM Produit WHERE idProd = ?';
+		$this->execQuery($requete,array($produits->getIdProd()),'Produit');
 	}
 
 } //fin classe DB
