@@ -187,11 +187,6 @@ class DB {
 		$this->insertDroitUtilisateur($droituti);
 	}
 
-	/** Ajouter les droits d'un utilisateur. */
-	public function insertDroitUtilisateur($droituti) {
-		$requete = 'INSERT INTO UtilisateurDroit VALUES (?,?)';
-		return $this->execQuery($requete,array($droituti->getIdUti(),$droituti->getIdDroit()),'UtilisateurDroit');
-	}
 
 	/** Supprimer les droits d'un utilisateur. */
 	public function suppDroitUtilisateur($iduti) {
