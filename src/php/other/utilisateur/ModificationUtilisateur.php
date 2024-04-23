@@ -1,13 +1,13 @@
 <?php
 header('Access-Control-Allow-Origin: *');
-include_once '../inc/DB.inc.php';
+include_once '../../inc/DB.inc.php';
 
 // initialisations des variables
 $prevLogin = $_POST['prevLogin'];
 $login = $_POST['login'];
 $mdp = $_POST['mdp'];
 $email = $_POST['email'];
-$actif = $_POST['actif'];
+$actif = isset($_POST['actif'])?true:false;
 $iddroit = $_POST['iddroit'];
 
 

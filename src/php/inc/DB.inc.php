@@ -1,13 +1,8 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include 'Client.inc.php';
-include 'Droit.inc.php';
-include 'Historique.inc.php';
-include 'Produit.inc.php';
-include 'Ticket.inc.php';
-include 'Utilisateur.inc.php';
-include 'UtilisateurDroit.inc.php';
+include_once 'Utilisateur.inc.php';
+include_once 'UtilisateurDroit.inc.php';
 
 class DB {
 
@@ -143,7 +138,7 @@ class DB {
 	/** Obtenir un utilisateur à partir de son login */
 	public function getUtilisateur($login) {
 		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
-		return $this->execQuery($requete,array($login),'Utilisateur');
+		return $this->execQuery($requete,array($login),'Utilisateur')[0];
 	}
 
 	/** Modifier les données d'un utilisateur. */
