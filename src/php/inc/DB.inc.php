@@ -135,6 +135,18 @@ class DB {
 
 	/*** METHODES POUR LES UTILISATEURS ****/
 
+	/** retourne un utilisateur à partir de son login */
+	public function getUtilisateur($login) {
+		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
+		$tab = $this->execQuery($requete,array($login),'Utilisateur');
+		if (count($tab) == 0) {
+			return null;
+		}
+		else {
+			return $tab[0];
+		}
+	}
+
 	/** retourne vrai si un utilisateur avec le même login existe déjà dans la base */
 	public function loginEstEnBase($utilisateur) {
 		$requete = 'SELECT * FROM Utilisateur WHERE login = ? AND idUti != ?';
@@ -167,5 +179,18 @@ class DB {
 		// Insérer l'utilisateur s'il n'existe pas déjà
 		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
 		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
+	}
+
+	/** Ajouter un UtilisateurDroit si l'utilisateur n'a pas déjà de droit */
+	public function insertUtilisateurDroit($idUti, $droit) {
+		$requete = 'SELECT * FROM UtilisateurDroit WHERE idUti = ?';
+		$existingUser = $this->execQuery($requete, array($idUti), 'UtilisateurDroit');
+		if ($existingUser) {
+			echo "L'utilisateur a déjà un droit. <br>";
+			return false; // Sortir de la fonction si l'utilisateur a déjà un droit
+		}
+
+		$requete = 'INSERT INTO UtilisateurDroit (idUti, droit) VALUES (?, ?)';
+		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
 	}
 } //fin classe DB
