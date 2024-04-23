@@ -17,10 +17,11 @@ import Modal from 'react-bootstrap/Modal';
 
 function Navbar({ role })
 {
+	//stocke les éléments de la navbar
 	let navLinks = [];
-	let connect = false;
 	const [showModal, setShowModal] = useState(false);
 
+	//en fonction du paramètre on charge plus ou moins de role
 	switch (role)
 	{
 		case 'admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
@@ -31,37 +32,51 @@ function Navbar({ role })
 			break;
 	}
 
-	const getUrl = (link) =>
+	//à chaque on fois qu'on appel la nav on regarde si le user est connecté en fonction de ça on aura un bouton connexion ou deconnexion
+	const getConnexion = () =>
 	{
-		return '/' + link;
+		console.log(sessionStorage.getItem('login'));
+		if (sessionStorage.getItem('login') !== null)
+		{
+			return (
+				<a href="/" onClick={ deconnect }>
+					<Button className="navbar-brand btnLogout"></Button>
+				</a>
+			);
+		} else
+		{
+			return (
+				<Button className="navbar-brand btnLog" onClick={ toggleModal }>
+					Connexion
+				</Button>
+			);
+		}
+	}
+	//retire l'utilisateur de la session quand on appuye sur deconnecter
+	const deconnect = () =>
+	{
+		sessionStorage.removeItem('login'); // Supprimer l'élément 'login' du sessionStorage
+	}
+	//affiche ou non le popup de login
+	const toggleModal = () =>
+	{
+		setShowModal(!showModal);
 	};
 
+	//retourne le code de chaque éléments de la nav
 	const getItem = () =>
 	{
 		return navLinks.map((link, index) => (
 			<Link key={ index } className="nav-link elt" to={ getUrl(link).toLowerCase().replace(/ /g, '-') }> { link } </Link>
 		))
 	}
-
-	const getConnexion = () =>
+	//retourne l'url de l'elements passé en paramètre pour la redirection
+	const getUrl = (link) =>
 	{
-		if (connect)
-		{
-			connect = !connect;
-			return <Link className="navbar-brand btnLogout" to="/"></Link>
-		}
-		else
-		{
-			connect = !connect;
-			return <Button className="navbar-brand btnLog" onClick={ toggleModal } > Connexion </Button>
-		}
-	}
-
-	const toggleModal = () =>
-	{
-		setShowModal(!showModal);
+		return '/' + link;
 	};
 
+	//code la navabar
 	return (
 		<div className="navbar">
 			<nav className="navbar navbar-expand-lg nav">
@@ -85,7 +100,7 @@ function Navbar({ role })
 				<Route path="/tickets" element={ <Tickets /> } />
 				<Route path="/fiche-de-sécurité" element={ <FicheSecu /> } />
 			</Routes>
-			<Modal className ="popup d-flex justify-content-center align-items-center" show={ showModal } onHide={ toggleModal }>
+			<Modal className="popup d-flex justify-content-center align-items-center" show={ showModal } onHide={ toggleModal }>
 				<Modal.Body>
 					<Form />
 				</Modal.Body>
