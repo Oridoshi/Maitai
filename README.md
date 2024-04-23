@@ -3,13 +3,9 @@
 Projet de Stage de 2eme année de BUT Informatique.
 
 
-## Quel est cette branche ?
-
-- **Création des tables**                   : Le fichier create.sql dans le dossier src/sql/ permet de créer la base de données. Nous utilisons MYSQL.
-- **Création des triggers**                 : Le fichier fonction.sql dans le dossier src/sql/ permet de créer des triggers sur cette base. Nous utilisons MYSQL.
-- **Insertions de données dans les tables** : Le fichier insert.sql dans le dossier src/sql/ permet d'inserer des données test dans cette base. Nous utilisons MYSQL.
-
-
+## Description
+L'objectif de cette branche est de pouvoir modifier les informations d'un utilisateur. Pour cela le fichier modificationUtilisateur.php récupère les informations à envoyé en POST sous 'login', 'mdp', 'email', 'actif' et 'iddroit'.
+Si les informations sont renseigné alors elles sont mise à jours dans la base de donnée. Ici je ne vérifie pas que la demande de modification viens d'un compte administrateur. Je pars du principe que seul un administrateur peut accéder à cette page.
 
 ## Developpeur
 - [**Hugo Vicente** ]

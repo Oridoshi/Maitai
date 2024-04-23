@@ -1,19 +1,23 @@
-<form action="../src/php/other/utilisateur/creationUtilisateur.php" method="POST">
-	<label for="login">Login :</label>
-	<input type="text" id="login" name="login" required><br><br>
-	
-	<label for="email">Email :</label>
-	<input type="email" id="email" name="email" required><br><br>
+<?php
 
-    <label for="actif">Actif :</label>
-    <input type="checkbox" id="actif" name="actif" checked><br><br>
+echo "<form action='../src/php/other/utilisateur/ModificationUtilisateur.php' method='post'>";
+echo "<label for='prevLogin'>Ancien login</label>";
+echo "<input type='text' id='prevLogin' name='prevLogin' required><br>";
 
-    <label for="droit">Droit :</label>
-    <select id="droit" name="droit">
-        <option value="0">Client</option>
-        <option value="1">Maitai</option>
-        <option value="2">Administrateur</option>
-    </select><br><br>
-	
-	<input type="submit" value="Créer utilisateur">
-</form>
+echo "<label for='login'>Nouveau login</label>";
+echo "<input type='text' id='login' name='login'><br>";
+
+echo "<label for='mdp'>Nouveau mot de passe</label>";
+echo "<input type='text' id='mdp' name='mdp'><br>";
+
+echo "<label for='email'>Nouvel email</label>";
+echo "<input type='text' id='email' name='email'><br>";
+
+echo "<label for='actif'>Actif</label>";
+echo "<input type='checkbox' id='actif' name='actif'><br>";
+
+echo "<label for='iddroit'>ID Droit</label>";
+echo "<input type='text' id='iddroit' name='iddroit'><br>";
+
+echo "<input type='submit' value='Modifier l'utilisateur'>";
+echo "</form>";
