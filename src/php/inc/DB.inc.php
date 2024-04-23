@@ -159,7 +159,6 @@ class DB {
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** Obtenir un utilisateur à partir de son login */
-	/** retourne un utilisateur à partir de son login */
 	public function getUtilisateur($login) {
 		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
 		return $this->execQuery($requete,array($login),'Utilisateur')[0];
