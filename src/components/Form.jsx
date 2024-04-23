@@ -73,7 +73,7 @@ const Log = ({ changeEtat }) =>
 			changeEtat('mdp');//passe sur la page de mdp
 		}
 		else
-		{lundi :
+		{
 			setLogin("");//vide le champs de texte
 			setIsValid(false);	//change le style
 			document.getElementById("btnSubmit").disabled = true;
@@ -157,6 +157,7 @@ const Mdp = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire quand on a un chargement de page
 		if (verifMdp())
 		{
+			sessionStorage.setItem('mdpValid',"true");
 			window.location.href = "/";//lien de l'accueil
 		}
 		else
@@ -240,6 +241,7 @@ const Creer = ({ changeEtat }) =>
 		{
 			if (tel.length === 14)
 			{
+				sessionStorage.setItem('login',login);
 				changeEtat('confmdp');
 			}
 		}
@@ -412,6 +414,7 @@ const ConfMdp = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changment de page
 		if (valider())
 		{
+			sessionStorage.setItem('mdpValid',"true");
 			window.location.href = "/";//envoie à la page d'accueil
 		}
 		else

@@ -35,8 +35,7 @@ function Navbar({ role })
 	//à chaque on fois qu'on appel la nav on regarde si le user est connecté en fonction de ça on aura un bouton connexion ou deconnexion
 	const getConnexion = () =>
 	{
-		console.log(sessionStorage.getItem('login'));
-		if (sessionStorage.getItem('login') !== null)
+		if (sessionStorage.getItem('login') !== null && sessionStorage.getItem('mdpValid') === "true")
 		{
 			return (
 				<a href="/" onClick={ deconnect }>
@@ -56,6 +55,7 @@ function Navbar({ role })
 	const deconnect = () =>
 	{
 		sessionStorage.removeItem('login'); // Supprimer l'élément 'login' du sessionStorage
+		sessionStorage.removeItem('mdpValid'); // Supprimer l'élément 'mdpValid' du sessionStorage
 	}
 	//affiche ou non le popup de login
 	const toggleModal = () =>
