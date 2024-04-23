@@ -61,7 +61,52 @@ public function setCategorie(string $categorie): void
 ```
 Définit la catégorie du produit.
 
+## Méthode BD
+```php
+/*** METHODES POUR LES PRODUITS ***/
 
+/** Récuperer les produits. Trier par categorie.
+ * @return array tableau d'objets de la classe Produit
+ */
+public function getProduits() {
+  $requete = 'SELECT * FROM Produit ORDER BY categorie';
+  return $this->execQuery($requete,null,'Produit');
+}
+
+/** Récuperer les produits en fonction de la catégorie.
+ * @param string $categ la catégorie des produits à récupérer
+ * @return array tableau d'objets de la classe Produit
+ */
+public function getProduitsParCateg($categ) {
+  $requete = 'SELECT * FROM Produit WHERE categorie = ?';
+  return $this->execQuery($requete,array($categ),'Produit');
+}
+
+/** Modifier les données d'un produit.
+ * @param Produit $produits le produit à modifier.
+ */
+public function updateProduit($produits) {
+  $requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+  $this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
+}
+
+/**
+ * Créer un produit.
+ * @param Produit $produits le produit à créer.
+ */
+public function insertProduit($produits) {
+  $requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
+  $this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
+}
+
+/** Supprimer un produit.
+ * @param Produit $produits le produit à supprimer
+ */
+public function suppProduit($produits) {
+  $requete = 'DELETE FROM Produit WHERE idProd = ?';
+  $this->execQuery($requete,array($produits->getIdProd()),'Produit');
+}
+```
 
 # Dev
 - [**Tom Dunet**    ](https://github.com/Oridoshi)
