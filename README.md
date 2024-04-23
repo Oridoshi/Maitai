@@ -1,44 +1,67 @@
-# Clonage d'un Repository
+# Classe Produit
 
-Ce guide vous montrera comment cloner un repository à partir de GitHub sur votre machine locale.
+La classe Produit est une représentation d'un produit avec ses attributs tels que l'identifiant, le libellé, le prix unitaire et la catégorie.
 
-## Prérequis
+## Attributs
 
-Avant de commencer, assurez-vous d'avoir Git installé sur votre système. Si ce n'est pas déjà le cas, vous pouvez le télécharger et l'installer à partir de [Git's official website](https://git-scm.com/).
+- **idprod** : *int* - Numéro d'identification du produit.
+- **libprod** : *string* - Libellé du produit.
+- **prixuni** : *float* - Prix unitaire du produit. Peut être null si le prix n'est pas défini.
+- **categorie** : *string* - Catégorie à laquelle le produit appartient.
 
-## Étapes
+## Méthodes
 
-1. Ouvrez votre terminal.
+### Constructeur
 
-2. Allez dans le répertoire où vous souhaitez cloner le repository. Utilisez la commande `cd` pour naviguer dans les dossiers. Dans votre cas tapper la commande :
+```php
+public function __construct(int $idprod = 0, string $libprod = "", ?float $prixuni = null, string $categorie = "")
+```
+Constructeur de la classe Produit. Permet d'initialiser les attributs de l'objet.
 
-    ```bash
-    cd C:/xampp/htdocs
-    ```
+### Getters
+```php
+public function getIdProd(): int
+```
+Retourne l'identifiant du produit.
 
-3. Copiez l'URL du repository que vous souhaitez cloner depuis GitHub. Dans ce cas https://github.com/Oridoshi/Maitai
+```php
+public function getLibProd(): string
+```
+Retourne le libellé du produit.
 
-4. Utilisez la commande `git clone` suivie de l'URL que vous avez copiée pour cloner le repository. Par exemple :
+```php
+public function getPrixUni(): ?float
+```
+Retourne le prix unitaire du produit. Peut être null si le prix n'est pas défini.
 
-    ```bash
-    git clone https://github.com/utilisateur/nom-du-repository.git
-    ```
+```php
+public function getCategorie(): string
+```
+Retourne la catégorie du produit.
 
-    Remplacez `https://github.com/utilisateur/nom-du-repository.git` par l'URL réelle du repository que vous souhaitez cloner.
+### Setters
 
-5. Appuyez sur Entrée. Git va maintenant télécharger tous les fichiers du repository sur votre machine locale.
+```php
+public function setIdProd(int $idprod): void
+```
+Définit l'identifiant du produit.
 
-## Remarques
+```php
+public function setLibProd(string $libprod): void
+```
+Définit le libellé du produit.
 
-- Assurez-vous d'avoir les autorisations nécessaires pour accéder au repository que vous souhaitez cloner.
-- Vous pouvez également cloner un repository en utilisant des clients Git graphiques comme GitHub Desktop ou Sourcetree.
+```php
+public function setPrixUni(?float $prixuni): void
+```
+Définit le prix unitaire du produit.
 
-C'est tout ! Vous avez maintenant cloné un repository GitHub sur votre machine locale.
+```php
+public function setCategorie(string $categorie): void
+```
+Définit la catégorie du produit.
 
 
 
-# Participants
-- [**Sarah Hautot** ](https://github.com/SarahHAUTOT)
-- [**Hugo Vicente** ](https://github.com/VicenteHugo)
+# Dev
 - [**Tom Dunet**    ](https://github.com/Oridoshi)
-- [**Martin Queval**]()
