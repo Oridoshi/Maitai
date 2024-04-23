@@ -1,7 +1,7 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include_once 'Produit.inc.php';
+include 'Produit.inc.php';
 
 class DB {
 
@@ -133,6 +133,23 @@ class DB {
 	*************************************************************************/
 
 	/*** METHODES POUR LES PRODUITS ***/
+
+	/** Récuperer les produits. Trier par categorie.
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduits() {
+		$requete = 'SELECT * FROM Produit ORDER BY categorie';
+		return $this->execQuery($requete,null,'Produit');
+	}
+
+	/** Récuperer les produits en fonction de la catégorie.
+	 * @param string $categ la catégorie des produits à récupérer
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduitsParCateg($categ) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
+		return $this->execQuery($requete,array($categ),'Produit');
+	}
 
 	/** Modifier les données d'un produit.
 	 * @param Produit $produits le produit à modifier.
