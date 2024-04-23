@@ -75,6 +75,11 @@ const Log = ({ changeEtat }) =>
 		{
 			setLogin("");//vide le champs de texte
 			setIsValid(false);	//change le style
+			document.getElementById("btnSubmit").disabled = true;
+			setTimeout(() =>
+			{
+				document.getElementById("btnSubmit").disabled = false;
+			}, 2000)//empêche de faire un grand nombre tantative
 		}
 	};
 
@@ -107,7 +112,7 @@ const Log = ({ changeEtat }) =>
 	//test bd si l'utilisateur existe
 	function logExist()
 	{
-		if(login === "test") return true;
+		if (login === "test") return true;
 		return false;
 	}
 
@@ -125,7 +130,7 @@ const Log = ({ changeEtat }) =>
 					<input required type="text" value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ creerCompte }> Créer un compte </button>
 				</div>
-				<button type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
+				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
 		</div>
 	);
@@ -149,12 +154,19 @@ const Mdp = ({ changeEtat }) =>
 	const envoyer = (event) =>
 	{
 		event.preventDefault();//obligatoire quand on a un chargement de page
-		if(verifMdp()){
+		if (verifMdp())
+		{
 			window.location.href = "/";//lien de l'accueil
 		}
-		else{
+		else
+		{
 			setMdp("");//vide le champs de mot de passe
 			setIsValid(false);//met le style invalide
+			document.getElementById("btnSubmit").disabled = true;
+			setTimeout(() =>
+			{
+				document.getElementById("btnSubmit").disabled = false;
+			}, 2000)//empêche de faire un grand nombre tantative
 		}
 	};
 
@@ -166,8 +178,9 @@ const Mdp = ({ changeEtat }) =>
 	};
 
 	//test si le mot de passe est bien en bado
-	function verifMdp(){
-		if(mdp === "test") return true;
+	function verifMdp()
+	{
+		if (mdp === "test") return true;
 	}
 
 	//classes de style
@@ -180,10 +193,10 @@ const Mdp = ({ changeEtat }) =>
 				<h3 className="titre">Mot de passe</h3>
 				<div className="mb-3">
 					<label htmlFor="exampleInputPassword1" className="form-label label">Mot de passe</label>
-					<input required type="password" value={ mdp } className={inputClass} placeholder={placeholderText} onChange={ changement } />
+					<input required type="password" value={ mdp } className={ inputClass } placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ mdpOublie }> Mot de passe oublié ? </button>
 				</div>
-				<button type="submit" className="btn btn-primary bouton container-fluid">Connexion</button>
+				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Connexion</button>
 			</form>
 		</div>
 	);
@@ -224,7 +237,8 @@ const Creer = ({ changeEtat }) =>
 		event.preventDefault();
 		if (!logExist())// il ne faut pas creer 2 compte identique
 		{
-			if(tel.length === 14){
+			if (tel.length === 14)
+			{
 				changeEtat('confmdp');
 			}
 		}
@@ -232,6 +246,11 @@ const Creer = ({ changeEtat }) =>
 		{
 			setLogin("");//vide le champs de texte
 			setIsValid(false);	//change le style
+			document.getElementById("btnSubmit").disabled = true;
+			setTimeout(() =>
+			{
+				document.getElementById("btnSubmit").disabled = false;
+			}, 2000)//empêche de faire un grand nombre tantative
 		}
 	};
 
@@ -267,7 +286,7 @@ const Creer = ({ changeEtat }) =>
 	//vérifie si le compte existe déjà en bado
 	function logExist()
 	{
-		if(login=== "test") return true;
+		if (login === "test") return true;
 		return false;
 	}
 
@@ -281,13 +300,13 @@ const Creer = ({ changeEtat }) =>
 				<h4 className="titre">Création du compte</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
-					<input type="text" required value={ login } className={inputClass} id="exampleInputLogin" aria-describedby="emailHelp" placeholder={placeholderText} onChange={ changeLogin } />
+					<input type="text" required value={ login } className={ inputClass } id="exampleInputLogin" aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
 					<label htmlFor="exampleInputMail" className="form-label label">Mail</label>
 					<input type="email" required value={ mail } className="form-control saisie" aria-describedby="emailHelp" placeholder="Entrez votre mail" onChange={ changeMail } />
 					<label htmlFor="exampleInputPhone" className="form-label label"> Numéro de téléphone </label>
 					<input type="tel" required value={ tel } className="form-control saisie" id="exampleInputPhone" aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
 				</div>
-				<button type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
+				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
 		</div>
 	);
@@ -316,9 +335,15 @@ const Mail = ({ changeEtat }) =>
 		{
 			changeEtat('code');
 		}
-		else{
+		else
+		{
 			setMail("");//vide le champs de texte
 			setIsValid(false);//applique le style invalide
+			document.getElementById("btnSubmit").disabled = true;
+			setTimeout(() =>
+			{
+				document.getElementById("btnSubmit").disabled = false;
+			}, 2000)//empêche de faire un grand nombre tantative
 		}
 	};
 
@@ -335,8 +360,9 @@ const Mail = ({ changeEtat }) =>
 	};
 
 	//test en bado si le mail existe
-	function mailExist(){
-		if(mail === "test@gmail.com") return true;
+	function mailExist()
+	{
+		if (mail === "test@gmail.com") return true;
 		return false;
 	}
 
@@ -350,16 +376,16 @@ const Mail = ({ changeEtat }) =>
 				<h4 className="titre">Mot de passe oublié</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label">Mail</label>
-					<input required type="email" value={ mail } className={inputClass} id="exampleInputEmail1" aria-describedby="emailHelp" placeholder={placeholderText} onChange={ changement } />
+					<input required type="email" value={ mail } className={ inputClass } id="exampleInputEmail1" aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 				</div>
-				<button type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
+				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
 		</div>
 	);
 };
 
 /*--Code de la page de Nouveau mot de passe*/
-const ConfMdp = ({changeEtat}) =>
+const ConfMdp = ({ changeEtat }) =>
 {
 	//pour changer les contenus des inputs
 	const [mdp, setMdp] = useState("");
@@ -383,17 +409,20 @@ const ConfMdp = ({changeEtat}) =>
 	const envoyer = (event) =>
 	{
 		event.preventDefault();//obligatoire pour un changment de page
-		if(valider()){
+		if (valider())
+		{
 			window.location.href = "/";//envoie à la page d'accueil
 		}
-		else{
+		else
+		{
 			setMdpConf("");	//vide le champs de texte
 			setIsValid(false);//applique le style invalide
 		}
 	};
 
 	//test si le mot de passe et le conf mot de passe sont identiques
-	function valider(){
+	function valider()
+	{
 		return mdp === mdpconf;
 	}
 
@@ -412,7 +441,7 @@ const ConfMdp = ({changeEtat}) =>
 					</div>
 					<div className="champs">
 						<label htmlFor="exampleInputPassword1" className="form-label label">Confirmer le mot de passe</label>
-						<input required type="password" value={ mdpconf } className={inputClass} id="exampleInputPassword1" placeholder={placeholderText} onChange={ changeMdpConf } />
+						<input required type="password" value={ mdpconf } className={ inputClass } id="exampleInputPassword1" placeholder={ placeholderText } onChange={ changeMdpConf } />
 					</div>
 				</div>
 				<button type="submit" className="btn btn-primary bouton container-fluid">Connexion</button>
@@ -442,14 +471,19 @@ const Code = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changement de page
 		if (code.length === 6) // test si la longeur du code est bien de 6
 		{
-			if(codeExist())
+			if (codeExist())
 			{
 				changeEtat('confmdp');//charge la page de choix du mot de passe
 			}
 			else
 			{
+				document.getElementById("btnSubmit").disabled = true;
 				setCode("");	//vide le champs de texte
 				setIsValid(false);//applique le style invalide
+				setTimeout(() =>
+				{
+					document.getElementById("btnSubmit").disabled = false;
+				}, 2000)//empêche de faire un grand nombre tantative
 			}
 		}
 	};
@@ -470,8 +504,9 @@ const Code = ({ changeEtat }) =>
 	};
 
 	//test si on a bien envoyer le code à cette adresse mail
-	function codeExist(){
-		if(code==="123456") return true;
+	function codeExist()
+	{
+		if (code === "123456") return true;
 		return false;
 	}
 
@@ -485,11 +520,11 @@ const Code = ({ changeEtat }) =>
 				<h4 className="titre">Mot de passe oublié</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label"> Code </label>
-					<input required type="text" className={inputClass} id="exampleInputEmail1"
-						aria-describedby="emailHelp" placeholder={placeholderText} onChange={ changement } />
+					<input required type="text" className={ inputClass } id="exampleInputEmail1"
+						aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ renvoyerMail }> Renvoyer un mail </button>
 				</div>
-				<button type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
+				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
 		</div>
 	);
