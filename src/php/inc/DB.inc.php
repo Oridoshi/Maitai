@@ -139,7 +139,7 @@ class DB {
 	 */
 	public function updateProduit($produits) {
 		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getLibProd(),floatval($produits->getPrixUni()),$produits->getCategorie(),$produits->getIdProd()),'Produit');
+		$this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
 	}
 
 } //fin classe DB

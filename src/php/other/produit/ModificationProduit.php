@@ -15,9 +15,8 @@ $Prod->setIdProd($_POST['idProd']);
 $Prod->setLibProd($_POST['libProd']);
 if($_POST['prixUni'] != ""){
     $Prod->setPrixUni($_POST['prixUni']);
-} else {
-    $Prod->setPrixUni(NULL);
-}
+} 
+
 $Prod->setCategorie($_POST['categorie']);
 
 /**
