@@ -1,6 +1,6 @@
 <?php
 
-echo "<form action='../other/utilisateur/ModificationUtilisateur.php' method='post'>";
+echo "<form action='../src/php/other/utilisateur/ModificationUtilisateur.php' method='post'>";
 echo "<label for='prevLogin'>Ancien login</label>";
 echo "<input type='text' id='prevLogin' name='prevLogin' required><br>";
 
