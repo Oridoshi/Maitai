@@ -26,7 +26,7 @@ class DB {
 		try {
 			// Connexion à la base
 
-    		$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
+			$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
 
 			// Configuration facultative de la connexion
 			$this->connect->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER); 
@@ -34,7 +34,7 @@ class DB {
 		}
 		catch (PDOException $e) {
 					echo "probleme de connexion :".$e->getMessage();
-			return null;    
+			return null;
 		}
 	}
 
@@ -133,6 +133,14 @@ class DB {
 	*************************************************************************/
 
 	/*** METHODES POUR LES PRODUITS ***/
+
+	/** Modifier les données d'un produit.
+	 * @param Produit $produits le produit à modifier.
+	 */
+	public function updateProduit($produits) {
+		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
+	}
 
 	/**
 	 * Créer un produit.
