@@ -1,6 +1,7 @@
 <?php
 
 //Mettre les objet a require ici /!\
+include_once 'Droit.inc.php';
 include_once 'Utilisateur.inc.php';
 include_once 'UtilisateurDroit.inc.php';
 
@@ -133,6 +134,28 @@ class DB {
 	* Fonctions qui peuvent être utilisées dans les scripts PHP
 	*************************************************************************/
 
+	/** Retourne tout les droits de la table droit. */
+	public function getDroits() {
+		$requete = 'SELECT * FROM Droit';
+		return $this->execQuery($requete,null,'Droit');
+	}
+
+	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
+	public function getUtilisateursEtDroit() {
+		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple;
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** retourne un utilisateur à partir de son login */

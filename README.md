@@ -3,8 +3,11 @@
 Projet de Stage de 2eme année de BUT Informatique.
 
 
-### Description 
-Le but de cette branche est d'implémenter la création d'un utilisateur, pour cela le fichier creationUtilisateur.php récupère des informations en POST qui doivent avoir pour id 'login' et 'email'. Si une de ces deux informations n'est pas renseignées alors l'utilisateur n'est pas créé. Sinon l'utilisateur est créé et inséré dans la base de données. 
+## Quel est cette branche ?
+
+- **Création des tables**                   : Le fichier create.sql dans le dossier src/sql/ permet de créer la base de données. Nous utilisons MYSQL.
+- **Création des triggers**                 : Le fichier fonction.sql dans le dossier src/sql/ permet de créer des triggers sur cette base. Nous utilisons MYSQL.
+- **Insertions de données dans les tables** : Le fichier insert.sql dans le dossier src/sql/ permet d'inserer des données test dans cette base. Nous utilisons MYSQL.
 
 
 
