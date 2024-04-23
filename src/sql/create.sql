@@ -35,7 +35,7 @@ CREATE TABLE Client
 CREATE TABLE Produit
 (
 	idProd    INTEGER       PRIMARY KEY,
-	libProd   VARCHAR(30)   NOT NULL   ,
+	libProd   VARCHAR(255)  NOT NULL   ,
 	prixUni   DECIMAL(12,2)            ,
 	categorie VARCHAR(30)   NOT NULL
 );
