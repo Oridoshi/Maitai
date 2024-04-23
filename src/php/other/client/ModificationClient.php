@@ -3,23 +3,11 @@
 include_once '../inc/DB.inc.php';
 
 // initialisations des variables à null
-$prevNomClub = null;
-$nomClub = null;
-$email = null;
-$telephone = null;
-$present = null;
-
-// récupération des données du formulaire si elles sont renseignées
-if(isset($_POST['prevNomClub'])) {$prevNomClub = $_POST['prevNomClub'];}
-
-if(isset($_POST['nomClub'])) {$nomClub = $_POST['nomClub'];}
-
-if(isset($_POST['email'])) {$email = $_POST['email'];}
-
-if(isset($_POST['telephone'])) {$telephone = $_POST['telephone'];}
-
-if(isset($_POST['present'])) {$present = $_POST['present'];}
-
+$prevNomClub = $_POST['prevNomClub'];
+$nomClub = $_POST['nomClub'];
+$email = $_POST['email'];
+$telephone = $_POST['telephone'];
+$present = $_POST['present'];
 
 $pdo = DB::getInstance();
 
@@ -27,14 +15,14 @@ $pdo = DB::getInstance();
 $client = $pdo->getClient($prevNomClub)[0];
 
 // modification des données du client si non null
-if($nomClub != null)
+if($nomClub != "")
     $client->setNomClub($nomClub);
-if($email != null)
+if($email != "")
     $client->setEmail($email);
-if($telephone != null)
+if($telephone != "")
     $client->setTelephone($telephone);
-if($present != null)
-    $client->setPresent($present);
+
+$client->setPresent($present);
 
 // mise à jour du client
 $pdo->updateClient($client);
