@@ -1,4 +1,4 @@
-<h1>Ajout Produit au Ticket avec Prix Total</h1>
+<h1>Modif Produit au Ticket avec Prix Total</h1>
 <form action="../src/php/other/ticket/CreationTicket.php" method="post">
 	<label for="idprod">idprod:</label>
 	<input type="idprod" name="idprod" id="idprod" required><br>
@@ -15,7 +15,7 @@
 	<input type="submit" value="Envoyer">
 </form>
 
-<h1>Ajout Produit au Ticket sans Prix Total</h1>
+<h1>Modif Produit au Ticket sans Prix Total</h1>
 <form action="../src/php/other/ticket/CreationTicket.php" method="post">
 	<label for="idprod">idprod:</label>
 	<input type="idprod" name="idprod" id="idprod" required><br>

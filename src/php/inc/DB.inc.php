@@ -134,14 +134,10 @@ class DB {
 
 	/*** METHODES POUR LES TICKETS ***/
 
-	/**
-	 * Insère un ticket dans la base de données.
-	 * @param Ticket $ticket Ticket à insérer dans la base de données.
-	 * @return void
-	 */
-	public function insertTicket(Ticket $ticket) {
-		$requete = "INSERT INTO ticket (idprod, idcli, qa, prixtot) VALUES (?, ?, ?, ?)";
-		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixTot());
+	
+	public function updateTicket(Ticket $ticket) {
+		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
+		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
 		$this->execMaj($requete, $tparam);
 	}
 }
