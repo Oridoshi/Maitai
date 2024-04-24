@@ -1,4 +1,4 @@
-<form action="../src/php/other/clien/CreationClient.php" method="post">
+<form action="../src/php/other/client/CreationClient.php" method="post">
     <label for="nomClub">Nom du club</label>
     <input type="text" name="nomClub" id="nomClub" required>
     <label for="email">Email</label>
