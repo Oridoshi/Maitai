@@ -22,7 +22,7 @@ DROP TRIGGER IF EXISTS verifRetrograde_delete;//
 
 CREATE TRIGGER verifDesactivation_update BEFORE UPDATE ON Utilisateur FOR EACH ROW
 BEGIN
-    IF isLastActiveAdmin(OLD.idUti) THEN
+    IF NEW.actif = 0 AND isLastActiveAdmin(OLD.idUti) THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Impossible de désactiver le dernier compte admin actif !';
     END IF;
 END //
