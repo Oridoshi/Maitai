@@ -1,32 +1,30 @@
-<?php
-include_once '../src/php/inc/Ticket.inc.php';
+<h1>Ajout Produit au Ticket avec Prix Total</h1>
+<form action="../src/php/other/ticket/CreationTicket.php" method="post">
+	<label for="idprod">idprod:</label>
+	<input type="idprod" name="idprod" id="idprod" required><br>
 
-/**
- * Création d'un ticket.
- * `setIdProd` : Vous pouvez mettre l'id du produit existant dans la base de données (Nombre entier).
- * `setIdCli` : Vous pouvez mettre l'id du client existant dans la base de données (Nombre entier).
- * `setQa` : Vous pouvez mettre la quantité du produit acheté (Nombre entier).
- * `setPrixTot` : Vous pouvez mettre le prix total de la commande (Nombre à virgule).
- */
-$ticket = new Ticket();
-$ticket->setIdProd(1);
-$ticket->setIdCli(2);
-$ticket->setQa(3);
-$ticket->setPrixTot(4.0);
+	<label for="idcli">idcli:</label>
+	<input type="idcli" name="idcli" id="idcli" required><br>
 
-//Affichage Ticket
-echo "Ticket : idprod = " . $ticket->getIdProd() . ", idcli = " . $ticket->getIdCli() . ", qa = " . $ticket->getQa() . ", prixtot = " . $ticket->getPrixTot() . "\n";
+	<label for="qa">qa:</label>
+	<textarea name="qa" id="qa" required></textarea><br>
 
-/**
- * Création d'un ticket.
- * `setIdProd` : Vous pouvez mettre l'id du produit existant dans la base de données (Nombre entier).
- * `setIdCli` : Vous pouvez mettre l'id du client existant dans la base de données (Nombre entier).
- * `setQa` : Vous pouvez mettre la quantité du produit acheté (Nombre entier).
- */
-$ticket2 = new Ticket();
-$ticket2->setIdProd(1);
-$ticket2->setIdCli(2);
-$ticket2->setQa(3);
+	<label for="prixtot">qa:</label>
+	<textarea name="prixtot" id="prixtot" required></textarea><br>
 
-//Affichage Ticket
-echo "Ticket2 : idprod = " . $ticket2->getIdProd() . ", idcli = " . $ticket2->getIdCli() . ", qa = " . $ticket2->getQa() . ", prixtot = " . $ticket2->getPrixTot() . "\n";
+	<input type="submit" value="Envoyer">
+</form>
+
+<h1>Ajout Produit au Ticket sans Prix Total</h1>
+<form action="../src/php/other/ticket/CreationTicket.php" method="post">
+	<label for="idprod">idprod:</label>
+	<input type="idprod" name="idprod" id="idprod" required><br>
+
+	<label for="idcli">idcli:</label>
+	<input type="idcli" name="idcli" id="idcli" required><br>
+
+	<label for="qa">qa:</label>
+	<textarea name="qa" id="qa" required></textarea><br>
+
+	<input type="submit" value="Envoyer">
+</form>
