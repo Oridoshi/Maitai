@@ -190,6 +190,13 @@ function Client() {
 	
 		<h1 className='titre'>Gestion des clients </h1>
 
+		
+				<div className="grpRecherche">
+					<form className="d-flex col-sm-3 m-0" role="search">
+						<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search"/>
+					</form>
+				</div>
+
 		<Table 
 			header={initialHeader} 
 			data={initialData} 
