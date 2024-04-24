@@ -1,6 +1,6 @@
 <?php
 
-include_once "../inc/DB.inc.php";
+include_once "../../inc/DB.inc.php";
 
 $present = isset($_POST['present']) ? $_POST['present'] : false;
 
