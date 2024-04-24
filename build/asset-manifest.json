@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.796c39d9.css",
+    "main.js": "/static/js/main.2fee433e.js",
+    "static/media/maitai.png": "/static/media/maitai.55dfd5f6f17091544e0c.png",
+    "static/media/Poppins-Medium.ttf": "/static/media/Poppins-Medium.c5eb70982e90502d0d01.ttf",
+    "static/media/Logout.svg": "/static/media/Logout.f809457ddb4aa2caa291.svg",
+    "static/media/Home.svg": "/static/media/Home.b66b5bdbe02802eb5d62.svg",
+    "index.html": "/index.html",
+    "main.796c39d9.css.map": "/static/css/main.796c39d9.css.map",
+    "main.2fee433e.js.map": "/static/js/main.2fee433e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.796c39d9.css",
+    "static/js/main.2fee433e.js"
+  ]
+}
