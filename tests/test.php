@@ -9,7 +9,7 @@
 	<label for="qa">qa:</label>
 	<textarea name="qa" id="qa" required></textarea><br>
 
-	<label for="prixtot">qa:</label>
+	<label for="prixtot">prix:</label>
 	<textarea name="prixtot" id="prixtot" required></textarea><br>
 
 	<input type="submit" value="Envoyer">
