@@ -139,9 +139,9 @@ class DB {
 		return $this->execQuery($requete,null,'Client');
 	}
 	/** Récuperer le client à l'aide du nom du club */
-	public function getClient($nomClub) {
-		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
-		return $this->execQuery($requete,array($nomClub),'Client');
+	public function getClient($client) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ? AND idCli != ?';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getIdCli()),'Client');
 	}
 
 	/** Modifier les données d'un client. */

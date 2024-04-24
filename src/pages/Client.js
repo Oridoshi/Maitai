@@ -44,7 +44,8 @@ function Client() {
 	const initialHeader = [
 		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false },
 		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'text'    , required : true , editable : true , show : true  },
-		{ id: 'telephone', name: 'Numero de téléphone'  , type:'number'  , required : false, editable : true , show : true  },
+		{ id: 'telephone', name: 'Numero de téléphone'  , type:'number'  , required : true , editable : true , show : true  },
+		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true  },
 		{ id: 'present'  , name: 'Présent sur le site ?', type:'checkbox', required : true , editable : true , show : true  },
 	];
 
@@ -86,18 +87,19 @@ function Client() {
 		try {
 
 			const formData = new FormData();
-			formData.append('login', nouvItem.login);
-			formData.append('email', nouvItem.email);
+			formData.append('nomClub'  , nouvItem.nomclub);
+			formData.append('email'    , nouvItem.email);
+			formData.append('telephone', nouvItem.telephone);
 
-			if (nouvItem.actif) formData.append('actif', 1);
-			else                formData.append('actif', 0);
+			if (nouvItem.present) formData.append('present', 1);
+			else                  formData.append('present', 0);
 
 
 			/*
-				$login = $_POST['login'];
-				$email = $_POST['email'];
-				$actif = $_POST['actif'];
-				$droit = $_POST['droit'];
+				$client->setNomClub  ($_POST['nomClub']);
+				$client->setEmail    ($_POST['email']);
+				$client->setTelephone($_POST['telephone']);
+				$client->setPresent  ($_POST['present']);
 			 */
 
 			const requestOptions = {
@@ -126,20 +128,20 @@ function Client() {
 		try {
 
 			const formData = new FormData();
-			formData.append('prevLogin', oldItem.login );
-			formData.append('login'    , nouvItem.login);
-			formData.append('mdp'      , nouvItem.mdp  );
-			formData.append('email'    , nouvItem.email);
-			if (nouvItem.actif) formData.append('actif', 1);
-			else                formData.append('actif', 0);
+			formData.append('prevNomClub', oldItem.nomclub   );
+			formData.append('nomClub'    , nouvItem.nomclub  );
+			formData.append('email'      , nouvItem.email    );
+			formData.append('telephone'  , nouvItem.telephone);
+
+			if (nouvItem.present) formData.append('present', 1);
+			else                  formData.append('present', 0);
 
 			/*
-				$prevLogin = $_POST['prevLogin'];
-				$login     = $_POST['login'];
-				$mdp       = $_POST['mdp'];
-				$email     = $_POST['email'];
-				$actif     = isset($_POST['actif'])?true:false;
-				$iddroit   = $_POST['iddroit'];
+				$prevNomClub = $_POST['prevNomClub'];
+				$nomClub = $_POST['nomClub'];
+				$email = $_POST['email'];
+				$telephone = $_POST['telephone'];
+				$present = $_POST['present'];
 			 */
 
 			const requestOptions = {
@@ -176,7 +178,7 @@ function Client() {
 			alert(errorMessageText);
 			
 		} else {
-			console.log("Aucune correspondance trouvée.");
+			console.log(data);
 		}
 	}
 

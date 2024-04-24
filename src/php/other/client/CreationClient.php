@@ -10,11 +10,7 @@ $client = new Client();
 $client->setNomClub($_POST['nomClub']);
 $client->setEmail($_POST['email']);
 $client->setTelephone($_POST['telephone']);
+$client->setPresent($_POST['present']);
 
 // insertion du client
 $valide = DB::getInstance()->insertClient($client);
-
-if(!$valide) {
-    echo "Erreur lors de la création du client";
-    exit;
-}
