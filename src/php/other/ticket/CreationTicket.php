@@ -14,7 +14,7 @@ $newTicket->setIdProd($_POST['idprod']);
 $newTicket->setIdCli($_POST['idcli']);
 $newTicket->setQa($_POST['qa']);
 if(isset($_POST['prixtot'])) {
-	$newProd->setPrixTot($_POST['prixtot']);
+	$newTicket->setPrixTot($_POST['prixtot']);
 }
 
 
