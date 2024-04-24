@@ -134,7 +134,11 @@ class DB {
 
 	/*** METHODES POUR LES TICKETS ***/
 
-	
+	/**
+	 * Permet de mettre à jour un ticket
+	 * @param Ticket $ticket le ticket à mettre à jour
+	 * @return void
+	 */
 	public function updateTicket(Ticket $ticket) {
 		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
 		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
