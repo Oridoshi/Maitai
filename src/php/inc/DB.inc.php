@@ -140,7 +140,7 @@ class DB {
 	 * @param int $idprod id du produit
 	 * @return void
 	 */
-	public function suppTicket(int $idcli, int $idprod) {
+	public function suppTicket(int $idprod, int $idcli) {
 		$requete = "DELETE FROM ticket WHERE idprod = ? AND idcli = ?";
 		$tparam = array($idprod, $idcli);
 		$this->execMaj($requete, $tparam);

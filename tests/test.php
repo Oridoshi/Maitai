@@ -1,5 +1,5 @@
 <h1>Supp Produit au Ticket</h1>
-<form action="../src/php/other/ticket/CreationTicket.php" method="post">
+<form action="../src/php/other/ticket/SuppressionTicket.php" method="post">
 	<label for="idprod">idprod:</label>
 	<input type="idprod" name="idprod" id="idprod" required><br>
 
