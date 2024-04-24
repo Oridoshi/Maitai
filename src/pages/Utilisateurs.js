@@ -226,14 +226,17 @@ function Utilisateur() {
 
 	//Création du tableau
 	return (
-	<div className="App">
-	<Table 
-		header={initialHeader} 
-		data={initialData} 
-		funInsert={funInsert} 
-		funUpdate={funUpdate} 
-		funDelete={funDelete} 
-	/>
+	<div className="col-sm-10">
+	
+		<h1 className='titre'>Gestion des utilisateurs </h1>
+
+		<Table 
+			header={initialHeader} 
+			data={initialData} 
+			funInsert={funInsert} 
+			funUpdate={funUpdate} 
+			funDelete={funDelete} 
+		/>
 	</div>
 	);
 }
