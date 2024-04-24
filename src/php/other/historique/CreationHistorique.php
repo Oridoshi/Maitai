@@ -1,11 +1,17 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
+include_once '../../inc/DB.inc.php';
 
-$chemin = $_POST['chemin'];
 $type = $_POST['type'];
 $idcli = $_POST['idcli'];
 $file = $_FILES['file'];
 $fileName = $file['name'];
 $fileTmpPath = $file['tmp_name'];
+
+$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
+
+echo $chemin . $fileName . "<br>";
 
 $historique = new Historique();
 $historique->setChemin($chemin . $fileName);
