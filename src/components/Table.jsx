@@ -193,7 +193,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete}) {
 					setTableData(prevData => [...prevData, updatedRowData]);
 					setModalIsOpen(false);
 				} else {
-					openModal(updatedRowData); // Ouvre le modal avec les données nouvellement insérées
+					openModal(); // Ouvre le modal avec les données nouvellement insérées
 				}
 			}
 		};
