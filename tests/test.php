@@ -15,5 +15,5 @@
     <label for="present">Présent</label>
     <input type="checkbox" name="present" id="present" required>
     
-    <input type="submit" value="Créer le client">
+    <input type="submit" value="Modif le client">
 </form>

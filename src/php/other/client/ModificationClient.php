@@ -1,6 +1,6 @@
 <?php
 
-include_once '../inc/DB.inc.php';
+include_once '../../inc/DB.inc.php';
 
 // initialisations des variables à null
 $prevNomClub = $_POST['prevNomClub'];
