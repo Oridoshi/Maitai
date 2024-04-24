@@ -4,14 +4,12 @@ import Table from '../components/Table';
 function Client() {
 
 	const [initialData , setInitialData ] = useState([]);
-	const [initialDroit, setInitialDroit] = useState([]);
-	const [libDroit    , setLibDroit    ] = useState([]);
 
 
 
 
 	useEffect(() => {
-		fetch("http://localhost/Maitai/src/php/other/client/GetUtilisateurs.php", {
+		fetch("http://localhost/Maitai/src/php/other/client/GetClients.php", {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
@@ -24,35 +22,14 @@ function Client() {
 			return response.json();
 		})
 		.then(data => {
+
+			console.log(data);
+
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1
 			}));
 			setInitialData(newData);
-		})
-		.catch(error => {
-			console.error('Erreur :', error);
-		});
-	}, []);
-
-	useEffect(() => {
-		fetch("http://localhost/Maitai/src/php/other/GetDroits.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Erreur de réseau !');
-			}
-			return response.json();
-		})
-		.then(data => {
-			const newLibDroit = data.map(item => item.libdroit);
-			const droit = [...data];
-			setLibDroit(newLibDroit);
-			setInitialDroit(droit);
 		})
 		.catch(error => {
 			console.error('Erreur :', error);
@@ -65,12 +42,10 @@ function Client() {
 
 	// En-tête de la table
 	const initialHeader = [
-		{ id: 'id'      , name: 'NB Ligne'     , type:'number'  , required : true , editable : false, show : false },
-		{ id: 'login'   , name: 'Login'        , type:'text'    , required : true , editable : true , show : true  },
-		{ id: 'mdp'     , name: 'Mots de passe', type:'text'    , required : true , editable : false, show : false },
-		{ id: 'email'   , name: 'Adresse email', type:'email'   , required : false, editable : true , show : true  },
-		{ id: 'libdroit', name: 'Droit'        , type:'list'    , required : true , editable : true , show : true  , options:libDroit},
-		{ id: 'actif'   , name: 'Actif'        , type:'checkbox', required : true , editable : true , show : true  },
+		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false },
+		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'text'    , required : true , editable : true , show : true  },
+		{ id: 'telephone', name: 'Numero de téléphone'  , type:'number'  , required : false, editable : true , show : true  },
+		{ id: 'present'  , name: 'Présent sur le site ?', type:'checkbox', required : true , editable : true , show : true  },
 	];
 
 
@@ -90,7 +65,7 @@ function Client() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/src/php/other/client/SuppressionUtilisateur.php", requestOptions);
+			const response = await fetch("http://localhost/Maitai/src/php/other/client/SuppressionClient.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
@@ -106,19 +81,6 @@ function Client() {
 	};
 
 
-	function getIdDroit(libDroit) {
-
-		var id = -1;
-
-		initialDroit.forEach(droit => {
-			if(droit.libdroit === libDroit)
-				id = droit.iddroit;
-		});
-		
-		return id;
-	}
-
-
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {
 		try {
@@ -129,8 +91,6 @@ function Client() {
 
 			if (nouvItem.actif) formData.append('actif', 1);
 			else                formData.append('actif', 0);
-
-			formData.append('droit', getIdDroit(nouvItem.libdroit));
 
 
 			/*
@@ -145,7 +105,7 @@ function Client() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/src/php/other/client/CreationUtilisateur.php", requestOptions);
+			const response = await fetch("http://localhost/Maitai/src/php/other/client/CreationClient.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
@@ -172,8 +132,6 @@ function Client() {
 			formData.append('email'    , nouvItem.email);
 			if (nouvItem.actif) formData.append('actif', 1);
 			else                formData.append('actif', 0);
-			formData.append('iddroit'  , getIdDroit(nouvItem.libdroit));
-
 
 			/*
 				$prevLogin = $_POST['prevLogin'];
@@ -189,7 +147,7 @@ function Client() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/src/php/other/client/ModificationUtilisateur.php", requestOptions);
+			const response = await fetch("http://localhost/Maitai/src/php/other/client/ModificationClient.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');

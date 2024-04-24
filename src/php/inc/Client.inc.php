@@ -3,19 +3,19 @@
 class Client {
 
     /** Numéro d'identification du client. */
-    private int $idcli;
+    public int $idcli;
     
     /** Nom du client. */
-    private string $nomclub;
+    public string $nomclub;
     
     /** Email du client (encryptés). */
-    private string $email;
+    public string $email;
     
     /** Telephone du client (encryptés). */
-    private string $telephone;
+    public string $telephone;
     
     /** Si le client est actuellement present sur le site ou non. */
-    private bool $present;
+    public bool $present;
 
     /**
      * @var int $idcli Numéro d'identification du client.
