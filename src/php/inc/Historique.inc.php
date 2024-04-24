@@ -48,7 +48,6 @@ class Historique {
     /** Getter de l'id du client attachés au fichiers générés */
     public function getIdCli(): int {return $this->idcli;}
 
-
     /** Setter de l'id du fichier stockés */
     public function setIdHis(int $idhis): void {$this->idhis = $idhis;}
 

@@ -11,7 +11,7 @@ function Utilisateur() {
 
 
 	useEffect(() => {
-		fetch("http://localhost/Maitai/php/other/utilisateur/GetUtilisateurs.php", {
+		fetch("http://localhost/Maitai/src/php/other/utilisateur/GetUtilisateurs.php", {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
@@ -36,7 +36,7 @@ function Utilisateur() {
 	}, []);
 
 	useEffect(() => {
-		fetch("http://localhost/Maitai/php/other/GetDroits.php", {
+		fetch("http://localhost/Maitai/src/php/other/GetDroits.php", {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
@@ -90,7 +90,7 @@ function Utilisateur() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/php/other/utilisateur/SuppressionUtilisateur.php", requestOptions);
+			const response = await fetch("http://localhost/Maitai/src/php/other/utilisateur/SuppressionUtilisateur.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
@@ -145,7 +145,7 @@ function Utilisateur() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/php/other/utilisateur/CreationUtilisateur.php", requestOptions);
+			const response = await fetch("http://localhost/Maitai/src/php/other/utilisateur/CreationUtilisateur.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
@@ -189,7 +189,7 @@ function Utilisateur() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/php/other/utilisateur/ModificationUtilisateur.php", requestOptions);
+			const response = await fetch("http://localhost/Maitai/src/php/other/utilisateur/ModificationUtilisateur.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');

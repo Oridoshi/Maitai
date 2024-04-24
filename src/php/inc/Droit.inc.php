@@ -3,10 +3,10 @@
 class Droit {
 
     /** Numéro d'identification du droit. */
-    private int $iddroit;
+    public int $iddroit;
 
     /** Libellé du droit afin de faciliter l'identification. */
-    private string $libdroit;
+    public string $libdroit;
 
     /**
      * @var int $iddroit Numéro d'identification du droit.
