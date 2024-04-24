@@ -129,4 +129,31 @@ class DB {
 	//	Methode permettant de récupérer tous les historiques de la base     //
 	/************************************************************************/
 
+	/** Get tout l'historique d'un client */
+	public function getHistoriquesByClient(int $idcli): array {
+		$requete = "SELECT chemin, idhist FROM historique WHERE idcli = ?";
+		$tparam = array($idcli);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple;
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
+
+	/** Get un historique via son id */
+	public function getHistoriquesById(int $idhist): string {
+		$requete = "SELECT chemin FROM historique WHERE idhist = ?";
+		$tparam = array($idhist);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$tuple = $stmt->fetch();
+		return $tuple['chemin'];
+	}
+
 } //fin classe DB
