@@ -21,4 +21,4 @@ if(isset($_POST['prixtot'])) {
 /**
  * Insère le produit dans la base de données
  */
-DB::getInstance()->insertTicket($Ticket);
+DB::getInstance()->insertTicket($newTicket);
