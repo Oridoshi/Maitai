@@ -2,6 +2,7 @@
 
 //Mettre les objet a require ici /!\
 include_once 'Client.inc.php';
+include_once 'Client.inc.php';
 
 class DB {
 
@@ -120,13 +121,24 @@ class DB {
 	//	que d'éléments dans le tableau passé en second paramètre.
 	/************************************************************************/
 	private function execMaj($ordreSQL,$tparam) {
-			$stmt = $this->connect->prepare($ordreSQL);
+		$stmt = $this->connect->prepare($ordreSQL);
 		$res = $stmt->execute($tparam); //execution de l'ordre SQL      	     
 		return $stmt->rowCount();
 	}
 
 	/*** METHODES POUR LES CLIENTS ****/
 
+	/** Récuperer le client à l'aide du nom du club */
+	public function getClient($nomClub) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
+		return $this->execQuery($requete,array($nomClub),'Client');
+	}
+
+	/** Modifier les données d'un client. */
+	public function updateClient($client) {
+		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
+	}
 	/** Vérifie si le nom d'un club existe déjà en base */
 	public function nomClubEstEnBase($client) {
 		$requete = 'SELECT * FROM Client WHERE nomClub = ? AND idCli != ?';
