@@ -2,7 +2,6 @@
 
 //Mettre les objet a require ici /!\
 include_once 'Client.inc.php';
-include_once 'Client.inc.php';
 
 class DB {
 
@@ -128,6 +127,17 @@ class DB {
 
 	/*** METHODES POUR LES CLIENTS ****/
 
+	/** Récuperer les clients. */
+	public function getClients() {
+		$requete = 'SELECT * FROM Client';
+		return $this->execQuery($requete,null,'Client');
+	}
+
+	/** Récuperer les clients présents. */
+	public function getClientsPresent() {
+		$requete = 'SELECT * FROM Client WHERE present = 1';
+		return $this->execQuery($requete,null,'Client');
+	}
 	/** Récuperer le client à l'aide du nom du club */
 	public function getClient($nomClub) {
 		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
@@ -136,19 +146,22 @@ class DB {
 
 	/** Modifier les données d'un client. */
 	public function updateClient($client) {
+
+
+		$existingClient = $this->getClient($client);
+		if ($existingClient) {
+			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+
 		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
 		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
-	}
-	/** Vérifie si le nom d'un club existe déjà en base */
-	public function nomClubEstEnBase($client) {
-		$requete = 'SELECT * FROM Client WHERE nomClub = ? AND idCli != ?';
-		return $this->execQuery($requete,array($client->getNomClub(),$client->getIdCli()),'Client');
 	}
 
 	/** Ajouter un client. */
 	public function insertClient($client) {
 
-		$existingClient = $this->nomClubEstEnBase($client);
+		$existingClient = $this->getClient($client);
 		if ($existingClient) {
 			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
@@ -156,5 +169,79 @@ class DB {
 
 		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) VALUES (?, ?, ?, ?)';
 		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
+	}
+
+	/** Supprimer un client. */
+	public function suppClient($client) {
+		$requete = 'DELETE FROM Client WHERE idCli = ?';
+		return $this->execQuery($requete,array($client->getIdCli()),'Client');
+	}
+
+
+
+	/*** METHODES POUR LES TICKETS ****/
+
+	/** Récuperer les tickets/commande d'un client. */
+	public function getTicketClient($ticket) {
+		$requete = 'SELECT * FROM Ticket WHERE idCli = ?';
+		return $this->execQuery($requete,array($ticket->getIdCli()),'Ticket');
+	}
+
+	/** Modifier la quantité et le prix total d'un des tickets/commande */
+	public function updateTicket($ticket) {
+		$requete = 'UPDATE Ticket SET qa = ?, prixTot = ? WHERE idCli = ? AND idProd = ?';
+		return $this->execQuery($requete,array($ticket->getQa(),floatval($ticket->getPrixTot()),$ticket->getIdCli(),$ticket->getIdProd()),'Ticket');
+	}
+
+	/** Ajouter un ticket/commande. */
+	public function insertTicket($ticket) {
+		$requete = 'INSERT INTO Ticket VALUES (?, ?, ?, ?)';
+		return $this->execQuery($requete,array($ticket->getIdProd(),$ticket->getIdCli(),$ticket->getQa(),floatval($ticket->getPrixTot())),'Ticket');
+	}
+
+	/** Supprimer un ticket/commande. */
+	public function suppTicket($ticket) {
+		$requete = 'DELETE FROM Ticket WHERE idCli = ?';
+		return $this->execQuery($requete,array($ticket->getIdCli()),'Ticket');
+	}
+
+
+
+	/*** METHODES POUR L'HISTORIQUE ****/
+
+	/** Récuperer l'historique des fiches de securité. */
+	public function getHistoriqueSecu() {
+		$requete = 'SELECT * FROM Historique WHERE type = \'SECU\'';
+		return $this->execQuery($requete,null,'Historique');
+	}
+
+	/** Récuperer l'historique des ticket. */
+	public function getHistoriqueTicket() {
+		$requete = 'SELECT * FROM Historique WHERE type = \'TICKET\'';
+		return $this->execQuery($requete,null,'Historique');
+	}
+
+	/** Récuperer l'historique des tickets d'un client. */
+	public function getHistoriqueTicketClient($client) {
+		$requete = 'SELECT * FROM Historique WHERE type = \'TICKET\' AND idCli = ?';
+		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
+	}
+
+	/** Récuperer l'historique des fiche de sécurité d'un client. */
+	public function getHistoriqueSecuClient($client) {
+		$requete = 'SELECT * FROM Historique WHERE type = \'SECU\' AND idCli = ?';
+		return $this->execQuery($requete,array($client->getIdCli()),'Historique');
+	}
+
+	/** Inserer un fichier dans l'historique. */
+	public function insertHistorique($historique) {
+		$requete = 'INSERT INTO Historique (chemin, type, idCli) VALUES (?, ?, ?)';
+		return $this->execQuery($requete,array($historique->getChemin(),$historique->getType(),$historique->getIdCli()),'Historique');
+	}
+
+	/** Inserer un fichier dans l'historique. */
+	public function suppHistorique($historique) {
+		$requete = 'DELETE FROM Historique WHERE idHis = ?';
+		return $this->execQuery($requete,array($historique->getIdHis()),'Historique');
 	}
 } //fin classe DB

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <form action="../src/php/other/client/ModificationClient.php" method="post">
     <label for="prevNomClub">Nom du club</label>
     <input type="text" name="prevNomClub" id="prevNomClub" required>
@@ -24,4 +25,9 @@
     <label for="telephone">Téléphone</label>
     <input type="tel" name="telephone" id="telephone" required>
     <input type="submit" value="Créer le client">
+=======
+<form action="../src/php/other/client/GetClients.php" method="post">
+    <input type="checkbox" name="present" value="1">
+    <input type="submit" value="Get Clients">
+>>>>>>> e24f1e2616fd6e9085c2a0292809861e71a3c49b
 </form>
