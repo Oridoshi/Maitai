@@ -134,10 +134,21 @@ class DB {
 
 	/*** METHODES POUR LES TICKETS ***/
 
-	
-	public function updateTicket(Ticket $ticket) {
-		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
-		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
-		$this->execMaj($requete, $tparam);
+	/**
+	 * Récupère les produits du ticket en fonction de l'id du client
+	 * @param int $idcli id du client ou null pour tous les clients
+	 * @return array de produit de Ticket
+	 */
+	public function getProdTicket(?int $idcli) {
+		if ($idcli == null) {
+			$requete = "SELECT * FROM ticket";
+			$tparam = null;
+		}
+		else {
+			$requete = "SELECT * FROM ticket WHERE idcli = ?";
+			$tparam = array($idcli);
+		}
+
+		return $this->execQuery($requete, $tparam, 'Ticket');
 	}
 }
