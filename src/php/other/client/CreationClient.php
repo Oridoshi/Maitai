@@ -13,8 +13,3 @@ $client->setTelephone($_POST['telephone']);
 
 // insertion du client
 $valide = DB::getInstance()->insertClient($client);
-
-if(!$valide) {
-    echo "Erreur lors de la création du client";
-    exit;
-}

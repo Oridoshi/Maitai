@@ -12,7 +12,7 @@ $present = $_POST['present'];
 $pdo = DB::getInstance();
 
 // récupération du client à modifier
-$client = $pdo->getClient($prevNomClub)[0];
+$client = $pdo->getClient($prevNomClub);
 
 // modification des données du client si non null
 if($nomClub != "")
