@@ -124,4 +124,25 @@ class DB {
 		$res = $stmt->execute($tparam); //execution de l'ordre SQL      	     
 		return $stmt->rowCount();
 	}
+
+	/*** METHODES POUR LES CLIENTS ****/
+
+	/** Vérifie si le nom d'un club existe déjà en base */
+	public function nomClubEstEnBase($client) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ? AND idCli != ?';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getIdCli()),'Client');
+	}
+
+	/** Ajouter un client. */
+	public function insertClient($client) {
+
+		$existingClient = $this->nomClubEstEnBase($client);
+		if ($existingClient) {
+			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+
+		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) VALUES (?, ?, ?, ?)';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
+	}
 } //fin classe DB
