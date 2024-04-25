@@ -59,10 +59,12 @@ function Client() {
 	const funInsert = async (nouvItem) => {
 		try {
 
+
 			const formData = new FormData();
 			formData.append('nomClub'  , nouvItem.nomclub);
 			formData.append('email'    , nouvItem.email);
 			formData.append('telephone', nouvItem.telephone);
+
 
 			if (nouvItem.present) formData.append('present', 1);
 			else                  formData.append('present', 0);
@@ -99,6 +101,7 @@ function Client() {
 	// Fonction pour l'update
 	const funUpdate = async (nouvItem, oldItem) => {
 		try {
+
 
 			const formData = new FormData();
 			formData.append('prevNomClub', oldItem.nomclub   );
@@ -138,6 +141,12 @@ function Client() {
 	};
 
 
+	function presentFalseAll ()
+	{
+
+	}
+
+
 	function afficherError(data) {
 		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
 		const match = regex.exec(data);
@@ -159,29 +168,40 @@ function Client() {
 
 
 
-	const handleChange = (e) => {
-		const { value } = e.target;
+	const handleChange   = (e) => {filter( e.target.value);};
+	const handleCbChange = (e) => {filter( e.target.checked);};
 
+
+	function filter (value)
+	{
+		console.log(value)
 		// Filtrer les données en fonction de la valeur de recherche
 		const filteredData = initialData.filter((element) => {
-			// Parcourir les clés de l'en-tête initial
-			for (const key of initialHeader) {
-				// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-				if (key.show) {
-					// Vérifier si la valeur existe et est une chaîne de caractères
-					const elementValue = typeof element[key.id] === 'string' ? element[key.id] : '';
-					// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-					if (elementValue.includes(value)) {
-						return true; // Si correspondance, conserver cet élément
+
+			if (typeof value === 'boolean')
+			{
+				if(element.present === value || element.present) return true;
+				else                          return false;
+			}
+			else
+			{
+				// Parcourir les clés de l'en-tête initial
+				for (const key of initialHeader) {
+					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+					if (key.show) {
+						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+						if ((element[key.id] +'').includes(value)) {
+							return true; // Si correspondance, conserver cet élément
+						}
 					}
 				}
+				return false; // Si aucune correspondance, exclure cet élément
 			}
-			return false; // Si aucune correspondance, exclure cet élément
 		});
 
 		// Mettre à jour les données filtrées
 		setFilterData(filteredData);
-	};
+	}
 
 
 
@@ -192,18 +212,30 @@ function Client() {
 	
 		<h1 className='titre mt-1'>Gestion des clients </h1>
 
-		<div className="grpRecherche mt-4">
-			<form className="d-flex col-sm-3 m-0" role="search">
-				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange}/>
-			</form>
+		<div className="grpRecherche mt-4 d-flex align-items-center">
+			{/* barre de recherche */}
+			<div className="col-sm-3">
+				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
+			</div>
+
+			{/* Bouton décoché */}
+			<button className='btn-primary btn mx-2' onClick={presentFalseAll}>Tous décoché</button>
+
+			{/* Bouton checkbox avec style CSS pour la marge gauche */}
+			<div className="form-check" style={{ marginLeft: '10em' }}>
+				<input type='checkbox' className="form-check-input border-secondary" id="afficherClients" onChange={handleCbChange}/>
+				<label className="form-check-label" htmlFor="afficherClients">Afficher seulement clients présents</label>
+			</div>
 		</div>
 
-			<Table 
-				header={initialHeader} 
-				data={filterData} 
-				funInsert={funInsert} 
-				funUpdate={funUpdate} 
-			/>
+
+
+		<Table 
+			header={initialHeader} 
+			data={filterData} 
+			funInsert={funInsert} 
+			funUpdate={funUpdate} 
+		/>
 	</div>
 	);
 }
