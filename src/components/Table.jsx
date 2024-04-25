@@ -287,7 +287,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 	return (
 		<div className='m-4'>
 
-			<div className="panel" style={ { maxHeight: '300px', overflowY: 'auto' } }>
+			<div className="panel" style={ { maxHeight: '45vh', overflowY: 'auto' } }>
 				<table className='tableau table table-hover my-0'>
 					<thead className='position-sticky top-0'>
 						<tr>

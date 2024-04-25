@@ -182,13 +182,6 @@ class DB {
 		return $this->execQuery($requete,array($iduti),'UtilisateurDroit');
 	}
 
-
-	/** Modifier les droits d'un utilisateur. */
-	public function updateDroitUtilisateur($iduti, $idDroit) {
-		$requete = 'UPDATE UtilisateurDroit SET idDroit = ? WHERE idUti = ?';
-		return $this->execMaj($requete,array($idDroit, $idUti));
-	}
-
 	/** Supprimer un utilisateur. */
 	public function suppUtilisateur($iduti) {
 		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';

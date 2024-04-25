@@ -256,7 +256,7 @@ function Utilisateur() {
 
 	//Création du tableau
 	return (
-		<div className="col-sm-12">
+		<div className="col-sm-12 h-100">
 	
 			<h1 className='titre mt-1'>Gestion des utilisateurs </h1>
 
@@ -267,13 +267,15 @@ function Utilisateur() {
 				</div>
 			</div>
 
-			<Table 
-				header={initialHeader} 
-				data={filterData} 
-				funInsert={funInsert} 
-				funUpdate={funUpdate} 
-				funDelete={funDelete} 
-			/>
+			<div className='h-25'>
+				<Table 
+					header={initialHeader} 
+					data={filterData} 
+					funInsert={funInsert} 
+					funUpdate={funUpdate} 
+					funDelete={funDelete} 
+				/>
+			</div>
 		</div>
 	);
 }
