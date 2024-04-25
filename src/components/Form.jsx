@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../style/form.css';		//style du composant
+import { cheminPHP } from './VarGlobale';
 
 /**
  * Ce formulaire fonctionne avec un système d'état qui se suivent ex : l'état login
@@ -533,6 +534,27 @@ const Code = ({ changeEtat }) =>
 		</div>
 	);
 };
+
+const getUtilisateurs = () =>{
+	fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
+		},
+	})
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+		return response.json();
+	})
+	.then(data => {
+		console.log(data);
+	})
+	.catch(error => {
+		console.error('Erreur :', error);
+	});
+}
 
 
 export default Form;
