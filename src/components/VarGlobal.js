@@ -1,0 +1,1 @@
+export const cheminPHP = "http://localhost/Maitai/src/php/other/";
