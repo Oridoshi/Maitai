@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../style/form.css';		//style du composant
 import { cheminPHP } from './VarGlobale';
 
@@ -63,15 +63,15 @@ const Log = ({ changeEtat }) =>
 	const [isValid, setIsValid] = useState(true);
 
 	//pour passer à la page de mot de passe
-	const envoyer = (event) =>
+	const envoyer = async (event) =>
 	{
 		event.preventDefault();//obligatoire quand on change de page
 
 		//test avec la bd si le login existe bien
-		if (logExist())
+		if (await logExist({ login }))
 		{
-			sessionStorage.setItem('login', login);//stock sous forme de session le login
-			changeEtat('mdp');//passe sur la page de mdp
+			sessionStorage.setItem('login', login); // Stocke le login en session
+			changeEtat('mdp'); // Passe à la page de mot de passe
 		}
 		else
 		{
@@ -103,20 +103,13 @@ const Log = ({ changeEtat }) =>
 	const regex = (event) =>
 	{
 		let val = event.target.value;
-		const loginRegex = /^[A-Za-z]+$/;
+		const loginRegex = /^[A-Za-z\d]+$/;
 		if (!loginRegex.test(val))
 		{
 			val = val.slice(0, -1);
 			event.target.value = val;
 		}
 	};
-
-	//test bd si l'utilisateur existe
-	function logExist()
-	{
-		if (login === "test") return true;
-		return false;
-	}
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
@@ -153,23 +146,22 @@ const Mdp = ({ changeEtat }) =>
 	};
 
 	//envoye à l'acceuil
-	const envoyer = (event) =>
+	const envoyer = async (event) =>
 	{
-		event.preventDefault();//obligatoire quand on a un chargement de page
-		if (verifMdp())
+		event.preventDefault(); // Obligatoire quand on a un chargement de page
+		if (await mdpValid(mdp))
+		{ // Utilisation directe de mdp
+			sessionStorage.setItem('mdpValid', "true");
+			window.location.href = "/"; // Lien de l'accueil
+		} else
 		{
-			sessionStorage.setItem('mdpValid',"true");
-			window.location.href = "/";//lien de l'accueil
-		}
-		else
-		{
-			setMdp("");//vide le champs de mot de passe
-			setIsValid(false);//met le style invalide
+			setMdp(""); // Vide le champ de mot de passe
+			setIsValid(false); // Met le style invalide
 			document.getElementById("btnSubmit").disabled = true;
 			setTimeout(() =>
 			{
 				document.getElementById("btnSubmit").disabled = false;
-			}, 2000)//empêche de faire un grand nombre tantative
+			}, 2000); // Empêche de faire un grand nombre de tentatives
 		}
 	};
 
@@ -179,12 +171,6 @@ const Mdp = ({ changeEtat }) =>
 		event.preventDefault();
 		changeEtat('mail');
 	};
-
-	//test si le mot de passe est bien en bado
-	function verifMdp()
-	{
-		if (mdp === "test") return true;
-	}
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
@@ -242,7 +228,7 @@ const Creer = ({ changeEtat }) =>
 		{
 			if (tel.length === 14)
 			{
-				sessionStorage.setItem('login',login);
+				sessionStorage.setItem('login', login);
 				changeEtat('confmdp');
 			}
 		}
@@ -286,13 +272,6 @@ const Creer = ({ changeEtat }) =>
 		telVal = telVal.slice(0, 14);
 		event.target.value = telVal;
 	};
-
-	//vérifie si le compte existe déjà en bado
-	function logExist()
-	{
-		if (login === "test") return true;
-		return false;
-	}
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
@@ -415,7 +394,7 @@ const ConfMdp = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changment de page
 		if (valider())
 		{
-			sessionStorage.setItem('mdpValid',"true");
+			sessionStorage.setItem('mdpValid', "true");
 			window.location.href = "/";//envoie à la page d'accueil
 		}
 		else
@@ -535,26 +514,70 @@ const Code = ({ changeEtat }) =>
 	);
 };
 
-const getUtilisateurs = () =>{
-	fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-		},
-	})
-	.then(response => {
-		if (!response.ok) {
+//cherche en bado si on a bien un utilisateur
+const logExist = async ({ login }) =>
+{
+	try
+	{
+		const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'text/plain; charset=UTF-8'
+			},
+		});
+
+		if (!response.ok)
+		{
 			throw new Error('Erreur de réseau !');
 		}
-		return response.json();
-	})
-	.then(data => {
-		console.log(data);
-	})
-	.catch(error => {
-		console.error('Erreur :', error);
-	});
+
+		const data = await response.json();
+		const utilisateurs = data.map(item => ({
+			login: item.login,
+			mdp: item.mdp,
+			email: item.email,
+			libdroit: item.libdroit
+		}));
+
+		return utilisateurs.some(user => user.login === login);
+	} catch (error)
+	{
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
 }
 
+//test si le mdp correspond au user
+const mdpValid = async (pass) =>
+{
+	try
+	{
+		const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'text/plain; charset=UTF-8'
+			},
+		});
+
+		if (!response.ok)
+		{
+			throw new Error('Erreur de réseau !');
+		}
+
+		const data = await response.json();
+		const utilisateurs = data.map(item => ({
+			login: item.login,
+			mdp: item.mdp,
+			email: item.email,
+			libdroit: item.libdroit
+		}));
+		return utilisateurs.some(user => user.login === sessionStorage.getItem('login') &&
+			user.mdp === pass);
+	} catch (error)
+	{
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
 
 export default Form;
