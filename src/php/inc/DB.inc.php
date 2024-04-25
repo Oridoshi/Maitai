@@ -14,7 +14,7 @@ class DB {
 	private static string $login    = "Admin";
 	private static string $password = "maitai";
 	private static string $port     = "3306";
-	private static string $host     = "localhost";
+	private static string $host     = "172.26.4.207";
 
 
 
