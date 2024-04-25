@@ -218,7 +218,7 @@ function Utilisateur() {
 			alert(errorMessageText);
 			
 		} else {
-			console.log("Aucune correspondance trouvée.");
+			console.log("Aucune erreur connue renvoyé. Retour du fetch ", data);
 		}
 	}
 
