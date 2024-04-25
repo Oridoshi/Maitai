@@ -1,9 +1,7 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include_once 'Droit.inc.php';
-include_once 'Utilisateur.inc.php';
-include_once 'UtilisateurDroit.inc.php';
+include_once 'Client.inc.php';
 
 class DB {
 
@@ -122,90 +120,46 @@ class DB {
 	//	que d'éléments dans le tableau passé en second paramètre.
 	/************************************************************************/
 	private function execMaj($ordreSQL,$tparam) {
-			$stmt = $this->connect->prepare($ordreSQL);
+		$stmt = $this->connect->prepare($ordreSQL);
 		$res = $stmt->execute($tparam); //execution de l'ordre SQL      	     
 		return $stmt->rowCount();
 	}
 
+	/*** METHODES POUR LES CLIENTS ****/
 
-
-
-	/*************************************************************************
-	* Fonctions qui peuvent être utilisées dans les scripts PHP
-	*************************************************************************/
-
-	/** Retourne tout les droits de la table droit. */
-	public function getDroits() {
-		$requete = 'SELECT * FROM Droit';
-		return $this->execQuery($requete,null,'Droit');
+	/** Récuperer les clients. */
+	public function getClients() {
+		$requete = 'SELECT * FROM Client';
+		return $this->execQuery($requete,null,'Client');
 	}
 
-	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
-	public function getUtilisateursEtDroit() {
-		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit';
-		$stmt = $this->connect->prepare($requete);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		$tab = array();
-		$tuple = $stmt->fetch();
-		if ($tuple) {
-			while ($tuple != false) {
-				$tab[]=$tuple;
-				$tuple = $stmt->fetch();
-			}
+	/** Récuperer les clients présents. */
+	public function getClientsPresent() {
+		$requete = 'SELECT * FROM Client WHERE present = 1';
+		return $this->execQuery($requete,null,'Client');
+	}
+	/** Récuperer le client à l'aide du nom du club */
+	public function getClient($nomClub) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
+		return $this->execQuery($requete,array($nomClub),'Client')[0];
+	}
+
+	/** Modifier les données d'un client. */
+	public function updateClient($client) {
+		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
+	}
+
+	/** Ajouter un client. */
+	public function insertClient($client) {
+
+		$existingClient = $this->getClient($client);
+		if ($existingClient) {
+			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
 		}
-		return $tab;
-	}
-	/*** METHODES POUR LES UTILISATEURS ****/
 
-	/** Obtenir un utilisateur à partir de son login */
-	public function getUtilisateur($login) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
-		return $this->execQuery($requete,array($login),'Utilisateur')[0];
-	}
-
-	/** Modifier les données d'un utilisateur. */
-	public function updateUtilisateur($utilisateur) {
-		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
-		return $this->execMaj($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()));
-	}
-
-	public function updateUtilisateurDroit($droituti) {
-		$this->suppDroitUtilisateur($droituti->getIdUti());
-		$this->insertUtilisateurDroit($droituti->getIdUti(), $droituti->getIdDroit());
-	}
-
-
-	/** Supprimer les droits d'un utilisateur. */
-	public function suppDroitUtilisateur($iduti) {
-		$requete = 'DELETE FROM UtilisateurDroit WHERE idUti = ?';
-		return $this->execQuery($requete,array($iduti),'UtilisateurDroit');
-	}
-
-
-	/** Modifier les droits d'un utilisateur. */
-	public function updateDroitUtilisateur($iduti, $idDroit) {
-		$requete = 'UPDATE UtilisateurDroit SET idDroit = ? WHERE idUti = ?';
-		return $this->execMaj($requete,array($idDroit, $idUti));
-	}
-
-	/** Supprimer un utilisateur. */
-	public function suppUtilisateur($iduti) {
-		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
-		return $this->execQuery($requete,array($iduti),'Utilisateur');
-	}
-	
-	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
-	public function insertUtilisateur($utilisateur) {		
-		// Insérer l'utilisateur s'il n'existe pas déjà
-		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
-	}
-
-	/** Ajouter un UtilisateurDroit si l'utilisateur n'a pas déjà de droit */
-	public function insertUtilisateurDroit($idUti, $droit) {
-		$requete = 'INSERT INTO UtilisateurDroit (idUti, idDroit) VALUES (?, ?)';
-		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
-		
+		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) VALUES (?, ?, ?, ?)';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
 	}
 } //fin classe DB
