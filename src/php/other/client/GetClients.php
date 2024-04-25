@@ -1,5 +1,5 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+
 include_once "../../inc/DB.inc.php";
 
 $present = isset($_POST['present']) ? $_POST['present'] : false;
