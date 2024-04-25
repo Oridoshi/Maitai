@@ -79,7 +79,7 @@ return (
 									name={head.id}
 									className="form-control border-secondary"
 									pattern="0[1-9](\s?\d{2}){4}"
-									value={formValues[head.id] || ''} 
+									value={formValues[head.id] !== undefined ? formValues[head.id].replace(/(\d{2})(?=\d)/g, '$1 ') : ''}
 									onChange={handleChangePhoneNumber}
 									required={head.required ? true : false}
 								/>
@@ -202,10 +202,9 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 		const updatedRowData = {};
 		header.forEach(head =>
 		{
-			if (head.type !== 'checkbox')
-				updatedRowData[head.id] = formData.get(head.id);
-			else
-				updatedRowData[head.id] = formData.get(head.id) !== null;
+			if      (head.type === 'checkbox') updatedRowData[head.id] = formData.get(head.id) !== null;
+			else if (head.type === 'tel')      updatedRowData[head.id] = formData.get(head.id).replace(/\s/g, '');
+			else                               updatedRowData[head.id] = formData.get(head.id);
 		});
 
 		const id = updatedRowData.id;
@@ -305,7 +304,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 									{header.map(column => (
 										column.show && (
 												<td className={`bg-light ${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={`${item.id}-${column.id}`}>
-												{column.type !== 'checkbox' && column.type !== 'button' && (
+												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && (
 													// Si ce n'est pas un checkbox ni un button, afficher la valeur de la colonne
 													`${item[column.id]}`
 												)}
@@ -313,6 +312,11 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 												{column.type === 'checkbox' && (
 													// Si c'est un checkbox, afficher une case à cocher en lecture seule
 													<input type='checkbox' checked={item[column.id]} readOnly className="form-check-input border-secondary" style={{ fontSize: '1.2em' }}  />
+												)}
+
+												{column.type === 'tel' && (
+													// Si c'est un numéro de téléphone, afficher les numéros avec un espace
+													`${item[column.id].replace(/(..)/g, '$1 ')}` // Retirez le caractère ")" en trop
 												)}
 
 												{/* Si c'est un button */}
