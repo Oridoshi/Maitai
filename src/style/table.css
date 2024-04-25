@@ -1,0 +1,67 @@
+.tableau th {
+	background-color: #005C8F !important;
+}
+
+.tableau td {
+	background-color: #F2EEEB !important;
+	border: 0px;
+	vertical-align: middle;
+}
+
+.tableau tr:nth-child(even) td {
+	background-color: #ede4dd !important;
+}
+
+.celCenter {
+	text-align: center;
+}
+
+.celLeft {
+	text-align: left;
+}
+
+.btnModif,
+.btnSuppr {
+	width: 30px;
+	height: 30px;
+	border: 0px;
+	border-radius: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+	background-color: #006DAA;
+
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.btnModif {
+	background-image: url('../img/update.svg');
+}
+
+.btnModif:hover {
+	background-color: #005C8F
+}
+
+.btnSuppr {
+	background-image: url('../img/suppr.svg');
+}
+
+.btnSuppr:hover {
+	background-color: #DD6565;
+}
+
+.btnAjouter {
+	width: 40px;
+	height: 40px;
+
+	background-image: url('../img/ajouter.svg');
+
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-radius: 10px;
+
+	background-color: #006DAA;
+	border-color: #006DAA;
+}
