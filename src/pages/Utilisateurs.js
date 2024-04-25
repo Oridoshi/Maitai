@@ -4,7 +4,9 @@ import { cheminPHP } from '../components/VarGlobal';
 
 function Utilisateur() {
 
+
 	const [initialData , setInitialData ] = useState([]);
+	const [filterData  , setFilterData  ] = useState([]);
 	const [initialDroit, setInitialDroit] = useState([]);
 	const [libDroit    , setLibDroit    ] = useState([]);
 
@@ -30,6 +32,7 @@ function Utilisateur() {
 				id: index + 1
 			}));
 			setInitialData(newData);
+			setFilterData (newData);
 		})
 		.catch(error => {
 			console.error('Erreur :', error);
@@ -224,21 +227,54 @@ function Utilisateur() {
 	}
 
 
+	// FILTRES
+	const handleChange   = (e) => {filter( e.target.value);};
+
+	function filter (value)
+	{
+		console.log(value)
+		// Filtrer les données en fonction de la valeur de recherche
+		const filteredData = initialData.filter((element) => {
+				// Parcourir les clés de l'en-tête initial
+				for (const key of initialHeader) {
+					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+					if (key.show) {
+						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
+							return true; // Si correspondance, conserver cet élément
+						}
+					}
+				}
+				return false; // Si aucune correspondance, exclure cet élément
+		});
+
+		// Mettre à jour les données filtrées
+		setFilterData(filteredData);
+	}
+
+
 
 	//Création du tableau
 	return (
-	<div className="col-sm-10">
+		<div className="col-sm-12">
 	
-		<h1 className='titre'>Gestion des utilisateurs </h1>
+			<h1 className='titre'>Gestion des utilisateurs </h1>
 
-		<Table 
-			header={initialHeader} 
-			data={initialData} 
-			funInsert={funInsert} 
-			funUpdate={funUpdate} 
-			funDelete={funDelete} 
-		/>
-	</div>
+			<div className="grpRecherche mt-4 d-flex align-items-center">
+				{/* barre de recherche */}
+				<div className="col-sm-3">
+					<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
+				</div>
+			</div>
+
+			<Table 
+				header={initialHeader} 
+				data={filterData} 
+				funInsert={funInsert} 
+				funUpdate={funUpdate} 
+				funDelete={funDelete} 
+			/>
+		</div>
 	);
 }
 

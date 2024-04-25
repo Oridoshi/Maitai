@@ -3,9 +3,74 @@
 	src: url("../fonts/Poppins-Medium.ttf");
 }
 
-.body {
+.font {
 	background-color: #FFFFFF;
+	font-family: Popins;
 }
-.enTete{
-	color : #005C8F;
+
+.titre {
+	width: 100%;
+	margin-top: 20px;
+	padding-left: 2%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+
+	color: #005C8F;
+	background-color: #F2EEEB;
+
+	font-size: 30px;
+	font-weight: bolder;
+}
+
+.body {
+	margin-top: 50px;
+}
+
+.btngroup {
+	text-align: right;
+	padding-right: 2%;
+}
+
+.btnAnnuler {
+	background-color: #DD6565;
+	color: #FFFFFF;
+	font-weight: bolder;
+	border: 0px;
+	margin-right: 20px;
+}
+
+.btnAnnuler:hover,
+.btnAnnuler:focus {
+	background-color: rgb(176, 47, 47) !important;
+	color: #FFFFFF !important;
+}
+
+.btnSauvegarder {
+	background-color: #006DAA;
+	color: #FFFFFF;
+	font-weight: bolder;
+	border: 0px;
+}
+
+.btnSauvegarder:hover,
+.btnSauvegarder:focus {
+	background-color: #005C8F !important;
+	color: #FFFFFF !important;
+}
+
+.grpRecherche {
+	margin-left: 3%;
+}
+
+.barre {
+	background-color: #F2EEEB;
+	border-color: #006DAA;
+	border-width: 2px;
+	border-radius: 15px;
+
+	background-image: url('../img/loupe.svg');
+	background-size: 30px;
+	background-position: calc(100% - 10px) center;
+	/* Décaler de 5px vers la gauche */
+	background-repeat: no-repeat;
 }
