@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'; // Importez useState ici
 import Table from '../components/Table';
+import { cheminPHP } from '../components/VarGlobal.js';  
 
 function Client() {
 
@@ -10,7 +11,7 @@ function Client() {
 
 
 	useEffect(() => {
-		fetch("http://localhost/Maitai/src/php/other/client/GetClients.php", {
+		fetch(cheminPHP + "client/GetClients.php", {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
@@ -68,7 +69,7 @@ function Client() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/src/php/other/client/SuppressionClient.php", requestOptions);
+			const response = await fetch(cheminPHP + "client/SuppressionClient.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
@@ -109,7 +110,7 @@ function Client() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/src/php/other/client/CreationClient.php", requestOptions);
+			const response = await fetch(cheminPHP + "client/CreationClient.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
@@ -151,7 +152,7 @@ function Client() {
 				body: formData
 			};
 
-			const response = await fetch("http://localhost/Maitai/src/php/other/client/ModificationClient.php", requestOptions);
+			const response = await fetch(cheminPHP + "client/ModificationClient.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
