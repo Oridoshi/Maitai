@@ -258,7 +258,7 @@ function Utilisateur() {
 	return (
 		<div className="col-sm-12">
 	
-			<h1 className='titre'>Gestion des utilisateurs </h1>
+			<h1 className='titre mt-1'>Gestion des utilisateurs </h1>
 
 			<div className="grpRecherche mt-4 d-flex align-items-center">
 				{/* barre de recherche */}
