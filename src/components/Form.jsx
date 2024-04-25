@@ -58,6 +58,10 @@ const Form = ({ etat }) =>
 /*--Page de login--*/
 const Log = ({ changeEtat }) =>
 {
+	sessionStorage.removeItem('login');
+	sessionStorage.removeItem('mail');
+	sessionStorage.removeItem('tel');
+
 	//pour changer le login sinon ça change pas
 	const [login, setLogin] = useState("");
 	const [isValid, setIsValid] = useState(true);
@@ -194,6 +198,10 @@ const Mdp = ({ changeEtat }) =>
 /*-Page de Création de compte-*/
 const Creer = ({ changeEtat }) =>
 {
+	sessionStorage.removeItem('login');
+	sessionStorage.removeItem('mail');
+	sessionStorage.removeItem('tel');
+
 	//pour changer les contenus des inputs
 	const [login, setLogin] = useState("");
 	const [mail, setMail] = useState("");
@@ -201,6 +209,7 @@ const Creer = ({ changeEtat }) =>
 
 	//pour changer le style quand c'est faux
 	const [isValid, setIsValid] = useState(true);
+	const [mailValid, setMailValid] = useState(true);
 
 	//évènement des zones de texte
 	const changeLogin = (event) =>
@@ -221,38 +230,48 @@ const Creer = ({ changeEtat }) =>
 	};
 
 	//envoye à la page de choix de mdp lorsqu'on souhaite créer un compte
-	const envoyer = (event) =>
+	const envoyer = async (event) =>
 	{
 		event.preventDefault();
-		if (!logExist())// il ne faut pas creer 2 compte identique
+		if (await logExist({ login })||await mailExist(mail))// il ne faut pas creer 2 compte identique
 		{
-			if (tel.length === 14)
+			if(await mailExist(mail))
 			{
-				sessionStorage.setItem('login', login);
-				changeEtat('confmdp');
+				setMail("");
+				setMailValid(false);
 			}
-		}
-		else
-		{
-			setLogin("");//vide le champs de texte
-			setIsValid(false);	//change le style
+			else
+			{
+				setLogin("");//vide le champs de texte
+				setIsValid(false);	//change le style
+			}
 			document.getElementById("btnSubmit").disabled = true;
 			setTimeout(() =>
 			{
 				document.getElementById("btnSubmit").disabled = false;
 			}, 2000)//empêche de faire un grand nombre tantative
 		}
+		else
+		{
+			if (tel.length === 14)
+			{
+				sessionStorage.setItem('login', login);
+				sessionStorage.setItem('mail', mail);
+				sessionStorage.setItem('tel', tel);
+				changeEtat('confmdp');
+			}
+		}
 	};
 
 	/* Regex des champs de textes test si l'expression son correctes*/
 	const regexLog = (event) =>
 	{
-		let loginVal = event.target.value;
-		const loginRegex = /^[A-Za-z]+$/;
-		if (!loginRegex.test(loginVal))
+		let val = event.target.value;
+		const loginRegex = /^[A-Za-z\d]+$/;
+		if (!loginRegex.test(val))
 		{
-			loginVal = loginVal.slice(0, -1);
-			event.target.value = loginVal;
+			val = val.slice(0, -1);
+			event.target.value = val;
 		}
 	};
 	const regexMail = (event) =>
@@ -275,7 +294,10 @@ const Creer = ({ changeEtat }) =>
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
+	const mailClass = mailValid ? "form-control saisie" : "form-control saisie invalid";
 	const placeholderText = isValid ? "Entrez votre login" : "Cette identifiant existe déjà !";
+	const placeholderMail = mailValid ? "Entrez votre mail" : "Ce mail existe déjà !";
+
 
 	return (
 		<div>
@@ -285,7 +307,7 @@ const Creer = ({ changeEtat }) =>
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
 					<input type="text" required value={ login } className={ inputClass } id="exampleInputLogin" aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
 					<label htmlFor="exampleInputMail" className="form-label label">Mail</label>
-					<input type="email" required value={ mail } className="form-control saisie" aria-describedby="emailHelp" placeholder="Entrez votre mail" onChange={ changeMail } />
+					<input type="email" required value={ mail } className={mailClass} aria-describedby="emailHelp" placeholder={placeholderMail} onChange={ changeMail } />
 					<label htmlFor="exampleInputPhone" className="form-label label"> Numéro de téléphone </label>
 					<input type="tel" required value={ tel } className="form-control saisie" id="exampleInputPhone" aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
 				</div>
@@ -316,6 +338,7 @@ const Mail = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changement de page
 		if (await mailValid(mail))
 		{
+			sessionStorage.setItem('mail', mail);
 			changeEtat('code');
 		}
 		else
@@ -388,6 +411,7 @@ const ConfMdp = ({ changeEtat }) =>
 		if (valider())
 		{
 			sessionStorage.setItem('mdpValid', "true");
+			insertUser(mdp);
 			window.location.href = "/";//envoie à la page d'accueil
 		}
 		else
@@ -446,7 +470,7 @@ const Code = ({ changeEtat }) =>
 	const envoyer = async (event) =>
 	{
 		event.preventDefault();//obligatoire pour un changement de page
-		if (code.length === 6) // test si la longeur du code est bien de 6
+		if (code.length === 19) // test si la longeur du code est bien de 6
 		{
 			if (await mdpValid(code))
 			{
@@ -475,9 +499,18 @@ const Code = ({ changeEtat }) =>
 	//test si on entre bien des chiffres
 	const regex = (event) =>
 	{
-		let codeVal = event.target.value.replace(/\D/g, '');
-		codeVal = codeVal.slice(0, 6);	// /!\ j'ai choisi un nombre de 6 chiffres arbitrairement si on veut la changer c'est ici et dans envoyer()
-		event.target.value = codeVal;
+		// Supprime tous les caractères non alphabétiques et non numériques
+		let codeVal = event.target.value.replace(/[^A-Za-z0-9]/g, '');
+
+		// Insère un tiret après chaque groupe de 4 caractères
+		codeVal = codeVal.slice(0, 16); // Limite la longueur à 16 caractères
+		codeVal = codeVal.replace(/(.{4})/g, '$1-'); // Insère un tiret après chaque groupe de 4 caractères
+
+		// Supprime le dernier tiret s'il y en a un
+		codeVal = codeVal.replace(/-$/, '');
+
+		// Met à jour la valeur de l'élément cible
+		event.target.value = codeVal
 	};
 
 	//classes de style
@@ -500,8 +533,17 @@ const Code = ({ changeEtat }) =>
 	);
 };
 
-//cherche en bado si on a bien un utilisateur
-const logExist = async ({ login }) =>
+
+
+/**
+ * Ici c'est la partie bado qui sera relié au back
+ *
+ */
+
+/*--REQUETE--*/
+
+//renvoie tous les utilisateurs le but est de limité le fetch de select à seulement cette fonction
+const getUsers = async () =>
 {
 	try
 	{
@@ -525,7 +567,7 @@ const logExist = async ({ login }) =>
 			libdroit: item.libdroit
 		}));
 
-		return utilisateurs.some(user => user.login === login);
+		return utilisateurs;
 	} catch (error)
 	{
 		console.log("erreur", error);
@@ -533,71 +575,77 @@ const logExist = async ({ login }) =>
 	}
 }
 
+//cherche en bado si on a bien un utilisateur
+const logExist = async ({ login }) =>
+{
+	const utilisateurs = await getUsers();
+	return utilisateurs.some(user => user.login === login);
+}
 //test si le mdp correspond au user
 const mdpValid = async (pass) =>
 {
-	try
-	{
-		const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8'
-			},
-		});
-
-		if (!response.ok)
-		{
-			throw new Error('Erreur de réseau !');
-		}
-
-		const data = await response.json();
-		const utilisateurs = data.map(item => ({
-			login: item.login,
-			mdp: item.mdp,
-			email: item.email,
-			libdroit: item.libdroit
-		}));
-		return utilisateurs.some(user => user.login === sessionStorage.getItem('login') &&
-			user.mdp === pass);
-	} catch (error)
-	{
-		console.log("erreur", error);
-		return false; // Retourner une valeur par défaut en cas d'erreur
-	}
+	const utilisateurs = await getUsers();
+	return utilisateurs.some(user => user.login === sessionStorage.getItem('login') && user.mdp === pass);
 }
 
 //test si le mail correspond au user
 const mailValid = async (mail) =>
 {
+	const utilisateurs = await getUsers();
+	return utilisateurs.some(user => user.login === sessionStorage.getItem('login') && user.email === mail);
+}
+//test si le mail exist en bado
+const mailExist = async (mail) =>
+{
+	const utilisateurs = await getUsers();
+	return utilisateurs.some(user => user.mail === mail);
+}
+
+/*--INSERT--*/
+
+// Fonction pour l'insertion
+const insertUser = async (mdp) =>
+{
 	try
 	{
-		const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8'
-			},
-		});
+
+		console.log("test");
+		let utilisateur = {
+			login: sessionStorage.getItem('login'),
+			email: sessionStorage.getItem('mail'),
+			mdp: mdp,
+			tel: sessionStorage.getItem('tel'),
+			actif: 1,
+			droit: 'client'
+		};
+
+		console.log(utilisateur);
+		/*
+			$login = $_POST['login'];
+			$email = $_POST['email'];
+			$actif = $_POST['actif'];
+			$droit = $_POST['droit'];
+		 */
+
+
+		const requestOptions = {
+			method: 'POST',
+			body: utilisateur
+		};
+
+		const response = await fetch(cheminPHP + "utilisateur/UpdateUtilisateur.php", requestOptions);
 
 		if (!response.ok)
 		{
-			throw new Error('Erreur de réseau !');
+			throw new Error('Une erreur s\'est produite.');
 		}
 
-		const data = await response.json();
-		const utilisateurs = data.map(item => ({
-			login: item.login,
-			mdp: item.mdp,
-			email: item.email,
-			libdroit: item.libdroit
-		}));
-
-		return utilisateurs.some(user => user.login === sessionStorage.getItem('login') &&
-			user.email === mail);
+		const data = await response.text();
+		return data === ""; // Retourne true si la suppression a réussi, sinon false
 	} catch (error)
 	{
-		console.log("erreur", error);
-		return false; // Retourner une valeur par défaut en cas d'erreur
+		console.log(error);
+		return false; // Retourne false en cas d'erreur
 	}
-}
-
+};
 export default Form;
