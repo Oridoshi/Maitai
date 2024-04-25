@@ -311,10 +311,10 @@ const Mail = ({ changeEtat }) =>
 	};
 
 	//envoye vers la page de récupération du compte via un code
-	const envoyer = (event) =>
+	const envoyer = async (event) =>
 	{
 		event.preventDefault();//obligatoire pour un changement de page
-		if (mailExist())
+		if (await mailValid(mail))
 		{
 			changeEtat('code');
 		}
@@ -341,13 +341,6 @@ const Mail = ({ changeEtat }) =>
 			event.target.value = mailVal;
 		}
 	};
-
-	//test en bado si le mail existe
-	function mailExist()
-	{
-		if (mail === "test@gmail.com") return true;
-		return false;
-	}
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
@@ -450,12 +443,12 @@ const Code = ({ changeEtat }) =>
 	};
 
 	//ennvoye à la page de choix du nouveau mot de passe
-	const envoyer = (event) =>
+	const envoyer = async (event) =>
 	{
 		event.preventDefault();//obligatoire pour un changement de page
 		if (code.length === 6) // test si la longeur du code est bien de 6
 		{
-			if (codeExist())
+			if (await mdpValid(code))
 			{
 				changeEtat('confmdp');//charge la page de choix du mot de passe
 			}
@@ -486,13 +479,6 @@ const Code = ({ changeEtat }) =>
 		codeVal = codeVal.slice(0, 6);	// /!\ j'ai choisi un nombre de 6 chiffres arbitrairement si on veut la changer c'est ici et dans envoyer()
 		event.target.value = codeVal;
 	};
-
-	//test si on a bien envoyer le code à cette adresse mail
-	function codeExist()
-	{
-		if (code === "123456") return true;
-		return false;
-	}
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
@@ -573,6 +559,40 @@ const mdpValid = async (pass) =>
 		}));
 		return utilisateurs.some(user => user.login === sessionStorage.getItem('login') &&
 			user.mdp === pass);
+	} catch (error)
+	{
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
+//test si le mail correspond au user
+const mailValid = async (mail) =>
+{
+	try
+	{
+		const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'text/plain; charset=UTF-8'
+			},
+		});
+
+		if (!response.ok)
+		{
+			throw new Error('Erreur de réseau !');
+		}
+
+		const data = await response.json();
+		const utilisateurs = data.map(item => ({
+			login: item.login,
+			mdp: item.mdp,
+			email: item.email,
+			libdroit: item.libdroit
+		}));
+
+		return utilisateurs.some(user => user.login === sessionStorage.getItem('login') &&
+			user.email === mail);
 	} catch (error)
 	{
 		console.log("erreur", error);
