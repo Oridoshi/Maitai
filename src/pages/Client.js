@@ -4,6 +4,7 @@ import Table from '../components/Table';
 function Client() {
 
 	const [initialData , setInitialData ] = useState([]);
+	const [filterData  , setFilterData  ] = useState([]);
 
 
 
@@ -30,6 +31,7 @@ function Client() {
 				id: index + 1
 			}));
 			setInitialData(newData);
+			setFilterData (newData);
 		})
 		.catch(error => {
 			console.error('Erreur :', error);
@@ -184,26 +186,53 @@ function Client() {
 
 
 
+
+	const handleChange = (e) => {
+		const { value } = e.target;
+
+		// Filtrer les données en fonction de la valeur de recherche
+		const filteredData = initialData.filter((element) => {
+			// Parcourir les clés de l'en-tête initial
+			for (const key of initialHeader) {
+				// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+				if (key.show) {
+					// Vérifier si la valeur existe et est une chaîne de caractères
+					const elementValue = typeof element[key.id] === 'string' ? element[key.id] : '';
+					// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+					if (elementValue.includes(value)) {
+						return true; // Si correspondance, conserver cet élément
+					}
+				}
+			}
+			return false; // Si aucune correspondance, exclure cet élément
+		});
+
+		// Mettre à jour les données filtrées
+		setFilterData(filteredData);
+	};
+
+
+
+
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre'>Gestion des clients </h1>
+		<h1 className='titre mt-1'>Gestion des clients </h1>
 
-		
-				<div className="grpRecherche">
-					<form className="d-flex col-sm-3 m-0" role="search">
-						<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search"/>
-					</form>
-				</div>
+		<div className="grpRecherche mt-4">
+			<form className="d-flex col-sm-3 m-0" role="search">
+				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange}/>
+			</form>
+		</div>
 
-		<Table 
-			header={initialHeader} 
-			data={initialData} 
-			funInsert={funInsert} 
-			funUpdate={funUpdate} 
-			funDelete={funDelete} 
-		/>
+			<Table 
+				header={initialHeader} 
+				data={filterData} 
+				funInsert={funInsert} 
+				funUpdate={funUpdate} 
+				funDelete={funDelete} 
+			/>
 	</div>
 	);
 }

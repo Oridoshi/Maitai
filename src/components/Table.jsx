@@ -288,15 +288,15 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 	return (
 		<div className='m-4'>
 
-			<div className="panel" style={ { maxHeight: '400px', overflowY: 'auto' } }>
+			<div className="panel" style={ { maxHeight: '300px', overflowY: 'auto' } }>
 				<table className='tableau table table-hover my-0'>
 					<thead className='position-sticky top-0'>
 						<tr>
 							{ header.map(column => (
 								column.show && // Vérifier si la colonne doit être affichée
-								<th className='bg-primary text-white' key={ column.id }>{ column.name }</th>
+								<th className= {`bg-primary text-white ${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={ column.id }>{ column.name }</th>
 							)) }
-							{ (funUpdate !== undefined || funDelete !== undefined) && <th className='bg-primary text-white'>Action</th> }
+							{ (funUpdate !== undefined || funDelete !== undefined) && <th className='bg-primary text-white celCenter'>Action</th> }
 						</tr>
 					</thead>
 					<tbody>
@@ -304,7 +304,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 								<tr key={item.id} className=''>
 									{header.map(column => (
 										column.show && (
-											<td className='bg-light' key={`${item.id}-${column.id}`}>
+												<td className={`bg-light ${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={`${item.id}-${column.id}`}>
 												{column.type !== 'checkbox' && column.type !== 'button' && (
 													// Si ce n'est pas un checkbox ni un button, afficher la valeur de la colonne
 													`${item[column.id]}`
@@ -312,7 +312,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 
 												{column.type === 'checkbox' && (
 													// Si c'est un checkbox, afficher une case à cocher en lecture seule
-													<input type='checkbox' checked={item[column.id]} readOnly />
+													<input type='checkbox' checked={item[column.id]} readOnly className="form-check-input border-secondary" style={{ fontSize: '1.2em' }}  />
 												)}
 
 												{/* Si c'est un button */}
@@ -327,7 +327,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 									))}
 
 									{(funUpdate !== undefined || funDelete !== undefined) &&
-										<td className='bg-light'>
+										<td className='bg-light celCenter'>
 											{funUpdate !== undefined && <button className='btnModif' onClick={() => openModal(item)}></button>}
 											{funDelete !== undefined && <button className='btnSuppr' onClick={() => deleteRow(item)}></button>}
 										</td>
