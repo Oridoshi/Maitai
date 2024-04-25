@@ -47,42 +47,12 @@ function Client() {
 	const initialHeader = [
 		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false },
 		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'text'    , required : true , editable : true , show : true  },
-		{ id: 'telephone', name: 'Numero de téléphone'  , type:'number'  , required : true , editable : true , show : true  },
+		{ id: 'telephone', name: 'Numero de téléphone'  , type:'tel'     , required : true , editable : true , show : true  },
 		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true  },
-		{ id: 'present'  , name: 'Présent sur le site ?', type:'checkbox', required : true , editable : true , show : true  },
+		{ id: 'present'  , name: 'Présent sur le site'  , type:'checkbox', required : true , editable : true , show : true  },
 	];
 
 
-
-
-
-
-
-	// Fonction pour la suppression
-	const funDelete = async (suppItem) => {
-		try {
-			const formData = new FormData();
-			formData.append('login', suppItem.login);
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "client/SuppressionClient.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const data = await response.text();
-			afficherError(data);
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
-		}
-	};
 
 
 	// Fonction pour l'insertion
@@ -181,7 +151,8 @@ function Client() {
 			alert(errorMessageText);
 			
 		} else {
-			console.log(data);
+			if (data !== "")
+				alert(data.replace('<br>', ''));
 		}
 	}
 
@@ -232,7 +203,6 @@ function Client() {
 				data={filterData} 
 				funInsert={funInsert} 
 				funUpdate={funUpdate} 
-				funDelete={funDelete} 
 			/>
 	</div>
 	);

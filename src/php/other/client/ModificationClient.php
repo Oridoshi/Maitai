@@ -1,5 +1,5 @@
 <?php
-
+header("Access-Control-Allow-Origin: *");
 include_once '../../inc/DB.inc.php';
 
 // initialisations des variables à null
@@ -12,7 +12,7 @@ $present = $_POST['present'];
 $pdo = DB::getInstance();
 
 // récupération du client à modifier
-$client = $pdo->getClient($prevNomClub);
+$client = $pdo->getClient($prevNomClub)[0];
 
 // modification des données du client si non null
 if($nomClub != "")

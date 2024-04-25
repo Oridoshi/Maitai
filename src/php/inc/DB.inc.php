@@ -141,7 +141,7 @@ class DB {
 	/** Récuperer le client à l'aide du nom du club */
 	public function getClient($nomClub) {
 		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
-		return $this->execQuery($requete,array($nomClub),'Client')[0];
+		return $this->execQuery($requete,array($nomClub),'Client');
 	}
 
 	/** Modifier les données d'un client. */
@@ -153,7 +153,7 @@ class DB {
 	/** Ajouter un client. */
 	public function insertClient($client) {
 
-		$existingClient = $this->getClient($client);
+		$existingClient = $this->getClient($client->getNomClub());
 		if ($existingClient) {
 			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
 			return false; // Sortir de la fonction si l'utilisateur existe déjà
