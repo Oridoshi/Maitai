@@ -61,6 +61,7 @@ const Log = ({ changeEtat }) =>
 	sessionStorage.removeItem('login');
 	sessionStorage.removeItem('mail');
 	sessionStorage.removeItem('tel');
+	sessionStorage.removeItem('statut');
 
 	//pour changer le login sinon ça change pas
 	const [login, setLogin] = useState("");
@@ -201,6 +202,7 @@ const Creer = ({ changeEtat }) =>
 	sessionStorage.removeItem('login');
 	sessionStorage.removeItem('mail');
 	sessionStorage.removeItem('tel');
+	sessionStorage.setItem('statut', 'nouveau');
 
 	//pour changer les contenus des inputs
 	const [login, setLogin] = useState("");
@@ -233,9 +235,9 @@ const Creer = ({ changeEtat }) =>
 	const envoyer = async (event) =>
 	{
 		event.preventDefault();
-		if (await logExist({ login })||await mailExist(mail))// il ne faut pas creer 2 compte identique
+		if (await logExist({ login }) || await mailExist(mail))// il ne faut pas creer 2 compte identique
 		{
-			if(await mailExist(mail))
+			if (await mailExist(mail))
 			{
 				setMail("");
 				setMailValid(false);
@@ -307,7 +309,7 @@ const Creer = ({ changeEtat }) =>
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
 					<input type="text" required value={ login } className={ inputClass } id="exampleInputLogin" aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
 					<label htmlFor="exampleInputMail" className="form-label label">Mail</label>
-					<input type="email" required value={ mail } className={mailClass} aria-describedby="emailHelp" placeholder={placeholderMail} onChange={ changeMail } />
+					<input type="email" required value={ mail } className={ mailClass } aria-describedby="emailHelp" placeholder={ placeholderMail } onChange={ changeMail } />
 					<label htmlFor="exampleInputPhone" className="form-label label"> Numéro de téléphone </label>
 					<input type="tel" required value={ tel } className="form-control saisie" id="exampleInputPhone" aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
 				</div>
@@ -411,7 +413,11 @@ const ConfMdp = ({ changeEtat }) =>
 		if (valider())
 		{
 			sessionStorage.setItem('mdpValid', "true");
-			insertUser(mdp);
+			if (sessionStorage.getItem('statut') === 'nouveau')
+			{
+				console.log('catcha');
+				insertUser(mdp);
+			}
 			window.location.href = "/";//envoie à la page d'accueil
 		}
 		else
@@ -543,6 +549,7 @@ const Code = ({ changeEtat }) =>
 /*--REQUETE--*/
 
 //renvoie tous les utilisateurs le but est de limité le fetch de select à seulement cette fonction
+
 const getUsers = async () =>
 {
 	try
@@ -604,48 +611,51 @@ const mailExist = async (mail) =>
 /*--INSERT--*/
 
 // Fonction pour l'insertion
-const insertUser = async (mdp) =>
+function insertUser(mdp)
 {
-	try
-	{
+	let tel = sessionStorage.getItem('tel').replace(/\s/g, '');
+	tel = parseInt(tel, 10);
 
-		console.log("test");
-		let utilisateur = {
-			login: sessionStorage.getItem('login'),
-			email: sessionStorage.getItem('mail'),
-			mdp: mdp,
-			tel: sessionStorage.getItem('tel'),
-			actif: 1,
-			droit: 'client'
-		};
+	// Création de l'utilisateur de test
+	const utilisateur = {
+		login: sessionStorage.getItem('login'),
+		mdp: mdp,
+		email: sessionStorage.getItem('mail'),
+		actif: true,
+		droit: 'client', // Exemple de droit, à remplacer par l'ID du droit désiré
+		tel: tel
+	};
 
-		console.log(utilisateur);
-		/*
-			$login = $_POST['login'];
-			$email = $_POST['email'];
-			$actif = $_POST['actif'];
-			$droit = $_POST['droit'];
-		 */
+	console.log(utilisateur);
 
+	// Configuration de la requête fetch
+	const requestOptions = {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(utilisateur)
+	};
 
-		const requestOptions = {
-			method: 'POST',
-			body: utilisateur
-		};
-
-		const response = await fetch(cheminPHP + "utilisateur/UpdateUtilisateur.php", requestOptions);
-
-		if (!response.ok)
+	// Exécution de la requête fetch vers creationUtilisateur.php
+	fetch(cheminPHP + "utilisateur/CreationUtilisateur2.php", requestOptions)
+		.then(response =>
 		{
-			throw new Error('Une erreur s\'est produite.');
-		}
+			if (!response.ok)
+			{
+				throw new Error('Erreur lors de la requête vers creationUtilisateur.php');
+			}
+			return response.json();
+		})
+		.then(data =>
+		{
+			console.log('Utilisateur inséré avec succès:', data);
+		})
+		.catch(error =>
+		{
+			console.error('Erreur:', error);
+		});
+}
 
-		const data = await response.text();
-		return data === ""; // Retourne true si la suppression a réussi, sinon false
-	} catch (error)
-	{
-		console.log(error);
-		return false; // Retourne false en cas d'erreur
-	}
-};
+
 export default Form;
