@@ -1,8 +1,6 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 include_once '../../inc/DB.inc.php';
-header('Access-Control-Allow-Origin: *');
-include_once '../../inc/DB.inc.php';
 
 // initialisations des variables
 $prevLogin = $_POST['prevLogin'];
