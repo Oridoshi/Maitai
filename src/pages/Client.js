@@ -38,9 +38,6 @@ function Client() {
 	}, []);
 
 
-
-
-
 	// En-tête de la table
 	const initialHeader = [
 		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false                     },
@@ -141,17 +138,38 @@ function Client() {
 
 	const presentFalseAll = async () => {
 		try {
-
-			const response = await fetch(cheminPHP + "client/ModificationClient.php");
+			const response = await fetch(cheminPHP + "client/DesactiverClients.php");
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
 			}
 
+			// Requête pour obtenir les données mises à jour après la désactivation de tous les clients
+			const newDataResponse = await fetch(cheminPHP + "client/GetClients.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!newDataResponse.ok) {
+				throw new Error('Erreur lors de la récupération des données mises à jour.');
+			}
+
+			const newData = await newDataResponse.json();
+
+			// Mettre à jour les données initiales et filtrées avec les nouvelles données
+			const updatedData = newData.map((item, index) => ({
+				...item,
+				id: index + 1
+			}));
+			setInitialData(updatedData);
+			setFilterData(updatedData);
 		} catch (error) {
 			console.log(error);
 		}
-	}
+	};
+
 
 
 	function afficherError(data) {
