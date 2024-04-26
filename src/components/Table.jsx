@@ -170,7 +170,7 @@ function Checkbox({ id, name, defaultValue })
 
 
 
-function Table({ header, data, funInsert, funUpdate, funDelete })
+function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse })
 {
 	const [datas, setTableData] = useState(data);
 	useEffect(() =>
@@ -210,7 +210,6 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 		const id = updatedRowData.id;
 		console.log(updatedRowData);
 
-
 		if (id !== '')
 		{
 			const oldRowData = datas.find(item => item.id + "" === id);
@@ -237,13 +236,13 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 			}
 		} else
 		{
-			updatedRowData.id = Math.max(...datas.map(item => item.id), 0) + 1;
 
 			// Appel de funInsert
 			const insertSuccess = await funInsert(updatedRowData);
 
 			if (insertSuccess)
 			{
+				updatedRowData.id = Math.max(...datas.map(item => item.id), 0) + 1;
 				setTableData(prevData => [...prevData, updatedRowData]);
 				setModalIsOpen(false);
 			} else
@@ -287,7 +286,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 	return (
 		<div className='m-4'>
 
-			<div className="panel" style={ { maxHeight: '45vh', overflowY: 'auto' } }>
+			<div className="panel" style={ { maxHeight: '300px', overflowY: 'auto' } }>
 				<table className='tableau table table-hover my-0'>
 					<thead className='position-sticky top-0'>
 						<tr>
@@ -298,12 +297,29 @@ function Table({ header, data, funInsert, funUpdate, funDelete })
 							{ (funUpdate !== undefined || funDelete !== undefined) && <th className='bg-primary text-white celCenter'>Action</th> }
 						</tr>
 					</thead>
+
+
+
+
+
+
 					<tbody>
 					{datas.slice().reverse().map(item => (
-								<tr key={item.id} className=''>
+
+								<tr
+									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 1) === false ? 'text-muted' : ''}`}
+									key={`${item.id}`}
+								>
+
 									{header.map(column => (
 										column.show && (
-												<td className={`bg-light ${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={`${item.id}-${column.id}`}>
+												<td className={
+														`bg-light 
+														${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`
+													} 
+													key={`${item.id}-${column.id}`}
+												>
+												
 												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && (
 													// Si ce n'est pas un checkbox ni un button, afficher la valeur de la colonne
 													`${item[column.id]}`

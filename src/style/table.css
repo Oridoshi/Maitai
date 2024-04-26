@@ -65,3 +65,7 @@
 	background-color: #006DAA;
 	border-color: #006DAA;
 }
+.text-muted td {
+	color: #6c757d !important;
+	/* Couleur grise par défaut */
+}

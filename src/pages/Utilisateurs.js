@@ -274,6 +274,7 @@ function Utilisateur() {
 					funInsert={funInsert} 
 					funUpdate={funUpdate} 
 					funDelete={funDelete} 
+					keyGrayWhenFalse='actif'
 				/>
 			</div>
 		</div>
