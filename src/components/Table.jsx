@@ -307,11 +307,9 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 					{datas.slice().reverse().map(item => (
 
 								<tr
-									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && item[keyGrayWhenFalse] === false ? 'text-muted' : ''}`}
+									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'}`}
 									key={`${item.id}`}
 								>
-
-								{console.log(typeof keyGrayWhenFalse === 'string', item[keyGrayWhenFalse] === false)}
 
 									{header.map(column => (
 										column.show && (

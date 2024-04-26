@@ -25,8 +25,6 @@ function Client() {
 		})
 		.then(data => {
 
-			console.log(data);
-
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1
@@ -141,9 +139,18 @@ function Client() {
 	};
 
 
-	function presentFalseAll ()
-	{
+	const presentFalseAll = async () => {
+		try {
 
+			const response = await fetch(cheminPHP + "client/ModificationClient.php");
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 
