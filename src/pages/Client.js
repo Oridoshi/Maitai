@@ -45,11 +45,11 @@ function Client() {
 
 	// En-tête de la table
 	const initialHeader = [
-		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false },
-		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'text'    , required : true , editable : true , show : true  },
-		{ id: 'telephone', name: 'Numero de téléphone'  , type:'tel'     , required : true , editable : true , show : true  },
-		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true  },
-		{ id: 'present'  , name: 'Présent sur le site'  , type:'checkbox', required : true , editable : true , show : true  },
+		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false                     },
+		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'text'    , required : true , editable : true , show : true                      },
+		{ id: 'telephone', name: 'Numero de téléphone'  , type:'tel'     , required : true , editable : true , show : true                      },
+		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true                      },
+		{ id: 'present'  , name: 'Présent sur le site'  , type:'checkbox', required : true , editable : true , show : true, fastEditable : true },
 	];
 
 
@@ -235,6 +235,7 @@ function Client() {
 			data={filterData} 
 			funInsert={funInsert} 
 			funUpdate={funUpdate} 
+			keyGrayWhenFalse = 'present'
 		/>
 	</div>
 	);
