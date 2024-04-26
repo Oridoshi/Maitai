@@ -4,6 +4,7 @@
 include_once 'Droit.inc.php';
 include_once 'Utilisateur.inc.php';
 include_once 'UtilisateurDroit.inc.php';
+include_once 'Client.inc.php';
 
 class DB {
 
@@ -199,6 +200,10 @@ class DB {
 	public function insertUtilisateurDroit($idUti, $droit) {
 		$requete = 'INSERT INTO UtilisateurDroit (idUti, idDroit) VALUES (?, ?)';
 		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
-		
+	}
+
+	public function getClient($login) {
+		$requete = 'SELECT * FROM Client WHERE login = ?';
+		return $this->execQuery($requete, array($login), 'Client')[0];
 	}
 } //fin classe DB
