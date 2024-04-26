@@ -1,0 +1,66 @@
+.nav {
+	background-color: #e5e5e5;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	width: 100%;
+	margin-top: 0px;
+}
+.logoMaitai{
+	width: 50px;
+	height: 50px;
+
+	background-image: url('../img/maitai.png');
+
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.btnAccueil{
+	width: 50px;
+	height: 50px;
+
+	background-image: url('../img/Home.svg');
+
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-radius: 10px;
+
+	background-color: #005C8F;
+}
+.btnAccueil:hover{
+	background-color: #006DAA;
+}
+
+.elt{
+	margin-left: 5px;
+	margin-right: 5px;
+	border-radius: 5px;
+	color: #000000;
+}
+.elt:hover {
+	color: #000000;
+	background-color: #dfdfdf;
+	text-decoration: underline;
+	text-decoration-color: #005C8F;
+	text-decoration-thickness: 2px;
+	text-decoration-skip-ink: none;
+	text-underline-offset: 10px;
+}
+.btnLogout{
+	width: 50px;
+	height: 50px;
+
+	background-image: url('../img/Logout.svg');
+
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-radius: 10px;
+
+	background-color: #005C8F;
+}
+.btnLogout:hover{
+	background-color: #DD6565;
+}
