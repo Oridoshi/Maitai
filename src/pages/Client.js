@@ -21,10 +21,10 @@ function Client() {
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
+			console.log(response)
 			return response.json();
 		})
 		.then(data => {
-
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1
