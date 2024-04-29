@@ -202,6 +202,17 @@ class DB {
 		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
 	}
 
+	/**
+	 * Mettre à jour le mot de passe d'un utilisateur.
+	 * @param string $login login de l'utilisateur
+	 * @param string $mdp nouveau mot de passe
+	 * @return void
+	 */
+	public function majMdpUti($login, $mdp) {
+		$requete = 'UPDATE Utilisateur SET mdp = ? WHERE login = ?';
+		$this->execMaj($requete, array($mdp, $login));
+	}
+
 
 
 
