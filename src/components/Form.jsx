@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import '../style/form.css';		//style du composant
 import { cheminPHP } from './VarGlobale';
 
@@ -15,6 +15,7 @@ import { cheminPHP } from './VarGlobale';
  * Pour le moment pour les test on a login = test mdp = test mail = test@gmail.com code = 123456
  * On ne doit pas pouvir créeer de compte identique au compte test
  */
+
 const Form = ({ etat }) =>
 {
 	//stock l'etat et recharge le menu quand on change d'etat
@@ -416,7 +417,7 @@ const ConfMdp = ({ changeEtat }) =>
 			if (sessionStorage.getItem('statut') === 'nouveau')
 			{
 				console.log('catcha');
-				insertUser(mdp);
+				funInsert(mdp);
 			}
 			window.location.href = "/";//envoie à la page d'accueil
 		}
@@ -611,51 +612,60 @@ const mailExist = async (mail) =>
 /*--INSERT--*/
 
 // Fonction pour l'insertion
-function insertUser(mdp)
+const funInsert = async (mdp) => {
+	try {
+
+		let tel = sessionStorage.getItem('tel').replace(/\s/g, '');
+
+		const formData = new FormData();
+		formData.append('login', sessionStorage.getItem('login'));
+		formData.append('mdp',mdp);
+		formData.append('email', sessionStorage.getItem('mail'));
+		formData.append('actif',true);
+		formData.append('droit','admin');
+		formData.append('tel',tel);
+
+		const requestOptions = {
+			method: 'POST',
+			body: formData
+		};
+
+		console.log(formData);
+
+		const response = await fetch(cheminPHP + "utilisateur/CreationUtilisateur.php", requestOptions);
+
+		if (!response.ok) {
+			throw new Error('Une erreur s\'est produite.');
+		}
+
+		const data = await response.text();
+		afficherError(data);
+		return data === ""; // Retourne true si la suppression a réussi, sinon false
+	} catch (error) {
+		console.log(error);
+		return false; // Retourne false en cas d'erreur
+	}
+};
+
+
+function afficherError(data)
 {
-	let tel = sessionStorage.getItem('tel').replace(/\s/g, '');
-	tel = parseInt(tel, 10);
+	const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
+	const match = regex.exec(data);
 
-	// Création de l'utilisateur de test
-	const utilisateur = {
-		login: sessionStorage.getItem('login'),
-		mdp: mdp,
-		email: sessionStorage.getItem('mail'),
-		actif: true,
-		droit: 'client', // Exemple de droit, à remplacer par l'ID du droit désiré
-		tel: tel
-	};
+	if (match)
+	{
+		const sqlState = match[1]; // État SQL
+		const errorCode = match[2]; // Code d'erreur
+		const errorMessageText = match[3].trim(); // Texte du message d'erreur
 
-	console.log(utilisateur);
+		console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState, "] error code :", errorCode);
+		alert(errorMessageText);
 
-	// Configuration de la requête fetch
-	const requestOptions = {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(utilisateur)
-	};
-
-	// Exécution de la requête fetch vers creationUtilisateur.php
-	fetch(cheminPHP + "utilisateur/CreationUtilisateur2.php", requestOptions)
-		.then(response =>
-		{
-			if (!response.ok)
-			{
-				throw new Error('Erreur lors de la requête vers creationUtilisateur.php');
-			}
-			return response.json();
-		})
-		.then(data =>
-		{
-			console.log('Utilisateur inséré avec succès:', data);
-		})
-		.catch(error =>
-		{
-			console.error('Erreur:', error);
-		});
+	} else
+	{
+		console.log("Aucune erreur connue renvoyé. Retour du fetch ", data);
+	}
 }
-
 
 export default Form;
