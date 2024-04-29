@@ -123,7 +123,7 @@ class DB {
 	//	que d'éléments dans le tableau passé en second paramètre.
 	/************************************************************************/
 	private function execMaj($ordreSQL,$tparam) {
-			$stmt = $this->connect->prepare($ordreSQL);
+		$stmt = $this->connect->prepare($ordreSQL);
 		$res = $stmt->execute($tparam); //execution de l'ordre SQL      	     
 		return $stmt->rowCount();
 	}
