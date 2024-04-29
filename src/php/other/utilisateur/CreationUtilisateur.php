@@ -4,18 +4,27 @@ include_once '../../inc/DB.inc.php';
 
 // récupération des données du formulaire
 $login = $_POST['login'];
-$mdp   = $_POST['mdp'];
+$mdp   = isset($_POST['mdp'])?$_POST['mdp']:null;
 $email = $_POST['email'];
 $actif = $_POST['actif'];
 $droit = $_POST['droit'];
-$tel   = $_POST['tel'];
+$tel   = isset($_POST['tel'])?$_POST['tel']:null;
 
 $pdo = DB::getInstance();
+
+if($mdp != null && $tel != null){
+    // Création du client
+    $client = new Client();
+    $client->setEmail($email);
+    $client->setNomClub($login);
+    $client->setTelephone($tel);
+
+    $pdo->insertClient($client->getEmail(), $client->getNomClub(), $client->getTelephone());
+}
 
 // création de l'utilisateur
 $utilisateur = new Utilisateur();
 $utilisateur->setLogin($login);
-$utilisateur->setMdp($mdp);
 $utilisateur->setEmail($email);
 $utilisateur->setActif($actif);
 
@@ -25,5 +34,3 @@ $pdo->insertUtilisateur($utilisateur);
 $uti = $pdo->getUtilisateur($login);
 
 $pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
-
-$pdo->getClient($login)->setTelephone($tel);

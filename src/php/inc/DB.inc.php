@@ -202,8 +202,14 @@ class DB {
 		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
 	}
 
-	public function getClient($login) {
-		$requete = 'SELECT * FROM Client WHERE login = ?';
+	public function insertClient($email, $nomClub, $telephone){
+		$requete = 'INSERT INTO Client (email, nomClub, telephone) VALUES (?, ?, ?)';
+		return $this->execQuery($requete, array($email, $nomClub, $telephone),'Client');
+	}
+
+	public function getClient($login)
+	{
+		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
 		return $this->execQuery($requete, array($login), 'Client')[0];
 	}
 } //fin classe DB
