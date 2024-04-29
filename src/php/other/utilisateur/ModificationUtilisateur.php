@@ -6,9 +6,9 @@ include_once '../../inc/DB.inc.php';
 $prevLogin = isset($_POST['prevLogin'])?$_POST['prevLogin']:null;
 $login     = $_POST['login'];
 $mdp       = $_POST['mdp']  ;
-$email     = isset($_POST['email']    )?$_POST['email']    :null;
-$actif     = isset($_POST['actif']    )?$_POST['actif']    :null;
-$iddroit   = isset($_POST['iddroit']  )?$_POST['iddroit']  :null;
+$email     = isset($_POST['email']  )?$_POST['email']    :null;
+$actif     = isset($_POST['actif']  )?$_POST['actif']    :null;
+$iddroit   = isset($_POST['iddroit'])?$_POST['iddroit']  :null;
 
 $pdo = DB::getInstance();
 
