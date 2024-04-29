@@ -71,13 +71,7 @@ return (
 									))}
 								</select>
 							) : head.type === 'checkbox' ? (
-								{head.fastEditable !== 'undefined' ? (
-									<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
-								) : (
-									
-								)
-								
-								}
+								<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
 							) : head.type === 'tel' ? (
 								<input 
 									type="tel" 
@@ -260,7 +254,14 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 
+	function changeThing(item, columnId) {
+		// Modifiez la propriété correspondante dans l'objet item
+		item[columnId] = !item[columnId];
 
+		// Mettez à jour l'état avec les nouvelles données
+		if (funUpdate !== undefined && funUpdate(item, item))
+			setTableData(prevData => [...prevData]);
+	}
 
 
 
@@ -332,9 +333,25 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 												)}
 
 												{column.type === 'checkbox' && (
-													// Si c'est un checkbox, afficher une case à cocher en lecture seule
-													<input type='checkbox' checked={item[column.id]} readOnly className="form-check-input border-secondary" style={{ fontSize: '1.2em' }}  />
+													column.fastEditable ? (
+														<input
+														type='checkbox'
+														checked={item[column.id]}
+														onChange={() => changeThing(item, column.id)}
+														className="form-check-input border-secondary"
+														style={{ fontSize: '1.2em' }}
+														/>
+													) : (
+														<input
+														type='checkbox'
+														checked={item[column.id]}
+														readOnly
+														className="form-check-input border-secondary"
+														style={{ fontSize: '1.2em' }}
+														/>
+													)
 												)}
+
 
 												{column.type === 'tel' && (
 													// Si c'est un numéro de téléphone, afficher les numéros avec un espace
