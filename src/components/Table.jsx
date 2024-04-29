@@ -71,7 +71,13 @@ return (
 									))}
 								</select>
 							) : head.type === 'checkbox' ? (
-								<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
+								{head.fastEditable !== 'undefined' ? (
+									<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
+								) : (
+									
+								)
+								
+								}
 							) : head.type === 'tel' ? (
 								<input 
 									type="tel" 
