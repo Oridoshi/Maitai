@@ -13,7 +13,7 @@ class UtilisateurDroit {
      * @var int $iddroit Numéro d'identification du droit
      * Constructeur de la classe UtilisateurDroit.
      */
-    public function __construct(int $iduti = 0, int $iddroit = 0) {
+    public function __construct(int $iduti = 3, int $iddroit = 0) {
         $this->iduti = $iduti;
         $this->iddroit = $iddroit;
     }

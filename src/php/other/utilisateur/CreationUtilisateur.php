@@ -40,8 +40,8 @@ else
     {
         $pdo->majMdpUti($login, $mdp);
     }
+
+    $uti = $pdo->getUtilisateur($login);
+    
+    $pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
 }
-
-$uti = $pdo->getUtilisateur($login);
-
-$pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
