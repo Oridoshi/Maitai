@@ -84,11 +84,19 @@ function Client() {
 
 			const data = await response.text();
 			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
 			return false; // Retourne false en cas d'erreur
 		}
+
+		// TODO : Regenerer les data avec un fetch
 	};
 
 
@@ -127,10 +135,42 @@ function Client() {
 
 			const data = await response.text();
 			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
 			return false; // Retourne false en cas d'erreur
+		}
+	};
+
+
+	// Fonction pour récupérer les données des clients
+	const fetchClientData = async () => {
+		try {
+			const response = await fetch(cheminPHP + "client/GetClients.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			return data.map((item, index) => ({
+				...item,
+				id: index + 1
+			}));
+		} catch (error) {
+			console.error('Erreur :', error);
+			return [];
 		}
 	};
 
