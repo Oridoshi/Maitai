@@ -10,14 +10,16 @@ ALTER TABLE UtilisateurDroit AUTO_INCREMENT = 1;
 ALTER TABLE Utilisateur      AUTO_INCREMENT = 1;
 ALTER TABLE Droit            AUTO_INCREMENT = 1;
 
+ALTER TABLE UtilisateurDroit AUTO_INCREMENT = 1;
+ALTER TABLE Utilisateur      AUTO_INCREMENT = 1;
+ALTER TABLE Droit            AUTO_INCREMENT = 1;
+
 
 -- Insérer des droits
 INSERT INTO Droit (libDroit)
-VALUES ('Administrateur'),
-       ('Présent'),
-       ('Créer Utilisateur'),
-       ('Créer Client'),
-       ('Historique Ticket');
+VALUES ('Admin'),
+       ('Maitai'),
+       ('Client');
 
 -- Insérer des utilisateurs
 INSERT INTO Utilisateur (login, mdp, email, actif)
@@ -38,12 +40,12 @@ VALUES ( 1, 1), -- admin1 a le droit d'administrateur
        ( 2, 1), -- admin2 a le droit d'administrateur
        ( 3, 2),
        ( 4, 2),
-       ( 5, 3),
-       ( 6, 3),
-       ( 7, 4),
-       ( 8, 4),
-       ( 9, 5),
-       (10, 5);
+       ( 5, 2),
+       ( 6, 2),
+       ( 7, 2),
+       ( 8, 2),
+       ( 9, 2),
+       (10, 2);
 
 
 
@@ -57,6 +59,12 @@ VALUES ( 1, 1), -- admin1 a le droit d'administrateur
 DELETE FROM Ticket;
 DELETE FROM Client;
 DELETE FROM Produit;
+
+ALTER TABLE Ticket  AUTO_INCREMENT = 1;
+ALTER TABLE Client  AUTO_INCREMENT = 1;
+ALTER TABLE Produit AUTO_INCREMENT = 1;
+
+ALTER TABLE Historique AUTO_INCREMENT = 1;
 
 ALTER TABLE Ticket  AUTO_INCREMENT = 1;
 ALTER TABLE Client  AUTO_INCREMENT = 1;
