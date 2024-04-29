@@ -19,11 +19,16 @@ $utilisateur->setMdp($mdp);
 $utilisateur->setEmail($email);
 $utilisateur->setActif($actif);
 
+// Création du client
+$client = new Client();
+$client->setEmail($email);
+$client->setNomClub($login);
+$client->setTelephone($tel);
+
 // insertion de l'utilisateur dans la base de données
 $pdo->insertUtilisateur($utilisateur);
+$pdo->insertClient($client->getEmail(), $client->getNomClub(), $client->getTelephone());
 
 $uti = $pdo->getUtilisateur($login);
 
 $pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
-
-$pdo->getClient($login)->setTelephone($tel);
