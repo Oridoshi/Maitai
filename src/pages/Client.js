@@ -21,7 +21,6 @@ function Client() {
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
-			console.log(response)
 			return response.json();
 		})
 		.then(data => {
@@ -199,7 +198,6 @@ function Client() {
 
 	function filter (value)
 	{
-		console.log(value)
 		// Filtrer les données en fonction de la valeur de recherche
 		const filteredData = initialData.filter((element) => {
 

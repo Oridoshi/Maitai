@@ -232,7 +232,6 @@ function Utilisateur() {
 
 	function filter (value)
 	{
-		console.log(value)
 		// Filtrer les données en fonction de la valeur de recherche
 		const filteredData = initialData.filter((element) => {
 				// Parcourir les clés de l'en-tête initial

@@ -208,7 +208,6 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 		});
 
 		const id = updatedRowData.id;
-		console.log(updatedRowData);
 
 		if (id !== '')
 		{
