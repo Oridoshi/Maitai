@@ -280,3 +280,5 @@ function Utilisateur() {
 		</div>
 	);
 }
+
+export default Utilisateur;
