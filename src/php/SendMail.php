@@ -1,5 +1,5 @@
 <?php 
-header('Cross-Origin-Allow-Origin: *');
+header("Access-Control-Allow-Origin: *");
 
 use PHPMailer\PHPMailer\PHPMailer;
 

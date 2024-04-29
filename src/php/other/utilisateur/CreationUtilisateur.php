@@ -1,5 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+
 include_once '../../inc/DB.inc.php';
 
 // récupération des données du formulaire
@@ -19,17 +21,22 @@ if($mdp != null && $tel != null){
     $client->setNomClub($login);
     $client->setTelephone($tel);
 
-    $pdo->insertClient($client->getEmail(), $client->getNomClub(), $client->getTelephone());
+    $pdo->insertClient($client);
+
+    $pdo->majMdpUti($login, $mdp);
 }
-
-// création de l'utilisateur
-$utilisateur = new Utilisateur();
-$utilisateur->setLogin($login);
-$utilisateur->setEmail($email);
-$utilisateur->setActif($actif);
-
-// insertion de l'utilisateur dans la base de données
-$pdo->insertUtilisateur($utilisateur);
+else
+{
+    // création de l'utilisateur
+    $utilisateur = new Utilisateur();
+    $utilisateur->setLogin($login);
+    $utilisateur->setEmail($email);
+    $utilisateur->setActif($actif);
+    
+    // insertion de l'utilisateur dans la base de données
+    $pdo->insertUtilisateur($utilisateur);
+    
+}
 
 $uti = $pdo->getUtilisateur($login);
 
