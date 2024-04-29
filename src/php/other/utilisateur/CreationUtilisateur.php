@@ -14,7 +14,7 @@ $tel   = isset($_POST['tel'])?$_POST['tel']:null;
 
 $pdo = DB::getInstance();
 
-if($mdp != null && $tel != null){
+if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
     // Création du client
     $client = new Client();
     $client->setEmail($email);
@@ -35,7 +35,11 @@ else
     
     // insertion de l'utilisateur dans la base de données
     $pdo->insertUtilisateur($utilisateur);
-    
+
+    if(count($pdo->getClient($login)) != 0)
+    {
+        $pdo->majMdpUti($login, $mdp);
+    }
 }
 
 $uti = $pdo->getUtilisateur($login);
