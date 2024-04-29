@@ -202,14 +202,48 @@ class DB {
 		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
 	}
 
-	public function insertClient($email, $nomClub, $telephone){
-		$requete = 'INSERT INTO Client (email, nomClub, telephone) VALUES (?, ?, ?)';
-		return $this->execQuery($requete, array($email, $nomClub, $telephone),'Client');
+
+
+
+
+	/*** METHODES POUR LES CLIENTS ****/
+
+	/** Récuperer les clients. */
+	public function getClients() {
+		$requete = 'SELECT * FROM Client';
+		return $this->execQuery($requete,null,'Client');
 	}
 
-	public function getClient($login)
-	{
-		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
-		return $this->execQuery($requete, array($login), 'Client')[0];
+	/** Récuperer les clients présents. */
+	public function getClientsPresent() {
+		$requete = 'SELECT * FROM Client WHERE present = 1';
+		return $this->execQuery($requete,null,'Client');
 	}
+	/** Récuperer le client à l'aide du nom du club */
+	public function getClient($nomClub) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
+		return $this->execQuery($requete,array($nomClub),'Client');
+	}
+
+	/** Modifier les données d'un client. */
+	public function updateClient($client) {
+		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
+	}
+
+	/** Ajouter un client. */
+	public function insertClient($client) {
+
+		$existingClient = $this->getClient($client->getNomClub());
+		if ($existingClient) {
+			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
+			return false; // Sortir de la fonction si l'utilisateur existe déjà
+		}
+
+		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) VALUES (?, ?, ?, ?)';
+		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
+	}
+
+
+	
 } //fin classe DB
