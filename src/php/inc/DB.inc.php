@@ -201,9 +201,9 @@ class DB {
 		$requete = 'INSERT INTO UtilisateurDroit (idUti, idDroit) VALUES (?, ?)';
 		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
 	}
-
-	public function getClient($login) {
-		$requete = 'SELECT * FROM Client WHERE login = ?';
-		return $this->execQuery($requete, array($login), 'Client')[0];
+	
+	public function getClient($nomClub) {
+		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
+		return $this->execQuery($requete, array($nomClub), 'Client')[0];
 	}
 } //fin classe DB
