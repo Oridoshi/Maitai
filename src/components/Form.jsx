@@ -338,9 +338,11 @@ const Mail = ({ changeEtat }) =>
 	//envoye vers la page de récupération du compte via un code
 	const envoyer = async (event) =>
 	{
+		sessionStorage.removeItem('code');
 		event.preventDefault();//obligatoire pour un changement de page
 		if (await mailValid(mail))
 		{
+			await recupCode(mail)
 			sessionStorage.setItem('mail', mail);
 			changeEtat('code');
 		}
@@ -416,8 +418,11 @@ const ConfMdp = ({ changeEtat }) =>
 			sessionStorage.setItem('mdpValid', "true");
 			if (sessionStorage.getItem('statut') === 'nouveau')
 			{
-				console.log('catcha');
 				funInsert(mdp);
+			}
+			else
+			{
+				funUpdate(mdp);
 			}
 			window.location.href = "/";//envoie à la page d'accueil
 		}
@@ -477,7 +482,7 @@ const Code = ({ changeEtat }) =>
 	const envoyer = async (event) =>
 	{
 		event.preventDefault();//obligatoire pour un changement de page
-		if (code.length === 19) // test si la longeur du code est bien de 6
+		if (code.length === 9) // test si la longeur du code est bien de 6
 		{
 			if (await mdpValid(code))
 			{
@@ -510,7 +515,7 @@ const Code = ({ changeEtat }) =>
 		let codeVal = event.target.value.replace(/[^A-Za-z0-9]/g, '');
 
 		// Insère un tiret après chaque groupe de 4 caractères
-		codeVal = codeVal.slice(0, 16); // Limite la longueur à 16 caractères
+		codeVal = codeVal.slice(0, 9); // Limite la longueur à 8 caractères
 		codeVal = codeVal.replace(/(.{4})/g, '$1-'); // Insère un tiret après chaque groupe de 4 caractères
 
 		// Supprime le dernier tiret s'il y en a un
@@ -647,7 +652,65 @@ const funInsert = async (mdp) => {
 	}
 };
 
+// Fonction pour l'update
+const funUpdate = async (mdp) => {
+	try {
 
+		const formData = new FormData();
+		formData.append('mdp', mdp );
+
+		const requestOptions = {
+			method: 'POST',
+			body: formData
+		};
+
+		const response = await fetch(cheminPHP + "utilisateur/ModificationUtilisateur.php", requestOptions);
+
+		if (!response.ok) {
+			throw new Error('Une erreur s\'est produite.');
+		}
+
+		const data = await response.text();
+		afficherError(data);
+		return data === ""; // Retourne true si la suppression a réussi, sinon false
+	} catch (error) {
+		console.log(error);
+		return false; // Retourne false en cas d'erreur
+	}
+};
+
+const recupCode = async (mail) =>
+{
+	try {
+
+		const formData = new FormData();
+		formData.append('mail', mail);
+
+		const requestOptions = {
+			method: 'POST',
+			body: formData
+		};
+
+		console.log(formData);
+
+		const response = await fetch("http://172.26.4.207/Maitai/src/php/SendMail.php", requestOptions);
+
+		if (!response.ok) {
+			throw new Error('Une erreur s\'est produite.');
+		}else{
+			sessionStorage.setItem('code',response);
+		}
+
+		const data = await response.text();
+		afficherError(data);
+		return data === ""; // Retourne true si la suppression a réussi, sinon false
+	} catch (error) {
+		console.log(error);
+		return false; // Retourne false en cas d'erreur
+	}
+}
+
+//gestion des erreurs
 function afficherError(data)
 {
 	const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
