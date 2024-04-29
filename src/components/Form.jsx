@@ -59,10 +59,8 @@ const Form = ({ etat }) =>
 /*--Page de login--*/
 const Log = ({ changeEtat }) =>
 {
-	sessionStorage.removeItem('login');
-	sessionStorage.removeItem('mail');
-	sessionStorage.removeItem('tel');
-	sessionStorage.removeItem('statut');
+	//reset les cookies
+	resetCookies();
 
 	//pour changer le login sinon ça change pas
 	const [login, setLogin] = useState("");
@@ -77,6 +75,7 @@ const Log = ({ changeEtat }) =>
 		if (await logExist({ login }))
 		{
 			sessionStorage.setItem('login', login); // Stocke le login en session
+			setDroits();
 			changeEtat('mdp'); // Passe à la page de mot de passe
 		}
 		else
@@ -200,9 +199,8 @@ const Mdp = ({ changeEtat }) =>
 /*-Page de Création de compte-*/
 const Creer = ({ changeEtat }) =>
 {
-	sessionStorage.removeItem('login');
-	sessionStorage.removeItem('mail');
-	sessionStorage.removeItem('tel');
+	//reset les cookies
+	resetCookies();
 	sessionStorage.setItem('statut', 'nouveau');
 
 	//pour changer les contenus des inputs
@@ -308,11 +306,11 @@ const Creer = ({ changeEtat }) =>
 				<h4 className="titre">Création du compte</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
-					<input type="text" required value={ login } className={ inputClass } id="exampleInputLogin" aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
+					<input type="text" required value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
 					<label htmlFor="exampleInputMail" className="form-label label">Mail</label>
 					<input type="email" required value={ mail } className={ mailClass } aria-describedby="emailHelp" placeholder={ placeholderMail } onChange={ changeMail } />
 					<label htmlFor="exampleInputPhone" className="form-label label"> Numéro de téléphone </label>
-					<input type="tel" required value={ tel } className="form-control saisie" id="exampleInputPhone" aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
+					<input type="tel" required value={ tel } className="form-control saisie"  aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
 				</div>
 				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
@@ -380,7 +378,7 @@ const Mail = ({ changeEtat }) =>
 				<h4 className="titre">Mot de passe oublié</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label">Mail</label>
-					<input required type="email" value={ mail } className={ inputClass } id="exampleInputEmail1" aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
+					<input required type="email" value={ mail } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 				</div>
 				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
@@ -410,7 +408,7 @@ const ConfMdp = ({ changeEtat }) =>
 	};
 
 	//envoye à la page d'acceuil
-	const envoyer = (event) =>
+	const envoyer = async (event) =>
 	{
 		event.preventDefault();//obligatoire pour un changment de page
 		if (valider())
@@ -418,11 +416,11 @@ const ConfMdp = ({ changeEtat }) =>
 			sessionStorage.setItem('mdpValid', "true");
 			if (sessionStorage.getItem('statut') === 'nouveau')
 			{
-				funInsert(mdp);
+				await funInsert(mdp);
 			}
 			else
 			{
-				funUpdate(mdp);
+				await funUpdate(mdp);
 			}
 			window.location.href = "/";//envoie à la page d'accueil
 		}
@@ -450,11 +448,11 @@ const ConfMdp = ({ changeEtat }) =>
 				<div className="mb-3">
 					<div className="champs">
 						<label htmlFor="exampleInputPassword1" className="form-label label">Mot de passe</label>
-						<input required type="password" value={ mdp } className="form-control" id="exampleInputPassword1" placeholder="Entrez votre mot de passe" onChange={ changeMdp } />
+						<input required type="password" value={ mdp } className="form-control" placeholder="Entrez votre mot de passe" onChange={ changeMdp } />
 					</div>
 					<div className="champs">
 						<label htmlFor="exampleInputPassword1" className="form-label label">Confirmer le mot de passe</label>
-						<input required type="password" value={ mdpconf } className={ inputClass } id="exampleInputPassword1" placeholder={ placeholderText } onChange={ changeMdpConf } />
+						<input required type="password" value={ mdpconf } className={ inputClass } placeholder={ placeholderText } onChange={ changeMdpConf } />
 					</div>
 				</div>
 				<button type="submit" className="btn btn-primary bouton container-fluid">Connexion</button>
@@ -535,7 +533,7 @@ const Code = ({ changeEtat }) =>
 				<h4 className="titre">Mot de passe oublié</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label"> Code </label>
-					<input required type="text" className={ inputClass } id="exampleInputEmail1"
+					<input required type="text" className={ inputClass }
 						aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ renvoyerMail }> Renvoyer un mail </button>
 				</div>
@@ -545,7 +543,15 @@ const Code = ({ changeEtat }) =>
 	);
 };
 
+const resetCookies = () =>
+{
+	sessionStorage.removeItem('login');
+	sessionStorage.removeItem('mail');
+	sessionStorage.removeItem('tel');
+	sessionStorage.removeItem('statut');
+	sessionStorage.removeItem('droit');
 
+}
 
 /**
  * Ici c'est la partie bado qui sera relié au back
@@ -579,7 +585,6 @@ const getUsers = async () =>
 			email: item.email,
 			libdroit: item.libdroit
 		}));
-
 		return utilisateurs;
 	} catch (error)
 	{
@@ -614,6 +619,16 @@ const mailExist = async (mail) =>
 	return utilisateurs.some(user => user.mail === mail);
 }
 
+const setDroits = async() =>
+{
+	const utilisateurs = await getUsers();
+	utilisateurs.forEach(user => {
+		if (user.login === sessionStorage.getItem('login')) {
+			sessionStorage.setItem('droit',user.libdroit);
+		}
+	});
+}
+
 /*--INSERT--*/
 
 // Fonction pour l'insertion
@@ -627,7 +642,7 @@ const funInsert = async (mdp) => {
 		formData.append('mdp',mdp);
 		formData.append('email', sessionStorage.getItem('mail'));
 		formData.append('actif',true);
-		formData.append('droit','admin');
+		formData.append('droit',3);
 		formData.append('tel',tel);
 
 		const requestOptions = {
@@ -635,9 +650,7 @@ const funInsert = async (mdp) => {
 			body: formData
 		};
 
-		console.log(formData);
-
-		const response = await fetch(cheminPHP + "CreationUtilisateur.php", requestOptions);
+		const response = await fetch(cheminPHP + "utilisateur/CreationUtilisateur.php", requestOptions);
 
 
 		if (!response.ok) {
@@ -658,6 +671,7 @@ const funUpdate = async (mdp) => {
 	try {
 
 		const formData = new FormData();
+		formData.append('login',sessionStorage.getItem('login'))
 		formData.append('mdp', mdp );
 
 		const requestOptions = {
@@ -692,8 +706,6 @@ const recupCode = async (mail) =>
 			body: formData
 		};
 
-		console.log(formData);
-
 		const response = await fetch("http://172.26.4.207/Maitai/src/php/SendMail.php", requestOptions);
 
 		if (!response.ok) {
@@ -702,7 +714,6 @@ const recupCode = async (mail) =>
 
 		const data = await response.text();
 		sessionStorage.setItem('code',data);
-		console.log(data);
 		afficherError(data);
 		return data === ""; // Retourne true si la suppression a réussi, sinon false
 	} catch (error) {

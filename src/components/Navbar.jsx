@@ -22,11 +22,12 @@ function Navbar({ role })
 	const [showModal, setShowModal] = useState(false);
 
 	//en fonction du paramètre on charge plus ou moins de role
+	role = sessionStorage.getItem('droit');
 	switch (role)
 	{
-		case 'admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
 			break;
-		case 'user': navLinks = ['Clients', 'Fiche de sécurité'];
+		case 'Maitai': navLinks = ['Clients', 'Fiche de sécurité'];
 			break;
 		default: navLinks = ['Fiche de sécurité'];
 			break;
@@ -35,12 +36,19 @@ function Navbar({ role })
 	//à chaque on fois qu'on appel la nav on regarde si le user est connecté en fonction de ça on aura un bouton connexion ou deconnexion
 	const getConnexion = () =>
 	{
+		//test si c'est une connexion ou une deconnexion
 		if (sessionStorage.getItem('login') !== null && sessionStorage.getItem('mdpValid') === "true")
 		{
+			sessionStorage.removeItem('droit');
 			return (
-				<a href="/" onClick={ deconnect }>
-					<Button className="navbar-brand btnLogout"></Button>
-				</a>
+				<div className="divlog">
+					<ul className="divlog">
+						<li className="login">{sessionStorage.getItem('login')}</li>
+					</ul>
+					<a href="/" onClick={ deconnect }>
+						<Button className="navbar-brand btnLogout"></Button>
+					</a>
+				</div>
 			);
 		} else
 		{
