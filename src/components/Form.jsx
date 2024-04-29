@@ -484,7 +484,7 @@ const Code = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changement de page
 		if (code.length === 9) // test si la longeur du code est bien de 6
 		{
-			if (await mdpValid(code))
+			if (code === sessionStorage.getItem('code'))
 			{
 				changeEtat('confmdp');//charge la page de choix du mot de passe
 			}
@@ -637,7 +637,8 @@ const funInsert = async (mdp) => {
 
 		console.log(formData);
 
-		const response = await fetch(cheminPHP + "utilisateur/CreationUtilisateur.php", requestOptions);
+		const response = await fetch(cheminPHP + "CreationUtilisateur.php", requestOptions);
+
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');
@@ -684,7 +685,7 @@ const recupCode = async (mail) =>
 	try {
 
 		const formData = new FormData();
-		formData.append('mail', mail);
+		formData.append('email', mail);
 
 		const requestOptions = {
 			method: 'POST',
@@ -697,11 +698,11 @@ const recupCode = async (mail) =>
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');
-		}else{
-			sessionStorage.setItem('code',response);
 		}
 
 		const data = await response.text();
+		sessionStorage.setItem('code',data);
+		console.log(data);
 		afficherError(data);
 		return data === ""; // Retourne true si la suppression a réussi, sinon false
 	} catch (error) {
