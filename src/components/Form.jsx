@@ -467,10 +467,21 @@ const Code = ({ changeEtat }) =>
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
+	let supprimer = false;
+
+	const suppr = (event) =>
+	{
+		supprimer = false;
+		if(event.inputType === "deleteContentBackward")
+		{
+			supprimer = true;
+		}
+	};
 
 	//évènements dans la zone de texte
 	const changement = (event) =>
 	{
+		if(supprimer && event.target.value.length === 5) event.target.value.lenght = event.target.value.slice(0,3);
 		regex(event);
 		setCode(event.target.value);
 		setIsValid(true);	//par défaut le style est valide
@@ -534,7 +545,7 @@ const Code = ({ changeEtat }) =>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label"> Code </label>
 					<input required type="text" className={ inputClass }
-						aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
+						aria-describedby="emailHelp" placeholder={ placeholderText } oninput={ suppr } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ renvoyerMail }> Renvoyer un mail </button>
 				</div>
 				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
