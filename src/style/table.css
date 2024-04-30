@@ -69,3 +69,32 @@
 	color: #6c757d !important;
 	/* Couleur grise par défaut */
 }
+
+.btnFermer{
+	background-color: #DD6565;
+	color: #FFFFFF;
+	font-weight: bolder;
+	border: 0px;
+	margin-right: 20px;
+}
+.btnFermer:hover,
+.btnFermer:focus {
+	background-color: rgb(176, 47, 47) !important;
+	color: #FFFFFF !important;
+}
+
+.btnAdd{
+	background-color: #006DAA;
+	color: #FFFFFF;
+	font-weight: bolder;
+	border: 0px;
+}
+.btnAdd:hover,
+.btnAdd:focus {
+	background-color: #005C8F !important;
+	color: #FFFFFF !important;
+}
+
+.check:checked{
+	background-color: #005C8F!important;
+}
