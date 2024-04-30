@@ -158,6 +158,7 @@ class DB {
 		}
 		return $tab;
 	}
+
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** Obtenir un utilisateur à partir de son login */
@@ -283,9 +284,9 @@ class DB {
 	/** Modifier les données d'un produit.
 	 * @param Produit $produits le produit à modifier.
 	 */
-	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
+	public function updateProduit($oldIdProd, $produits) {
+		$requete = 'UPDATE Produit SET idProd = ? libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$this->execMaj($requete,array($produits->getIdProd(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$oldIdProd));
 	}
 
 	/**
@@ -294,7 +295,7 @@ class DB {
 	 */
 	public function insertProduit($produits) {
 		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
-		$this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
+		$this->execMaj($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
 	}
 
 	/** Supprimer un produit.
@@ -302,9 +303,8 @@ class DB {
 	 */
 	public function suppProduit($produits) {
 		$requete = 'DELETE FROM Produit WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getIdProd()),'Produit');
+		$this->execMaj($requete,array($produits->getIdProd()));
 	}
-
 
 	
 } //fin classe DB

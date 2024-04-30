@@ -22,9 +22,9 @@ $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 $mail->Host = "smtp.gmail.com";
 $mail->Port = 465; 
 $mail->IsHTML(true);
-$mail->Username = "hugovicente965@gmail.com";// Addresse email de l'expéditeur à modifier
-$mail->Password = "ysjhynuggpqwcffi ";// Mot de passe de l'adresse email à modifier
-$mail->SetFrom("hugovicente965@gmail.com");// Addresse email de l'expéditeur à modifier
+$mail->Username = "centremaitaiplongee@gmail.com";// Addresse email de l'expéditeur à modifier
+$mail->Password = "nlftpbdhhdhmqoxc";// Mot de passe de l'adresse email à modifier
+$mail->SetFrom("centremaitaiplongee@gmail.com");// Addresse email de l'expéditeur à modifier
 $mail->Subject = "Réinitialisation de votre mot de passe Maitai";
 $mail->AddAddress($email); 
 $mail->Body = "

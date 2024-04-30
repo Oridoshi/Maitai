@@ -124,7 +124,7 @@ const Log = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h3 className="titre">Login</h3>
+				<h3 className="letitre">Login</h3>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label">Identifiant</label>
 					<input required type="text" value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
@@ -184,7 +184,7 @@ const Mdp = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h3 className="titre">Mot de passe</h3>
+				<h3 className="letitre">Mot de passe</h3>
 				<div className="mb-3">
 					<label htmlFor="exampleInputPassword1" className="form-label label">Mot de passe</label>
 					<input required type="password" value={ mdp } className={ inputClass } placeholder={ placeholderText } onChange={ changement } />
@@ -303,7 +303,7 @@ const Creer = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h4 className=" titre titrepetit">Création du compte</h4>
+				<h4 className=" letitre letitrepetit">Création du compte</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
 					<input type="text" required value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
@@ -375,7 +375,7 @@ const Mail = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h4 className="titre">Mot de passe oublié</h4>
+				<h4 className="letitre">Mot de passe oublié</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label">Mail</label>
 					<input required type="email" value={ mail } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
@@ -444,7 +444,7 @@ const ConfMdp = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h3 className="titre">Mot de passe</h3>
+				<h3 className="letitre">Mot de passe</h3>
 				<div className="mb-3">
 					<div className="champs">
 						<label htmlFor="exampleInputPassword1" className="form-label label">Mot de passe</label>
@@ -467,21 +467,13 @@ const Code = ({ changeEtat }) =>
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
-	let supprimer = false;
 
-	const suppr = (event) =>
-	{
-		supprimer = false;
-		if(event.inputType === "deleteContentBackward")
-		{
-			supprimer = true;
-		}
-	};
 
 	//évènements dans la zone de texte
 	const changement = (event) =>
 	{
-		if(supprimer && event.target.value.length === 5) event.target.value.lenght = event.target.value.slice(0,3);
+		if(event.action === "remove-value" && event.target.value.length === 5) event.target.value = event.target.value.slice(0, 3);
+		console.log(event.context)
 		regex(event);
 		setCode(event.target.value);
 		setIsValid(true);	//par défaut le style est valide
@@ -524,11 +516,8 @@ const Code = ({ changeEtat }) =>
 		let codeVal = event.target.value.replace(/[^A-Za-z0-9]/g, '');
 
 		// Insère un tiret après chaque groupe de 4 caractères
-		codeVal = codeVal.slice(0, 9); // Limite la longueur à 8 caractères
-		codeVal = codeVal.replace(/(.{4})/g, '$1-'); // Insère un tiret après chaque groupe de 4 caractères
-
-		// Supprime le dernier tiret s'il y en a un
-		codeVal = codeVal.replace(/-$/, '');
+		codeVal = codeVal.slice(0, 8); // Limite la longueur à 8 caractères
+		if(codeVal.length >= 4) codeVal = codeVal.slice(0,4) + "-" + codeVal.slice(4);
 
 		// Met à jour la valeur de l'élément cible
 		event.target.value = codeVal
@@ -541,11 +530,11 @@ const Code = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h4 className="titre">Mot de passe oublié</h4>
+				<h4 className="letitre">Mot de passe oublié</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label"> Code </label>
 					<input required type="text" className={ inputClass }
-						aria-describedby="emailHelp" placeholder={ placeholderText } oninput={ suppr } onChange={ changement } />
+						aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ renvoyerMail }> Renvoyer un mail </button>
 				</div>
 				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
