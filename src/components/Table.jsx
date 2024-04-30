@@ -62,7 +62,7 @@ return (
 									id={head.id}
 									name={head.id}
 									value={formValues[head.id] || ''}
-									onChange={handleChange} 
+									onChange={handleChange}
 								>
 									{head.options.map((option) => (
 										<option key={option} value={option}>
@@ -73,8 +73,8 @@ return (
 							) : head.type === 'checkbox' ? (
 								<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
 							) : head.type === 'tel' ? (
-								<input 
-									type="tel" 
+								<input
+									type="tel"
 									id={head.id}
 									name={head.id}
 									className="form-control border-secondary"
@@ -121,12 +121,12 @@ return (
 
 						</div>
 						<div className='modal-footer'>
-							<button type='button' className='btn btn-secondary' data-bs-dismiss='modal' onClick={ () => { closeModal(); resetForm(); } }>Fermer</button>
+							<button type='button' className='btnFermer btn btn-secondary' data-bs-dismiss='modal' onClick={ () => { closeModal(); resetForm(); } }>Fermer</button>
 							{ rowData.id !== undefined && (
 								<button type='submit' className='btn btn-primary'>Modifier</button>
 							) }
 							{ rowData.id === undefined && (
-								<button type='submit' className='btn btn-primary'>Ajouter</button>
+								<button type='submit' className='btnAdd btn 0btn-primary'>Ajouter</button>
 							) }
 						</div>
 					</div>
@@ -156,7 +156,7 @@ function Checkbox({ id, name, defaultValue })
 		<div>
 			<input
 				type="checkbox"
-				className="form-check-input border-secondary"
+				className="check form-check-input border-secondary"
 				id={ id }
 				name={ name }
 				checked={ isChecked }
@@ -320,12 +320,12 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 									{header.map(column => (
 										column.show && (
 												<td className={
-														`bg-light 
+														`bg-light
 														${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`
-													} 
+													}
 													key={`${item.id}-${column.id}`}
 												>
-												
+
 												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && (
 													// Si ce n'est pas un checkbox ni un button, afficher la valeur de la colonne
 													`${item[column.id]}`
@@ -337,7 +337,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 														type='checkbox'
 														checked={item[column.id]}
 														onChange={() => changeThing(item, column.id)}
-														className="form-check-input border-secondary"
+														className="check form-check-input border-secondary"
 														style={{ fontSize: '1.2em' }}
 														/>
 													) : (
@@ -345,7 +345,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 														type='checkbox'
 														checked={item[column.id]}
 														readOnly
-														className="form-check-input border-secondary"
+														className="check form-check-input border-secondary"
 														style={{ fontSize: '1.2em' }}
 														/>
 													)

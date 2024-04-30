@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; // Importez useState ici
 import Table from '../components/Table';
-import { cheminPHP } from '../components/VarGlobal.js';  
+import { cheminPHP } from '../components/VarGlobal.js';
 
 function Client() {
 
@@ -222,7 +222,7 @@ function Client() {
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
 			alert(errorMessageText);
-			
+
 		} else {
 			if (data !== "")
 				alert(data.replace('<br>', ''));
@@ -272,7 +272,7 @@ function Client() {
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
-	
+
 		<h1 className='titre mt-1'>Gestion des clients </h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
@@ -282,7 +282,7 @@ function Client() {
 			</div>
 
 			{/* Bouton décoché */}
-			<button className='btn-primary btn mx-2' onClick={presentFalseAll}>Tous décoché</button>
+			<button className='btnSauvegarder btn-primary btn mx-2' onClick={presentFalseAll}>Tous décoché</button>
 
 			{/* Bouton checkbox avec style CSS pour la marge gauche */}
 			<div className="form-check" style={{ marginLeft: '10em' }}>
@@ -293,11 +293,11 @@ function Client() {
 
 
 
-		<Table 
-			header={initialHeader} 
-			data={filterData} 
-			funInsert={funInsert} 
-			funUpdate={funUpdate} 
+		<Table
+			header={initialHeader}
+			data={filterData}
+			funInsert={funInsert}
+			funUpdate={funUpdate}
 			keyGrayWhenFalse = 'present'
 		/>
 	</div>

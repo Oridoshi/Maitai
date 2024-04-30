@@ -8,12 +8,9 @@
 	flex-direction: column;
 	justify-content: space-between;
 }
-.titre {
+.letitre {
 	color: #FFFFFF!important;
 	background-color: transparent;
-}
-.titrepetit{
-	font-size: 22px;
 }
 .label {
 	color: #FFFFFF;
