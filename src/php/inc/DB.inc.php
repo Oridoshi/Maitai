@@ -274,6 +274,14 @@ class DB {
 		return $this->execQuery($requete,array($categ),'Produit');
 	}
 
+	/** Récuperer toute les catégories de produits. 
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getCategorie() {
+		$requete = 'SELECT DISTINCT categorie FROM Produit';
+		return $this->execQuery($requete,null,'Produit');
+	}
+
 	/** Modifier les données d'un produit.
 	 * @param Produit $produits le produit à modifier.
 	 */
