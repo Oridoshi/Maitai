@@ -471,7 +471,7 @@ const Code = ({ changeEtat }) =>
 
 	const suppr = (event) =>
 	{
-		suppr = false;
+		supprimer = false;
 		if(event.inputType === "deleteContentBackward")
 		{
 			supprimer = true;
