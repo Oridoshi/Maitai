@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../style/table.css"
+
 function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 {
 	const [formValues, setFormValues] = useState({});
@@ -360,7 +361,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 												{/* Si c'est un button */}
 												{column.type === 'button' && (
 													// Si c'est un bouton, afficher un bouton qui appelle la fonction spécifiée dans la colonne au clic
-													<button className='btn btn-primary mx-2 py-1' onClick={() => column.function(item)}>
+													<button className={`btn btn-primary mx-2 py-1 ${column.className}`} onClick={() => column.function(item)}>
 														{column.btn}
 													</button>
 												)}

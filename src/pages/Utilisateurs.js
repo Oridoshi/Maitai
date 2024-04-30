@@ -118,7 +118,7 @@ function Utilisateur() {
 			if(droit.libdroit === libDroit)
 				id = droit.iddroit;
 		});
-		
+
 		return id;
 	}
 
@@ -220,7 +220,7 @@ function Utilisateur() {
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
 			alert(errorMessageText);
-			
+
 		} else {
 			console.log("Aucune erreur connue renvoyé. Retour du fetch ", data);
 		}
@@ -256,7 +256,7 @@ function Utilisateur() {
 	//Création du tableau
 	return (
 		<div className="col-sm-12 h-100">
-	
+
 			<h1 className='titre mt-1'>Gestion des utilisateurs </h1>
 
 			<div className="grpRecherche mt-4 d-flex align-items-center">
@@ -267,12 +267,12 @@ function Utilisateur() {
 			</div>
 
 			<div className='h-25'>
-				<Table 
-					header={initialHeader} 
-					data={filterData} 
-					funInsert={funInsert} 
-					funUpdate={funUpdate} 
-					funDelete={funDelete} 
+				<Table
+					header={initialHeader}
+					data={filterData}
+					funInsert={funInsert}
+					funUpdate={funUpdate}
+					funDelete={funDelete}
 					keyGrayWhenFalse='actif'
 				/>
 			</div>

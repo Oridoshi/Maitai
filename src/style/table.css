@@ -65,36 +65,63 @@
 	background-color: #006DAA;
 	border-color: #006DAA;
 }
+
 .text-muted td {
 	color: #6c757d !important;
 	/* Couleur grise par défaut */
 }
 
-.btnFermer{
+.btnFermer {
 	background-color: #DD6565;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
 	margin-right: 20px;
 }
+
 .btnFermer:hover,
 .btnFermer:focus {
 	background-color: rgb(176, 47, 47) !important;
 	color: #FFFFFF !important;
 }
 
-.btnAdd{
+.btnAdd {
 	background-color: #006DAA;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
 }
+
 .btnAdd:hover,
 .btnAdd:focus {
 	background-color: #005C8F !important;
 	color: #FFFFFF !important;
 }
 
-.check:checked{
-	background-color: #005C8F!important;
+.check:checked {
+	background-color: #005C8F !important;
+}
+
+.btntickets {
+	background-color: transparent;
+	border-color: transparent;
+	width: 20px;
+	height: 20px;
+	background-image: url('../img/chevron.svg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	transition: transform 0.3s;
+	/* Ajoute une transition pour une animation fluide */
+}
+.btntickets:hover{
+	background-color: transparent;
+	border-color: transparent;
+}
+.btntickets:focus,
+.btntickets:active {
+	background-color: transparent!important;
+	border-color: transparent !important;
+	transform: rotate(180deg);
+	/* Fait pivoter l'arrière-plan de 180 degrés au survol */
 }
