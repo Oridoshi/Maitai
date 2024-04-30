@@ -74,3 +74,8 @@
 	/* Décaler de 5px vers la gauche */
 	background-repeat: no-repeat;
 }
+
+input:read-only
+{
+	background-color: #F2EEEB;
+}
