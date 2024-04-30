@@ -1,189 +1,11 @@
 <?php
 
 //Mettre les objet a require ici /!\
-include_once 'Produit.inc.php';
-
-class DB {
-
-	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
-	private $connect=null; //connexion PDO à la base
-
-	private static string $dbName   = "maitai";
-	private static string $login    = "Admin";
-	private static string $password = "maitai";
-	private static string $port     = "3306";
-	private static string $host     = "localhost";
-
-
-
-	/************************************************************************/
-	//	Constructeur gerant  la connexion à la base via PDO
-	//	NB : il est non utilisable a l'exterieur de la classe DB
-	/************************************************************************/	
-	private function __construct() {
-
-		// Connexion à la base de données
-		try {
-			// Connexion à la base
-
-			$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
-
-			// Configuration facultative de la connexion
-			$this->connect->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER); 
-			$this->connect->setAttribute(PDO::ATTR_ERRMODE , PDO::ERRMODE_EXCEPTION); 
-		}
-		catch (PDOException $e) {
-					echo "probleme de connexion :".$e->getMessage();
-			return null;
-		}
-	}
-
-	/************************************************************************/
-	//	Methode permettant d'obtenir un objet instance de DB
-	//	NB : cet objet est unique pour l'exécution d'un même script PHP
-	//	NB2: c'est une methode de classe.
-	/************************************************************************/
-	public static function getInstance() {
-			if (is_null(self::$instance)) {
-			try { 
-			self::$instance = new DB(); 
-		} 
-		catch (PDOException $e) {
-			echo $e;
-		}
-			} //fin IF
-		$obj = self::$instance;
-
-		if (($obj->connect) == null) {
-		self::$instance=null;
-		}
-		return self::$instance;
-	} //fin getInstance	 
-
-	/************************************************************************/
-	//	Methode permettant de fermer la connexion a la base de données
-	/************************************************************************/
-	public function close() {
-			$this->connect = null;
-	}
-
-	/************************************************************************/
-	//	Methode uniquement utilisable dans les méthodes de la class DB 
-	//	permettant d'exécuter n'importe quelle requête SQL
-	//	et renvoyant en résultat les tuples renvoyés par la requête
-	//	sous forme d'un tableau d'objets
-	//	param1 : texte de la requête à exécuter (éventuellement paramétrée)
-	//	param2 : tableau des valeurs permettant d'instancier les paramètres de la requête
-	//	NB : si la requête n'est pas paramétrée alors ce paramètre doit valoir null.
-	//	param3 : nom de la classe devant être utilisée pour créer les objets qui vont
-	//	représenter les différents tuples.
-	//	NB : cette classe doit avoir des attributs qui portent le même que les attributs
-	//	de la requête exécutée.
-	//	ATTENTION : il doit y avoir autant de ? dans le texte de la requête
-	//	que d'éléments dans le tableau passé en second paramètre.
-	//	NB : si la requête ne renvoie aucun tuple alors la fonction renvoie un tableau vide
-	/************************************************************************/
-	private function execQuery($requete,$tparam,$nomClasse) {
-			//on prépare la requête
-		$stmt = $this->connect->prepare($requete);
-		//on indique que l'on va récupére les tuples sous forme d'objets instance de Client
-		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, $nomClasse); 
-		//on exécute la requête
-		if ($tparam != null) {
-			$stmt->execute($tparam);
-		}
-		else {
-			$stmt->execute();
-		}
-		//récupération du résultat de la requête sous forme d'un tableau d'objets
-		$tab = array();
-		$tuple = $stmt->fetch(); //on récupère le premier tuple sous forme d'objet
-		if ($tuple) {
-			//au moins un tuple a été renvoyé
-				while ($tuple != false) {
-			$tab[]=$tuple; //on ajoute l'objet en fin de tableau
-					$tuple = $stmt->fetch(); //on récupère un tuple sous la forme
-						//d'un objet instance de la classe $nomClasse	       
-			} //fin du while	           	     
-			}
-		return $tab;    
-	}
-
-	/************************************************************************/
-	//	Methode utilisable uniquement dans les méthodes de la classe DB
-	//	permettant d'exécuter n'importe quel ordre SQL (update, delete ou insert)
-	//	autre qu'une requête.
-	//	Résultat : nombre de tuples affectés par l'exécution de l'ordre SQL
-	//	param1 : texte de l'ordre SQL à exécuter (éventuellement paramétré)
-	//	param2 : tableau des valeurs permettant d'instancier les paramètres de l'ordre SQL
-	//	ATTENTION : il doit y avoir autant de ? dans le texte de la requête
-	//	que d'éléments dans le tableau passé en second paramètre.
-	/************************************************************************/
-	private function execMaj($ordreSQL,$tparam) {
-			$stmt = $this->connect->prepare($ordreSQL);
-		$res = $stmt->execute($tparam); //execution de l'ordre SQL      	     
-		return $stmt->rowCount();
-	}
-
-
-
-
-	/*************************************************************************
-	* Fonctions qui peuvent être utilisées dans les scripts PHP
-	*************************************************************************/
-
-	/*** METHODES POUR LES PRODUITS ***/
-
-	/** Récuperer les produits. Trier par categorie.
-	 * @return array tableau d'objets de la classe Produit
-	 */
-	public function getProduits() {
-		$requete = 'SELECT * FROM Produit ORDER BY categorie';
-		return $this->execQuery($requete,null,'Produit');
-	}
-
-	/** Récuperer les produits en fonction de la catégorie.
-	 * @param string $categ la catégorie des produits à récupérer
-	 * @return array tableau d'objets de la classe Produit
-	 */
-	public function getProduitsParCateg($categ) {
-		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
-		return $this->execQuery($requete,array($categ),'Produit');
-	}
-
-	/** Modifier les données d'un produit.
-	 * @param Produit $produits le produit à modifier.
-	 */
-	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
-	}
-
-	/**
-	 * Créer un produit.
-	 * @param Produit $produits le produit à créer.
-	 */
-	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
-		$this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
-	}
-
-	/** Supprimer un produit.
-	 * @param Produit $produits le produit à supprimer
-	 */
-	public function suppProduit($produits) {
-		$requete = 'DELETE FROM Produit WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getIdProd()),'Produit');
-	}
-
-} //fin classe DB
-<?php
-
-//Mettre les objet a require ici /!\
 include_once 'Droit.inc.php';
 include_once 'Utilisateur.inc.php';
 include_once 'UtilisateurDroit.inc.php';
 include_once 'Client.inc.php';
+include_once 'Produit.inc.php';
 
 class DB {
 
@@ -336,6 +158,8 @@ class DB {
 		}
 		return $tab;
 	}
+
+	
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** Obtenir un utilisateur à partir de son login */
@@ -393,9 +217,6 @@ class DB {
 	}
 
 
-
-
-
 	/*** METHODES POUR LES CLIENTS ****/
 
 	/** Récuperer les clients. */
@@ -434,6 +255,49 @@ class DB {
 		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
 	}
 
+	/*** METHODES POUR LES PRODUITS ***/
+
+	/** Récuperer les produits. Trier par categorie.
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduits() {
+		$requete = 'SELECT * FROM Produit ORDER BY categorie';
+		return $this->execQuery($requete,null,'Produit');
+	}
+
+	/** Récuperer les produits en fonction de la catégorie.
+	 * @param string $categ la catégorie des produits à récupérer
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduitsParCateg($categ) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
+		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
+	/** Modifier les données d'un produit.
+	 * @param Produit $produits le produit à modifier.
+	 */
+	public function updateProduit($produits) {
+		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
+	}
+
+	/**
+	 * Créer un produit.
+	 * @param Produit $produits le produit à créer.
+	 */
+	public function insertProduit($produits) {
+		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
+		$this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
+	}
+
+	/** Supprimer un produit.
+	 * @param Produit $produits le produit à supprimer
+	 */
+	public function suppProduit($produits) {
+		$requete = 'DELETE FROM Produit WHERE idProd = ?';
+		$this->execQuery($requete,array($produits->getIdProd()),'Produit');
+	}
 
 	
-} //f
+} //fin classe DB
