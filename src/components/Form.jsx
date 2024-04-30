@@ -467,16 +467,18 @@ const Code = ({ changeEtat }) =>
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
-
+	const [val, setVal] = useState("");
 
 	//évènements dans la zone de texte
 	const changement = (event) =>
 	{
-		if(event.action === "remove-value" && event.target.value.length === 5) event.target.value = event.target.value.slice(0, 3);
-		console.log(event.context)
+		let nouvelleVal = event.target.value;
+		if(nouvelleVal.length <= val.length && nouvelleVal.length === 4) event.target.value = nouvelleVal.slice(0, 3);
 		regex(event);
 		setCode(event.target.value);
 		setIsValid(true);	//par défaut le style est valide
+
+		setVal(event.target.value);
 	};
 
 	//ennvoye à la page de choix du nouveau mot de passe
