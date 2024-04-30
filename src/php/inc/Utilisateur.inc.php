@@ -28,7 +28,7 @@ class Utilisateur {
     public function __construct(int $iduti = 0, string $login = "", string $mdp = "", string $email = "", bool $actif = true) {
         $this->iduti = $iduti;
         $this->login = $login;
-        $this->mdp = $mdp;
+        $this->mdp   = $mdp;
         $this->email = $email;
         $this->actif = $actif;
     }
@@ -38,7 +38,7 @@ class Utilisateur {
 
     /** Getter du login de l'utilisateur */
     public function getLogin(): string {return $this->login;}
-    
+
     /** Getter du mot de passe de l'utilisateur */
     public function getMdp(): string {return $this->mdp;}
 
