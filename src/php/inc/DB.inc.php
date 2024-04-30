@@ -158,6 +158,7 @@ class DB {
 		}
 		return $tab;
 	}
+
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** Obtenir un utilisateur à partir de son login */
@@ -284,8 +285,8 @@ class DB {
 	 * @param Produit $produits le produit à modifier.
 	 */
 	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
+		$requete = 'UPDATE Produit SET ref = ? idProd = ? libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()));
 	}
 
 	/**
@@ -293,8 +294,8 @@ class DB {
 	 * @param Produit $produits le produit à créer.
 	 */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
-		$this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
+		$requete = 'INSERT INTO Produit VALUES (?,?,?,?,?)';
+		$this->execMaj($requete,array($produits->getIdProd(),$produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
 	}
 
 	/** Supprimer un produit.
@@ -302,9 +303,8 @@ class DB {
 	 */
 	public function suppProduit($produits) {
 		$requete = 'DELETE FROM Produit WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getIdProd()),'Produit');
+		$this->execMaj($requete,array($produits->getIdProd()));
 	}
-
 
 	
 } //fin classe DB
