@@ -34,7 +34,8 @@ CREATE TABLE Client
 
 CREATE TABLE Produit
 (
-	idProd    INTEGER       PRIMARY KEY,
+	idProd    SERIAL        PRIMARY KEY,
+	ref       VARCHAR(255)  NOT NULL   ,
 	libProd   VARCHAR(255)  NOT NULL   ,
 	prixUni   DECIMAL(12,2)            ,
 	categorie VARCHAR(30)   NOT NULL
