@@ -1,0 +1,41 @@
+.form {
+	width: 350px;
+	height: 450px;
+	padding: 30px 50px;
+	background-color: #00476E;
+	border-radius: 15px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.titre {
+	color: #FFFFFF;
+}
+.label {
+	color: #FFFFFF;
+}
+.bouton {
+	align-self: flex-start;
+	background-color: #006DAA;
+	border-color: transparent;
+}
+.champs{
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+.mdpOublie{
+	color: #FFFFFF;
+	text-align: center;
+	background-color: transparent;
+	border-color: transparent;
+}
+.mdpOublie:hover{
+	text-decoration: underline;
+}
+
+.invalid{
+	border: 1px solid red;
+}
+.invalid::placeholder{
+	color : red;
+}
