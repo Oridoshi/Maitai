@@ -303,7 +303,7 @@ const Creer = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h4 className="titre">Création du compte</h4>
+				<h4 className=" titre titrepetit">Création du compte</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
 					<input type="text" required value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
