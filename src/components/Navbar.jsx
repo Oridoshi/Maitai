@@ -46,14 +46,14 @@ function Navbar({ role })
 						<li className="login">{sessionStorage.getItem('login')}</li>
 					</ul>
 					<a href="/" onClick={ deconnect }>
-						<Button className="navbar-brand btnLogout"></Button>
+						<Button className=" btnLogout"></Button>
 					</a>
 				</div>
 			);
 		} else
 		{
 			return (
-				<Button className="navbar-brand btnLog" onClick={ toggleModal }>
+				<Button className="btnLog" onClick={ toggleModal }>
 					Connexion
 				</Button>
 			);
@@ -86,33 +86,41 @@ function Navbar({ role })
 
 	//code la navabar
 	return (
-		<div className="navbar">
-			<nav className="navbar navbar-expand-lg nav">
-				<div className="container-fluid">
-					<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-						<span className="navbar-toggler-icon"></span>
-					</button>
-					<Link className="navbar-brand logoMaitai" to="/"></Link>
-					<Link className="navbar-brand btnAccueil" to="/"></Link>
-					<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-						{ getItem() }
-					</div>
-					{ getConnexion() }
+		<div>
+			<div className="manav container-fluid">
+				<div className="navbar">
+					<nav className="navbar navbar-expand-lg nav">
+						<div className="container-fluid">
+							<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+								<span className="navbar-toggler-icon"></span>
+							</button>
+							<Link className="navbar-brand logoMaitai" to="/"></Link>
+							<Link className="navbar-brand btnAccueil" to="/"></Link>
+							<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+								{getItem()}
+							</div>
+						</div>
+					</nav>
 				</div>
-			</nav>
-			<Routes>
-				<Route path="/" element={ <Accueil /> } />
-				<Route path="/clients" element={ <Client /> } />
-				<Route path="/utilisateurs" element={ <Utilisateurs /> } />
-				<Route path="/produits" element={ <Produits /> } />
-				<Route path="/tickets" element={ <Tickets /> } />
-				<Route path="/fiche-de-sécurité" element={ <FicheSecu /> } />
-			</Routes>
-			<Modal className="popup d-flex justify-content-center align-items-center" show={ showModal } onHide={ toggleModal }>
-				<Modal.Body>
-					<Form />
-				</Modal.Body>
-			</Modal>
+				<div>
+					{getConnexion()}
+				</div>
+			</div>
+			<div>
+				<Routes>
+					<Route path="/" element={<Accueil />} />
+					<Route path="/clients" element={<Client />} />
+					<Route path="/utilisateurs" element={<Utilisateurs />} />
+					<Route path="/produits" element={<Produits />} />
+					<Route path="/tickets" element={<Tickets />} />
+					<Route path="/fiche-de-sécurité" element={<FicheSecu />} />
+				</Routes>
+				<Modal className="popup d-flex justify-content-center align-items-center" show={showModal} onHide={toggleModal}>
+					<Modal.Body>
+						<Form />
+					</Modal.Body>
+				</Modal>
+			</div>
 		</div>
 	);
 }

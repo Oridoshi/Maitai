@@ -1,10 +1,8 @@
-.nav {
-
-	padding-top: 10px;
-	padding-bottom: 10px;
-	width: 100%;
-	margin-top: 0px;
+.manav{
+	display:flex;
+	justify-content: space-between; /* Distribue les éléments horizontalement avec un espace entre eux */
 }
+
 .logoMaitai{
 	width: 50px;
 	height: 50px;
@@ -60,10 +58,10 @@
 	list-style-type: none;
 	margin-right: 5px;
 	font-size: 16px;
-	margin-top: 25%;
 }
 .divlog{
 	display:flex;
+	padding-top: 15px;
 }
 
 .btnLogout{
@@ -86,6 +84,7 @@
 	background-color: #005C8F;
 	border-color: transparent;
 	color: #FFFFFF;
+	margin-top: 20px;
 }
 .btnLog:hover,
 .btnLog:focus,
