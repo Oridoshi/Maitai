@@ -481,11 +481,9 @@ const Code = ({ changeEtat }) =>
 	//évènements dans la zone de texte
 	const changement = (event) =>
 	{
-		let val;
+		if(supprimer && event.target.value.length === 5) event.target.value.lenght = event.target.value.slice(0,3);
 		regex(event);
-		val = event.target.value;
-		if(supprimer && val.length === 5) val = val.slice(0,3);
-		setCode(val);
+		setCode(event.target.value);
 		setIsValid(true);	//par défaut le style est valide
 	};
 
