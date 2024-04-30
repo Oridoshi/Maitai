@@ -64,6 +64,35 @@ function Utilisateur() {
 	}, []);
 
 
+	
+
+
+	// Fonction pour récupérer les données des clients
+	const fetchUtilisateurData = async () => {
+		try {
+			const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des utilisateurs.');
+			}
+
+			const data = await response.json();
+			return data.map((item, index) => ({
+				...item,
+				id: index + 1
+			}));
+		} catch (error) {
+			console.error('Erreur :', error);
+			return [];
+		}
+	};
+
+
 
 
 
@@ -157,6 +186,13 @@ function Utilisateur() {
 
 			const data = await response.text();
 			afficherError(data);
+
+		
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchUtilisateurData();
+			setInitialData(newData);
+			setFilterData(newData);
+
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
@@ -201,6 +237,14 @@ function Utilisateur() {
 
 			const data = await response.text();
 			afficherError(data);
+		
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchUtilisateurData();
+
+			console.log(newData)
+			setInitialData(newData);
+			setFilterData(newData);
+
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
