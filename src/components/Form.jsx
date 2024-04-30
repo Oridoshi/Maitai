@@ -467,14 +467,14 @@ const Code = ({ changeEtat }) =>
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
-	let supprTiret = false;
+	let supprimer = false;
 
 	const suppr = (event) =>
 	{
-		supprTiret = false;
-		if(event.inputType === "deleteContentBackward" && event.target.value.length === 5)
+		suppr = false;
+		if(event.inputType === "deleteContentBackward")
 		{
-			supprTiret = true;
+			supprimer = true;
 		}
 	};
 
@@ -484,7 +484,7 @@ const Code = ({ changeEtat }) =>
 		let val;
 		regex(event);
 		val = event.target.value;
-		if(supprTiret) val = val.slice(0,3);
+		if(supprimer && val.length === 5) val = val.slice(0,3);
 		setCode(val);
 		setIsValid(true);	//par défaut le style est valide
 	};
