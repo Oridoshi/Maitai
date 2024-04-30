@@ -97,28 +97,28 @@ function FicheSecu() {
 						</div>
 
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1" name="dp"        id="dp"       value="DP"             required readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="dpnom"     id="dpnom"    placeholder="Nom"      required         />
-							<input type="text" className="form-control p-1 m-1" name="dpprenom"  id="dpprenom" placeholder="Prenom"   required         />
-							<input type="text" className="form-control p-1 m-1" name="dpniveau"  id="dpniveau" placeholder="Niveau"   required         />
+							<input type="text" className="form-control p-1 m-1"                   id="dp"       value="DP"                                                               required readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="dpnom"     id="dpnom"    defaultValue={sessionStorage.getItem("dpnom")}    placeholder="Nom"      required         />
+							<input type="text" className="form-control p-1 m-1" name="dpprenom"  id="dpprenom" defaultValue={sessionStorage.getItem("dpprenom")} placeholder="Prenom"   required         />
+							<input type="text" className="form-control p-1 m-1" name="dpniveau"  id="dpniveau" defaultValue={sessionStorage.getItem("dpniveau")} placeholder="Niveau"   required         />
 						</div>
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1" name="ss1"       id="ss1"       value="SECU.SURF"     required  readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="ss1nom"    id="ss1nom"    placeholder="Nom"     required          />
-							<input type="text" className="form-control p-1 m-1" name="ss1prenom" id="ss1prenom" placeholder="Prenom"  required          />
-							<input type="text" className="form-control p-1 m-1" name="ss1niveau" id="ss1niveau" placeholder="Niveau"  required          />
+							<input type="text" className="form-control p-1 m-1"                  id="ss1"       value="SECU.SURF"                                                        required  readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="ss1nom"    id="ss1nom"    placeholder="Nom"    defaultValue={sessionStorage.getItem("ss1nom")}     required          />
+							<input type="text" className="form-control p-1 m-1" name="ss1prenom" id="ss1prenom" placeholder="Prenom" defaultValue={sessionStorage.getItem("ss1prenom")}  required          />
+							<input type="text" className="form-control p-1 m-1" name="ss1niveau" id="ss1niveau" placeholder="Niveau" defaultValue={sessionStorage.getItem("ss1niveau")}  required          />
 						</div>
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1" name="ss2"       id="ss2"       value="SECU.SURF"     required readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="ss2nom"    id="ss2nom"    placeholder="Nom"     required         />
-							<input type="text" className="form-control p-1 m-1" name="ss2prenom" id="ss2prenom" placeholder="Prenom"  required         />
-							<input type="text" className="form-control p-1 m-1" name="ss2niveau" id="ss2niveau" placeholder="Niveau"  required         />
+							<input type="text" className="form-control p-1 m-1"                  id="ss2"       value="SECU.SURF"                                                        required readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="ss2nom"    id="ss2nom"    placeholder="Nom"    defaultValue={sessionStorage.getItem("ss2nom")}     required         />
+							<input type="text" className="form-control p-1 m-1" name="ss2prenom" id="ss2prenom" placeholder="Prenom" defaultValue={sessionStorage.getItem("ss2prenom")}  required         />
+							<input type="text" className="form-control p-1 m-1" name="ss2niveau" id="ss2niveau" placeholder="Niveau" defaultValue={sessionStorage.getItem("ss2niveau")}  required         />
 						</div>
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1" name="tel"       id="tel"       value="TELEPHONE"     required readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"     required         />
-							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom"  required         />
-							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau"  required         />
+							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"                                                        required readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    defaultValue={sessionStorage.getItem("telnom")}     required         />
+							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={sessionStorage.getItem("telprenom")}  required         />
+							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau" defaultValue={sessionStorage.getItem("telniveau")}  required         />
 						</div>
 					</div>
 
@@ -184,15 +184,13 @@ function FicheSecu() {
 
 		// Parcourir toutes les entrées du formulaire
 		for (let [key, value] of formData.entries()) {
-			// Ajouter chaque paire clé-valeur dans l'objet formValues
+			sessionStorage.setItem(key, value);
 			formValues[key] = value;
 		}
 
 		// Afficher les valeurs du formulaire dans la console
 		console.log("Form Data:", formValues);
-
-
-		// for
+		setEtape(etape + 1);
 	};
 
 
