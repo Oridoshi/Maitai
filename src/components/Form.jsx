@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../style/form.css';		//style du composant
-import { cheminPHP } from './VarGlobale';
+import { cheminPHP } from './VarGlobal';
 
 /**
  * Ce formulaire fonctionne avec un système d'état qui se suivent ex : l'état login

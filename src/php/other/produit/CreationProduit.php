@@ -6,7 +6,7 @@ include_once '../../inc/DB.inc.php';
  * Crée un nouveau produit
  */
 $newProd = new Produit();
-$newProd->setIdProd($_POST['idProd']);
+$newProd->setRef($_POST['ref']);
 $newProd->setLibProd($_POST['libProd']);
 
 if($_POST['prixUni'] != ""){

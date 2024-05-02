@@ -144,7 +144,7 @@ class DB {
 
 	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
 	public function getUtilisateursEtDroit() {
-		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY droit.idDroit,login DESC';
+		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY droit.idDroit,login';
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -285,7 +285,7 @@ class DB {
 	 * @param Produit $produits le produit à modifier.
 	 */
 	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET ref = ? idProd = ? libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
 		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()));
 	}
 
@@ -294,8 +294,8 @@ class DB {
 	 * @param Produit $produits le produit à créer.
 	 */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit VALUES (?,?,?,?,?)';
-		$this->execMaj($requete,array($produits->getIdProd(),$produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
+		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,categorie) VALUES (?,?,?,?)';
+		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
 	}
 
 	/** Supprimer un produit.

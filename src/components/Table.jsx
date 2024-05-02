@@ -94,6 +94,7 @@ return (
 										value={formValues[head.id] || ''}
 										onChange={handleChange}
 										required={head.required ? true : false}
+										{...head.step && { step: head.step }} // Ajout conditionnel de l'attribut step
 									/>
 
 									{head.datalist && (
