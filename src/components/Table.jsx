@@ -243,7 +243,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 			if (insertSuccess)
 			{
 				updatedRowData.id = Math.max(...datas.map(item => item.id), 0) + 1;
-				setTableData(prevData => [...prevData, updatedRowData]);
+				// setTableData(prevData => [...prevData, updatedRowData]);
 				setModalIsOpen(false);
 			} else
 			{
