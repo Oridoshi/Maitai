@@ -51,19 +51,24 @@
 	background-color: #DD6565;
 }
 
-.btnAjouter {
+.btnAjouter,
+.btnAdd:focus,
+.btnAjouter:active {
 	width: 40px;
 	height: 40px;
 
-	background-image: url('../img/ajouter.svg');
+	background-image: url('../img/ajouter.svg')!important;
 
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
 	border-radius: 10px;
 
-	background-color: #006DAA;
-	border-color: #006DAA;
+	background-color: #006DAA!important;
+	border-color: #006DAA!important;
+}
+.btnAjouter:hover{
+	background-color: #005C8F!important;
 }
 
 .text-muted td {
@@ -124,7 +129,4 @@
 	border-color: transparent !important;
 	transform: rotate(180deg);
 	/* Fait pivoter l'arrière-plan de 180 degrés au survol */
-}
-table.tableau tr.edit{
-	background-color: #DD6565!important;
 }

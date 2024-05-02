@@ -58,6 +58,25 @@
 	color: #FFFFFF !important;
 }
 
+.btnExport{
+	background-color: #006DAA!important;
+	color: #FFFFFF!important;
+	font-weight: bolder;
+	border: 0px;
+	width: 200px;
+
+	background-image: url('../img/Export.svg');
+	background-size: 30px;
+	background-position:calc(95%);
+	/* Décaler de 5px vers la gauche */
+	background-repeat: no-repeat;
+}
+.btnExport:hover,
+.btnExport:focus,
+.btnExport:active{
+	background-color: #005C8F !important;
+}
+
 .grpRecherche {
 	margin-left: 3%;
 }
@@ -73,4 +92,54 @@
 	background-position: calc(100% - 10px) center;
 	/* Décaler de 5px vers la gauche */
 	background-repeat: no-repeat;
+}
+
+.ligneProd{
+	display: grid;
+	grid-template-columns: 25% 50% 25%;
+	background-color: #DAE9EA!important;
+}
+
+.ligneTicket{
+	background-color: #DAE9EA!important;
+	width: 268%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.Modal{
+	display: grid;
+	grid-template-columns:60% 40%;
+}
+
+.saisieprix{
+	margin-top: 5px;
+	background-color: #F2EEEB;
+	border: solid #006DAA;
+	border-width: 2px;
+	border-radius: 10px;
+	height: 40px;
+	text-align: center;
+}
+
+.itemModal{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.btnProd{
+	background-color: #006DAA!important;
+	width: 223px;
+	border: 2px !important;
+	border-radius: 10px!important;
+}
+.btnProd:hover,
+.btnProd:active,
+.btnProd:focus{
+	background-color: #005C8F!important;
+}
+.lbl{
+	align-self: center;
+	font-weight: bolder;
+	color: #949494;
 }
