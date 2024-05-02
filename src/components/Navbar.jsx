@@ -10,6 +10,7 @@ import Produits from "../pages/Produits";
 import Tickets from "../pages/Tickets";
 import Utilisateurs from "../pages/Utilisateurs";
 import Form from "../components/Form";
+import Historique from "../pages/Historique";
 
 import '../style/nav.css';
 import Button from 'react-bootstrap/Button';
@@ -23,13 +24,16 @@ function Navbar({ role })
 
 	//en fonction du paramètre on charge plus ou moins de role
 	role = sessionStorage.getItem('droit');
+	console.log(role);
 	switch (role)
 	{
-		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité','Historique'];
 			break;
 		case 'Maitai': navLinks = ['Clients', 'Fiche de sécurité'];
 			break;
-		default: navLinks = ['Fiche de sécurité'];
+		case 'Client' : navLinks = ['Fiche de sécurité'];
+			break;
+		default: navLinks = [];
 			break;
 	}
 
@@ -114,6 +118,7 @@ function Navbar({ role })
 					<Route path="/produits" element={<Produits />} />
 					<Route path="/tickets" element={<Tickets />} />
 					<Route path="/fiche-de-sécurité" element={<FicheSecu />} />
+					<Route path="/historique" element={<Historique/>} />
 				</Routes>
 				<Modal className="popup d-flex justify-content-center align-items-center" show={showModal} onHide={toggleModal}>
 					<Modal.Body>
