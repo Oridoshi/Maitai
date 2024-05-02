@@ -129,6 +129,30 @@ class DB {
 	//	Methode permettant de récupérer tous les historiques de la base     //
 	/************************************************************************/
 
+	/** Insértion d'un historique */
+	public function insertHistorique(Historique $historique) {
+		$requete = "INSERT INTO historique (date, chemin, type, idcli) VALUES (NOW(), :chemin, :type, :idcli)";
+		$tparam = array(':chemin' => $historique->getChemin(), ':type' => $historique->getType(), ':idcli' => $historique->getIdCli());
+		$this->execMaj($requete, $tparam);
+		return true;
+	}
+
+	/** Suppression d'un historique */
+	public function suppHistorique(int $idhis) {
+		$requete = "DELETE FROM historique WHERE idhis = :idhis";
+		$tparam = array(':idhis' => $idhis);
+		$this->execMaj($requete, $tparam);
+		return true;
+	}
+
+	/** Get historique en fonction du chemin */
+	public function getHistoriqueByChemin(string $chemin) {
+		$requete = "SELECT * FROM historique WHERE chemin = :chemin";
+		$tparam = array(':chemin' => $chemin);
+		$tab = $this->execQuery($requete, $tparam, 'Historique');
+		return $tab[0];
+	}
+
 	/** Get tout l'historique d'un client */
 	public function getHistoriquesByClient(int $idcli): array {
 		$requete = "SELECT chemin, idhist FROM historique WHERE idcli = ?";
