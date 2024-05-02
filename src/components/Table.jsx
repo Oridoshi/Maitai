@@ -313,7 +313,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 					<tbody>
 					{datas.slice().reverse().map(item => (
 
-								<tr
+								<tr id={`ligne ${item.id}`}
 									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'}`}
 									key={`${item.id}`}
 								>

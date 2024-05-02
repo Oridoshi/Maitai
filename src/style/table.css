@@ -125,3 +125,6 @@
 	transform: rotate(180deg);
 	/* Fait pivoter l'arrière-plan de 180 degrés au survol */
 }
+table.tableau tr.edit{
+	background-color: #DD6565!important;
+}
