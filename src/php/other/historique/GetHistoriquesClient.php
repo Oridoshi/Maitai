@@ -1,5 +1,6 @@
 <?php
-header('Cross-Origin-Opener-Policy: same-origin');
+header("Access-Control-Allow-Origin: *");
+include_once '../../inc/DB.inc.php';
 
 $idcli = $_POST['idcli'];
 

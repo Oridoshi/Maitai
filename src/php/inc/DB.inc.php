@@ -392,10 +392,11 @@ class DB {
 
 	/** Get tout l'historique d'un client */
 	public function getHistoriquesByClient(int $idcli): array {
-		$requete = "SELECT chemin, idhist FROM historique WHERE idcli = ?";
+		$requete = "SELECT chemin, idhis, type, date FROM historique WHERE idcli = ?";
 		$tparam = array($idcli);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
+		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
 		$tab = array();
 		$tuple = $stmt->fetch();
 		if ($tuple) {
@@ -409,12 +410,19 @@ class DB {
 
 	/** Get un historique via son id */
 	public function getHistoriquesById(int $idhist): string {
-		$requete = "SELECT chemin FROM historique WHERE idhist = ?";
+		$requete = "SELECT chemin FROM historique WHERE idhis = ?";
 		$tparam = array($idhist);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
 		$tuple = $stmt->fetch();
 		return $tuple['chemin'];
 	}
+
+	// /** Supprime un Historique */
+	// public function suppHistoriqueById(int $idhist) {
+	// 	$requete = "DELETE FROM historique WHERE idhis = ?";
+	// 	$tparam = array($idhist);
+	// 	$this->execMaj($requete, $tparam);
+	// }
 
 } //fin classe DB
