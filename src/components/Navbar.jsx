@@ -27,7 +27,7 @@ function Navbar({ role })
 	console.log(role);
 	switch (role)
 	{
-		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité','Historique'];
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
 			break;
 		case 'Maitai': navLinks = ['Clients', 'Fiche de sécurité'];
 			break;

@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'; // Importez useState ici
-import Table from '../components/Table.jsx';
+import React, { useState, useEffect } from 'react'; // Importez useState ici
+import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';  
 
 export default function Produits(){
@@ -10,7 +10,7 @@ export default function Produits(){
 
 
 	// Récupérer les données des produits
-	useEffect(() =>
+	useEffect(() => {
 		fetch(cheminPHP + "produit/GetProduit.php", {
 			method: 'GET',
 			headers: {
@@ -34,7 +34,7 @@ export default function Produits(){
 		.catch(error => {
 			console.error('Erreur :', error);
 		})
-	, []);
+	}, []);
 
 
 	/*

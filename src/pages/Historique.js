@@ -1,23 +1,31 @@
-import { useState, useEffect } from 'react'; // Importez useState ici
-import Table from '../components/Table.jsx';
+import React, { useState, useEffect } from 'react'; // Importez useState ici
+import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';  
 
 export default function Historique(){
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
+	
+	// Récupérer l'ID de l'utilisateur au quelle on veut afficher les historiques
+	// console.log(sessionStorage.getItem('idCli'));
+	const idCli = parseInt(sessionStorage.getItem('idCli'));
 
+	
 	// Récupérer les données des produits
-	useEffect(() =>
-		fetch(cheminPHP + "produit/GetProduit.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-			},
+	useEffect(() => {
+		// Créer un objet FormData
+		const formData = new FormData();
+		formData.append('idcli', idCli);
+
+		fetch(cheminPHP + "historique/GetHistoriquesClient.php", {
+			method: 'POST',
+			body: formData
 		})
 		.then(response => {
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
+			
 			return response.json();
 		})
 		.then(data => {
@@ -31,205 +39,154 @@ export default function Historique(){
 		.catch(error => {
 			console.error('Erreur :', error);
 		})
-	, []);
+	}, [idCli]);
 
+	const funGetFile = async (item) => {
+		try {
+			const formData = new FormData();
+			formData.append('idhist', parseInt(item.idhis));
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "historique/GetFilesIdHist.php", requestOptions);
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			// console.log(await response.text());
+			// Convertir la réponse en blob
+			const blob = await response.blob();
+			
+			// Créer une URL pour le blob
+			const url = URL.createObjectURL(blob);
+
+			// Créer un lien <a> pour télécharger le fichier
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = item.chemin; // Spécifiez le nom de fichier souhaité ici
+
+			// Ajouter le lien à la page
+			document.body.appendChild(link);
+
+			// Simuler le clic sur le lien pour déclencher le téléchargement
+			link.click();
+
+			// Supprimer le lien de la page une fois le téléchargement terminé
+			document.body.removeChild(link);
+
+			return true;
+		} catch (error) {
+				console.log(error);
+				return false; // Retourne false en cas d'erreur
+		}
+	};
+
+	/*
+		idHis  SERIAL       PRIMARY KEY,
+		date   DATE         DEFAULT CURRENT_DATE NOT NULL,
+		chemin VARCHAR(255) NOT NULL,
+		type   VARCHAR(6)   NOT NULL CHECK (type IN ('TICKET', 'SECU')),
+		idCli  INTEGER      NOT NULL REFERENCES Client(idCli)
+	*/
 	// En-tête de la table
 	const initialHeader = [
-		{ id: 'id'       , name: 'NB Ligne'      , type:'number' ,              required : true , editable : false, show : false                     },
-		{ id: 'idprod'   , name: 'ID du produit' , type:'number' ,              required : true , editable : false, show : false                     },
-		{ id: 'ref'      , name: 'Référence'     , type:'text'   ,              required : true , editable : true , show : true                      },
-		{ id: 'libprod'  , name: 'Libellé'       , type:'text'   ,              required : true , editable : true , show : true                      },
-		{ id: 'prixuni'  , name: 'Prix Unitaire' , type:'number' , step:'0.01', required : false, editable : true , show : true                      },
-		{ id: 'categorie', name: 'Catégorie'     , type:'text'   ,              required : true , editable : true , show : true , datalist : datalistCateg}
+		{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+		{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+		{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+		{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
+		{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
+		{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
+		// { id: 'valider', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+		{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
 	];
 
 
+	// // Fonction pour récupérer les données des produits
+	// const fetchHistoriqueData = async () => {
+	// 	try {
+	// 		const formData = new FormData();
+	// 		formData.append('idcli', idCli);
 
+	// 		await fetch(cheminPHP + "historique/GetHistoriquesClient.php", {
+	// 			method: 'POST',
+	// 			body: formData
+	// 		})
+	// 		.then(response => {
+	// 			if (!response.ok) {
+	// 				throw new Error('Erreur de réseau !');
+	// 			}
+				
+	// 			return response.json();
+	// 		})
+	// 		.then(data => {
+	// 			const newData = data.map((item, index) => ({
+	// 				...item,
+	// 				id: index + 1
+	// 			}));
 
-	// Fonction pour l'insertion
-	const funInsert = async (nouvItem) => {
-		try {
-			const formData = new FormData();
+	// 			setInitialData(newData);
+	// 			setFilterData (newData);
+	// 		})
+	// 		.catch(error => {
+	// 			console.error('Erreur :', error);
+	// 		})
+	// 	} catch (error) {
+	// 		console.error('Erreur :', error);
+	// 		return [];
+	// 	}
+	// };
 
-			formData.append('ref'      , nouvItem.ref);
-			formData.append('libProd'  , nouvItem.libprod);
-			formData.append('prixUni'  , nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
-			formData.append('categorie', nouvItem.categorie);
+	// const funDelete = async (item) => {
+	// 	try {
+	// 		const formData = new FormData();
+	// 		formData.append('idhist', parseInt(item.idhis));
 
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
+	// 		const requestOptions = {
+	// 			method: 'POST',
+	// 			body: formData
+	// 		};
 
-			const response = await fetch(cheminPHP + "produit/CreationProduit.php", requestOptions);
+	// 		const response = await fetch(cheminPHP + "historique/SuppressionHistorique.php", requestOptions);
 
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
+	// 		if (!response.ok) {
+	// 			throw new Error('Une erreur s\'est produite.');
+	// 		}
 
-			const data = await response.text();
-			afficherError(data);
+	// 		const data = await response.text();
+	// 		afficherError(data);
 
-			// Récupérer les nouvelles données des produits après l'insertion réussie
-			const newData = await fetchProduitData();
-			setInitialData(newData);
-			setFilterData(newData);
-			await fetchCategData();
+	// 		// Récupérer les nouvelles données des produits après la suppression réussie
+	// 		await fetchHistoriqueData();
 
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
-		}
+	// 		return data === ""; // Retourne true si la suppression a réussi, sinon false
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 		return false; // Retourne false en cas d'erreur
+	// 	}
+	// };
 
-		// TODO : Regenerer les data avec un fetch
-	};
+	// // Fonction pour afficher les erreurs
+	// function afficherError(data) {
+	// 	const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
+	// 	const match = regex.exec(data);
 
+	// 	if (match) {
+	// 		const sqlState = match[1]; // État SQL
+	// 		const errorCode = match[2]; // Code d'erreur
+	// 		const errorMessageText = match[3].trim(); // Texte du message d'erreur
 
-	// Fonction pour l'update
-	const funUpdate = async (upItem/*, oldItem*/) => {
-		try {
-
-			// console.log(oldItem);
-			console.log(upItem);
-
-			const formData = new FormData();
-			formData.append('idProd'   , parseInt(upItem.idprod ));
-			formData.append('ref'      , upItem.ref);
-			formData.append('libProd'  , upItem.libprod);
-			formData.append('prixUni'  , upItem.prixuni===""?"":parseFloat(upItem.prixuni));
-			formData.append('categorie', upItem.categorie);
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "produit/ModificationProduit.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const data = await response.text();
-			afficherError(data);
-
-			// Récupérer les nouvelles données des produits après l'insertion réussie
-			const newData = await fetchProduitData();
-			setInitialData(newData);
-			setFilterData(newData);
-			await fetchCategData();
-
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
-		}
-	};
-
-	// Fonction pour la suppression
-	const funDelete = async (item) => {
-		try {
-			const formData = new FormData();
-			formData.append('idProd', parseInt(item.idprod));
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "produit/SuppressionProduit.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const data = await response.text();
-			afficherError(data);
-
-			// Récupérer les nouvelles données des produits après la suppression réussie
-			const newData = await fetchProduitData();
-			setInitialData(newData);
-			setFilterData(newData);
-			await fetchCategData();
-
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
-		}
-	};
-
-
-	// Fonction pour récupérer les données des produits
-	const fetchProduitData = async () => {
-		try {
-			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'text/plain; charset=UTF-8'
-				},
-			});
-
-			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de la récupération des données des produits.');
-			}
-
-			const data = await response.json();
-			return data.map((item, index) => ({
-				...item,
-				id: index + 1
-			}));
-		} catch (error) {
-			console.error('Erreur :', error);
-			return [];
-		}
-	};
-
-	// Fonction pour recupérer les données pour les datalist
-	const fetchCategData = async () => {
-		try {
-			const response = await fetch(cheminPHP + "produit/GetCateg.php", {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'text/plain; charset=UTF-8'
-				},
-			});
-
-			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de la récupération des données des produits.');
-			}
-
-			const data = await response.json();
-			let lstTemp = [];
-			data.forEach(element => {
-				lstTemp.push(element.categorie);
-			});
-			setDatalistCateg(lstTemp);
-		} catch (error) {
-			console.error('Erreur :', error);
-			return [];
-		}
-	};
-
-	// Fonction pour afficher les erreurs
-	function afficherError(data) {
-		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
-		const match = regex.exec(data);
-
-		if (match) {
-			const sqlState = match[1]; // État SQL
-			const errorCode = match[2]; // Code d'erreur
-			const errorMessageText = match[3].trim(); // Texte du message d'erreur
-
-			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
-			alert(errorMessageText);
+	// 		console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
+	// 		alert(errorMessageText);
 			
-		} else {
-			if (data !== "")
-				alert(data.replace('<br>', ''));
-		}
-	}
+	// 	} else {
+	// 		if (data !== "")
+	// 			alert(data.replace('<br>', ''));
+	// 	}
+	// }
 
 	const handleChange   = (e) => {filter( e.target.value);};
 
@@ -264,14 +221,11 @@ export default function Historique(){
 		setFilterData(filteredData);
 	}
 
-
-
-
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre mt-1'>Gestion des produits </h1>
+		<h1 className='titre mt-1'>Gestion des historiques </h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
@@ -284,10 +238,8 @@ export default function Historique(){
 
 		<Table 
 			header={initialHeader} 
-			data={filterData} 
-			funInsert={funInsert} 
-			funUpdate={funUpdate} 
-			funDelete={funDelete}
+			data={filterData}
+			// funDelete={funDelete}
 			keyGrayWhenFalse = 'present'
 		/>
 	</div>
