@@ -47,6 +47,7 @@ CREATE TABLE Historique
 	date   DATE         DEFAULT CURRENT_DATE NOT NULL,
 	chemin VARCHAR(255) NOT NULL,
 	type   VARCHAR(6)   NOT NULL CHECK (type IN ('TICKET', 'SECU')),
+	valide BOOLEAN      DEFAULT 0,
 	idCli  INTEGER      NOT NULL REFERENCES Client(idCli)
 );
 
