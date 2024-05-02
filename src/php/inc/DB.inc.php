@@ -135,13 +135,14 @@ class DB {
 	/*** METHODES POUR LES TICKETS ***/
 
 	/**
-	 * Permet de mettre à jour un ticket
-	 * @param Ticket $ticket le ticket à mettre à jour
+	 * Permet de récupérer les produits du ticket
+	 * @param int $idcli id du client
+	 * @param int $idprod id du produit
 	 * @return void
 	 */
-	public function updateTicket(Ticket $ticket) {
-		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
-		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
+	public function suppTicket(int $idprod, int $idcli) {
+		$requete = "DELETE FROM ticket WHERE idprod = ? AND idcli = ?";
+		$tparam = array($idprod, $idcli);
 		$this->execMaj($requete, $tparam);
 	}
 }
