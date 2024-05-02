@@ -109,7 +109,7 @@ export default function Produits(){
 			const data = await response.text();
 			afficherError(data);
 
-			// Récupérer les nouvelles données des clients après l'insertion réussie
+			// Récupérer les nouvelles données des produits après l'insertion réussie
 			const newData = await fetchProduitData();
 			setInitialData(newData);
 			setFilterData(newData);
@@ -153,7 +153,7 @@ export default function Produits(){
 			const data = await response.text();
 			afficherError(data);
 
-			// Récupérer les nouvelles données des clients après l'insertion réussie
+			// Récupérer les nouvelles données des produits après l'insertion réussie
 			const newData = await fetchProduitData();
 			setInitialData(newData);
 			setFilterData(newData);
@@ -186,7 +186,7 @@ export default function Produits(){
 			const data = await response.text();
 			afficherError(data);
 
-			// Récupérer les nouvelles données des clients après la suppression réussie
+			// Récupérer les nouvelles données des produits après la suppression réussie
 			const newData = await fetchProduitData();
 			setInitialData(newData);
 			setFilterData(newData);
@@ -200,7 +200,7 @@ export default function Produits(){
 	};
 
 
-	// Fonction pour récupérer les données des clients
+	// Fonction pour récupérer les données des produits
 	const fetchProduitData = async () => {
 		try {
 			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
@@ -211,7 +211,7 @@ export default function Produits(){
 			});
 
 			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+				throw new Error('Erreur de réseau lors de la récupération des données des produits.');
 			}
 
 			const data = await response.json();
@@ -236,7 +236,7 @@ export default function Produits(){
 			});
 
 			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+				throw new Error('Erreur de réseau lors de la récupération des données des produits.');
 			}
 
 			const data = await response.json();
@@ -310,7 +310,7 @@ export default function Produits(){
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre mt-1'>Gestion des clients </h1>
+		<h1 className='titre mt-1'>Gestion des produits </h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
