@@ -1,0 +1,15 @@
+@font-face {
+    font-family: 'Water Brush';
+    src: url('../fonts/WaterBrush-Regular.ttf') format('truetype');
+}
+
+.accueil {
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
+    align-items: left;
+    font-size: 6em;
+    height: 100vh;
+    font-family: 'Water Brush';
+}
