@@ -6,6 +6,7 @@ include_once 'Utilisateur.inc.php';
 include_once 'UtilisateurDroit.inc.php';
 include_once 'Client.inc.php';
 include_once 'Produit.inc.php';
+include_once 'Ticket.inc.php';
 
 class DB {
 
@@ -30,7 +31,7 @@ class DB {
 		try {
 			// Connexion à la base
 
-    		$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
+			$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
 
 			// Configuration facultative de la connexion
 			$this->connect->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER); 
@@ -38,7 +39,7 @@ class DB {
 		}
 		catch (PDOException $e) {
 					echo "probleme de connexion :".$e->getMessage();
-			return null;    
+			return null;
 		}
 	}
 
@@ -306,5 +307,57 @@ class DB {
 		$this->execMaj($requete,array($produits->getIdProd()));
 	}
 
-	
+	/*** METHODES POUR LES TICKETS ***/
+
+	/**
+	 * Insère un ticket dans la base de données.
+	 * @param Ticket $ticket Ticket à insérer dans la base de données.
+	 * @return void
+	 */
+	public function insertTicket(Ticket $ticket) {
+		$requete = "INSERT INTO ticket (idprod, idcli, qa, prixtot) VALUES (?, ?, ?, ?)";
+		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixTot());
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Permet de mettre à jour un ticket
+	 * @param Ticket $ticket le ticket à mettre à jour
+	 * @return void
+	 */
+	public function updateTicket(Ticket $ticket) {
+		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
+		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Permet de récupérer les produits du ticket
+	 * @param int $idcli id du client
+	 * @param int $idprod id du produit
+	 * @return void
+	 */
+	public function suppTicket(int $idprod, int $idcli) {
+		$requete = "DELETE FROM ticket WHERE idprod = ? AND idcli = ?";
+		$tparam = array($idprod, $idcli);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Récupère les produits du ticket en fonction de l'id du client
+	 * @param int $idcli id du client ou null pour tous les clients
+	 * @return array de produit de Ticket
+	 */
+	public function getProdTicket(?int $idcli) {
+		if ($idcli == null) {
+			$requete = "SELECT * FROM ticket";
+			$tparam = null;
+		}
+		else {
+			$requete = "SELECT * FROM ticket WHERE idcli = ?";
+			$tparam = array($idcli);
+		}
+
+		return $this->execQuery($requete, $tparam, 'Ticket');
+	}
 } //fin classe DB
