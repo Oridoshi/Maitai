@@ -3,19 +3,19 @@
 class Historique {
 
     /** Numéro d'identification du fichier stockés. */
-    private int $idhis;
+    public int $idhis;
 
     /** Date a laquelle le fichier a été généré. */
-    private string $date;
+    public string $date;
 
     /** Chemin pour retrouver le fichier. */
-    private string $chemin;
+    public string $chemin;
 
     /** Type de fichier (Ticket ou fiche de secu). */
-    private string $type;
+    public string $type;
 
     /** Client attachés au fichiers générés. */
-    private int $idcli;
+    public int $idcli;
 
     /**
      * @var int $idhis Numéro d'identification du fichier stockés.
