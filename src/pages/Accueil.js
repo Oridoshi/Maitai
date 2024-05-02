@@ -1,4 +1,5 @@
 import React from "react";
+import Compteur from "../components/Compteur";
 
 export default function accueil(){
 	return(
