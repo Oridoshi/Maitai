@@ -144,7 +144,7 @@ class DB {
 
 	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
 	public function getUtilisateursEtDroit() {
-		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY droit.idDroit,login DESC';
+		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY droit.idDroit,login';
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -159,7 +159,6 @@ class DB {
 		return $tab;
 	}
 
-	
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** Obtenir un utilisateur à partir de son login */
@@ -286,8 +285,8 @@ class DB {
 	 * @param Produit $produits le produit à modifier.
 	 */
 	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()),'Produit');
+		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()));
 	}
 
 	/**
@@ -295,8 +294,8 @@ class DB {
 	 * @param Produit $produits le produit à créer.
 	 */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit VALUES (?,?,?,?)';
-		$this->execQuery($requete,array($produits->getIdProd(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()),'Produit');
+		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,categorie) VALUES (?,?,?,?)';
+		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
 	}
 
 	/** Supprimer un produit.
@@ -304,7 +303,7 @@ class DB {
 	 */
 	public function suppProduit($produits) {
 		$requete = 'DELETE FROM Produit WHERE idProd = ?';
-		$this->execQuery($requete,array($produits->getIdProd()),'Produit');
+		$this->execMaj($requete,array($produits->getIdProd()));
 	}
 
 	

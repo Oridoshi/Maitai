@@ -1,332 +1,334 @@
-import React, { useState, useEffect } from 'react'; // Importez useState ici
-import Table from '../components/Table';
+import { useState, useEffect } from 'react'; // Importez useState ici
+import Table from '../components/Table.jsx';
 import { cheminPHP } from '../components/VarGlobal.js';  
 
-export default function produits(){
+export default function Produits(){
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
+	const [datalistCateg, setDatalistCateg] = useState([]);
 
 
 
-
-	fetch(cheminPHP + "client/GetClients.php", {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-		},
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Erreur de réseau !');
-		}
-		return response.json();
-	})
-	.then(data => {
-		const newData = data.map((item, index) => ({
-			...item,
-			id: index + 1
-		}));
-		setInitialData(newData);
-		setFilterData (newData);
-	})
-	.catch(error => {
-		console.error('Erreur :', error);
-	});
+	// Récupérer les données des produits
+	useEffect(() =>
+		fetch(cheminPHP + "produit/GetProduit.php", {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Erreur de réseau !');
+			}
+			return response.json();
+		})
+		.then(data => {
+			const newData = data.map((item, index) => ({
+				...item,
+				id: index + 1
+			}));
+			setInitialData(newData);
+			setFilterData (newData);
+		})
+		.catch(error => {
+			console.error('Erreur :', error);
+		})
+	, []);
 
 
 	/*
-		idProd    INTEGER       PRIMARY KEY,
-		libProd   VARCHAR(255)  NOT NULL   ,
-		prixUni   DECIMAL(12,2)            ,
+		idprod    INTEGER       PRIMARY KEY,
+		libprod   VARCHAR(255)  NOT NULL   ,
+		prixuni   DECIMAL(12,2)            ,
 		categorie VARCHAR(30)   NOT NULL
 	*/
 
 	//Génération du tableau pour la datalist
-	let datalistCateg = fetch(cheminPHP + "produit/GetCateg.php", {
-		method: 'GET',
-		headers: {
-			'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-		},
-	})
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Erreur de réseau !');
+	useEffect(() => {
+			fetch(cheminPHP + "produit/GetCateg.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
+				},
+			})
+			.then(response => {
+
+				if (!response.ok) {
+					throw new Error('Erreur de réseau !');
+				}
+				return response.json();
+			})
+			.then(data => {
+				let lstTemp = [];
+				data.forEach(element => {
+					lstTemp.push(element.categorie);
+				});
+				setDatalistCateg(lstTemp);
+			})
+			.catch(error => {
+				console.error('Erreur :', error);
+			}
+		);
+	}, []);
+
+	// En-tête de la table
+	const initialHeader = [
+		{ id: 'id'       , name: 'NB Ligne'      , type:'number' ,              required : true , editable : false, show : false                     },
+		{ id: 'idprod'   , name: 'ID du produit' , type:'number' ,              required : true , editable : false, show : false                     },
+		{ id: 'ref'      , name: 'Référence'     , type:'text'   ,              required : true , editable : true , show : true                      },
+		{ id: 'libprod'  , name: 'Libellé'       , type:'text'   ,              required : true , editable : true , show : true                      },
+		{ id: 'prixuni'  , name: 'Prix Unitaire' , type:'number' , step:'0.01', required : false, editable : true , show : true                      },
+		{ id: 'categorie', name: 'Catégorie'     , type:'text'   ,              required : true , editable : true , show : true , datalist : datalistCateg}
+	];
+
+
+
+
+	// Fonction pour l'insertion
+	const funInsert = async (nouvItem) => {
+		try {
+			const formData = new FormData();
+
+			formData.append('ref'      , nouvItem.ref);
+			formData.append('libProd'  , nouvItem.libprod);
+			formData.append('prixUni'  , nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
+			formData.append('categorie', nouvItem.categorie);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "produit/CreationProduit.php", requestOptions);
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchProduitData();
+			setInitialData(newData);
+			setFilterData(newData);
+			await fetchCategData();
+
+			return data === ""; // Retourne true si la suppression a réussi, sinon false
+		} catch (error) {
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
 		}
-		return response.json();
-	})
-	.then(data => {
-		let lstTemp = [];
-		data.forEach(element => {
-			lstTemp.push(element.categorie);
-		});
-		return lstTemp;
-	})
 
-	console.log(datalistCateg);
-
-	// // En-tête de la table
-	// const initialHeader = [
-	// 	{ id: 'id'       , name: 'NB Ligne'            , type:'number' , required : true , editable : false, show : false                     },
-	// 	{ id: 'idProd'   , name: 'ID'                  , type:'number' , required : true , editable : false, show : true                      },
-	// 	{ id: 'libProd'  , name: 'Libellé'             , type:'text'   , required : true , editable : true , show : true                      },
-	// 	{ id: 'prixUni'  , name: 'Numero de téléphone' , type:'tel'    , required : true , editable : true , show : true                      },
-	// 	{ id: 'categorie', name: 'Email'               , type:'text'   , required : true , editable : true , show : true                      }
-	// ];
+		// TODO : Regenerer les data avec un fetch
+	};
 
 
+	// Fonction pour l'update
+	const funUpdate = async (upItem/*, oldItem*/) => {
+		try {
+
+			// console.log(oldItem);
+			console.log(upItem);
+
+			const formData = new FormData();
+			formData.append('idProd'   , parseInt(upItem.idprod ));
+			formData.append('ref'      , upItem.ref);
+			formData.append('libProd'  , upItem.libprod);
+			formData.append('prixUni'  , upItem.prixuni===""?"":parseFloat(upItem.prixuni));
+			formData.append('categorie', upItem.categorie);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "produit/ModificationProduit.php", requestOptions);
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchProduitData();
+			setInitialData(newData);
+			setFilterData(newData);
+			await fetchCategData();
+
+			return data === ""; // Retourne true si la suppression a réussi, sinon false
+		} catch (error) {
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	};
+
+	// Fonction pour la suppression
+	const funDelete = async (item) => {
+		try {
+			const formData = new FormData();
+			formData.append('idProd', parseInt(item.idprod));
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "produit/SuppressionProduit.php", requestOptions);
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après la suppression réussie
+			const newData = await fetchProduitData();
+			setInitialData(newData);
+			setFilterData(newData);
+			await fetchCategData();
+
+			return data === ""; // Retourne true si la suppression a réussi, sinon false
+		} catch (error) {
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	};
 
 
-	// // Fonction pour l'insertion
-	// const funInsert = async (nouvItem) => {
-	// 	try {
+	// Fonction pour récupérer les données des clients
+	const fetchProduitData = async () => {
+		try {
+			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
 
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
 
-	// 		const formData = new FormData();
-	// 		formData.append('nomClub'  , nouvItem.nomclub);
-	// 		formData.append('email'    , nouvItem.email);
-	// 		formData.append('telephone', nouvItem.telephone);
+			const data = await response.json();
+			return data.map((item, index) => ({
+				...item,
+				id: index + 1
+			}));
+		} catch (error) {
+			console.error('Erreur :', error);
+			return [];
+		}
+	};
 
+	// Fonction pour recupérer les données pour les datalist
+	const fetchCategData = async () => {
+		try {
+			const response = await fetch(cheminPHP + "produit/GetCateg.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
 
-	// 		if (nouvItem.present) formData.append('present', 1);
-	// 		else                  formData.append('present', 0);
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
 
+			const data = await response.json();
+			let lstTemp = [];
+			data.forEach(element => {
+				lstTemp.push(element.categorie);
+			});
+			setDatalistCateg(lstTemp);
+		} catch (error) {
+			console.error('Erreur :', error);
+			return [];
+		}
+	};
 
-	// 		/*
-	// 			$client->setNomClub  ($_POST['nomClub']);
-	// 			$client->setEmail    ($_POST['email']);
-	// 			$client->setTelephone($_POST['telephone']);
-	// 			$client->setPresent  ($_POST['present']);
-	// 		*/
+	// Fonction pour afficher les erreurs
+	function afficherError(data) {
+		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
+		const match = regex.exec(data);
 
-	// 		const requestOptions = {
-	// 			method: 'POST',
-	// 			body: formData
-	// 		};
+		if (match) {
+			const sqlState = match[1]; // État SQL
+			const errorCode = match[2]; // Code d'erreur
+			const errorMessageText = match[3].trim(); // Texte du message d'erreur
 
-	// 		const response = await fetch(cheminPHP + "client/CreationClient.php", requestOptions);
-
-	// 		if (!response.ok) {
-	// 			throw new Error('Une erreur s\'est produite.');
-	// 		}
-
-	// 		const data = await response.text();
-	// 		afficherError(data);
-
-	// 		// Récupérer les nouvelles données des clients après l'insertion réussie
-	// 		const newData = await fetchClientData();
-	// 		setInitialData(newData);
-	// 		setFilterData(newData);
-
-	// 		return data === ""; // Retourne true si la suppression a réussi, sinon false
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return false; // Retourne false en cas d'erreur
-	// 	}
-
-	// 	// TODO : Regenerer les data avec un fetch
-	// };
-
-
-	// // Fonction pour l'update
-	// const funUpdate = async (nouvItem, oldItem) => {
-	// 	try {
-
-
-	// 		const formData = new FormData();
-	// 		formData.append('prevNomClub', oldItem.nomclub   );
-	// 		formData.append('nomClub'    , nouvItem.nomclub  );
-	// 		formData.append('email'      , nouvItem.email    );
-	// 		formData.append('telephone'  , nouvItem.telephone);
-
-	// 		if (nouvItem.present) formData.append('present', 1);
-	// 		else                  formData.append('present', 0);
-
-	// 		/*
-	// 			$prevNomClub = $_POST['prevNomClub'];
-	// 			$nomClub = $_POST['nomClub'];
-	// 			$email = $_POST['email'];
-	// 			$telephone = $_POST['telephone'];
-	// 			$present = $_POST['present'];
-	// 		 */
-
-	// 		const requestOptions = {
-	// 			method: 'POST',
-	// 			body: formData
-	// 		};
-
-	// 		const response = await fetch(cheminPHP + "client/ModificationClient.php", requestOptions);
-
-	// 		if (!response.ok) {
-	// 			throw new Error('Une erreur s\'est produite.');
-	// 		}
-
-	// 		const data = await response.text();
-	// 		afficherError(data);
-
-	// 		// Récupérer les nouvelles données des clients après l'insertion réussie
-	// 		const newData = await fetchClientData();
-	// 		setInitialData(newData);
-	// 		setFilterData(newData);
-
-	// 		return data === ""; // Retourne true si la suppression a réussi, sinon false
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return false; // Retourne false en cas d'erreur
-	// 	}
-	// };
-
-
-	// // Fonction pour récupérer les données des clients
-	// const fetchClientData = async () => {
-	// 	try {
-	// 		const response = await fetch(cheminPHP + "client/GetClients.php", {
-	// 			method: 'GET',
-	// 			headers: {
-	// 				'Content-Type': 'text/plain; charset=UTF-8'
-	// 			},
-	// 		});
-
-	// 		if (!response.ok) {
-	// 			throw new Error('Erreur de réseau lors de la récupération des données des clients.');
-	// 		}
-
-	// 		const data = await response.json();
-	// 		return data.map((item, index) => ({
-	// 			...item,
-	// 			id: index + 1
-	// 		}));
-	// 	} catch (error) {
-	// 		console.error('Erreur :', error);
-	// 		return [];
-	// 	}
-	// };
-
-
-	// const presentFalseAll = async () => {
-	// 	try {
-	// 		const response = await fetch(cheminPHP + "client/DesactiverClients.php");
-
-	// 		if (!response.ok) {
-	// 			throw new Error('Une erreur s\'est produite.');
-	// 		}
-
-	// 		// Requête pour obtenir les données mises à jour après la désactivation de tous les clients
-	// 		const newDataResponse = await fetch(cheminPHP + "client/GetClients.php", {
-	// 			method: 'GET',
-	// 			headers: {
-	// 				'Content-Type': 'text/plain; charset=UTF-8'
-	// 			},
-	// 		});
-
-	// 		if (!newDataResponse.ok) {
-	// 			throw new Error('Erreur lors de la récupération des données mises à jour.');
-	// 		}
-
-	// 		const newData = await newDataResponse.json();
-
-	// 		// Mettre à jour les données initiales et filtrées avec les nouvelles données
-	// 		const updatedData = newData.map((item, index) => ({
-	// 			...item,
-	// 			id: index + 1
-	// 		}));
-	// 		setInitialData(updatedData);
-	// 		setFilterData(updatedData);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
-
-
-
-	// function afficherError(data) {
-	// 	const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
-	// 	const match = regex.exec(data);
-
-	// 	if (match) {
-	// 		const sqlState = match[1]; // État SQL
-	// 		const errorCode = match[2]; // Code d'erreur
-	// 		const errorMessageText = match[3].trim(); // Texte du message d'erreur
-
-	// 		console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
-	// 		alert(errorMessageText);
+			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
+			alert(errorMessageText);
 			
-	// 	} else {
-	// 		if (data !== "")
-	// 			alert(data.replace('<br>', ''));
-	// 	}
-	// }
+		} else {
+			if (data !== "")
+				alert(data.replace('<br>', ''));
+		}
+	}
+
+	const handleChange   = (e) => {filter( e.target.value);};
+
+
+	function filter (value)
+	{
+		// Filtrer les données en fonction de la valeur de recherche
+		const filteredData = initialData.filter((element) => {
+
+			if (typeof value === 'boolean')
+			{
+				if(element.present === value || element.present) return true;
+				else                          return false;
+			}
+			else
+			{
+				// Parcourir les clés de l'en-tête initial
+				for (const key of initialHeader) {
+					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+					if (key.show) {
+						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
+							return true; // Si correspondance, conserver cet élément
+						}
+					}
+				}
+				return false; // Si aucune correspondance, exclure cet élément
+			}
+		});
+
+		// Mettre à jour les données filtrées
+		setFilterData(filteredData);
+	}
 
 
 
 
-	// const handleChange   = (e) => {filter( e.target.value);};
-	// const handleCbChange = (e) => {filter( e.target.checked);};
-
-
-	// function filter (value)
-	// {
-	// 	// Filtrer les données en fonction de la valeur de recherche
-	// 	const filteredData = initialData.filter((element) => {
-
-	// 		if (typeof value === 'boolean')
-	// 		{
-	// 			if(element.present === value || element.present) return true;
-	// 			else                          return false;
-	// 		}
-	// 		else
-	// 		{
-	// 			// Parcourir les clés de l'en-tête initial
-	// 			for (const key of initialHeader) {
-	// 				// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-	// 				if (key.show) {
-	// 					// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-	// 					if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
-	// 						return true; // Si correspondance, conserver cet élément
-	// 					}
-	// 				}
-	// 			}
-	// 			return false; // Si aucune correspondance, exclure cet élément
-	// 		}
-	// 	});
-
-	// 	// Mettre à jour les données filtrées
-	// 	setFilterData(filteredData);
-	// }
-
-
-
-
-	// //Création du tableau
-	// return (
-	// <div className="col-sm-12">
+	//Création du tableau
+	return (
+	<div className="col-sm-12">
 	
-	// 	<h1 className='titre mt-1'>Gestion des clients </h1>
+		<h1 className='titre mt-1'>Gestion des clients </h1>
 
-	// 	<div className="grpRecherche mt-4 d-flex align-items-center">
-	// 		{/* barre de recherche */}
-	// 		<div className="col-sm-3">
-	// 			<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
-	// 		</div>
-
-	// 		{/* Bouton décoché */}
-	// 		<button className='btn-primary btn mx-2' onClick={presentFalseAll}>Tous décoché</button>
-
-	// 		{/* Bouton checkbox avec style CSS pour la marge gauche */}
-	// 		<div className="form-check" style={{ marginLeft: '10em' }}>
-	// 			<input type='checkbox' className="form-check-input border-secondary" id="afficherClients" onChange={handleCbChange}/>
-	// 			<label className="form-check-label" htmlFor="afficherClients">Afficher seulement clients présents</label>
-	// 		</div>
-	// 	</div>
+		<div className="grpRecherche mt-4 d-flex align-items-center">
+			{/* barre de recherche */}
+			<div className="col-sm-3">
+				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
+			</div>
+		</div>
 
 
 
-	// 	<Table 
-	// 		header={initialHeader} 
-	// 		data={filterData} 
-	// 		funInsert={funInsert} 
-	// 		funUpdate={funUpdate} 
-	// 		keyGrayWhenFalse = 'present'
-	// 	/>
-	// </div>
-	// );
+		<Table 
+			header={initialHeader} 
+			data={filterData} 
+			funInsert={funInsert} 
+			funUpdate={funUpdate} 
+			funDelete={funDelete}
+			keyGrayWhenFalse = 'present'
+		/>
+	</div>
+	);
 }
