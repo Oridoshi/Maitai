@@ -168,7 +168,10 @@ export default function Historique(){
 	};
 
 	const funDelete = async (item) => {
-		if(item.valide === 1) return false;
+
+		console.log(item)
+		if(item.valide === true || item.valide === 1) return false;
+
 		try {
 			const formData = new FormData();
 			formData.append('idhist', parseInt(item.idhis));
