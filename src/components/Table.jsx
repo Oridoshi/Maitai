@@ -264,7 +264,12 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 			const updateSuccess = await funUpdate(item, item);
 			if (updateSuccess)
 				setTableData(prevData => [...prevData]);
-			
+			else
+				item[columnId] = !item[columnId];
+		}
+		else
+		{
+			item[columnId] = !item[columnId];
 		}
 	}
 
