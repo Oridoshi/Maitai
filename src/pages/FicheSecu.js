@@ -14,7 +14,7 @@ function FicheSecu() {
 	/*                                                                    */
 	/**********************************************************************/
 
-	const etapesLib = ['En tête', 'Palanquée', 'Réalisé'];
+	const etapesLib = ['En tête', 'Palanquée', 'Réalisé', 'Appercue final'];
 	const [etape, setEtape] = useState(0);
 
 	const [nombrePlaques    , setNombrePlaques    ] = useState(1);
@@ -328,6 +328,32 @@ function FicheSecu() {
 		);
 	}
 
+	
+
+
+	/**
+	 * Genere le formulaire pour le formulaire d'après plongee.
+	 * @returns 
+	 */
+	function generatehtmlAppercue() 
+	{ 
+		const chemin = generateCSV()
+		console.log(chemin)
+
+		return (
+			<div>
+				<object type="application/vnd.ms-excel" data={chemin} width="300" height="200">
+					alt : <a href={chemin}>{chemin}</a>
+				</object>
+			</div>
+		)
+	}
+
+	function generateCSV() {
+		console.log("Imagine c'est les bonnes info okay ?")
+		return "/src/doc/FicheSecuVierge.xlsx"
+	}
+
 
 
 
@@ -528,19 +554,22 @@ function FicheSecu() {
 
 			<form onSubmit={handleSubmit}>
 				{/* Pass formData and setFormData to the GeneratehtmlForm component */}
-				{etapesLib[etape] === 'En tête'       && generatehtmlFormEnTete()      }
-				{etapesLib[etape] === 'Palanquée'     && generatehtmlFormPalanquee()   }
-				{etapesLib[etape] === 'Réalisé'       && generatehtmlFormApresPlongee()}
+				{/* {etapesLib[etape] === 'En tête'        && generatehtmlFormEnTete()      }
+				{etapesLib[etape] === 'Palanquée'      && generatehtmlFormPalanquee()   }
+				{etapesLib[etape] === 'Réalisé'        && generatehtmlFormApresPlongee()}
+				{etapesLib[etape] === 'Appercue final' && generatehtmlAppercue()} */}
+
+				{generatehtmlAppercue()}
 
 				<div className="m-5 d-flex justify-content-end">
 					{/* {etape !== 0 &&
 						<button className="mx-2 col-sm-1 btn btn-secondary" onClick={etapePrecedente}>Précédent</button>
 					} */}
 					{etape < etapesLib.length - 1 &&
-						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btn-primary' : 'btn-secondary'}`} type="submit">Suivant</button>
+						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
 					{etape === etapesLib.length - 1 &&
-						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btn-danger' : 'btn-secondary'}`} type="submit">Envoyer</button>
+						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnAnnuler' : 'btn-secondary'}`} type="submit">Appercue</button>
 					}
 				</div>
 			
