@@ -7,4 +7,4 @@ export default function accueil(){
 			<h2>ici je test tout mes composants</h2>
 		</div>
 	)
-}
+}	

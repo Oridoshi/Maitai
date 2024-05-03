@@ -1,1 +1,1 @@
-export const cheminPHP = "http://172.26.4.207/Maitai/src/php/other/";
+export const cheminPHP = "http://maitai-becon.wuaze.com/php/other/";
