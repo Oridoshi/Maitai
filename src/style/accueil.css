@@ -11,5 +11,10 @@
     align-items: left;
     font-size: 6em;
     height: 100vh;
-    font-family: 'Water Brush';
+    font-family: 'Water Brush'; 
 }
+
+.custom-img {
+    max-width: 100%; /* Ajustez cette valeur selon vos besoins */
+  }
+  
