@@ -708,7 +708,7 @@ const recupCode = async (mail) =>
 			body: formData
 		};
 
-		const response = await fetch("http://172.26.4.207/Maitai/src/php/SendMail.php", requestOptions);
+		const response = await fetch("http://maitai-becon.wuaze.com/php/SendMail.php", requestOptions);
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');
