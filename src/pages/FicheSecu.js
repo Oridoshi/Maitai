@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
-import YourComponent from '../components/YourComponent.jsx';
 
 
 function FicheSecu() {
@@ -15,7 +14,7 @@ function FicheSecu() {
 	/*                                                                    */
 	/**********************************************************************/
 
-	const etapesLib = ['En tête', 'Palanquée', 'Réalisé', 'Appercue final'];
+	const etapesLib = ['En tête', 'Palanquée', 'Réalisé', 'Aperçu final'];
 	const [etape, setEtape] = useState(0);
 
 	const [nombrePlaques    , setNombrePlaques    ] = useState(1);
@@ -339,54 +338,10 @@ function FicheSecu() {
 	function generatehtmlAppercue() {
 
 		return (
-			<div>
-			oui
-				<YourComponent /> 
+			<div className='m-5'>
+				La génération de la fiche de sécurité est toujours en cours de préparation. Merci de votre patience 🙌
 			</div>
 
-		);
-	}
-
-	// Vous pouvez également déplacer cette fonction en dehors du composant si nécessaire
-	/*async function generateCSV() {
-		try {
-			const formData = new FormData();
-			formData.append('chemin', "C:/xampp/htdocs/Maitai/src/doc/FicheSecuVierge.xlsx");
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "GetFile.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const blob = await response.blob();
-			return blob;
-		} catch (error) {
-			console.error(error);
-			return null; // Retourne null en cas d'erreur
-		}
-	}*/
-
-
-
-	// Puis, utilisez ce composant dans votre fonction FicheSecu
-	function FicheSecu() {
-		// Autres parties de votre composant
-
-		return (
-			<div className="col-sm-12" style={{ overflowX: 'hidden' }}>
-				<h1 className='titre mt-1'>Création d'une fiche de sécurité - {etapesLib[etape]}</h1>
-				<form onSubmit={handleSubmit}>
-					{/* Pass formData and setFormData to the GeneratehtmlForm component */}
-					{generatehtmlAppercue()}
-					{/* Autres parties de votre formulaire */}
-				</form>
-			</div>
 		);
 	}
 
@@ -589,22 +544,20 @@ function FicheSecu() {
 
 			<form onSubmit={handleSubmit}>
 				{/* Pass formData and setFormData to the GeneratehtmlForm component */}
-				{/* {etapesLib[etape] === 'En tête'        && generatehtmlFormEnTete()      }
+				{etapesLib[etape] === 'En tête'        && generatehtmlFormEnTete()      }
 				{etapesLib[etape] === 'Palanquée'      && generatehtmlFormPalanquee()   }
 				{etapesLib[etape] === 'Réalisé'        && generatehtmlFormApresPlongee()}
-				{etapesLib[etape] === 'Appercue final' && generatehtmlAppercue()} */}
-
-				{generatehtmlAppercue()}
+				{etapesLib[etape] === 'Appercue final' && generatehtmlAppercue()        }
 
 				<div className="m-5 d-flex justify-content-end">
 					{/* {etape !== 0 &&
 						<button className="mx-2 col-sm-1 btn btn-secondary" onClick={etapePrecedente}>Précédent</button>
 					} */}
-					{etape < etapesLib.length - 1 &&
+					{etape < etapesLib.length - 2 &&
 						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
-					{etape === etapesLib.length - 1 &&
-						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnAnnuler' : 'btn-secondary'}`} type="submit">Appercue</button>
+					{etape === etapesLib.length - 2 &&
+						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnAnnuler' : 'btn-secondary'}`} type="submit">Envoyé</button>
 					}
 				</div>
 			
