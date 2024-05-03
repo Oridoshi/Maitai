@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'; // Importez useState ici
 import Table from '../components/Table';
-import { cheminPHP } from '../components/VarGlobal.js';  
+import { cheminPHP } from '../components/VarGlobal.js';
 
 export default function Historique(){
-	const [initialData , setInitialData ] = useState([]);
-	const [filterData  , setFilterData  ] = useState([]);
+	const [initialData  , setInitialData  ] = useState([]);
+	const [filterData   , setFilterData   ] = useState([]);
+	const [initialHeader, setInitialHeader] = useState([]);
+	const [type         , setType         ] = useState('Ticket');
 	
 	// Récupérer l'ID de l'utilisateur au quelle on veut afficher les historiques
 	// console.log(sessionStorage.getItem('idCli'));
@@ -17,7 +19,7 @@ export default function Historique(){
 		const formData = new FormData();
 		formData.append('idcli', idCli);
 
-		fetch(cheminPHP + "historique/GetHistoriquesClient.php", {
+		fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
 			method: 'POST',
 			body: formData
 		})
@@ -25,7 +27,7 @@ export default function Historique(){
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
-			
+			// console.log(response.text());
 			return response.json();
 		})
 		.then(data => {
@@ -93,100 +95,149 @@ export default function Historique(){
 		idCli  INTEGER      NOT NULL REFERENCES Client(idCli)
 	*/
 	// En-tête de la table
-	const initialHeader = [
-		{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
-		{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
-		{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
-		{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
-		{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
-		{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
-		// { id: 'valider', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
-		{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
-	];
+	useEffect(() => {
+		setInitialHeader([
+			{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+			{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+			{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+			{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
+			{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
+			{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
+			// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+			{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+		]);
+	}, []);
 
 
-	// // Fonction pour récupérer les données des produits
-	// const fetchHistoriqueData = async () => {
-	// 	try {
-	// 		const formData = new FormData();
-	// 		formData.append('idcli', idCli);
+	// Fonction pour récupérer les données des produits
+	const fetchHistoriqueData = async () => {
+		if(type === 'Ticket') {
 
-	// 		await fetch(cheminPHP + "historique/GetHistoriquesClient.php", {
-	// 			method: 'POST',
-	// 			body: formData
-	// 		})
-	// 		.then(response => {
-	// 			if (!response.ok) {
-	// 				throw new Error('Erreur de réseau !');
-	// 			}
+			const formData = new FormData();
+			formData.append('idcli', idCli);
+
+			fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Erreur de réseau !');
+				}
 				
-	// 			return response.json();
-	// 		})
-	// 		.then(data => {
-	// 			const newData = data.map((item, index) => ({
-	// 				...item,
-	// 				id: index + 1
-	// 			}));
+				return response.json();
+			})
+			.then(data => {
+				const newData = data.map((item, index) => ({
+					...item,
+					id: index + 1
+				}));
+				setInitialData(newData);
+				setFilterData (newData);
+			})
+			.catch(error => {
+				console.error('Erreur :', error);
+			});
+		} else {
+			const formData = new FormData();
+			formData.append('idcli', idCli);
 
-	// 			setInitialData(newData);
-	// 			setFilterData (newData);
-	// 		})
-	// 		.catch(error => {
-	// 			console.error('Erreur :', error);
-	// 		})
-	// 	} catch (error) {
-	// 		console.error('Erreur :', error);
-	// 		return [];
-	// 	}
-	// };
+			fetch(cheminPHP + "historique/GetHistoriquesClientSecu.php", {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Erreur de réseau !');
+				}
+				
+				return response.json();
+			})
+			.then(data => {
+				const newData = data.map((item, index) => ({
+					...item,
+					id: index + 1
+				}));
+				setInitialData(newData);
+				setFilterData (newData);
+			})
+			.catch(error => {
+				console.error('Erreur :', error);
+			});
+		}
+	};
 
-	// const funDelete = async (item) => {
-	// 	try {
-	// 		const formData = new FormData();
-	// 		formData.append('idhist', parseInt(item.idhis));
+	const funDelete = async (item) => {
+		if(item.valide === 1) return false;
+		try {
+			const formData = new FormData();
+			formData.append('idhist', parseInt(item.idhis));
 
-	// 		const requestOptions = {
-	// 			method: 'POST',
-	// 			body: formData
-	// 		};
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
 
-	// 		const response = await fetch(cheminPHP + "historique/SuppressionHistorique.php", requestOptions);
+			const response = await fetch(cheminPHP + "historique/SuppressionHistorique.php", requestOptions);
 
-	// 		if (!response.ok) {
-	// 			throw new Error('Une erreur s\'est produite.');
-	// 		}
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
 
-	// 		const data = await response.text();
-	// 		afficherError(data);
+			const data = await response.text();
+			afficherError(data);
 
-	// 		// Récupérer les nouvelles données des produits après la suppression réussie
-	// 		await fetchHistoriqueData();
+			// Récupérer les nouvelles données des produits après la suppression réussie
+			await fetchHistoriqueData();
 
-	// 		return data === ""; // Retourne true si la suppression a réussi, sinon false
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 		return false; // Retourne false en cas d'erreur
-	// 	}
-	// };
+			return data === ""; // Retourne true si la suppression a réussi, sinon false
+		} catch (error) {
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	};
 
-	// // Fonction pour afficher les erreurs
-	// function afficherError(data) {
-	// 	const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
-	// 	const match = regex.exec(data);
+	const funUpdate = async (item) => {
+		if(item.valide === false) return false;
 
-	// 	if (match) {
-	// 		const sqlState = match[1]; // État SQL
-	// 		const errorCode = match[2]; // Code d'erreur
-	// 		const errorMessageText = match[3].trim(); // Texte du message d'erreur
+		const formData = new FormData();
+		formData.append('idhist', parseInt(item.idhis));
 
-	// 		console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
-	// 		alert(errorMessageText);
+		const requestOptions = {
+			method: 'POST',
+			body: formData
+		};
+
+		const response = await fetch(cheminPHP + "historique/ModificationHistorique.php", requestOptions);
+
+		if (!response.ok) {
+			throw new Error('Une erreur s\'est produite.');
+		}
+
+		await fetchHistoriqueData();
+
+		return true;
+	};
 			
-	// 	} else {
-	// 		if (data !== "")
-	// 			alert(data.replace('<br>', ''));
-	// 	}
-	// }
+
+	// Fonction pour afficher les erreurs
+	function afficherError(data) {
+		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
+		const match = regex.exec(data);
+
+		if (match) {
+			const sqlState = match[1]; // État SQL
+			const errorCode = match[2]; // Code d'erreur
+			const errorMessageText = match[3].trim(); // Texte du message d'erreur
+
+			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
+			alert(errorMessageText);
+			
+		} else {
+			if (data !== "")
+				alert(data.replace('<br>', ''));
+		}
+	}
 
 	const handleChange   = (e) => {filter( e.target.value);};
 
@@ -221,6 +272,90 @@ export default function Historique(){
 		setFilterData(filteredData);
 	}
 
+	const affichageAutreFiche = async () => {
+		document.getElementById('btnChangerAffichage').innerHTML = 'Afficher fiche ' + type;
+		if(type === 'Ticket') {
+			setType('Secu');
+
+			setInitialHeader([
+				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false , show : true },
+				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false , show : true },
+				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false , show : true },
+				{ id: 'valide' , name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+			]);
+
+			const formData = new FormData();
+			formData.append('idcli', idCli);
+
+			fetch(cheminPHP + "historique/GetHistoriquesClientSecu.php", {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Erreur de réseau !');
+				}
+				
+				return response.json();
+			})
+			.then(data => {
+				const newData = data.map((item, index) => ({
+					...item,
+					id: index + 1
+				}));
+				setInitialData(newData);
+				setFilterData (newData);
+			})
+			.catch(error => {
+				console.error('Erreur :', error);
+			});
+		} else {
+			setType('Ticket');
+
+			setInitialHeader([
+				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
+				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
+				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
+				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+			]);
+
+			const formData = new FormData();
+			formData.append('idcli', idCli);
+
+			fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
+				method: 'POST',
+				body: formData
+			})
+			.then(response => {
+				if (!response.ok) {
+					throw new Error('Erreur de réseau !');
+				}
+				
+				return response.json();
+			})
+			.then(data => {
+				const newData = data.map((item, index) => ({
+					...item,
+					id: index + 1
+				}));
+				setInitialData(newData);
+				setFilterData (newData);
+			})
+			.catch(error => {
+				console.error('Erreur :', error);
+			});
+		}
+		// console.log(type);
+	}
+
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
@@ -232,16 +367,19 @@ export default function Historique(){
 			<div className="col-sm-3">
 				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
 			</div>
+			{/* Bouton décoché */}
+			<button id='btnChangerAffichage' className='btnSauvegarder btn-primary btn mx-2' onClick={affichageAutreFiche}>Afficher fiche SECU</button>
 		</div>
-
 
 
 		<Table 
 			header={initialHeader} 
 			data={filterData}
-			// funDelete={funDelete}
-			keyGrayWhenFalse = 'present'
+			funDelete={type === 'Ticket' ? undefined : funDelete}
+			funUpdate={type === 'Ticket' ? undefined : funUpdate}
+			keyGrayWhenFalse='present'
 		/>
+
 	</div>
 	);
 }

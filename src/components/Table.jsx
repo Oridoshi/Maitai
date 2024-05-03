@@ -254,13 +254,18 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 
-	function changeThing(item, columnId) {
+	const changeThing = async (item, columnId) => {
 		// Modifiez la propriété correspondante dans l'objet item
 		item[columnId] = !item[columnId];
 
 		// Mettez à jour l'état avec les nouvelles données
-		if (funUpdate !== undefined && funUpdate(item, item))
-			setTableData(prevData => [...prevData]);
+		if (funUpdate !== undefined)
+		{
+			const updateSuccess = await funUpdate(item, item);
+			if (updateSuccess)
+				setTableData(prevData => [...prevData]);
+			
+		}
 	}
 
 
