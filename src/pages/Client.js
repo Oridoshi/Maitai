@@ -36,6 +36,10 @@ function Client() {
 		});
 	}, []);
 
+	const funHisto = (item) => {
+		sessionStorage.setItem('idCli', item.idcli);
+		window.location.href = '/historique';
+	};
 
 	// En-tête de la table
 	const initialHeader = [
@@ -43,11 +47,9 @@ function Client() {
 		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'text'    , required : true , editable : true , show : true                      },
 		{ id: 'telephone', name: 'Numero de téléphone'  , type:'tel'     , required : true , editable : true , show : true                      },
 		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true                      },
+		{ id: 'btnHisto' , name: 'Historique'           , type:'button'  , required : true , editable : false, show : true, function : funHisto, btn : 'Historique', className:'btnSauvegarder'},
 		{ id: 'present'  , name: 'Présent sur le site'  , type:'checkbox', required : true , editable : true , show : true, fastEditable : true },
 	];
-
-
-
 
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {

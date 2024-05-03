@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../style/table.css"
+
 function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 {
 	const [formValues, setFormValues] = useState({});
@@ -94,7 +95,6 @@ return (
 										value={formValues[head.id] || ''}
 										onChange={handleChange}
 										required={head.required ? true : false}
-										{...head.step && { step: head.step }} // Ajout conditionnel de l'attribut step
 									/>
 
 									{head.datalist && (
@@ -243,7 +243,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 			if (insertSuccess)
 			{
 				updatedRowData.id = Math.max(...datas.map(item => item.id), 0) + 1;
-				// setTableData(prevData => [...prevData, updatedRowData]);
+				setTableData(prevData => [...prevData, updatedRowData]);
 				setModalIsOpen(false);
 			} else
 			{
@@ -254,13 +254,18 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 
-	function changeThing(item, columnId) {
+	const changeThing = async (item, columnId) => {
 		// Modifiez la propriété correspondante dans l'objet item
 		item[columnId] = !item[columnId];
 
 		// Mettez à jour l'état avec les nouvelles données
-		if (funUpdate !== undefined && funUpdate(item, item))
-			setTableData(prevData => [...prevData]);
+		if (funUpdate !== undefined)
+		{
+			const updateSuccess = await funUpdate(item, item);
+			if (updateSuccess)
+				setTableData(prevData => [...prevData]);
+			
+		}
 	}
 
 
@@ -313,7 +318,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 					<tbody>
 					{datas.map(item => (
 
-								<tr
+								<tr id={`ligne ${item.id}`}
 									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'}`}
 									key={`${item.id}`}
 								>
@@ -361,7 +366,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 												{/* Si c'est un button */}
 												{column.type === 'button' && (
 													// Si c'est un bouton, afficher un bouton qui appelle la fonction spécifiée dans la colonne au clic
-													<button className='btn btn-primary mx-2 py-1' onClick={() => column.function(item)}>
+													<button className={`btn btn-primary mx-2 py-1 ${column.className}`} onClick={() => column.function(item)}>
 														{column.btn}
 													</button>
 												)}

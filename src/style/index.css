@@ -74,3 +74,22 @@
 	/* Décaler de 5px vers la gauche */
 	background-repeat: no-repeat;
 }
+
+.btnExport{
+    background-color: #006DAA!important;
+    color: #FFFFFF!important;
+    font-weight: bolder;
+    border: 0px;
+    width: 200px;
+
+    background-image: url('../img/Export.svg');
+    background-size: 30px;
+    background-position:calc(95%);
+    /* Décaler de 5px vers la gauche */
+    background-repeat: no-repeat;
+}
+.btnExport:hover,
+.btnExport:focus,
+.btnExport:active{
+    background-color: #005C8F !important;
+}
