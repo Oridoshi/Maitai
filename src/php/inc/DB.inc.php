@@ -408,6 +408,42 @@ class DB {
 		return $tab;
 	}
 
+	/** Get tout l'historique SECU d'un client */
+	public function getHistoriquesByClientSecu(int $idcli): array {
+		$requete = "SELECT chemin, idhis, type, date, valide FROM historique WHERE idcli = ? AND type = 'SECU'";
+		$tparam = array($idcli);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple;
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
+
+	/** Get tout l'historique TICKET d'un client */
+	public function getHistoriquesByClientTicket(int $idcli): array {
+		$requete = "SELECT chemin, idhis, type, date FROM historique WHERE idcli = ? AND type = 'TICKET'";
+		$tparam = array($idcli);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple;
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
+
 	/** Get un historique via son id */
 	public function getHistoriquesById(int $idhist): string {
 		$requete = "SELECT chemin FROM historique WHERE idhis = ?";
@@ -418,11 +454,19 @@ class DB {
 		return $tuple['chemin'];
 	}
 
-	// /** Supprime un Historique */
-	// public function suppHistoriqueById(int $idhist) {
-	// 	$requete = "DELETE FROM historique WHERE idhis = ?";
-	// 	$tparam = array($idhist);
-	// 	$this->execMaj($requete, $tparam);
-	// }
+	/** Supprime un Historique */
+	public function suppHistoriqueById(int $idhist) {
+		$requete = "DELETE FROM historique WHERE idhis = ?";
+		$tparam = array($idhist);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/** Mise à jour d'un historique*/
+	public function updateHistorique(int $idhist) {
+		$requete = "UPDATE historique SET valide = 1 WHERE idhis = ?";
+		$tparam = array($idhist);
+		$this->execMaj($requete, $tparam);
+	}
+
 
 } //fin classe DB
