@@ -131,3 +131,8 @@
 	font-weight: bolder;
 	color: #949494;
 }
+
+input:read-only
+{
+	background-color: #F2EEEB;
+}
