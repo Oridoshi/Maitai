@@ -24,6 +24,7 @@ function Navbar({ role })
 
 	//en fonction du paramètre on charge plus ou moins de role
 	role = sessionStorage.getItem('droit');
+	console.log('role');
 	console.log(role);
 	switch (role)
 	{
@@ -43,7 +44,6 @@ function Navbar({ role })
 		//test si c'est une connexion ou une deconnexion
 		if (sessionStorage.getItem('login') !== null && sessionStorage.getItem('mdpValid') === "true")
 		{
-			sessionStorage.removeItem('droit');
 			return (
 				<div className="divlog">
 					<ul className="divlog">
@@ -68,6 +68,7 @@ function Navbar({ role })
 	{
 		sessionStorage.removeItem('login'); // Supprimer l'élément 'login' du sessionStorage
 		sessionStorage.removeItem('mdpValid'); // Supprimer l'élément 'mdpValid' du sessionStorage
+		sessionStorage.removeItem('droit'); // Supprimer l'élément 'droit' du sessionStorage
 	}
 	//affiche ou non le popup de login
 	const toggleModal = () =>
