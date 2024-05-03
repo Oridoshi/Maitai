@@ -8,8 +8,19 @@
 	vertical-align: middle;
 }
 
-.tableau tr:nth-child(even) td {
+.tableau tr:nth-child(even) td:not(.edit) {
 	background-color: #ede4dd !important;
+}
+
+.tableau td.edit {
+	background-color: #DAE9EA!important;
+}
+
+.btnEdit{
+	text-align: center;
+}
+.cpt{
+	width: 11%;
 }
 
 .celCenter {
@@ -119,14 +130,10 @@
 	transition: transform 0.3s;
 	/* Ajoute une transition pour une animation fluide */
 }
-.btntickets:hover{
-	background-color: transparent;
-	border-color: transparent;
-}
+
 .btntickets:focus,
-.btntickets:active {
+.btntickets:active,
+.btntickets:hover {
 	background-color: transparent!important;
 	border-color: transparent !important;
-	transform: rotate(180deg);
-	/* Fait pivoter l'arrière-plan de 180 degrés au survol */
 }

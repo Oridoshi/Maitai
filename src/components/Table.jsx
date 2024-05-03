@@ -361,14 +361,13 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 												{/* Si c'est un button */}
 												{column.type === 'button' && (
 													// Si c'est un bouton, afficher un bouton qui appelle la fonction spécifiée dans la colonne au clic
-													<button className={`btn btn-primary mx-2 py-1 ${column.className}`} onClick={() => column.function(item)}>
+													<button id={`btn ${item.id}`} className={`btn btn-primary mx-2 py-1 ${column.className}`} onClick={() => column.function(item)}>
 														{column.btn}
 													</button>
 												)}
 											</td>
 										)
 									))}
-
 									{(funUpdate !== undefined || funDelete !== undefined) &&
 										<td className='bg-light celCenter'>
 											{funUpdate !== undefined && <button className='btnModif' onClick={() => openModal(item)}></button>}

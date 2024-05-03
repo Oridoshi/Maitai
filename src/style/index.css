@@ -32,7 +32,8 @@
 }
 
 .btnAnnuler {
-	background-color: #DD6565;
+	background-color: #DD6565!important;
+	border-color:  #DD6565!important;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
@@ -82,29 +83,16 @@
 }
 
 .barre {
-	background-color: #F2EEEB;
-	border-color: #006DAA;
-	border-width: 2px;
-	border-radius: 15px;
+	background-color: #F2EEEB!important;
+	border-color: #006DAA!important;
+	border-width: 2px!important;
+	border-radius: 15px !important;
 
 	background-image: url('../img/loupe.svg');
 	background-size: 30px;
 	background-position: calc(100% - 10px) center;
 	/* Décaler de 5px vers la gauche */
 	background-repeat: no-repeat;
-}
-
-.ligneProd{
-	display: grid;
-	grid-template-columns: 25% 50% 25%;
-	background-color: #DAE9EA!important;
-}
-
-.ligneTicket{
-	background-color: #DAE9EA!important;
-	width: 268%;
-	padding-top: 20px;
-	padding-bottom: 20px;
 }
 
 .Modal{
