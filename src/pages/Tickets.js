@@ -74,7 +74,7 @@ export default function Ticket()
 	}
 
 	//affcihage du ticket
-	function construitTicket(ligne)
+	const construitTicket = async (ligne) =>
 	{
 		//on récupère la ligne sous laquelle on doit insérer le ticket
 		const client = document.getElementById('ligne ' + ligne.id);
@@ -128,14 +128,10 @@ export default function Ticket()
 
 
 		//récupération des porduits du tickets
-		const Prod = [
-			{ nomP: 'Lampe', prix: 5, qt: 10 },
-			{ nomP: 'Combinaison', prix: 25, qt: 5 },
-			{ nomP: 'Lunette', prix: 10, qt: 2 },
-		];
+		const tabTicket = await getTabTicket(ligne.id);
 
 		// Création des lignes de produits
-		Prod.forEach(prod =>
+		for(const prod of tabTicket)
 		{
 			//ligne du produit
 			const ligneProd = document.createElement('tr');
@@ -145,13 +141,13 @@ export default function Ticket()
 			// Nom Produit
 			const nomP = document.createElement('td');
 			nomP.colSpan = 2;
-			nomP.textContent = prod.nomP;
+			nomP.textContent = await getNomP(prod.idprod);
 			nomP.classList.add('edit');
 
 			// Prix Produit
 			const prix = document.createElement('td');
 			prix.colSpan = 2;
-			prix.textContent = prod.prix + " €";
+			prix.textContent = (prod.prixtot / prod.qa).toFixed(2) + " €";
 			prix.classList.add('edit');
 
 			// Création de l'élément compteur
@@ -163,7 +159,7 @@ export default function Ticket()
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
-			compteurRoot.render(<Compteur valIni={ prod.qt } />);
+			compteurRoot.render(<Compteur valIni={ prod.qa } />);
 
 			// Ajout des colonnes à la ligne de produit
 			ligneProd.appendChild(nomP);
@@ -172,7 +168,7 @@ export default function Ticket()
 
 			// Ajout de la ligne de produit après la ligne d'ajout
 			client.parentNode.insertBefore(ligneProd, ligneBtnExport);
-		});
+		};
 	}
 
 
@@ -212,6 +208,9 @@ export default function Ticket()
 		setFilterData(filteredData);
 	}
 
+	/*METHODE BADO*/
+
+	//récupère tous les Clients
 	const fetchClientData = async () => {
 		try {
 			const response = await fetch(cheminPHP + "client/GetClients.php", {
@@ -226,10 +225,10 @@ export default function Ticket()
 			}
 
 			const data = await response.json();
-			const newData = [];
-			data.forEach((item) =>{
-					newData.push({id:item.idcli, nomcli:item.nomclub, email:item.email, prix:0, present:item.present});
-			});
+			const newData = await Promise.all(data.map(async (item) => {
+				const prix = await getTotCommCli(item.idcli);
+				return { id: item.idcli, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
+			}));
 			return newData;
 		} catch (error) {
 			console.error('Erreur :', error);
@@ -237,6 +236,65 @@ export default function Ticket()
 		}
 	};
 
+	//retourne le prix total de la commande d'un client
+	const getTotCommCli = async (ncli) => {
+		const tabTicket = await getTabTicket(ncli);
+		let prixTot = 0;
+		tabTicket.forEach(prod=>{
+			prixTot += prod.prixtot;
+		})
+		return prixTot.toFixed(2);
+	};
+
+	//récupère tous les tickets pour un client
+	const getTabTicket = async(ncli)=> {
+		try {
+			const formData = new FormData();
+			formData.append('idcli', ncli);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/GetTicket.php", requestOptions);
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error) {
+			console.log(error);
+			return false;
+		}
+	};
+
+	const getNomP = async(idprod)=>{
+		try {
+			const formData = new FormData();
+			formData.append('id', idprod);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/GetProduit.php", requestOptions);
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.json(); // Parse the response into JSON
+
+			return data.libprod;
+		} catch (error) {
+			console.log(error);
+			return false;
+		}
+	}
 
 	///code de tous ce que gère la pop up d'ajout de produit
 
