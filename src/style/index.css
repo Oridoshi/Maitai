@@ -45,9 +45,8 @@
 	background-color: rgb(176, 47, 47) !important;
 	color: #FFFFFF !important;
 }
-
 .btnSauvegarder {
-	background-color: #006DAA;
+	background-color: #006DAA!important;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
@@ -130,4 +129,9 @@
 	align-self: center;
 	font-weight: bolder;
 	color: #949494;
+}
+
+input:read-only
+{
+	background-color: #F2EEEB;
 }

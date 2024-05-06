@@ -10,6 +10,7 @@ import Produits from "../pages/Produits";
 import Tickets from "../pages/Tickets";
 import Utilisateurs from "../pages/Utilisateurs";
 import Form from "../components/Form";
+import Historique from "../pages/Historique";
 
 import '../style/nav.css';
 import Button from 'react-bootstrap/Button';
@@ -29,7 +30,9 @@ function Navbar({ role })
 			break;
 		case 'Maitai': navLinks = ['Clients', 'Fiche de sécurité'];
 			break;
-		default: navLinks = ['Fiche de sécurité'];
+		case 'Client' : navLinks = ['Fiche de sécurité'];
+			break;
+		default: navLinks = [];
 			break;
 	}
 
@@ -39,7 +42,6 @@ function Navbar({ role })
 		//test si c'est une connexion ou une deconnexion
 		if (sessionStorage.getItem('login') !== null && sessionStorage.getItem('mdpValid') === "true")
 		{
-			sessionStorage.removeItem('droit');
 			return (
 				<div className="divlog">
 					<ul className="divlog">
@@ -64,6 +66,7 @@ function Navbar({ role })
 	{
 		sessionStorage.removeItem('login'); // Supprimer l'élément 'login' du sessionStorage
 		sessionStorage.removeItem('mdpValid'); // Supprimer l'élément 'mdpValid' du sessionStorage
+		sessionStorage.removeItem('droit'); // Supprimer l'élément 'droit' du sessionStorage
 	}
 	//affiche ou non le popup de login
 	const toggleModal = () =>
@@ -114,6 +117,7 @@ function Navbar({ role })
 					<Route path="/produits" element={<Produits />} />
 					<Route path="/tickets" element={<Tickets />} />
 					<Route path="/fiche-de-sécurité" element={<FicheSecu />} />
+					<Route path="/historique" element={<Historique/>} />
 				</Routes>
 				<Modal className="popup d-flex justify-content-center align-items-center" show={showModal} onHide={toggleModal}>
 					<Modal.Body>

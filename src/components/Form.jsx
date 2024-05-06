@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../style/form.css';		//style du composant
-import { cheminPHP } from './VarGlobale';
+import { cheminPHP } from './VarGlobal';
 
 /**
  * Ce formulaire fonctionne avec un système d'état qui se suivent ex : l'état login
@@ -303,7 +303,7 @@ const Creer = ({ changeEtat }) =>
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h4 className=" letitre">Création du compte</h4>
+				<h4 className=" letitre letitrepetit">Création du compte</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
 					<input type="text" required value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
@@ -467,13 +467,18 @@ const Code = ({ changeEtat }) =>
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
+	const [val, setVal] = useState("");
 
 	//évènements dans la zone de texte
 	const changement = (event) =>
 	{
+		let nouvelleVal = event.target.value;
+		if(nouvelleVal.length <= val.length && nouvelleVal.length === 4) event.target.value = nouvelleVal.slice(0, 3);
 		regex(event);
 		setCode(event.target.value);
 		setIsValid(true);	//par défaut le style est valide
+
+		setVal(event.target.value);
 	};
 
 	//ennvoye à la page de choix du nouveau mot de passe
@@ -506,19 +511,18 @@ const Code = ({ changeEtat }) =>
 		changeEtat('mail');
 	};
 
-	//test si on entre bien un code
-	const regex = (event) => {
+	//test si on entre bien des chiffres
+	const regex = (event) =>
+	{
 		// Supprime tous les caractères non alphabétiques et non numériques
 		let codeVal = event.target.value.replace(/[^A-Za-z0-9]/g, '');
 
-		// Insère un tiret après les quatre premiers caractères
-		codeVal = codeVal.slice(0, 8); // Limite la longueur à 9 caractères
-		if (codeVal.length >= 4 && codeVal.charAt(4) !== '-') {
-			codeVal = codeVal.substring(0, 4) + "-" + codeVal.substring(4);
-		}
+		// Insère un tiret après chaque groupe de 4 caractères
+		codeVal = codeVal.slice(0, 8); // Limite la longueur à 8 caractères
+		if(codeVal.length >= 4) codeVal = codeVal.slice(0,4) + "-" + codeVal.slice(4);
 
 		// Met à jour la valeur de l'élément cible
-		event.target.value = codeVal;
+		event.target.value = codeVal
 	};
 
 	//classes de style
@@ -704,7 +708,7 @@ const recupCode = async (mail) =>
 			body: formData
 		};
 
-		const response = await fetch("http://172.26.4.207/Maitai/src/php/SendMail.php", requestOptions);
+		const response = await fetch("http://maitai-becon.wuaze.com/php/SendMail.php", requestOptions);
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');

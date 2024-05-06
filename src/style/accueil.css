@@ -1,0 +1,22 @@
+@font-face {
+    font-family: 'Water Brush';
+    src: url('../fonts/WaterBrush-Regular.ttf') format('truetype');
+}
+
+.accueil {
+    display: flex;
+    flex-direction: column;
+    justify-content: center ;
+    text-align: center;
+    align-items: left;
+    font-size: 4em;
+    font-family: 'Water Brush'; 
+}
+
+.custom-img {
+    max-width: 100%; /* Ajustez cette valeur selon vos besoins */
+}
+
+.espacement {
+    margin-right: 230px;
+}

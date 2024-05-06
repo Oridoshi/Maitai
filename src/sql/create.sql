@@ -34,7 +34,8 @@ CREATE TABLE Client
 
 CREATE TABLE Produit
 (
-	idProd    INTEGER       PRIMARY KEY,
+	idProd    SERIAL        PRIMARY KEY,
+	ref       VARCHAR(255)  NOT NULL   ,
 	libProd   VARCHAR(255)  NOT NULL   ,
 	prixUni   DECIMAL(12,2)            ,
 	categorie VARCHAR(30)   NOT NULL
@@ -46,6 +47,7 @@ CREATE TABLE Historique
 	date   DATE         DEFAULT CURRENT_DATE NOT NULL,
 	chemin VARCHAR(255) NOT NULL,
 	type   VARCHAR(6)   NOT NULL CHECK (type IN ('TICKET', 'SECU')),
+	valide BOOLEAN      DEFAULT 0,
 	idCli  INTEGER      NOT NULL REFERENCES Client(idCli)
 );
 

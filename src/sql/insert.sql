@@ -15,13 +15,13 @@ ALTER TABLE Utilisateur      AUTO_INCREMENT = 1;
 ALTER TABLE Droit            AUTO_INCREMENT = 1;
 
 
--- Insérer des droits
+-- Inserer des droits
 INSERT INTO Droit (libDroit)
 VALUES ('Admin'),
        ('Maitai'),
        ('Client');
 
--- Insérer des utilisateurs
+-- Inserer des utilisateurs
 INSERT INTO Utilisateur (login, mdp, email, actif)
 VALUES ('admin1', 'mdp1', 'admin1@example.com', true),
        ('admin2', 'mdp2', 'admin2@example.com', true),
@@ -76,65 +76,65 @@ ALTER TABLE Historique AUTO_INCREMENT = 1;
 -- Inserer des Clients
 INSERT INTO Client (nomClub, email, telephone, present)
 VALUES
-    ('Club de plongée A', 'clubA@example.com', '0123456789', 1),
-    ('Club de plongée B', 'clubB@example.com', '9876543210', 1),
-    ('Club de plongée C', 'clubC@example.com', '1234567890', 1),
-    ('Club de plongée D', 'clubD@example.com', '0987654321', 0),
-    ('Club de plongée E', 'clubE@example.com', '0123456789', 0),
-    ('Club de plongée F', 'clubF@example.com', '9876543210', 0),
-    ('Club de plongée G', 'clubG@example.com', '1234567890', 0),
-    ('Club de plongée H', 'clubH@example.com', '0987654321', 0),
-    ('Club de plongée I', 'clubI@example.com', '0123456789', 0),
-    ('Club de plongée J', 'clubJ@example.com', '9876543210', 0),
-    ('Club de plongée K', 'clubK@example.com', '1234567890', 1),
-    ('Club de plongée L', 'clubL@example.com', '0987654321', 0),
-    ('Club de plongée M', 'clubM@example.com', '0123456789', 0),
-    ('Club de plongée N', 'clubN@example.com', '9876543210', 0),
-    ('Club de plongée O', 'clubO@example.com', '1234567890', 0),
-    ('Club de plongée P', 'clubP@example.com', '0987654321', 0),
-    ('Club de plongée Q', 'clubQ@example.com', '0123456789', 0),
-    ('Club de plongée R', 'clubR@example.com', '9876543210', 0),
-    ('Club de plongée S', 'clubS@example.com', '1234567890', 0),
-    ('Club de plongée T', 'clubT@example.com', '0987654321', 0),
-    ('Club de plongée U', 'clubU@example.com', '0123456789', 0),
-    ('Club de plongée V', 'clubV@example.com', '9876543210', 0),
-    ('Club de plongée W', 'clubW@example.com', '1234567890', 0),
-    ('Club de plongée X', 'clubX@example.com', '0987654321', 0),
-    ('Club de plongée Y', 'clubY@example.com', '0123456789', 0),
-    ('Club de plongée Z', 'clubZ@example.com', '9876543210', 0);
+    ('Club de plongee A', 'clubA@example.com', '0123456789', 1),
+    ('Club de plongee B', 'clubB@example.com', '9876543210', 1),
+    ('Club de plongee C', 'clubC@example.com', '1234567890', 1),
+    ('Club de plongee D', 'clubD@example.com', '0987654321', 0),
+    ('Club de plongee E', 'clubE@example.com', '0123456789', 0),
+    ('Club de plongee F', 'clubF@example.com', '9876543210', 0),
+    ('Club de plongee G', 'clubG@example.com', '1234567890', 0),
+    ('Club de plongee H', 'clubH@example.com', '0987654321', 0),
+    ('Club de plongee I', 'clubI@example.com', '0123456789', 0),
+    ('Club de plongee J', 'clubJ@example.com', '9876543210', 0),
+    ('Club de plongee K', 'clubK@example.com', '1234567890', 1),
+    ('Club de plongee L', 'clubL@example.com', '0987654321', 0),
+    ('Club de plongee M', 'clubM@example.com', '0123456789', 0),
+    ('Club de plongee N', 'clubN@example.com', '9876543210', 0),
+    ('Club de plongee O', 'clubO@example.com', '1234567890', 0),
+    ('Club de plongee P', 'clubP@example.com', '0987654321', 0),
+    ('Club de plongee Q', 'clubQ@example.com', '0123456789', 0),
+    ('Club de plongee R', 'clubR@example.com', '9876543210', 0),
+    ('Club de plongee S', 'clubS@example.com', '1234567890', 0),
+    ('Club de plongee T', 'clubT@example.com', '0987654321', 0),
+    ('Club de plongee U', 'clubU@example.com', '0123456789', 0),
+    ('Club de plongee V', 'clubV@example.com', '9876543210', 0),
+    ('Club de plongee W', 'clubW@example.com', '1234567890', 0),
+    ('Club de plongee X', 'clubX@example.com', '0987654321', 0),
+    ('Club de plongee Y', 'clubY@example.com', '0123456789', 0),
+    ('Club de plongee Z', 'clubZ@example.com', '9876543210', 0);
 
 
 -- Inserer des Produits
-INSERT INTO Produit (idProd, libProd, prixUni, categorie)
+INSERT INTO Produit (ref, libProd, prixUni, categorie)
 VALUES
-    ( 1, 'Masque de plongée'                           ,  39.99, 'Equipement' ),
-    ( 2, 'Palmes de plongée'                           ,  49.99, 'Equipement' ),
-    ( 3, 'Tuba de plongée'                             ,  29.99, 'Equipement' ),
-    ( 4, 'Combinaison de plongée'                      , 149.99, 'Vêtement'   ),
-    ( 5, 'Gilet stabilisateur'                         , 199.99, 'Equipement' ),
-    ( 6, 'Détendeur de plongée'                        , 299.99, 'Equipement' ),
-    ( 7, 'Lampe de plongée'                            ,  79.99, 'Accessoire' ),
-    ( 8, 'Couteau de plongée'                          ,  59.99, 'Accessoire' ),
-    ( 9, 'Ordinateur de plongée'                       , 349.99, 'Accessoire' ),
-    (10, 'Livre sur la plongée'                        ,  19.99, 'Littérature'),
-    (11, 'Boîtier étanche pour appareil photo'         ,  99.99, 'Accessoire' ),
-    (12, 'Sac de plongée'                              ,  69.99, 'Equipement' ),
-    (13, 'Boussole de plongée'                         ,  29.99, 'Accessoire' ),
-    (14, 'Housse de protection pour combinaison'       ,  39.99, 'Accessoire' ),
-    (15, 'Montre de plongée'                           , 149.99, 'Accessoire' ),
-    (16, 'Sonde de profondeur'                         ,  89.99, 'Accessoire' ),
-    (17, 'Réchauffeur pour combinaison de plongée'     , 119.99, 'Accessoire' ),
-    (18, 'Casque de plongée'                           ,  59.99, 'Equipement' ),
-    (19, 'Kit de nettoyage pour équipement de plongée' ,  29.99, 'Accessoire' ),
-    (20, 'Compresseur d''air portable'                 , 699.99, 'Equipement' ),
-    (21, 'Sac étanche'                                 ,  49.99, 'Accessoire' ),
-    (22, 'Kit de réparation pour équipement de plongée',  19.99, 'Accessoire' ),
-    (23, 'Écran solaire résistant à l''eau'            ,  19.99, 'Accessoire' ),
-    (24, 'Trousse de premiers secours pour plongée'    ,  49.99, 'Sécurité'   ),
-    (25, 'Sifflet de secours subaquatique'             ,   9.99, 'Sécurité'   ),
-    (26, 'Déflecteur de courant pour tuba'             ,  24.99, 'Accessoire' ),
-    (27, 'Boîte de rangement étanche'                  ,  34.99, 'Accessoire' ),
-    (28, 'Gonfleur pour combinaison de plongée'        ,  49.99, 'Equipement' );
+    (' 1', 'Masque de plongee'                           ,  39.99, 'Equipement' ),
+    (' 2', 'Palmes de plongee'                           ,  49.99, 'Equipement' ),
+    (' 3', 'Tuba de plongee'                             ,  29.99, 'Equipement' ),
+    (' 4', 'Combinaison de plongee'                      , 149.99, 'Vetement'   ),
+    (' 5', 'Gilet stabilisateur'                         , 199.99, 'Equipement' ),
+    (' 6', 'Detendeur de plongee'                        , 299.99, 'Equipement' ),
+    (' 7', 'Lampe de plongee'                            ,  79.99, 'Accessoire' ),
+    (' 8', 'Couteau de plongee'                          ,  59.99, 'Accessoire' ),
+    (' 9', 'Ordinateur de plongee'                       , 349.99, 'Accessoire' ),
+    ('10', 'Livre sur la plongee'                        ,  19.99, 'Litterature'),
+    ('11', 'Boitier etanche pour appareil photo'         ,  99.99, 'Accessoire' ),
+    ('12', 'Sac de plongee'                              ,  69.99, 'Equipement' ),
+    ('13', 'Boussole de plongee'                         ,  29.99, 'Accessoire' ),
+    ('14', 'Housse de protection pour combinaison'       ,  39.99, 'Accessoire' ),
+    ('15', 'Montre de plongee'                           , 149.99, 'Accessoire' ),
+    ('16', 'Sonde de profondeur'                         ,  89.99, 'Accessoire' ),
+    ('17', 'Rechauffeur pour combinaison de plongee'     , 119.99, 'Accessoire' ),
+    ('18', 'Casque de plongee'                           ,  59.99, 'Equipement' ),
+    ('19', 'Kit de nettoyage pour equipement de plongee' ,  29.99, 'Accessoire' ),
+    ('20', 'Compresseur d''air portable'                 , 699.99, 'Equipement' ),
+    ('21', 'Sac etanche'                                 ,  49.99, 'Accessoire' ),
+    ('22', 'Kit de reparation pour equipement de plongee',  19.99, 'Accessoire' ),
+    ('23', 'ecran solaire resistant a l''eau'            ,  19.99, 'Accessoire' ),
+    ('24', 'Trousse de premiers secours pour plongee'    ,  49.99, 'Securite'   ),
+    ('25', 'Sifflet de secours subaquatique'             ,   9.99, 'Securite'   ),
+    ('26', 'Deflecteur de courant pour tuba'             ,  24.99, 'Accessoire' ),
+    ('27', 'Boite de rangement etanche'                  ,  34.99, 'Accessoire' ),
+    ('28', 'Gonfleur pour combinaison de plongee'        ,  49.99, 'Equipement' );
 
 
 -- Inserer des Ticket

@@ -254,13 +254,23 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 
-	function changeThing(item, columnId) {
+	const changeThing = async (item, columnId) => {
 		// Modifiez la propriété correspondante dans l'objet item
 		item[columnId] = !item[columnId];
 
 		// Mettez à jour l'état avec les nouvelles données
-		if (funUpdate !== undefined && funUpdate(item, item))
-			setTableData(prevData => [...prevData]);
+		if (funUpdate !== undefined)
+		{
+			const updateSuccess = await funUpdate(item, item);
+			if (updateSuccess)
+				setTableData(prevData => [...prevData]);
+			else
+				item[columnId] = !item[columnId];
+		}
+		else
+		{
+			item[columnId] = !item[columnId];
+		}
 	}
 
 
@@ -311,7 +321,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 					<tbody>
-					{datas.slice().reverse().map(item => (
+					{datas.map(item => (
 
 								<tr id={`ligne ${item.id}`}
 									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'}`}
