@@ -161,6 +161,11 @@ class DB {
 		return $tab;
 	}
 
+	public function getUtilisateurByMail($mail) {
+		$requete = 'SELECT * FROM Utilisateur WHERE email = ?';
+		return $this->execQuery($requete,array($mail),'Utilisateur');
+	}
+
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** Obtenir un utilisateur à partir de son login */

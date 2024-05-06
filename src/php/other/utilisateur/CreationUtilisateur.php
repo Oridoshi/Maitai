@@ -15,6 +15,9 @@ $tel   = isset($_POST['tel'])?$_POST['tel']:null;
 $pdo = DB::getInstance();
 
 if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
+
+    password_hash($mdp, PASSWORD_DEFAULT);
+
     // Création du client
     $client = new Client();
     $client->setEmail($email);
