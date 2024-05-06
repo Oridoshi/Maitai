@@ -14,6 +14,19 @@ $tel   = isset($_POST['tel'])?$_POST['tel']:null;
 
 $pdo = DB::getInstance();
 
+// création de l'utilisateur
+$utilisateur = new Utilisateur();
+$utilisateur->setLogin($login);
+$utilisateur->setEmail($email);
+$utilisateur->setActif($actif);
+
+// insertion de l'utilisateur dans la base de données
+$pdo->insertUtilisateur($utilisateur);
+
+$uti = $pdo->getUtilisateur($login);
+
+$pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
+
 if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
 
     password_hash($mdp, PASSWORD_DEFAULT);
@@ -28,15 +41,3 @@ if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
 
     $pdo->majMdpUti($login, $mdp);
 }
-// création de l'utilisateur
-$utilisateur = new Utilisateur();
-$utilisateur->setLogin($login);
-$utilisateur->setEmail($email);
-$utilisateur->setActif($actif);
-
-// insertion de l'utilisateur dans la base de données
-$pdo->insertUtilisateur($utilisateur);
-
-$uti = $pdo->getUtilisateur($login);
-
-$pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
