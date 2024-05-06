@@ -27,11 +27,14 @@ export default function Ticket()
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
 
-	useEffect( async () => {
-		const newData = await fetchClientData();
-		setInitialData(newData);
-		setFilterData (newData);
-	}, []);
+	useEffect(() => {
+		async function fetchData() {
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+		}
+		fetchData();
+	},[]);
 
 	//Gestion des tickets
 	function editTickets(ligne)
@@ -288,11 +291,30 @@ export default function Ticket()
 			}
 
 			const data = await response.json(); // Parse the response into JSON
+			console.log(afficherError(data));
 
 			return data.libprod;
 		} catch (error) {
 			console.log(error);
 			return false;
+		}
+	}
+
+	function afficherError(data) {
+		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
+		const match = regex.exec(data);
+
+		if (match) {
+			const sqlState = match[1]; // État SQL
+			const errorCode = match[2]; // Code d'erreur
+			const errorMessageText = match[3].trim(); // Texte du message d'erreur
+
+			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
+			alert(errorMessageText);
+
+		} else {
+			if (data !== "")
+				alert(data.replace('<br>', ''));
 		}
 	}
 
