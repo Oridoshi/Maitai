@@ -258,6 +258,7 @@ function Utilisateur() {
 		const match = regex.exec(data);
 
 		if (match) {
+			console.log("Erreur SQL connue renvoyé. Retour du fetch ", data);
 			const sqlState = match[1]; // État SQL
 			const errorCode = match[2]; // Code d'erreur
 			const errorMessageText = match[3].trim(); // Texte du message d'erreur

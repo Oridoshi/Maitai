@@ -10,8 +10,24 @@
     text-align: center;
     align-items: left;
     font-size: 4em;
-    font-family: 'Water Brush'; 
+    font-family: 'Water Brush';
 }
+
+.carousel-control-prev-icon
+{
+    background-color: gray;
+}
+
+.carousel-control-next-icon
+{
+    background-color: gray;
+}
+
+.slide {
+    height: 500px;
+    justify-content: center ;
+}
+
 
 .custom-img {
     max-width: 100%; /* Ajustez cette valeur selon vos besoins */

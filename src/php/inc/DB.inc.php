@@ -14,12 +14,19 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "if0_36460769_maitai";
-	private static string $login    = "if0_36460769";
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $port     = "3306";
-	private static string $host     = "sql211.infinityfree.com";
+	// private static string $dbName   = "if0_36460769_maitai";
+	private static string $dbName   = "maitai";
 
+	// private static string $login    = "if0_36460769";
+	private static string $login    = "Admin";
+
+	// private static string $password = "Sc4ZKSO8sanWyvz";
+	private static string $password = "maitai";
+
+	private static string $port     = "3306";
+
+	// private static string $host     = "sql211.infinityfree.com";
+	private static string $host     = "localhost";
 
 
 	/************************************************************************/
@@ -144,6 +151,34 @@ class DB {
 		return $this->execQuery($requete,null,'Droit');
 	}
 
+	/**
+	 * Récupère un droit à partir de son id.
+	 * @param int $idDroit id du droit à récupérer
+	 * @return Droit le droit récupéré
+	 */
+	public function getDroitUtilisateur($iduti) {
+		$requete = 'SELECT iddroit FROM UtilisateurDroit WHERE iduti = ?';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute(array($iduti));
+		$tuple = $stmt->fetch();
+		return $tuple['iddroit'];
+	}
+
+	/**
+	 * Récupère le nombre d'administrateurs actifs.
+	 * @return int le nombre d'administrateurs actifs
+	 */
+	public function getNbAdminActif() {
+		$requete = 'SELECT COUNT(*) FROM Utilisateur, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Utilisateur.actif = 1 AND UtilisateurDroit.idDroit = 1';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tuple = $stmt->fetch();
+		// echo "KEY : " . array_keys($tuple)[0];
+		return $tuple['count(*)'];
+	}
+
+
 	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
 	public function getUtilisateursEtDroit() {
 		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY Droit.idDroit,login';
@@ -242,6 +277,27 @@ class DB {
 		return $this->execQuery($requete,array($nomClub),'Client');
 	}
 
+	/**
+	 * Récupérer un client à partir de son id.
+	 * @param int $idCli id du client à récupérer
+	 * @return Client le client récupéré
+	 */
+	public function getClientById($idCli) {
+		$requete = 'SELECT * FROM Client WHERE idCli = ?';
+		return $this->execQuery($requete,array($idCli),'Client')[0];
+	}
+
+	/**
+	 * Met à jour le champ actif d'un client.
+	 * @param int $idCli id du client à mettre à jour
+	 * @param bool $actif valeur du champ actif
+	 * @return void
+	 */
+	public function majActifCli($idCli, $actif) {
+		$requete = 'UPDATE Client SET present = ? WHERE idCli = ?';
+		$this->execMaj($requete, array($actif, $idCli));
+	}
+
 	/** Modifier les données d'un client. */
 	public function updateClient($client) {
 		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
@@ -271,6 +327,16 @@ class DB {
 		return $this->execQuery($requete,null,'Produit');
 	}
 
+	/**
+	 * Récupérer le produit à partir de l'id du produit.
+	 * @param int $idProd id du produit à récupérer
+	 * @return Produit le produit récupéré
+	 */
+	public function getProduit($idProd) {
+		$requete = 'SELECT * FROM Produit WHERE idProd = ?';
+		return $this->execQuery($requete,array($idProd),'Produit')[0];
+	}
+
 	/** Récuperer les produits en fonction de la catégorie.
 	 * @param string $categ la catégorie des produits à récupérer
 	 * @return array tableau d'objets de la classe Produit
@@ -278,6 +344,15 @@ class DB {
 	public function getProduitsParCateg($categ) {
 		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
 		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
+	/** Récuperer un produit en fonction de son id.
+	 * @param int $idProd l'id du produit à récupérer
+	 * @return Produit le produit récupéré
+	 */
+	public function getProduitById($idProd) {
+		$requete = 'SELECT * FROM Produit WHERE idProd = ?';
+		return $this->execQuery($requete,array($idProd),'Produit')[0];
 	}
 
 	/** Récuperer toute les catégories de produits. 
