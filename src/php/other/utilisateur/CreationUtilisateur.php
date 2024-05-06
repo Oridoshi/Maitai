@@ -29,7 +29,7 @@ $pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
 
 if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
 
-    password_hash($mdp, PASSWORD_DEFAULT);
+
 
     // Création du client
     $client = new Client();
@@ -39,5 +39,5 @@ if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
 
     $pdo->insertClient($client);
 
-    $pdo->majMdpUti($login, $mdp);
+    $pdo->majMdpUti($login, password_hash($mdp, PASSWORD_DEFAULT));
 }
