@@ -7,26 +7,12 @@
 	export default function accueil(){
 		return(
 			<div className="container">
-				<div className="row justify-content-start align-items-center">
-					<p className="accueil col-sm-4 ps-3">Maïtaï, Enfin une carrière à ma taille</p>
-					<p className="col"></p>
-					<div className="col-md-4">
+				<div className="row justify-content-center align-items-center">
+					<p className="accueil col-sm-4 ps-3 me-4">Maïtaï, Enfin une carrière à ma taille</p>
+					<div className="col-md-4 mx-4">
 						<ImageCarousel  />
 					</div>
 				</div>
-				
-				{/* <div className="container">
-					<div className="row">
-						<div className="col-md-4">
-							<img src={require("../img/image1.png")} className="img-fluid" alt="Image 1" />
-						</div>
-						<div className="col-md-4">
-							<img src={require("../img/image2.png")} className="img-fluid" alt="Image 2" />
-						</div>
-					</div>
-				</div> */}
 			</div>
-
-
 		) 
 	}
