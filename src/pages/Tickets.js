@@ -27,36 +27,13 @@ export default function Ticket()
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
 
-	useEffect(() => {
-		fetch(cheminPHP + "client/GetClients.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Erreur de réseau !');
-			}
-			console.log("ok");
-			return response.json();
-		})
-		.then(data => {
-			const newData = data.forEach((item, index) => ({
-				...item,
-				id: index + 1
-			}));
-			console.log(newData);
-			setInitialData(newData);
-			setFilterData (newData);
-		})
-		.catch(error => {
-			console.error('Erreur :', error);
-		});
+	useEffect( async () => {
+		const newData = await fetchClientData();
+		setInitialData(newData);
+		setFilterData (newData);
 	}, []);
 
 	//Gestion des tickets
-
 	function editTickets(ligne)
 	{
 		try
@@ -234,6 +211,31 @@ export default function Ticket()
 		// Mettre à jour les données filtrées
 		setFilterData(filteredData);
 	}
+
+	const fetchClientData = async () => {
+		try {
+			const response = await fetch(cheminPHP + "client/GetClients.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			const newData = [];
+			data.forEach((item) =>{
+					newData.push({id:item.idcli, nomcli:item.nomclub, email:item.email, prix:0, present:item.present});
+			});
+			return newData;
+		} catch (error) {
+			console.error('Erreur :', error);
+			return [];
+		}
+	};
 
 
 	///code de tous ce que gère la pop up d'ajout de produit
