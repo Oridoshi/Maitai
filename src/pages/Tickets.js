@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
+
 import Table from '../components/Table';
 import Compteur from '../components/Compteur';
+import { cheminPHP } from '../components/VarGlobal.js';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -12,6 +14,8 @@ export default function Ticket()
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");
 	const [prix, setPrix] = useState("");
+	const [initialData , setInitialData ] = useState([]);
+	const [filterData  , setFilterData  ] = useState([]);
 
 	// En-tête de la table
 	const initialHeader = [
@@ -23,13 +27,33 @@ export default function Ticket()
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
 
-	// En-tête de la table
-	const initData = [
-		{ id: '1', nomcli: 'test', email: 't', prix: 2 },
-		{ id: '2', nomcli: 'test', email: 't', prix: 2 },
-		{ id: '3', nomcli: 'test', email: 't', prix: 2 },
-		{ id: '4', nomcli: 'test', email: 't', prix: 2 },
-	];
+	useEffect(() => {
+		fetch(cheminPHP + "client/GetClients.php", {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Erreur de réseau !');
+			}
+			console.log("ok");
+			return response.json();
+		})
+		.then(data => {
+			const newData = data.forEach((item, index) => ({
+				...item,
+				id: index + 1
+			}));
+			console.log(newData);
+			setInitialData(newData);
+			setFilterData (newData);
+		})
+		.catch(error => {
+			console.error('Erreur :', error);
+		});
+	}, []);
 
 	//Gestion des tickets
 
@@ -188,9 +212,8 @@ export default function Ticket()
 
 	function filter(value)
 	{
-		/*
 		// Filtrer les données en fonction de la valeur de recherche
-		const filteredData = initData.filter((element) =>
+		const filteredData = initialData.filter((element) =>
 		{
 			// Parcourir les clés de l'en-tête initial
 			for (const key of initialHeader)
@@ -209,7 +232,7 @@ export default function Ticket()
 		});
 
 		// Mettre à jour les données filtrées
-		setFilterData(filteredData);*/
+		setFilterData(filteredData);
 	}
 
 
@@ -294,7 +317,7 @@ export default function Ticket()
 			<div className='h-25'>
 				<Table
 					header={ initialHeader }
-					data={ initData }
+					data={ initialData }
 				/>
 			</div>
 			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix(""); } }>
