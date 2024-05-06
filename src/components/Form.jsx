@@ -16,6 +16,21 @@ import { cheminPHP } from './VarGlobal';
  * On ne doit pas pouvir créeer de compte identique au compte test
  */
 
+window.addEventListener('load', async (event) =>	//recharge la page
+{
+	if(! await setDroits()) {
+		window.location.reload();
+	}
+
+	if(sessionStorage.getItem('idSession') != null && !await mdpValid(sessionStorage.getItem('idSession'))){
+		sessionStorage.removeItem('login');
+		sessionStorage.removeItem('idSession');
+		sessionStorage.setItem('droit', "");
+		sessionStorage.removeItem('mdpValid');
+		window.location.reload();
+	}	
+});
+
 const Form = ({ etat }) =>
 {
 	//stock l'etat et recharge le menu quand on change d'etat
@@ -72,7 +87,7 @@ const Log = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire quand on change de page
 
 		//test avec la bd si le login existe bien
-		if (await logExist({ login }))
+		if (await logExist( login ))
 		{
 			sessionStorage.setItem('login', login); // Stocke le login en session
 			setDroits();
@@ -104,7 +119,7 @@ const Log = ({ changeEtat }) =>
 		setLogin(event.target.value);//actualise le login
 	};
 
-	//test si ce qu'on entre correspon bien à l'expression d'un login
+	//test si ce qu'on entre correspond bien à l'expression d'un login
 	const regex = (event) =>
 	{
 		let val = event.target.value;
@@ -157,6 +172,7 @@ const Mdp = ({ changeEtat }) =>
 		if (await mdpValid(mdp))
 		{ // Utilisation directe de mdp
 			sessionStorage.setItem('mdpValid', "true");
+			sessionStorage.setItem('idSession', await getMdp());
 			window.location.href = "/"; // Lien de l'accueil
 		} else
 		{
@@ -562,73 +578,169 @@ const resetCookies = () =>
 
 /*--REQUETE--*/
 
-//renvoie tous les utilisateurs le but est de limité le fetch de select à seulement cette fonction
+const getMdp = async () => {
+	const data = new FormData();
+	data.append('login', sessionStorage.getItem('login'));
 
-const getUsers = async () =>
-{
-	try
-	{
-		const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8'
-			},
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/GetMdp.php", {
+			method: 'POST',
+			body: data
 		});
 
-		if (!response.ok)
-		{
+		if (!response.ok) {
 			throw new Error('Erreur de réseau !');
 		}
 
-		const data = await response.json();
-		const utilisateurs = data.map(item => ({
-			login: item.login,
-			mdp: item.mdp,
-			email: item.email,
-			libdroit: item.libdroit
-		}));
-		return utilisateurs;
-	} catch (error)
-	{
+		const dat = await response.text();
+		console.log("mdp", dat);
+		return dat;
+	} catch (error) {
 		console.log("erreur", error);
 		return false; // Retourner une valeur par défaut en cas d'erreur
 	}
 }
 
+const loginExist = async (data) => {
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/LoginExist.php", {
+			method: 'POST',
+			body: data
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat === "1";
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
+const pwdValid = async (data) => {
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/PwdForLogin.php", {
+			method: 'POST',
+			body: data
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat === "1";
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
+const mailIsValid = async (data) => {
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/MailForLogin.php", {
+			method: 'POST',
+			body: data
+		});
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat === "1";
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
+const mailInDB = async (data) => {
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/MailExist.php", {
+			method: 'POST',
+			body: data
+
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat === "1";
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
+const getDroit = async (data) => {
+	try {
+		const response = await fetch(cheminPHP + "GetDroit.php", {
+			method: 'POST',
+			body: data
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat;
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
+
 //cherche en bado si on a bien un utilisateur
-const logExist = async ({ login }) =>
+const logExist = async ( log ) =>
 {
-	const utilisateurs = await getUsers();
-	return utilisateurs.some(user => user.login === login);
+	const data = new FormData();
+	data.append('login', log);
+	const utilisateurs = await loginExist(data);
+	return utilisateurs;
 }
 //test si le mdp correspond au user
 const mdpValid = async (pass) =>
 {
-	const utilisateurs = await getUsers();
-	return utilisateurs.some(user => user.login === sessionStorage.getItem('login') && user.mdp === pass);
+	const data = new FormData();
+	data.append('login', sessionStorage.getItem('login'));
+	data.append('mdp', pass);
+	const utilisateurs = await pwdValid(data);
+	return utilisateurs;
 }
 
 //test si le mail correspond au user
 const mailValid = async (mail) =>
 {
-	const utilisateurs = await getUsers();
-	return utilisateurs.some(user => user.login === sessionStorage.getItem('login') && user.email === mail);
+	const data = new FormData();
+	data.append('login', sessionStorage.getItem('login'));
+	data.append('email', mail);
+	const utilisateurs = await mailIsValid(data);
+	return utilisateurs;
 }
 //test si le mail exist en bado
 const mailExist = async (mail) =>
 {
-	const utilisateurs = await getUsers();
-	return utilisateurs.some(user => user.mail === mail);
+	const data = new FormData();
+	data.append('email', mail);
+	const utilisateurs = await mailInDB(data);
+	return utilisateurs;
 }
 
 const setDroits = async() =>
 {
-	const utilisateurs = await getUsers();
-	utilisateurs.forEach(user => {
-		if (user.login === sessionStorage.getItem('login')) {
-			sessionStorage.setItem('droit',user.libdroit);
-		}
-	});
+	const data = new FormData();
+	data.append('login', sessionStorage.getItem('login'));
+	const utilisateurs = await getDroit(data);
+	const droit = sessionStorage.getItem('droit');
+	sessionStorage.setItem('droit', utilisateurs);
+	return droit === utilisateurs;
 }
 
 /*--INSERT--*/
@@ -708,7 +820,7 @@ const recupCode = async (mail) =>
 			body: formData
 		};
 
-		const response = await fetch("http://maitai-becon.wuaze.com/php/SendMail.php", requestOptions);
+		const response = await fetch("https://maitai-becon.wuaze.com/php/SendMail.php", requestOptions);
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');
