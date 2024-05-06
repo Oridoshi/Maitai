@@ -8,8 +8,8 @@
 		return(
 			<div className="container">
 				<div className="row justify-content-center align-items-center">
-					<p className="accueil col-sm-4 ps-3 me-4">Maïtaï, Enfin une carrière à ma taille</p>
-					<div className="col-md-4 mx-4">
+					<p className="accueil col-sm-4 espacement">Maïtaï, Enfin une carrière à ma taille</p>
+					<div className="col-md-4">
 						<ImageCarousel  />
 					</div>
 				</div>

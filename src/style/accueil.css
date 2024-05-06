@@ -15,4 +15,8 @@
 
 .custom-img {
     max-width: 100%; /* Ajustez cette valeur selon vos besoins */
-  }
+}
+
+.espacement {
+    margin-right: 230px;
+}
