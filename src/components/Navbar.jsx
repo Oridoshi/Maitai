@@ -24,8 +24,6 @@ function Navbar({ role })
 
 	//en fonction du paramètre on charge plus ou moins de role
 	role = sessionStorage.getItem('droit');
-	console.log('role');
-	console.log(role);
 	switch (role)
 	{
 		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
