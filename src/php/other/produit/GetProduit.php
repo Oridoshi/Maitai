@@ -1,5 +1,6 @@
 <?php
 header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 include_once '../../inc/DB.inc.php';
 
 /**
@@ -9,9 +10,10 @@ if(isset($_POST['categ']) && $_POST['categ'] != "")
 {
 	$prods=DB::getInstance()->getProduitsParCateg($_POST['categ']);
 }
-/**
- * Récupère tout les produit de la base de donnée trié par catégorie
- */
+else if(isset($_POST['idprod']) && $_POST['idprod'] != "")
+{
+	$prods=DB::getInstance()->getProduitById($_POST['idprod']);
+}
 else
 {
 	$prods = DB::getInstance()->getProduits();

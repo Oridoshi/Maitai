@@ -2,6 +2,14 @@
 header('Access-Control-Allow-Origin: *');
 include_once '../../inc/DB.inc.php';
 
+$pdo = DB::getInstance();
+
+$cli = $pdo->getClientById($_POST['idcli']);
+
+if($cli->getPresent() == 0 || !$cli->getPresent()) {
+	$pdo->majActifCli($_POST['idcli'], true);
+}
+
 /**
  * Cration d'un ticket défini par :
  * @var int $idprod Numéro d'identification du produits commandés.
@@ -21,4 +29,4 @@ if(isset($_POST['prixtot'])) {
 /**
  * Insère le produit dans la base de données
  */
-DB::getInstance()->insertTicket($newTicket);
+$pdo->insertTicket($newTicket);

@@ -2,6 +2,8 @@
 header('Access-Control-Allow-Origin: *');
 include_once '../../inc/DB.inc.php';
 
+$pdo = DB::getInstance();
+
 /**
  * Modification d'un ticket défini par :
  * @var int $idprod Numéro d'identification du produits commandés.
@@ -16,9 +18,13 @@ $modifTicket->setQa($_POST['qa']);
 if(isset($_POST['prixtot'])) {
 	$modifTicket->setPrixTot($_POST['prixtot']);
 }
+else {
+	$prod = $pdo->getProduit($modifTicket->getIdProd());
+	$modifTicket->setPrixTot($prod->getPrixUni() * $modifTicket->getQa());
+}
 
 
 /**
  * Insère le produit dans la base de données
  */
-DB::getInstance()->updateTicket($modifTicket);
+$pdo->updateTicket($modifTicket);
