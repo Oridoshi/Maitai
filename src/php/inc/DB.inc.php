@@ -14,12 +14,19 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "if0_36460769_maitai";
-	private static string $login    = "if0_36460769";
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $port     = "3306";
-	private static string $host     = "sql211.infinityfree.com";
+	// private static string $dbName   = "if0_36460769_maitai";
+	private static string $dbName   = "maitai";
 
+	// private static string $login    = "if0_36460769";
+	private static string $login    = "Admin";
+
+	// private static string $password = "Sc4ZKSO8sanWyvz";
+	private static string $password = "maitai";
+
+	private static string $port     = "3306";
+
+	// private static string $host     = "sql211.infinityfree.com";
+	private static string $host     = "localhost";
 
 
 	/************************************************************************/
@@ -143,6 +150,34 @@ class DB {
 		$requete = 'SELECT * FROM Droit';
 		return $this->execQuery($requete,null,'Droit');
 	}
+
+	/**
+	 * Récupère un droit à partir de son id.
+	 * @param int $idDroit id du droit à récupérer
+	 * @return Droit le droit récupéré
+	 */
+	public function getDroitUtilisateur($iduti) {
+		$requete = 'SELECT iddroit FROM UtilisateurDroit WHERE iduti = ?';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute(array($iduti));
+		$tuple = $stmt->fetch();
+		return $tuple['iddroit'];
+	}
+
+	/**
+	 * Récupère le nombre d'administrateurs actifs.
+	 * @return int le nombre d'administrateurs actifs
+	 */
+	public function getNbAdminActif() {
+		$requete = 'SELECT COUNT(*) FROM Utilisateur, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Utilisateur.actif = 1 AND UtilisateurDroit.idDroit = 1';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tuple = $stmt->fetch();
+		// echo "KEY : " . array_keys($tuple)[0];
+		return $tuple['count(*)'];
+	}
+
 
 	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
 	public function getUtilisateursEtDroit() {
@@ -273,6 +308,15 @@ class DB {
 	public function getProduitsParCateg($categ) {
 		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
 		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
+	/** Récuperer un produit en fonction de son id.
+	 * @param int $idProd l'id du produit à récupérer
+	 * @return Produit le produit récupéré
+	 */
+	public function getProduitById($idProd) {
+		$requete = 'SELECT * FROM Produit WHERE idProd = ?';
+		return $this->execQuery($requete,array($idProd),'Produit')[0];
 	}
 
 	/** Récuperer toute les catégories de produits. 
