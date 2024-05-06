@@ -272,6 +272,27 @@ class DB {
 		return $this->execQuery($requete,array($nomClub),'Client');
 	}
 
+	/**
+	 * Récupérer un client à partir de son id.
+	 * @param int $idCli id du client à récupérer
+	 * @return Client le client récupéré
+	 */
+	public function getClientById($idCli) {
+		$requete = 'SELECT * FROM Client WHERE idCli = ?';
+		return $this->execQuery($requete,array($idCli),'Client')[0];
+	}
+
+	/**
+	 * Met à jour le champ actif d'un client.
+	 * @param int $idCli id du client à mettre à jour
+	 * @param bool $actif valeur du champ actif
+	 * @return void
+	 */
+	public function majActifCli($idCli, $actif) {
+		$requete = 'UPDATE Client SET present = ? WHERE idCli = ?';
+		$this->execMaj($requete, array($actif, $idCli));
+	}
+
 	/** Modifier les données d'un client. */
 	public function updateClient($client) {
 		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
@@ -299,6 +320,16 @@ class DB {
 	public function getProduits() {
 		$requete = 'SELECT * FROM Produit ORDER BY categorie';
 		return $this->execQuery($requete,null,'Produit');
+	}
+
+	/**
+	 * Récupérer le produit à partir de l'id du produit.
+	 * @param int $idProd id du produit à récupérer
+	 * @return Produit le produit récupéré
+	 */
+	public function getProduit($idProd) {
+		$requete = 'SELECT * FROM Produit WHERE idProd = ?';
+		return $this->execQuery($requete,array($idProd),'Produit')[0];
 	}
 
 	/** Récuperer les produits en fonction de la catégorie.

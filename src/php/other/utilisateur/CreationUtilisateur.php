@@ -25,23 +25,15 @@ if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
 
     $pdo->majMdpUti($login, $mdp);
 }
-else
-{
-    // création de l'utilisateur
-    $utilisateur = new Utilisateur();
-    $utilisateur->setLogin($login);
-    $utilisateur->setEmail($email);
-    $utilisateur->setActif($actif);
-    
-    // insertion de l'utilisateur dans la base de données
-    $pdo->insertUtilisateur($utilisateur);
+// création de l'utilisateur
+$utilisateur = new Utilisateur();
+$utilisateur->setLogin($login);
+$utilisateur->setEmail($email);
+$utilisateur->setActif($actif);
 
-    if(count($pdo->getClient($login)) != 0)
-    {
-        $pdo->majMdpUti($login, $mdp);
-    }
+// insertion de l'utilisateur dans la base de données
+$pdo->insertUtilisateur($utilisateur);
 
-    $uti = $pdo->getUtilisateur($login);
-    
-    $pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
-}
+$uti = $pdo->getUtilisateur($login);
+
+$pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
