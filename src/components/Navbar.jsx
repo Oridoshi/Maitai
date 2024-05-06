@@ -13,6 +13,7 @@ import Form from "../components/Form";
 import Historique from "../pages/Historique";
 
 import '../style/nav.css';
+import '../style/form.css';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
@@ -21,6 +22,11 @@ function Navbar({ role })
 	//stocke les éléments de la navbar
 	let navLinks = [];
 	const [showModal, setShowModal] = useState(false);
+	const [showForm, setShowForm] = useState(false); 
+
+	const toggleForm = () => {
+		setShowForm(!showForm);
+	};
 
 	//en fonction du paramètre on charge plus ou moins de role
 	role = sessionStorage.getItem('droit');
@@ -87,6 +93,72 @@ function Navbar({ role })
 		return '/' + link;
 	};
 
+
+const sendMail = (mail) =>
+	{
+		const data = new FormData();
+		data.append('email', mail);
+		data.append('file', true);
+		fetch("https://maitai-becon.wuaze.com/php/SendMail.php", {
+			method: 'POST',
+			body: data
+		}).then(response => 
+			response.ok ? alert("La convention du club vous a été envoyé") : alert("Erreur lors de l'envoi du mail")
+		);
+
+		toggleForm();
+	}
+	
+	const MailConv = () =>
+	{
+		//pour changer les contenus des inputs
+		const [mail, setMail] = useState("");
+		const [isValid, setIsValid] = useState(true);
+	
+		//évènement dans la zone de texte
+		const changement = (event) =>
+		{
+			regexMail(event);
+			setMail(event.target.value);
+			setIsValid(true);
+		};
+	
+		//envoye vers la page de récupération du compte via un code
+		const envoyer = async (event) =>
+		{
+			event.preventDefault();//obligatoire pour un changement de page
+			sendMail(mail);		
+		};
+	
+		//test i on entre bien une expression correspondant à une adresse mail
+		const regexMail = (event) =>
+		{
+			let mailVal = event.target.value;
+			const regex = /^[a-z0-9@.]+$/;
+			if (!regex.test(mailVal))
+			{
+				mailVal = mailVal.slice(0, -1);
+				event.target.value = mailVal;
+			}
+		};
+	
+		//classes de style
+		const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
+	
+		return (
+			<div>
+				<form className="form" onSubmit={ envoyer }>
+					<h4 className="letitre">Convention du club</h4>
+					<div className="mb-3">
+						<label htmlFor="exampleInputEmail1" className="form-label label">Mail</label>
+						<input required type="email" value={ mail } className={ inputClass } aria-describedby="emailHelp"  onChange={ changement } />
+					</div>
+					<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
+				</form>
+			</div>
+		);
+	};
+
 	//code la navabar
 	return (
 		<div>
@@ -97,7 +169,7 @@ function Navbar({ role })
 							<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 								<span className="navbar-toggler-icon"></span>
 							</button>
-							<Link className="navbar-brand logoMaitai" to="/"></Link>
+							<Link className="navbar-brand logoMaitai" onClick={ toggleForm }></Link>
 							<Link className="navbar-brand btnAccueil" to="/"></Link>
 							<div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 								{getItem()}
@@ -124,6 +196,12 @@ function Navbar({ role })
 						<Form />
 					</Modal.Body>
 				</Modal>
+				<Modal className="popup d-flex justify-content-center align-items-center" show={showForm} onHide={toggleForm}>
+					<Modal.Body>
+						<MailConv />
+					</Modal.Body>
+				</Modal>
+				
 			</div>
 		</div>
 	);
