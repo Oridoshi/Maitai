@@ -593,7 +593,7 @@ const getMdp = async () => {
 		}
 
 		const dat = await response.text();
-		console.log("mdp", dat);
+	
 		return dat;
 	} catch (error) {
 		console.log("erreur", error);
