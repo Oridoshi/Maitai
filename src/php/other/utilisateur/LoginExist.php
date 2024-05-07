@@ -8,4 +8,6 @@ $login = $_POST['login'];
 
 $pdo = DB::getInstance();
 
-echo $pdo->getUtilisateur($login) != null;
+$uti = $pdo->getUtilisateur($login);
+
+echo $uti != null && $uti->getActif() == 1 ? "true" : "false";
