@@ -486,7 +486,7 @@ function FicheSecu() {
 		worksheet.mergeCells('I13:N13');
 
 
-		// Ajouter du texte et des styles à quelques cellules
+		// EN TETE (DATE LIEU CLUB NB PLONG)
 		worksheet.getCell('B4').value  = 'DATE : ';
 		worksheet.getCell('B4').font   = { bold: true, size: 12, name:'Arial'};
 		worksheet.getCell('B4').border = borderAll;
@@ -506,76 +506,53 @@ function FicheSecu() {
 		worksheet.getCell('C6').border = borderAll;
 
 		worksheet.getCell('B8').value  = 'nombre plongeurs';   
-		worksheet.getCell('B8').font   = { bold: true, size: 14, name:'Arial'};
+		worksheet.getCell('B8').font   = { bold: true, size: 12, name:'Arial'};
 		worksheet.getCell('B8').border = borderAll;
 		worksheet.getCell('C8').value  = sessionStorage.getItem("nbplong");
 		worksheet.getCell('C8').border = borderAll;
 
-		worksheet.getCell('M8').border = borderAll;
+		worksheet.getCell('M8').border = borderAll; //signature
+		worksheet.getCell('M7').value  = 'signature DP';   
+		worksheet.getCell('M7').font   = {size: 6, italic:true, name:'Arial'}; 
 
 		
-		worksheet.getCell('B9').value  = 'DP';   
-		worksheet.getCell('B9').font   = {size: 12, name:'Arial'};
-		worksheet.getCell('C9').value  = sessionStorage.getItem("dpnom")   ;
-		worksheet.getCell('D9').value  = sessionStorage.getItem("dpprenom");
-		worksheet.getCell('E9').value  = sessionStorage.getItem("dpniveau");
-		worksheet.getCell('B9').border = borderAll;
-		worksheet.getCell('C9').border = borderAll;
-		worksheet.getCell('D9').border = borderAll;
-		worksheet.getCell('E9').border = borderAll;
 
-		
-		worksheet.getCell('B10').value  = 'SECU. SURF.';   
-		worksheet.getCell('B10').font   = {size: 12, name:'Arial'};
-		worksheet.getCell('C10').value = sessionStorage.getItem("ss1nom")   ;
-		worksheet.getCell('D10').value = sessionStorage.getItem("ss1prenom");
-		worksheet.getCell('E10').value = sessionStorage.getItem("ss1niveau");
-		worksheet.getCell('B10').border = borderAll;
-		worksheet.getCell('C10').border = borderAll;
-		worksheet.getCell('D10').border = borderAll;
-		worksheet.getCell('E10').border = borderAll;
+		// SURVEILLANT
+		var lib = [{ lib : 'DP', key : 'dp', ligne : 9}, {lib : 'SECU. SURF.', key : 'ss1', ligne : 10}, {lib : 'SECU. SURF.', key : 'ss2', ligne : 11}, { lib : 'TELEPHONE', key : 'tel', ligne : 12}];
 
-		
-		worksheet.getCell('B11').value  = 'SECU. SURF.';   
-		worksheet.getCell('B11').font   = {size: 12, name:'Arial'};
-		worksheet.getCell('C11').value = sessionStorage.getItem("ss2nom")   
-		worksheet.getCell('D11').value = sessionStorage.getItem("ss2prenom")
-		worksheet.getCell('E11').value = sessionStorage.getItem("ss2niveau")
-		worksheet.getCell('B11').border = borderAll;
-		worksheet.getCell('C11').border = borderAll;
-		worksheet.getCell('D11').border = borderAll;
-		worksheet.getCell('E11').border = borderAll;
+		lib.map((item) => {
+			worksheet.getCell('B' + item.ligne).value  = item.lib;   
+			worksheet.getCell('B' + item.ligne).font   = {size: 12, name:'Arial'};
+			worksheet.getCell('C' + item.ligne).value  = sessionStorage.getItem(item.key + "nom")   ;
+			worksheet.getCell('D' + item.ligne).value  = sessionStorage.getItem(item.key + "prenom");
+			worksheet.getCell('E' + item.ligne).value  = sessionStorage.getItem(item.key + "niveau");
+			worksheet.getCell('B' + item.ligne).border = borderAll;
+			worksheet.getCell('C' + item.ligne).border = borderAll;
+			worksheet.getCell('D' + item.ligne).border = borderAll;
+			worksheet.getCell('E' + item.ligne).border = borderAll;
+			
+		});  
 
-		
-		worksheet.getCell('B12').value  = 'TELEPHONE';   
-		worksheet.getCell('B12').font   = {size: 12, name:'Arial'};
-		worksheet.getCell('C12').value = sessionStorage.getItem("telnom")   
-		worksheet.getCell('D12').value = sessionStorage.getItem("telprenom")
-		worksheet.getCell('E12').value = sessionStorage.getItem("telniveau")
-		worksheet.getCell('B12').border = borderAll;
-		worksheet.getCell('C12').border = borderAll;
-		worksheet.getCell('D12').border = borderAll;
-		worksheet.getCell('E12').border = borderAll;
 
+
+		// PA12
+		lib = [{ lib : 'PA12: NON AUTORISE', key : 'pa12', ligne : 8}, {lib : 'Bloc de secu', key : 'secu', ligne : 9}, {lib : 'O2', key : 'o2', ligne : 10}];
+
+		lib.map((item) => {
+			worksheet.getCell('G'+item.ligne).value  = item.lib;   
+			worksheet.getCell('G'+item.ligne).font   = {size: 10, bold : true, name:'Arial'};
+			worksheet.getCell('G'+item.ligne).border = borderAll;
+			worksheet.getCell('J'+item.ligne).value  = sessionStorage.getItem(item.key)     
+			worksheet.getCell('J'+item.ligne).border = borderAll;     
+		});  
+
+		worksheet.getCell('G8').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'ffC000'}};
 		
-		worksheet.getCell('G8').value  = 'PA12: NON AUTORISE';   
-		worksheet.getCell('G8').font   = {size: 12, bold : true, name:'Arial'};
-		worksheet.getCell('G8').border = borderAll;
-		worksheet.getCell('J8').value  = sessionStorage.getItem("pa12")     
-		worksheet.getCell('J8').border = borderAll;     
-		
-		worksheet.getCell('G9').value  = 'Bloc de secu';   
-		worksheet.getCell('G9').font   = {size: 12, name:'Arial'};
-		worksheet.getCell('G9').border = borderAll;
-		worksheet.getCell('J9').value  = sessionStorage.getItem("secu")    
-		worksheet.getCell('J9').border = borderAll;  
-		
-		worksheet.getCell('G10').value  = 'O2';   
-		worksheet.getCell('G10').font   = {size: 12, name:'Arial'}; 
-		worksheet.getCell('G10').border = borderAll;
-		worksheet.getCell('J10').value = sessionStorage.getItem("o2")
-		worksheet.getCell('J10').border = borderAll;
-		
+
+
+
+		// PETIT ENTETE 
+
 		worksheet.getCell('B14').value  = 'PALANQUEE';   
 		worksheet.getCell('B14').font   = {size: 6,bold:true, name:'Arial'}; 
 		worksheet.getCell('B14').border = borderAll;
@@ -587,6 +564,9 @@ function FicheSecu() {
 		worksheet.getCell('G13').value  = 'PREVU';   
 		worksheet.getCell('G13').font   = {size: 6,bold:true, name:'Arial'}; 
 		worksheet.getCell('G13').border = borderAll;
+		worksheet.getCell('G13').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
+		worksheet.getCell('G14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
+		worksheet.getCell('H14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
 		
 		worksheet.getCell('I13').value  = 'REALISE';   
 		worksheet.getCell('I13').font   = {size: 6,bold:true, name:'Arial'}; 
@@ -594,77 +574,37 @@ function FicheSecu() {
 
 
 
+		// GROSSE ENTETE
 
-		
-		worksheet.getCell('B15').value  = 'NOM';   
-		worksheet.getCell('B15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('B15').border = borderAll;
-		
-		worksheet.getCell('C15').value  = 'PRENOM';   
-		worksheet.getCell('C15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('C15').border = borderAll;
-		
-		worksheet.getCell('D15').value  = 'PE-PA-PN BREVET';   
-		worksheet.getCell('D15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('D15').border = borderAll;
-		
-		worksheet.getCell('E15').value  = 'TECH';   
-		worksheet.getCell('E15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('E15').border = borderAll;
-		
-		worksheet.getCell('F15').value  = 'EXPLO';   
-		worksheet.getCell('F15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('F15').border = borderAll;
-		
-		worksheet.getCell('G15').value  = 'PROF';   
-		worksheet.getCell('G15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('G15').border = borderAll;
-		
-		worksheet.getCell('H15').value  = 'DUREE';   
-		worksheet.getCell('H15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('H15').border = borderAll;
-		
-		worksheet.getCell('I15').value  = 'PROF';   
-		worksheet.getCell('I15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('I15').border = borderAll;
-		
-		worksheet.getCell('J15').value  = 'DUREE';   
-		worksheet.getCell('J15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('J15').border = borderAll;
-		
-		worksheet.getCell('K15').value  = 'PALIER 3M';   
-		worksheet.getCell('K15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('K15').border = borderAll;
-		
-		worksheet.getCell('L15').value  = 'PALIER 6M';   
-		worksheet.getCell('L15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('L15').border = borderAll;
-		
-		worksheet.getCell('M15').value  = 'HD';   
-		worksheet.getCell('M15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('M15').border = borderAll;
-		
-		worksheet.getCell('N15').value  = 'HS';   
-		worksheet.getCell('N15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('N15').border = borderAll;
-		
-		worksheet.getCell('O15').value  = 'GAZ';   
-		worksheet.getCell('O15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('O15').border = borderAll;
-		
-		worksheet.getCell('P15').value  = 'REMARQUE';   
-		worksheet.getCell('P15').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('P15').border = borderAll;
-		
-		worksheet.getCell('Q14').value  = 'MATERIEL';   
-		worksheet.getCell('Q14').font   = {size: 8,bold:true, name:'Arial'}; 
-		worksheet.getCell('Q14').border = borderAll;
-		
-		worksheet.getCell('M7').value  = 'signature DP';   
-		worksheet.getCell('M7').font   = {size: 6, italic:true, name:'Arial'}; 
+		lib = [
+			{ lib : 'NOM'            , col : 'B'}, 
+			{ lib : 'PRENOM'         , col : 'C'}, 
+			{ lib : 'PE-PA-PN BREVET', col : 'D'}, 
+			{ lib : 'TECH'           , col : 'E'}, 
+			{ lib : 'EXPLO'          , col : 'F'}, 
+			{ lib : 'PROF'           , col : 'G'}, 
+			{ lib : 'DUREE'          , col : 'H'}, 
+			{ lib : 'PROF'           , col : 'I'}, 
+			{ lib : 'DUREE'          , col : 'J'}, 
+			{ lib : 'PALIER 3M'      , col : 'K'}, 
+			{ lib : 'PALIER 6M'      , col : 'L'}, 
+			{ lib : 'HD'             , col : 'M'}, 
+			{ lib : 'HS'             , col : 'N'}, 
+			{ lib : 'GAZ'            , col : 'O'}, 
+			{ lib : 'REMARQUE'       , col : 'P'}, 
+			{ lib : 'MATERIEL'       , col : 'Q'}, 
+		];
+
+		lib.map((item) => {
+			worksheet.getCell(item.col + '15').value  = item.lib;   
+			worksheet.getCell(item.col + '15').font   = {size: 8,bold:true, name:'Arial'}; 
+			worksheet.getCell(item.col + '15').border = borderAll;
+		});  
 
 
 
+		const grayFill = {type: 'pattern',pattern:'solid',fgColor:{argb:'FFCCCCCC'}};
+		const allVCHC = { vertical: 'middle', horizontal: 'center' };
 		//Pour chaque palanqué 
 		Array(nombrePlaques - 1).fill().map((_, index) => {
 
@@ -672,29 +612,32 @@ function FicheSecu() {
 			worksheet.getCell('A' + (16 + index * 3)).value = (index+1);
 			worksheet.getCell('A' + (16 + index * 3)).font = {bold:true, vertAlign:'top'}
 			worksheet.getCell('A' + (16 + index * 3)).border = borderAll;
+			worksheet.getCell('A' + (16 + index * 3)).alignment = { vertical: 'top', horizontal: 'right' };
 
 
 			//NOM PRENOM NIVEAU
-			worksheet.getCell('B' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Anom"    );
-			worksheet.getCell('C' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Aprenom" );
-			worksheet.getCell('D' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Aniv"    );
-			worksheet.getCell('B' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('C' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('D' + (16 + index * 3)).border = borderAll;
+			for (let i = 0; i < 3; i++)
+			{
+				let ind = String.fromCharCode(65 + i); // Convertit 0 à 'A', 1 à 'B', etc.
 
-			worksheet.getCell('B' + (17 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Bnom"    );
-			worksheet.getCell('C' + (17 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Bprenom" );
-			worksheet.getCell('D' + (17 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Bniv"    );
-			worksheet.getCell('B' + (17 + index * 3)).border = borderAll;
-			worksheet.getCell('C' + (17 + index * 3)).border = borderAll;
-			worksheet.getCell('D' + (17 + index * 3)).border = borderAll;
+				worksheet.getCell('B' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "nom"    );
+				worksheet.getCell('C' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "prenom" );
+				worksheet.getCell('D' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "niv"    );
+				worksheet.getCell('B' + ((16 + i) + index * 3)).border = borderAll;
+				worksheet.getCell('C' + ((16 + i) + index * 3)).border = borderAll;
+				worksheet.getCell('D' + ((16 + i) + index * 3)).border = borderAll;
 
-			worksheet.getCell('B' + (18 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Cnom"    );
-			worksheet.getCell('C' + (18 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Cprenom" );
-			worksheet.getCell('D' + (18 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"Cniv"    );
-			worksheet.getCell('B' + (18 + index * 3)).border = borderAll;
-			worksheet.getCell('C' + (18 + index * 3)).border = borderAll;
-			worksheet.getCell('D' + (18 + index * 3)).border = borderAll;
+
+				console.log(index, "encadreOuNon ?", encadreOuNon[index])
+				console.log(i, "i == 0 ?", i === 0)
+				if (encadreOuNon[index + 1] && i === 0)
+				{
+					worksheet.getCell('B' + ((16 + i) + index * 3)).fill = grayFill;
+					worksheet.getCell('C' + ((16 + i) + index * 3)).fill = grayFill;
+					worksheet.getCell('D' + ((16 + i) + index * 3)).fill = grayFill;
+				}
+
+			}
 
 			if (sessionStorage.getItem("p" + (index+1) +"type") === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
 			else                                                             worksheet.getCell('E' + (16 + index * 3)).value = 'X'
@@ -738,6 +681,23 @@ function FicheSecu() {
 			worksheet.getCell('N' + (16 + index * 3)).border = borderAll;
 			worksheet.getCell('O' + (16 + index * 3)).border = borderAll;
 			worksheet.getCell('P' + (16 + index * 3)).border = borderAll;
+
+			worksheet.getCell('E' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('F' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('G' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('H' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('I' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('J' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('K' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('L' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('M' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('N' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('O' + (16 + index * 3)).alignment = allVCHC;
+			worksheet.getCell('P' + (16 + index * 3)).alignment = allVCHC;
+
+
+
+
 
 			//Case matériel border
 			worksheet.getCell('Q' + (16 + index * 3)).border = borderAll;
