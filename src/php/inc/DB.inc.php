@@ -548,5 +548,9 @@ class DB {
 		$this->execMaj($requete, $tparam);
 	}
 
+	public function getHistoriquesSecuNonValide() {
+		$requete = "SELECT * FROM historique WHERE type = 'SECU' AND valide = 0";
+		return $this->execQuery($requete, null, 'Historique');
+	}
 
 } //fin classe DB
