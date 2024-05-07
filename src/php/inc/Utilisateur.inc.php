@@ -1,5 +1,4 @@
 <?php
-
 class Utilisateur {
 
     /** Numéro d'identification de l'utilisateur. */

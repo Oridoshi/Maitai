@@ -28,9 +28,6 @@ $uti = $pdo->getUtilisateur($login);
 $pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
 
 if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
-
-
-
     // Création du client
     $client = new Client();
     $client->setEmail($email);

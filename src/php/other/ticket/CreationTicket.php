@@ -3,7 +3,6 @@ header('Access-Control-Allow-Origin: *');
 include_once '../../inc/DB.inc.php';
 
 $pdo = DB::getInstance();
-
 $cli = $pdo->getClientById($_POST['idcli']);
 
 if($cli->getPresent() == 0 || !$cli->getPresent()) {

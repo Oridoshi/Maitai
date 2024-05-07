@@ -57,6 +57,7 @@ CREATE TABLE Ticket
 	idCli   INTEGER REFERENCES Client(idCli),
 	qa      INTEGER NOT NULL CHECK (qa >= 0),
 	prixTot DECIMAL(12,2) DEFAULT NULL,
+	prixSpe DECIMAL(12,2) DEFAULT NULL,
 	PRIMARY KEY (idProd, idCli)
 );
 
