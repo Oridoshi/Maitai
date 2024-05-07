@@ -63,7 +63,7 @@
 }
 
 .btnAjouter,
-.btnAdd:focus,
+.btnAjouter:focus,
 .btnAjouter:active {
 	width: 40px;
 	height: 40px;

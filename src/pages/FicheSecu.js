@@ -706,7 +706,7 @@ function FicheSecu() {
 		formData.append('idcli'  , parseInt(id));
 		formData.append('type'   , 'SECU');
 		formData.append('file'   , blob);
-		formData.append('name'   , "_" + sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs");
+		formData.append('name'   , "_" + sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
 
 		const requestOptions = {
 			method: 'POST',

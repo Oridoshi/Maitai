@@ -1,5 +1,4 @@
 <?php
-
 //Mettre les objet a require ici /!\
 include_once 'Droit.inc.php';
 include_once 'Utilisateur.inc.php';

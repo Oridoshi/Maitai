@@ -9,8 +9,8 @@ $file = $_FILES['file'];
 $fileName = $_POST['name'];
 $fileTmpPath = $file['tmp_name'];
 
-$chemin = "/" . $type . "/";
-//$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
+// $chemin = "/" . $type . "/";
+$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
 
 $val = count(DB::getInstance()->getHistoriques());
 
