@@ -15,7 +15,7 @@ function FicheSecu() {
 	/*                                                                    */
 	/**********************************************************************/
 
-	const etapesLib = ['En tête', 'Palanquée', 'Réalisé', 'Aperçu final'];
+	const etapesLib = ['En tête', 'Palanquée', 'Réalisé', 'Envoie'];
 	const [etape, setEtape] = useState(0);
 
 	const [nombrePlaques    , setNombrePlaques    ] = useState(1);
@@ -348,9 +348,9 @@ function FicheSecu() {
 		return (
 			<div className='m-5'>
 				La fiche à était générer et envoyé a l'administration. <br></br>
-				Vous pouvez la modifié jusqu'à sa validation par le.s administateur.euse.s. <br></br>
+				Vous pourez la modifié jusqu'à sa validation par le.s administateur.euse.s dans de futur fonctionnalités. <br></br>
 
-				<button className='btnSauvegarder'></button>
+				<button className='btn mt-4 btnSauvegarder' onClick={() => {window.location.href = '/Acceuil'}}> Retourner à l'acceuil </button>
 			</div>
 		);
 	}
@@ -706,7 +706,7 @@ function FicheSecu() {
 		formData.append('idcli'  , parseInt(id));
 		formData.append('type'   , 'SECU');
 		formData.append('file'   , blob);
-		formData.append('nom'    , sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU");
+		formData.append('name'   , "_" + sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs");
 
 		const requestOptions = {
 			method: 'POST',
@@ -948,7 +948,7 @@ function FicheSecu() {
 				{etapesLib[etape] === 'En tête'        && generatehtmlFormEnTete()      }
 				{etapesLib[etape] === 'Palanquée'      && generatehtmlFormPalanquee()   }
 				{etapesLib[etape] === 'Réalisé'        && generatehtmlFormApresPlongee()}
-				{etapesLib[etape] === 'Aperçu final'   && generatehtmlAppercue()        }
+				{etapesLib[etape] === 'Envoie'   && generatehtmlAppercue()        }
 
 				<div className="m-5 d-flex justify-content-end">
 					{/* {etape !== 0 &&
