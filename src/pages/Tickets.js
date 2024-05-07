@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 
 import Table from '../components/Table';
@@ -7,15 +7,26 @@ import { cheminPHP } from '../components/VarGlobal.js';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { getAllByRole } from '@testing-library/react';
 
 export default function Ticket()
 {
+	//donnée tab
+	const [initialData, setInitialData] = useState([]);
+	const [tabCateg, setTabCateg] = useState([]);
+	const [tabProd, setTabProd] = useState([]);
+	//modal ajt prod
 	const [modalOpen, setModalOpen] = useState(false);
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");
+	const [idCli,setIdCli] = useState("");
+	const [idProd,setIdProd] = useState("");
 	const [prix, setPrix] = useState("");
-	const [initialData , setInitialData ] = useState([]);
-	const [filterData  , setFilterData  ] = useState([]);
+	//bar de Recherche
+	const [filterData, setFilterData] = useState([]);
+
+
+	/*TABLEAU DE CLIENT*/
 
 	// En-tête de la table
 	const initialHeader = [
@@ -27,25 +38,31 @@ export default function Ticket()
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
 
-	useEffect(() => {
-		async function fetchData() {
+	useEffect(() =>
+	{
+		async function fetchData()
+		{
 			const newData = await fetchClientData();
 			setInitialData(newData);
 			setFilterData(newData);
+			setTabCateg(await getCategProd());
 		}
 		fetchData();
-	},[]);
+	}, []);
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/*TICKET QUAND ON CLIQUE SUR LE BOUTON DEROULANT*/
 	//Gestion des tickets
 	function editTickets(ligne)
 	{
 		try
 		{
-			//récupère la ligne qui appel la méthode et celle qui suit
+			//récupère la ligne qui appel la méthode et celle d'après
 			const ligneAppel = document.getElementById('ligne ' + ligne.id);
 			const isligneEdit = ligneAppel.nextSibling;
 
-			//récupère tous les boutons et kes remets dans la même position
+			//récupère tous les boutons et les remets dans la position haute
 			var buttons = document.getElementsByTagName('button');
 			for (var i = 0; i < buttons.length; i++)
 			{
@@ -134,7 +151,7 @@ export default function Ticket()
 		const tabTicket = await getTabTicket(ligne.id);
 
 		// Création des lignes de produits
-		for(const prod of tabTicket)
+		for (const prod of tabTicket)
 		{
 			//ligne du produit
 			const ligneProd = document.createElement('tr');
@@ -143,13 +160,13 @@ export default function Ticket()
 
 			// Nom Produit
 			const nomP = document.createElement('td');
-			nomP.colSpan = 2;
+			nomP.colSpan = 1;
 			nomP.textContent = await getNomP(prod.idprod);
 			nomP.classList.add('edit');
 
 			// Prix Produit
 			const prix = document.createElement('td');
-			prix.colSpan = 2;
+			prix.colSpan = 3;
 			prix.textContent = (prod.prixtot / prod.qa).toFixed(2) + " €";
 			prix.classList.add('edit');
 
@@ -162,7 +179,12 @@ export default function Ticket()
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
-			compteurRoot.render(<Compteur valIni={ prod.qa } />);
+			compteurRoot.render(<Compteur
+				valIni={ prod.qa }
+				updateTotComm={ (idprod, idcli, qa) => updateTotComm(idprod, idcli, qa) }
+				idprod={ prod.idprod }
+				idcli={ ligne.id }
+			/>);
 
 			// Ajout des colonnes à la ligne de produit
 			ligneProd.appendChild(nomP);
@@ -171,9 +193,113 @@ export default function Ticket()
 
 			// Ajout de la ligne de produit après la ligne d'ajout
 			client.parentNode.insertBefore(ligneProd, ligneBtnExport);
+			setIdCli(ligne.id);
 		};
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	///code de tous ce que gère la pop up d'ajout de produit
+	const renderCateg = () =>
+	{
+		const elements = tabCateg.map(categ => (
+			<li key={ categ.categorie }>
+				<a className="dropdown-item" onClick={ () => { setLblCat(categ.categorie); activerProd(categ.categorie); } }>
+					{ categ.categorie }
+				</a>
+			</li>
+		));
+		return elements;
+	};
+
+	const renderProd = () =>
+	{
+		const elements = tabProd.map(prod => (
+			<li key={ prod.libprod}><a className="dropdown-item" onClick={ () => {setIdProd(prod.idprod); setLblProd(prod.libprod); setPrix(prod.prixuni); } }>{ prod.libprod }</a></li>
+		));
+		return elements;
+	};
+
+	//Ouvre la pop-up pour ajouter un nouveau produit
+	function nvProd()
+	{
+		setModalOpen(true);
+	}
+
+	//met à jour la liste des produits en fonction de la catégorie sélectionnée
+	async function activerProd(categorie) {
+		const produits = await getProduitByCateg(categorie);
+		setTabProd(produits);
+
+		const btnProd = document.getElementById("btnProdCat");
+		btnProd.disabled = false;
+	}
+
+	//ajoute un produit au ticket
+	async function ajtProd()
+	{
+		if (lblProd !== "" && !(await ticketExist(idProd,idCli)))
+		{
+			insertProdTicket(idProd,idCli,prix);
+
+			//ligne du produit
+			const ligneProd = document.createElement('tr');
+			ligneProd.id = 'edit';
+			ligneProd.classList.add('ligneProd');
+
+			// Nom Produit
+			const nomP = document.createElement('td');
+			nomP.colSpan = 1;
+			nomP.textContent = lblProd;
+			nomP.classList.add('edit');
+
+			// Prix Produit
+			const lblprix = document.createElement('td');
+			lblprix.colSpan = 3;
+			lblprix.textContent = prix + " €";
+			lblprix.classList.add('edit');
+
+			// Création de l'élément compteur
+			const compteur = document.createElement('td');
+			compteur.classList.add('edit');
+			compteur.classList.add('cpt');
+			const compteurComponent = document.createElement('div');
+			compteur.appendChild(compteurComponent); // Ajoute le compteurComponent au td
+
+			// Rendu de l'application React dans l'élément compteurComponent
+			const compteurRoot = ReactDOM.createRoot(compteurComponent);
+			compteurRoot.render(<Compteur
+				valIni={ 1 }
+				updateTotComm={ (idprod, idcli, qa) => updateTotComm(idprod, idcli, qa) }
+				idprod={ idProd }
+				idcli={ idCli }
+			/>);
+
+			// Ajout des colonnes à la ligne de produit
+			ligneProd.appendChild(nomP);
+			ligneProd.appendChild(lblprix);
+			ligneProd.appendChild(compteur);
+
+			// Ajout de la ligne de produit après la ligne d'ajout
+			const lignebtnExport = document.getElementsByClassName("ligneBtnExport")[0]
+			lignebtnExport.parentNode.insertBefore(ligneProd, lignebtnExport);
+
+			//réinitialise les champs et ferme la pop-up
+			setLblCat("");
+			setLblProd("");
+			setPrix("");
+			setModalOpen(false);
+
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+			setTabCateg(await getCategProd());
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//EVENEMENTTS
 
 	//gère l'exportation
 	function exportation()
@@ -211,11 +337,15 @@ export default function Ticket()
 		setFilterData(filteredData);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/*METHODE BADO*/
 
 	//récupère tous les Clients
-	const fetchClientData = async () => {
-		try {
+	const fetchClientData = async () =>
+	{
+		try
+		{
 			const response = await fetch(cheminPHP + "client/GetClients.php", {
 				method: 'GET',
 				headers: {
@@ -223,35 +353,42 @@ export default function Ticket()
 				},
 			});
 
-			if (!response.ok) {
+			if (!response.ok)
+			{
 				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
 			}
 
 			const data = await response.json();
-			const newData = await Promise.all(data.map(async (item) => {
-				const prix = await getTotCommCli(item.idcli);
+			const newData = await Promise.all(data.map(async (item) =>
+			{
+				const prix = await getTotCommCli(item.idcli) + " €";
 				return { id: item.idcli, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
 			}));
 			return newData;
-		} catch (error) {
+		} catch (error)
+		{
 			console.error('Erreur :', error);
 			return [];
 		}
 	};
 
 	//retourne le prix total de la commande d'un client
-	const getTotCommCli = async (ncli) => {
+	const getTotCommCli = async (ncli) =>
+	{
 		const tabTicket = await getTabTicket(ncli);
 		let prixTot = 0;
-		tabTicket.forEach(prod=>{
+		tabTicket.forEach(prod =>
+		{
 			prixTot += prod.prixtot;
 		})
 		return prixTot.toFixed(2);
 	};
 
 	//récupère tous les tickets pour un client
-	const getTabTicket = async(ncli)=> {
-		try {
+	const getTabTicket = async (ncli) =>
+	{
+		try
+		{
 			const formData = new FormData();
 			formData.append('idcli', ncli);
 
@@ -262,125 +399,238 @@ export default function Ticket()
 
 			const response = await fetch(cheminPHP + "ticket/GetTicket.php", requestOptions);
 
-			if (!response.ok) {
+			if (!response.ok)
+			{
 				throw new Error('Une erreur s\'est produite.');
 			}
 
 			const data = await response.json();
 			return data;
-		} catch (error) {
+		} catch (error)
+		{
 			console.log(error);
 			return false;
 		}
 	};
 
-	const getNomP = async(idprod)=>{
-		try {
+	//récupère toutes les catégories
+	const getCategProd = async () =>
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "produit/GetCateg.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	}
+
+	//récupère tous les produits d'une Catégorie
+	const getProduitByCateg = async (nomCateg) =>
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			const tabProd = [];
+			data.forEach(prod =>
+			{
+				if (prod.categorie === nomCateg)
+				{
+					tabProd.push(prod);
+				}
+			})
+			return tabProd;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	}
+
+	//récupère le nom du produit idprod
+	const getNomP = async (idprod) =>
+	{
+		const prod = await getProduit(idprod);
+		return prod.libprod;
+	}
+
+	const getProduit = async (idprod) =>
+	{
+		try
+		{
 			const formData = new FormData();
-			formData.append('id', idprod);
+			formData.append('idprod', idprod);
 
 			const requestOptions = {
 				method: 'POST',
 				body: formData
 			};
 
-			const response = await fetch(cheminPHP + "ticket/GetProduit.php", requestOptions);
-
-			if (!response.ok) {
+			const response = await fetch(cheminPHP + "produit/GetProduit.php", requestOptions);
+			if (!response.ok)
+			{
 				throw new Error('Une erreur s\'est produite.');
 			}
 
-			const data = await response.json(); // Parse the response into JSON
-			console.log(afficherError(data));
-
-			return data.libprod;
-		} catch (error) {
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
 			console.log(error);
 			return false;
 		}
 	}
 
-	function afficherError(data) {
+	const getTickets = async () =>
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "client/GetClients.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	}
+
+	const ticketExist = async (idprod,idcli)=>
+	{
+		const tabTicket = await getTickets();
+		return tabTicket.some(ticket => ticket.idprod === idprod && ticket.idcli === idcli);
+	}
+
+	//change le prix de la commande quand on modifie le nombre de produit
+	const updateTotComm = async (idprod, idcli, qa) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idprod', idprod);
+			formData.append('idcli', idcli);
+			formData.append('qa', qa);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/ModificationTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+
+			return data === ""; // Retourne true si la suppression a réussi, sinon false
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+
+	};
+
+	const insertProdTicket = async (idprod,idcli) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idprod', idprod);
+			formData.append('idcli', idcli);
+			formData.append('qa', 1);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/CreationTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+
+
+			return data === ""; // Retourne true si la insert a réussi, sinon false
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	}
+
+	function afficherError(data)
+	{
 		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
 		const match = regex.exec(data);
 
-		if (match) {
+		if (match)
+		{
 			const sqlState = match[1]; // État SQL
 			const errorCode = match[2]; // Code d'erreur
 			const errorMessageText = match[3].trim(); // Texte du message d'erreur
 
-			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
+			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState, "] error code :", errorCode);
 			alert(errorMessageText);
 
-		} else {
+		} else
+		{
 			if (data !== "")
 				alert(data.replace('<br>', ''));
 		}
 	}
 
-	///code de tous ce que gère la pop up d'ajout de produit
-
-	//Ouvre la pop-up pour ajouter un nouveau produit
-	function nvProd()
-	{
-		setModalOpen(true);
-	}
-	//met à jour la liste des produits en fonction de la catégorie sélectionnée
-	function activerProd()
-	{
-		const btnProd = document.getElementById("btnProdCat");
-		btnProd.disabled = false;
-	}
-
-	//ajoute un produit au ticket
-	function ajtProd()
-	{
-		if (lblProd !== "")
-		{
-			//ligne du produit
-			const ligneProd = document.createElement('tr');
-			ligneProd.id = 'edit';
-			ligneProd.classList.add('ligneProd');
-
-			// Nom Produit
-			const nomP = document.createElement('td');
-			nomP.colSpan = 2;
-			nomP.textContent = lblProd;
-			nomP.classList.add('edit');
-
-			// Prix Produit
-			const lblprix = document.createElement('td');
-			lblprix.colSpan = 2;
-			lblprix.textContent = prix + " €";
-			lblprix.classList.add('edit');
-
-			// Création de l'élément compteur
-			const compteur = document.createElement('td');
-			compteur.classList.add('edit');
-			compteur.classList.add('cpt');
-			const compteurComponent = document.createElement('div');
-			compteur.appendChild(compteurComponent); // Ajoute le compteurComponent au td
-
-			// Rendu de l'application React dans l'élément compteurComponent
-			const compteurRoot = ReactDOM.createRoot(compteurComponent);
-			compteurRoot.render(<Compteur/>);
-
-			// Ajout des colonnes à la ligne de produit
-			ligneProd.appendChild(nomP);
-			ligneProd.appendChild(lblprix);
-			ligneProd.appendChild(compteur);
-
-			// Ajout de la ligne de produit après la ligne d'ajout
-			const lignebtnExport = document.getElementsByClassName("ligneBtnExport")[0]
-			lignebtnExport.parentNode.insertBefore(ligneProd, lignebtnExport);
-
-			//réinitialise les champs et ferme la pop-up
-			setLblCat("");
-			setLblProd("");
-			setPrix("");
-			setModalOpen(false);
-		}
-	}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///code html de la page des tickets
 	return (
@@ -402,7 +652,7 @@ export default function Ticket()
 					data={ initialData }
 				/>
 			</div>
-			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix(""); } }>
+			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix("");} }>
 				<Modal.Header closeButton>
 					<Modal.Title>Ajouter un Produit</Modal.Title>
 				</Modal.Header>
@@ -413,8 +663,7 @@ export default function Ticket()
 								Catégorie Produit
 							</button>
 							<ul className="dropdown-menu">
-								<li><a className="dropdown-item" onClick={ () => { setLblCat("Matériel"); activerProd() } }>Matériel</a></li>
-								<li><a className="dropdown-item" onClick={ () => { setLblCat("Consomation"); activerProd() } }>Consomation</a></li>
+								{ renderCateg() }
 							</ul>
 						</div>
 						<label id="lblcat" className="lbl" >{ lblCat } </label>
@@ -423,9 +672,7 @@ export default function Ticket()
 								Produit
 							</button>
 							<ul className="dropdown-menu">
-								<li><a className="dropdown-item" onClick={ () => { setLblProd("Lampe"); setPrix(5); } }>Lampe</a></li>
-								<li><a className="dropdown-item" onClick={ () => { setLblProd("Combinaison"); setPrix(25); } }>Combinaison</a></li>
-								<li><a className="dropdown-item" onClick={ () => { setLblProd("Lunette"); setPrix("7"); } }>Lunette</a></li>
+								{ renderProd() }
 							</ul>
 						</div>
 						<label id="lblprod" className="lbl"> { lblProd } </label>

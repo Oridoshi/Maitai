@@ -17,7 +17,6 @@ if(isset($_POST['prixtot'])) {
 	$newTicket->setPrixTot($_POST['prixtot']);
 }
 
-
 /**
  * Insère le produit dans la base de données
  */
