@@ -649,7 +649,7 @@ export default function Ticket()
 			<div className='h-25'>
 				<Table
 					header={ initialHeader }
-					data={ initialData }
+					data={ filterData }
 				/>
 			</div>
 			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix("");} }>
