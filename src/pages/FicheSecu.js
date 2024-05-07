@@ -347,56 +347,11 @@ function FicheSecu() {
 		generateExcel()
 		return (
 			<div className='m-5'>
+				La fiche à était générer et envoyé a l'administration. <br></br>
+				Vous pouvez la modifié jusqu'à sa validation par le.s administateur.euse.s. <br></br>
+
+				<button className='btnSauvegarder'></button>
 			</div>
-		);
-	}
-
-
-	function afficherFichier()
-	{
-		return (
-			
-				<table className='table border'>
-				
-					<thead>
-						<th colSpan={19} className='border'> FICHE DE SECU </th>					
-					</thead>
-
-
-					<tbody>
-					
-					<tr>
-						{/* HEADER */}
-						<td className='border'></td>
-						<td className='border'>Date</td>
-						<td className='border'>{sessionStorage.getItem("date")}</td>
-						<td className='border' colSpan={2}>Lieu</td>
-						<td className='border' colSpan={10}>{sessionStorage.getItem("lieu")}</td>
-						<td className='border' colSpan={4} rowSpan={5}> <img src='./img/maitai.png'></img></td>
-					</tr>
-					
-					<tr>
-						<td className='border'></td>
-						<td className='border'>Nom du club</td>
-						<td className='border' colSpan={13}>{sessionStorage.getItem("nomClub")}</td>
-					</tr>
-
-					<tr><td></td></tr>
-					
-					<tr>
-						<td className='border'></td>
-						<td className='border'>Nombre plongeurs</td>
-						<td className='border'>{sessionStorage.getItem("nomClub")}</td>
-					</tr>
-
-					
-					</tbody>
-				
-				
-				
-				
-				
-				</table>
 		);
 	}
 
@@ -719,13 +674,17 @@ function FicheSecu() {
 		// Créer un objet Blob à partir des données binaires du fichier Excel
 		const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
+		//Donne un nom au fichier 
+		blob.name = sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU";
+
+
 		// Créer un objet URL à partir du Blob
 		const url = window.URL.createObjectURL(blob);
 
 		// Créer un lien d'ancrage pour télécharger le fichier Excel
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = 'example.xlsx';
+		a.download = blob.name;
 		document.body.appendChild(a);
 		a.click();
 
