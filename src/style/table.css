@@ -8,8 +8,19 @@
 	vertical-align: middle;
 }
 
-.tableau tr:nth-child(even) td {
+.tableau tr:nth-child(even) td:not(.edit) {
 	background-color: #ede4dd !important;
+}
+
+.tableau td.edit {
+	background-color: #DAE9EA!important;
+}
+
+.btnEdit{
+	text-align: center;
+}
+.cpt{
+	width: 11%;
 }
 
 .celCenter {
@@ -51,21 +62,78 @@
 	background-color: #DD6565;
 }
 
-.btnAjouter {
+.btnAjouter,
+.btnAdd:focus,
+.btnAjouter:active {
 	width: 40px;
 	height: 40px;
 
-	background-image: url('../img/ajouter.svg');
+	background-image: url('../img/ajouter.svg')!important;
 
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
 	border-radius: 10px;
 
-	background-color: #006DAA;
-	border-color: #006DAA;
+	background-color: #006DAA!important;
+	border-color: #006DAA!important;
 }
+.btnAjouter:hover{
+	background-color: #005C8F!important;
+}
+
 .text-muted td {
 	color: #6c757d !important;
 	/* Couleur grise par défaut */
+}
+
+.btnFermer {
+	background-color: #DD6565;
+	color: #FFFFFF;
+	font-weight: bolder;
+	border: 0px;
+	margin-right: 20px;
+}
+
+.btnFermer:hover,
+.btnFermer:focus {
+	background-color: rgb(176, 47, 47) !important;
+	color: #FFFFFF !important;
+}
+
+.btnAdd {
+	background-color: #006DAA;
+	color: #FFFFFF;
+	font-weight: bolder;
+	border: 0px;
+}
+
+.btnAdd:hover,
+.btnAdd:focus {
+	background-color: #005C8F !important;
+	color: #FFFFFF !important;
+}
+
+.check:checked {
+	background-color: #005C8F !important;
+}
+
+.btntickets {
+	background-color: transparent;
+	border-color: transparent;
+	width: 20px;
+	height: 20px;
+	background-image: url('../img/chevron.svg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	transition: transform 0.3s;
+	/* Ajoute une transition pour une animation fluide */
+}
+
+.btntickets:focus,
+.btntickets:active,
+.btntickets:hover {
+	background-color: transparent!important;
+	border-color: transparent !important;
 }

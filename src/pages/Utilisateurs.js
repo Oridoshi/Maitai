@@ -67,6 +67,35 @@ function Utilisateur() {
 
 
 
+	// Fonction pour récupérer les données des clients
+	const fetchUtilisateurData = async () => {
+		try {
+			const response = await fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des utilisateurs.');
+			}
+
+			const data = await response.json();
+			return data.map((item, index) => ({
+				...item,
+				id: index + 1
+			}));
+		} catch (error) {
+			console.error('Erreur :', error);
+			return [];
+		}
+	};
+
+
+
+
+
 	// En-tête de la table
 	const initialHeader = [
 		{ id: 'id'      , name: 'NB Ligne'     , type:'number'  , required : true , editable : false, show : false },
@@ -118,7 +147,7 @@ function Utilisateur() {
 			if(droit.libdroit === libDroit)
 				id = droit.iddroit;
 		});
-		
+
 		return id;
 	}
 
@@ -157,6 +186,13 @@ function Utilisateur() {
 
 			const data = await response.text();
 			afficherError(data);
+
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchUtilisateurData();
+			setInitialData(newData);
+			setFilterData(newData);
+
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
@@ -201,6 +237,14 @@ function Utilisateur() {
 
 			const data = await response.text();
 			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchUtilisateurData();
+
+			console.log(newData)
+			setInitialData(newData);
+			setFilterData(newData);
+
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
@@ -214,13 +258,14 @@ function Utilisateur() {
 		const match = regex.exec(data);
 
 		if (match) {
+			console.log("Erreur SQL connue renvoyé. Retour du fetch ", data);
 			const sqlState = match[1]; // État SQL
 			const errorCode = match[2]; // Code d'erreur
 			const errorMessageText = match[3].trim(); // Texte du message d'erreur
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
 			alert(errorMessageText);
-			
+
 		} else {
 			console.log("Aucune erreur connue renvoyé. Retour du fetch ", data);
 		}
@@ -256,7 +301,7 @@ function Utilisateur() {
 	//Création du tableau
 	return (
 		<div className="col-sm-12 h-100">
-	
+
 			<h1 className='titre mt-1'>Gestion des utilisateurs </h1>
 
 			<div className="grpRecherche mt-4 d-flex align-items-center">
@@ -267,12 +312,12 @@ function Utilisateur() {
 			</div>
 
 			<div className='h-25'>
-				<Table 
-					header={initialHeader} 
-					data={filterData} 
-					funInsert={funInsert} 
-					funUpdate={funUpdate} 
-					funDelete={funDelete} 
+				<Table
+					header={initialHeader}
+					data={filterData}
+					funInsert={funInsert}
+					funUpdate={funUpdate}
+					funDelete={funDelete}
 					keyGrayWhenFalse='actif'
 				/>
 			</div>

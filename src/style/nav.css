@@ -1,10 +1,8 @@
-.nav {
-	background-color: #e5e5e5;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	width: 100%;
-	margin-top: 0px;
+.manav{
+	display:flex;
+	justify-content: space-between; /* Distribue les éléments horizontalement avec un espace entre eux */
 }
+
 .logoMaitai{
 	width: 50px;
 	height: 50px;
@@ -41,13 +39,31 @@
 }
 .elt:hover {
 	color: #000000;
-	background-color: #dfdfdf;
 	text-decoration: underline;
 	text-decoration-color: #005C8F;
 	text-decoration-thickness: 2px;
 	text-decoration-skip-ink: none;
 	text-underline-offset: 10px;
 }
+.elt:focus {
+	color: #000000;
+	text-decoration: underline;
+	text-decoration-color: #005C8F;
+	text-decoration-thickness: 2px;
+	text-decoration-skip-ink: none;
+	text-underline-offset: 10px;
+}
+
+.login{
+	list-style-type: none;
+	margin-right: 5px;
+	font-size: 16px;
+}
+.divlog{
+	display:flex;
+	padding-top: 15px;
+}
+
 .btnLogout{
 	width: 50px;
 	height: 50px;
@@ -58,9 +74,27 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	border-radius: 10px;
-
 	background-color: #005C8F;
 }
 .btnLogout:hover{
 	background-color: #DD6565;
+	border-color: transparent;
+}
+.btnLog{
+	background-color: #005C8F;
+	border-color: transparent;
+	color: #FFFFFF;
+	margin-top: 20px;
+}
+.btnLog:hover,
+.btnLog:focus,
+.btnLog:active{
+	background-color: #006DAA !important;
+	border-color: transparent !important;
+	color: #FFFFFF !important;
+}
+
+.popup .modal-content{
+	background-color: transparent;
+	border-color: transparent;
 }

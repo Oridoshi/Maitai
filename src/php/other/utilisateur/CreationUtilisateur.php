@@ -14,7 +14,23 @@ $tel   = isset($_POST['tel'])?$_POST['tel']:null;
 
 $pdo = DB::getInstance();
 
+// création de l'utilisateur
+$utilisateur = new Utilisateur();
+$utilisateur->setLogin($login);
+$utilisateur->setEmail($email);
+$utilisateur->setActif($actif);
+
+// insertion de l'utilisateur dans la base de données
+$pdo->insertUtilisateur($utilisateur);
+
+$uti = $pdo->getUtilisateur($login);
+
+$pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);
+
 if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
+
+
+
     // Création du client
     $client = new Client();
     $client->setEmail($email);
@@ -23,25 +39,5 @@ if($mdp != null && $tel != null && count($pdo->getClient($login)) == 0){
 
     $pdo->insertClient($client);
 
-    $pdo->majMdpUti($login, $mdp);
+    $pdo->majMdpUti($login, password_hash($mdp, PASSWORD_DEFAULT));
 }
-else
-{
-    // création de l'utilisateur
-    $utilisateur = new Utilisateur();
-    $utilisateur->setLogin($login);
-    $utilisateur->setEmail($email);
-    $utilisateur->setActif($actif);
-    
-    // insertion de l'utilisateur dans la base de données
-    $pdo->insertUtilisateur($utilisateur);
-
-    if(count($pdo->getClient($login)) != 0)
-    {
-        $pdo->majMdpUti($login, $mdp);
-    }
-}
-
-$uti = $pdo->getUtilisateur($login);
-
-$pdo->insertUtilisateurDroit($uti->getIdUti(), $droit);

@@ -15,8 +15,8 @@
 	padding-top: 20px;
 	padding-bottom: 20px;
 
-	color: #005C8F;
-	background-color: #F2EEEB;
+	background-color: #F2EEEB!important;
+	color: #005C8F!important;
 
 	font-size: 30px;
 	font-weight: bolder;
@@ -32,7 +32,8 @@
 }
 
 .btnAnnuler {
-	background-color: #DD6565;
+	background-color: #DD6565!important;
+	border-color:  #DD6565!important;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
@@ -44,9 +45,8 @@
 	background-color: rgb(176, 47, 47) !important;
 	color: #FFFFFF !important;
 }
-
 .btnSauvegarder {
-	background-color: #006DAA;
+	background-color: #006DAA!important;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
@@ -58,21 +58,77 @@
 	color: #FFFFFF !important;
 }
 
+.btnExport{
+	background-color: #006DAA!important;
+	color: #FFFFFF!important;
+	font-weight: bolder;
+	border: 0px;
+	width: 200px;
+
+	background-image: url('../img/Export.svg');
+	background-size: 30px;
+	background-position:calc(95%);
+	/* Décaler de 5px vers la gauche */
+	background-repeat: no-repeat;
+}
+.btnExport:hover,
+.btnExport:focus,
+.btnExport:active{
+	background-color: #005C8F !important;
+}
+
 .grpRecherche {
 	margin-left: 3%;
 }
 
 .barre {
-	background-color: #F2EEEB;
-	border-color: #006DAA;
-	border-width: 2px;
-	border-radius: 15px;
+	background-color: #F2EEEB!important;
+	border-color: #006DAA!important;
+	border-width: 2px!important;
+	border-radius: 15px !important;
 
 	background-image: url('../img/loupe.svg');
 	background-size: 30px;
 	background-position: calc(100% - 10px) center;
 	/* Décaler de 5px vers la gauche */
 	background-repeat: no-repeat;
+}
+
+.Modal{
+	display: grid;
+	grid-template-columns:60% 40%;
+}
+
+.saisieprix{
+	margin-top: 5px;
+	background-color: #F2EEEB;
+	border: solid #006DAA;
+	border-width: 2px;
+	border-radius: 10px;
+	height: 40px;
+	text-align: center;
+}
+
+.itemModal{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.btnProd{
+	background-color: #006DAA!important;
+	width: 223px;
+	border: 2px !important;
+	border-radius: 10px!important;
+}
+.btnProd:hover,
+.btnProd:active,
+.btnProd:focus{
+	background-color: #005C8F!important;
+}
+.lbl{
+	align-self: center;
+	font-weight: bolder;
+	color: #949494;
 }
 
 input:read-only

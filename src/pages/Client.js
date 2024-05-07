@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; // Importez useState ici
 import Table from '../components/Table';
-import { cheminPHP } from '../components/VarGlobal.js';  
+import { cheminPHP } from '../components/VarGlobal.js';
 
 function Client() {
 
@@ -36,6 +36,10 @@ function Client() {
 		});
 	}, []);
 
+	const funHisto = (item) => {
+		sessionStorage.setItem('idCli', item.idcli);
+		window.location.href = '/historique';
+	};
 
 	// En-tête de la table
 	const initialHeader = [
@@ -43,11 +47,9 @@ function Client() {
 		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'text'    , required : true , editable : true , show : true                      },
 		{ id: 'telephone', name: 'Numero de téléphone'  , type:'tel'     , required : true , editable : true , show : true                      },
 		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true                      },
+		{ id: 'btnHisto' , name: 'Historique'           , type:'button'  , required : true , editable : false, show : true, function : funHisto, btn : 'Historique', className:'btnSauvegarder'},
 		{ id: 'present'  , name: 'Présent sur le site'  , type:'checkbox', required : true , editable : true , show : true, fastEditable : true },
 	];
-
-
-
 
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {
@@ -222,7 +224,7 @@ function Client() {
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
 			alert(errorMessageText);
-			
+
 		} else {
 			if (data !== "")
 				alert(data.replace('<br>', ''));
@@ -272,7 +274,7 @@ function Client() {
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
-	
+
 		<h1 className='titre mt-1'>Gestion des clients </h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
@@ -282,7 +284,7 @@ function Client() {
 			</div>
 
 			{/* Bouton décoché */}
-			<button className='btn-primary btn mx-2' onClick={presentFalseAll}>Tous décoché</button>
+			<button className='btnSauvegarder btn-primary btn mx-2' onClick={presentFalseAll}>Tous décoché</button>
 
 			{/* Bouton checkbox avec style CSS pour la marge gauche */}
 			<div className="form-check" style={{ marginLeft: '10em' }}>
@@ -293,11 +295,11 @@ function Client() {
 
 
 
-		<Table 
-			header={initialHeader} 
-			data={filterData} 
-			funInsert={funInsert} 
-			funUpdate={funUpdate} 
+		<Table
+			header={initialHeader}
+			data={filterData}
+			funInsert={funInsert}
+			funUpdate={funUpdate}
 			keyGrayWhenFalse = 'present'
 		/>
 	</div>

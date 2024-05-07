@@ -5,18 +5,28 @@ include_once 'Droit.inc.php';
 include_once 'Utilisateur.inc.php';
 include_once 'UtilisateurDroit.inc.php';
 include_once 'Client.inc.php';
+include_once 'Produit.inc.php';
+include_once 'Ticket.inc.php';
+include_once 'Historique.inc.php';
 
 class DB {
 
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "maitai";
-	private static string $login    = "Admin";
-	private static string $password = "maitai";
-	private static string $port     = "3306";
-	private static string $host     = "172.26.4.207";
+	 private static string $dbName   = "if0_36460769_maitai";
+	//private static string $dbName   = "maitai";
 
+	 private static string $login    = "if0_36460769";
+	//private static string $login    = "Admin";
+
+	 private static string $password = "Sc4ZKSO8sanWyvz";
+	//private static string $password = "maitai";
+
+	private static string $port     = "3306";
+
+	 private static string $host     = "sql211.infinityfree.com";
+	//private static string $host     = "localhost";
 
 
 	/************************************************************************/
@@ -29,7 +39,7 @@ class DB {
 		try {
 			// Connexion à la base
 
-    		$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
+			$this->connect = new PDO("mysql:host=" . self::$host . ";port=" . self::$port . ";dbname=" . self::$dbName, self::$login, self::$password);
 
 			// Configuration facultative de la connexion
 			$this->connect->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER); 
@@ -37,7 +47,7 @@ class DB {
 		}
 		catch (PDOException $e) {
 					echo "probleme de connexion :".$e->getMessage();
-			return null;    
+			return null;
 		}
 	}
 
@@ -141,9 +151,37 @@ class DB {
 		return $this->execQuery($requete,null,'Droit');
 	}
 
+	/**
+	 * Récupère un droit à partir de son id.
+	 * @param int $idDroit id du droit à récupérer
+	 * @return Droit le droit récupéré
+	 */
+	public function getDroitUtilisateur($iduti) {
+		$requete = 'SELECT iddroit FROM UtilisateurDroit WHERE iduti = ?';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute(array($iduti));
+		$tuple = $stmt->fetch();
+		return $tuple['iddroit'];
+	}
+
+	/**
+	 * Récupère le nombre d'administrateurs actifs.
+	 * @return int le nombre d'administrateurs actifs
+	 */
+	public function getNbAdminActif() {
+		$requete = 'SELECT COUNT(*) FROM Utilisateur, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Utilisateur.actif = 1 AND UtilisateurDroit.idDroit = 1';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tuple = $stmt->fetch();
+		// echo "KEY : " . array_keys($tuple)[0];
+		return $tuple['count(*)'];
+	}
+
+
 	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
 	public function getUtilisateursEtDroit() {
-		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY droit.idDroit,login DESC';
+		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY Droit.idDroit,login';
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -157,6 +195,12 @@ class DB {
 		}
 		return $tab;
 	}
+
+	public function getUtilisateurByMail($mail) {
+		$requete = 'SELECT * FROM Utilisateur WHERE email = ?';
+		return $this->execQuery($requete,array($mail),'Utilisateur');
+	}
+
 	/*** METHODES POUR LES UTILISATEURS ****/
 
 	/** Obtenir un utilisateur à partir de son login */
@@ -214,9 +258,6 @@ class DB {
 	}
 
 
-
-
-
 	/*** METHODES POUR LES CLIENTS ****/
 
 	/** Récuperer les clients. */
@@ -234,6 +275,27 @@ class DB {
 	public function getClient($nomClub) {
 		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
 		return $this->execQuery($requete,array($nomClub),'Client');
+	}
+
+	/**
+	 * Récupérer un client à partir de son id.
+	 * @param int $idCli id du client à récupérer
+	 * @return Client le client récupéré
+	 */
+	public function getClientById($idCli) {
+		$requete = 'SELECT * FROM Client WHERE idCli = ?';
+		return $this->execQuery($requete,array($idCli),'Client')[0];
+	}
+
+	/**
+	 * Met à jour le champ actif d'un client.
+	 * @param int $idCli id du client à mettre à jour
+	 * @param bool $actif valeur du champ actif
+	 * @return void
+	 */
+	public function majActifCli($idCli, $actif) {
+		$requete = 'UPDATE Client SET present = ? WHERE idCli = ?';
+		$this->execMaj($requete, array($actif, $idCli));
 	}
 
 	/** Modifier les données d'un client. */
@@ -255,6 +317,240 @@ class DB {
 		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
 	}
 
+	/*** METHODES POUR LES PRODUITS ***/
 
+	/** Récuperer les produits. Trier par categorie.
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduits() {
+		$requete = 'SELECT * FROM Produit ORDER BY categorie';
+		return $this->execQuery($requete,null,'Produit');
+	}
+
+	/**
+	 * Récupérer le produit à partir de l'id du produit.
+	 * @param int $idProd id du produit à récupérer
+	 * @return Produit le produit récupéré
+	 */
+	public function getProduit($idProd) {
+		$requete = 'SELECT * FROM Produit WHERE idProd = ?';
+		return $this->execQuery($requete,array($idProd),'Produit')[0];
+	}
+
+	/** Récuperer les produits en fonction de la catégorie.
+	 * @param string $categ la catégorie des produits à récupérer
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduitsParCateg($categ) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ?';
+		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
+	/** Récuperer un produit en fonction de son id.
+	 * @param int $idProd l'id du produit à récupérer
+	 * @return Produit le produit récupéré
+	 */
+	public function getProduitById($idProd) {
+		$requete = 'SELECT * FROM Produit WHERE idProd = ?';
+		return $this->execQuery($requete,array($idProd),'Produit')[0];
+	}
+
+	/** Récuperer toute les catégories de produits. 
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getCategorie() {
+		$requete = 'SELECT DISTINCT categorie FROM Produit';
+		return $this->execQuery($requete,null,'Produit');
+	}
+
+	/** Modifier les données d'un produit.
+	 * @param Produit $produits le produit à modifier.
+	 */
+	public function updateProduit($produits) {
+		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
+		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()));
+	}
+
+	/**
+	 * Créer un produit.
+	 * @param Produit $produits le produit à créer.
+	 */
+	public function insertProduit($produits) {
+		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,categorie) VALUES (?,?,?,?)';
+		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
+	}
+
+	/** Supprimer un produit.
+	 * @param Produit $produits le produit à supprimer
+	 */
+	public function suppProduit($produits) {
+		$requete = 'DELETE FROM Produit WHERE idProd = ?';
+		$this->execMaj($requete,array($produits->getIdProd()));
+	}
+
+	/*** METHODES POUR LES TICKETS ***/
+
+	/**
+	 * Insère un ticket dans la base de données.
+	 * @param Ticket $ticket Ticket à insérer dans la base de données.
+	 * @return void
+	 */
+	public function insertTicket(Ticket $ticket) {
+		$requete = "INSERT INTO ticket (idprod, idcli, qa, prixtot) VALUES (?, ?, ?, ?)";
+		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixTot());
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Permet de mettre à jour un ticket
+	 * @param Ticket $ticket le ticket à mettre à jour
+	 * @return void
+	 */
+	public function updateTicket(Ticket $ticket) {
+		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
+		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Permet de récupérer les produits du ticket
+	 * @param int $idcli id du client
+	 * @param int $idprod id du produit
+	 * @return void
+	 */
+	public function suppTicket(int $idprod, int $idcli) {
+		$requete = "DELETE FROM ticket WHERE idprod = ? AND idcli = ?";
+		$tparam = array($idprod, $idcli);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Récupère les produits du ticket en fonction de l'id du client
+	 * @param int $idcli id du client ou null pour tous les clients
+	 * @return array de produit de Ticket
+	 */
+	public function getProdTicket(?int $idcli) {
+		if ($idcli == null) {
+			$requete = "SELECT * FROM ticket";
+			$tparam = null;
+		}
+		else {
+			$requete = "SELECT * FROM ticket WHERE idcli = ?";
+			$tparam = array($idcli);
+		}
+
+		return $this->execQuery($requete, $tparam, 'Ticket');
+	}
 	
+	/************************************************************************/
+	//	Methode permettant de récupérer tous les historiques de la base     //
+	/************************************************************************/
+
+	/** Insértion d'un historique */
+	public function insertHistorique(Historique $historique) {
+		$requete = "INSERT INTO historique (date, chemin, type, idcli) VALUES (NOW(), :chemin, :type, :idcli)";
+		$tparam = array(':chemin' => $historique->getChemin(), ':type' => $historique->getType(), ':idcli' => $historique->getIdCli());
+		$this->execMaj($requete, $tparam);
+		return true;
+	}
+
+	/** Suppression d'un historique */
+	public function suppHistorique(int $idhis) {
+		$requete = "DELETE FROM historique WHERE idhis = :idhis";
+		$tparam = array(':idhis' => $idhis);
+		$this->execMaj($requete, $tparam);
+		return true;
+	}
+
+	/** Get historique en fonction du chemin */
+	public function getHistoriqueByChemin(string $chemin) {
+		$requete = "SELECT * FROM historique WHERE chemin = :chemin";
+		$tparam = array(':chemin' => $chemin);
+		$tab = $this->execQuery($requete, $tparam, 'Historique');
+		return $tab[0];
+	}
+
+	/** Get tout l'historique d'un client */
+	public function getHistoriquesByClient(int $idcli): array {
+		$requete = "SELECT chemin, idhis, type, date FROM historique WHERE idcli = ?";
+		$tparam = array($idcli);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple;
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
+
+	/** Get tout l'historique SECU d'un client */
+	public function getHistoriquesByClientSecu(int $idcli): array {
+		$requete = "SELECT chemin, idhis, type, date, valide FROM historique WHERE idcli = ? AND type = 'SECU'";
+		$tparam = array($idcli);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple;
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
+
+	/** Get tout l'historique TICKET d'un client */
+	public function getHistoriquesByClientTicket(int $idcli): array {
+		$requete = "SELECT chemin, idhis, type, date FROM historique WHERE idcli = ? AND type = 'TICKET'";
+		$tparam = array($idcli);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple;
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
+
+	/** Get un historique via son id */
+	public function getHistoriquesById(int $idhist): string {
+		$requete = "SELECT chemin FROM historique WHERE idhis = ?";
+		$tparam = array($idhist);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$tuple = $stmt->fetch();
+		return $tuple['chemin'];
+	}
+
+	/** Supprime un Historique */
+	public function suppHistoriqueById(int $idhist) {
+		$requete = "DELETE FROM historique WHERE idhis = ?";
+		$tparam = array($idhist);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/** Mise à jour d'un historique*/
+	public function updateHistorique(int $idhist) {
+		$requete = "UPDATE historique SET valide = 1 WHERE idhis = ?";
+		$tparam = array($idhist);
+		$this->execMaj($requete, $tparam);
+	}
+
+	public function getHistoriquesSecuNonValide() {
+		$requete = "SELECT * FROM historique WHERE type = 'SECU' AND valide = 0";
+		return $this->execQuery($requete, null, 'Historique');
+	}
+
 } //fin classe DB

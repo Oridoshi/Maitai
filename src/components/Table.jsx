@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import "../style/table.css"
+
 function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 {
 	const [formValues, setFormValues] = useState({});
@@ -62,7 +63,7 @@ return (
 									id={head.id}
 									name={head.id}
 									value={formValues[head.id] || ''}
-									onChange={handleChange} 
+									onChange={handleChange}
 								>
 									{head.options.map((option) => (
 										<option key={option} value={option}>
@@ -73,8 +74,8 @@ return (
 							) : head.type === 'checkbox' ? (
 								<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
 							) : head.type === 'tel' ? (
-								<input 
-									type="tel" 
+								<input
+									type="tel"
 									id={head.id}
 									name={head.id}
 									className="form-control border-secondary"
@@ -121,12 +122,12 @@ return (
 
 						</div>
 						<div className='modal-footer'>
-							<button type='button' className='btn btn-secondary' data-bs-dismiss='modal' onClick={ () => { closeModal(); resetForm(); } }>Fermer</button>
+							<button type='button' className='btnFermer btn btn-secondary' data-bs-dismiss='modal' onClick={ () => { closeModal(); resetForm(); } }>Fermer</button>
 							{ rowData.id !== undefined && (
 								<button type='submit' className='btn btn-primary'>Modifier</button>
 							) }
 							{ rowData.id === undefined && (
-								<button type='submit' className='btn btn-primary'>Ajouter</button>
+								<button type='submit' className='btnAdd btn 0btn-primary'>Ajouter</button>
 							) }
 						</div>
 					</div>
@@ -156,7 +157,7 @@ function Checkbox({ id, name, defaultValue })
 		<div>
 			<input
 				type="checkbox"
-				className="form-check-input border-secondary"
+				className="check form-check-input border-secondary"
 				id={ id }
 				name={ name }
 				checked={ isChecked }
@@ -253,13 +254,23 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 
-	function changeThing(item, columnId) {
+	const changeThing = async (item, columnId) => {
 		// Modifiez la propriété correspondante dans l'objet item
 		item[columnId] = !item[columnId];
 
 		// Mettez à jour l'état avec les nouvelles données
-		if (funUpdate !== undefined && funUpdate(item, item))
-			setTableData(prevData => [...prevData]);
+		if (funUpdate !== undefined)
+		{
+			const updateSuccess = await funUpdate(item, item);
+			if (updateSuccess)
+				setTableData(prevData => [...prevData]);
+			else
+				item[columnId] = !item[columnId];
+		}
+		else
+		{
+			item[columnId] = !item[columnId];
+		}
 	}
 
 
@@ -292,7 +303,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 	return (
 		<div className='m-4'>
 
-			<div className="panel" style={ { maxHeight: '300px', overflowY: 'auto' } }>
+			<div className="panel" style={ { maxHeight: '600px', overflowY: 'auto' } }>
 				<table className='tableau table table-hover my-0'>
 					<thead className='position-sticky top-0'>
 						<tr>
@@ -310,9 +321,9 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 					<tbody>
-					{datas.slice().reverse().map(item => (
+					{datas.map(item => (
 
-								<tr
+								<tr id={`ligne ${item.id}`}
 									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'}`}
 									key={`${item.id}`}
 								>
@@ -320,12 +331,12 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 									{header.map(column => (
 										column.show && (
 												<td className={
-														`bg-light 
+														`bg-light
 														${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`
-													} 
+													}
 													key={`${item.id}-${column.id}`}
 												>
-												
+
 												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && (
 													// Si ce n'est pas un checkbox ni un button, afficher la valeur de la colonne
 													`${item[column.id]}`
@@ -337,7 +348,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 														type='checkbox'
 														checked={item[column.id]}
 														onChange={() => changeThing(item, column.id)}
-														className="form-check-input border-secondary"
+														className="check form-check-input border-secondary"
 														style={{ fontSize: '1.2em' }}
 														/>
 													) : (
@@ -345,7 +356,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 														type='checkbox'
 														checked={item[column.id]}
 														readOnly
-														className="form-check-input border-secondary"
+														className="check form-check-input border-secondary"
 														style={{ fontSize: '1.2em' }}
 														/>
 													)
@@ -360,14 +371,13 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 												{/* Si c'est un button */}
 												{column.type === 'button' && (
 													// Si c'est un bouton, afficher un bouton qui appelle la fonction spécifiée dans la colonne au clic
-													<button className='btn btn-primary mx-2 py-1' onClick={() => column.function(item)}>
+													<button id={`btn ${item.id}`} className={`btn btn-primary mx-2 py-1 ${column.className}`} onClick={() => column.function(item)}>
 														{column.btn}
 													</button>
 												)}
 											</td>
 										)
 									))}
-
 									{(funUpdate !== undefined || funDelete !== undefined) &&
 										<td className='bg-light celCenter'>
 											{funUpdate !== undefined && <button className='btnModif' onClick={() => openModal(item)}></button>}
