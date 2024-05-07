@@ -678,6 +678,57 @@ function FicheSecu() {
 		blob.name = sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU";
 
 
+		/***************************************************/
+		/*                      FETCH                      */
+		/***************************************************/
+
+		
+		let formData = new FormData();
+		formData.append('login'  , sessionStorage.getItem("login"));
+		//On récupère id du login 
+		const response = await fetch(cheminPHP + "client/GetIdClient.php", {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'text/plain; charset=UTF-8'
+			},
+			body: formData
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau lors de la récupération des données des utilisateurs.');
+		}
+
+		const id = await response.text();
+		
+
+
+
+		formData = new FormData();
+		formData.append('idcli'  , id);
+		formData.append('type'   , 'SECU');
+		formData.append('file'   , blob);
+
+		// On 
+		fetch(cheminPHP + "historique/CreationHistorique.php", {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
+			},
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error('Erreur de réseau !');
+			}
+			return response.json();
+		})
+		.then(data => {
+		})
+		.catch(error => {
+			console.error('Erreur :', error);
+		});
+
+
+		/*
 		// Créer un objet URL à partir du Blob
 		const url = window.URL.createObjectURL(blob);
 
@@ -689,7 +740,7 @@ function FicheSecu() {
 		a.click();
 
 		// Libérer l'URL de l'objet Blob
-		window.URL.revokeObjectURL(url);
+		window.URL.revokeObjectURL(url);*/
 	}
 
 

@@ -19,7 +19,7 @@ import { cheminPHP } from './VarGlobal';
 window.addEventListener('load', async (event) =>	//recharge la page
 {
 	if(! await setDroits()) {
-		window.location.reload();
+		// window.location.reload();
 	}
 
 	if(sessionStorage.getItem('idSession') != null && !await mdpValid(sessionStorage.getItem('idSession'))){
@@ -27,7 +27,7 @@ window.addEventListener('load', async (event) =>	//recharge la page
 		sessionStorage.removeItem('idSession');
 		sessionStorage.setItem('droit', "");
 		sessionStorage.removeItem('mdpValid');
-		window.location.reload();
+		// window.location.reload();
 	}	
 });
 
