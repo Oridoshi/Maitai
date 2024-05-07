@@ -131,7 +131,7 @@ function Utilisateur() {
 
 			const data = await response.text();
 			afficherError(data);
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
+			return data.replace(/\s/g, "") === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
 			return false; // Retourne false en cas d'erreur
@@ -193,7 +193,7 @@ function Utilisateur() {
 			setInitialData(newData);
 			setFilterData(newData);
 
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
+			return data.replace(/\s/g, "") === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
 			return false; // Retourne false en cas d'erreur
@@ -244,8 +244,8 @@ function Utilisateur() {
 			console.log(newData)
 			setInitialData(newData);
 			setFilterData(newData);
-
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
+			console.log("Error ", data,  data === "")
+			return data.replace(/\s/g, "") === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
 			console.log(error);
 			return false; // Retourne false en cas d'erreur
