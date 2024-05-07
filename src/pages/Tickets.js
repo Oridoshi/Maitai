@@ -320,11 +320,13 @@ export default function Ticket()
 
 			if (typeof value === 'boolean')
 			{
+				console.log("bolean:",value);
 				if(element.present === value || element.present) return true;
 				else                          return false;
 			}
 			else
 			{
+				console.log("pas bolean:",value);
 				// Parcourir les clés de l'en-tête initial
 				for (const key of initialHeader) {
 					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
