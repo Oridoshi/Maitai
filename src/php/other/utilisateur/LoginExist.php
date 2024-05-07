@@ -10,4 +10,4 @@ $pdo = DB::getInstance();
 
 $uti = $pdo->getUtilisateur($login);
 
-echo $uti != null && $uti->getActif() == 1 ? "true" : "false";
+echo $uti != null && $uti->getActif() == 1;
