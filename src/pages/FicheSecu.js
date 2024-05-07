@@ -674,9 +674,6 @@ function FicheSecu() {
 		// Créer un objet Blob à partir des données binaires du fichier Excel
 		const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-		//Donne un nom au fichier 
-		blob.name = sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU";
-
 
 		/***************************************************/
 		/*                      FETCH                      */
@@ -709,6 +706,7 @@ function FicheSecu() {
 		formData.append('idcli'  , parseInt(id));
 		formData.append('type'   , 'SECU');
 		formData.append('file'   , blob);
+		formData.append('nom'    , sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU");
 
 		const requestOptions = {
 			method: 'POST',
