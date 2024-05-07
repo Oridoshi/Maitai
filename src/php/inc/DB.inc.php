@@ -14,19 +14,19 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	//private static string $dbName   = "if0_36460769_maitai";
-	private static string $dbName   = "maitai";
+	private static string $dbName   = "if0_36460769_maitai";
+	//private static string $dbName   = "maitai";
 
-	//private static string $login    = "if0_36460769";
-	private static string $login    = "Admin";
+	private static string $login    = "if0_36460769";
+	//private static string $login    = "Admin";
 
-	//private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $password = "maitai";
+	private static string $password = "Sc4ZKSO8sanWyvz";
+	//private static string $password = "maitai";
 
 	private static string $port     = "3306";
 
-	// private static string $host     = "sql211.infinityfree.com";
-	private static string $host     = "localhost";
+	private static string $host     = "sql211.infinityfree.com";
+	//private static string $host     = "localhost";
 
 
 	/************************************************************************/
@@ -447,13 +447,13 @@ class DB {
 	/************************************************************************/
 
 	public function getHistoriques() {
-		$requete = 'SELECT * FROM historique';
+		$requete = 'SELECT * FROM Historique';
 		return $this->execQuery($requete, null, 'Historique');
 	}
 
 	/** Insértion d'un historique */
 	public function insertHistorique(Historique $historique) {
-		$requete = "INSERT INTO historique (date, chemin, type, idcli) VALUES (NOW(), :chemin, :type, :idcli)";
+		$requete = "INSERT INTO Historique (date, chemin, type, idcli) VALUES (NOW(), :chemin, :type, :idcli)";
 		$tparam = array(':chemin' => $historique->getChemin(), ':type' => $historique->getType(), ':idcli' => $historique->getIdCli());
 		$this->execMaj($requete, $tparam);
 		return true;
@@ -461,7 +461,7 @@ class DB {
 
 	/** Suppression d'un historique */
 	public function suppHistorique(int $idhis) {
-		$requete = "DELETE FROM historique WHERE idhis = :idhis";
+		$requete = "DELETE FROM Historique WHERE idhis = :idhis";
 		$tparam = array(':idhis' => $idhis);
 		$this->execMaj($requete, $tparam);
 		return true;
@@ -469,7 +469,7 @@ class DB {
 
 	/** Get historique en fonction du chemin */
 	public function getHistoriqueByChemin(string $chemin) {
-		$requete = "SELECT * FROM historique WHERE chemin = :chemin";
+		$requete = "SELECT * FROM Historique WHERE chemin = :chemin";
 		$tparam = array(':chemin' => $chemin);
 		$tab = $this->execQuery($requete, $tparam, 'Historique');
 		return $tab[0];
@@ -477,7 +477,7 @@ class DB {
 
 	/** Get tout l'historique d'un client */
 	public function getHistoriquesByClient(int $idcli): array {
-		$requete = "SELECT chemin, idhis, type, date FROM historique WHERE idcli = ?";
+		$requete = "SELECT chemin, idhis, type, date FROM Historique WHERE idcli = ?";
 		$tparam = array($idcli);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
@@ -495,7 +495,7 @@ class DB {
 
 	/** Get tout l'historique SECU d'un client */
 	public function getHistoriquesByClientSecu(int $idcli): array {
-		$requete = "SELECT chemin, idhis, type, date, valide FROM historique WHERE idcli = ? AND type = 'SECU'";
+		$requete = "SELECT chemin, idhis, type, date, valide FROM Historique WHERE idcli = ? AND type = 'SECU'";
 		$tparam = array($idcli);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
@@ -513,7 +513,7 @@ class DB {
 
 	/** Get tout l'historique TICKET d'un client */
 	public function getHistoriquesByClientTicket(int $idcli): array {
-		$requete = "SELECT chemin, idhis, type, date FROM historique WHERE idcli = ? AND type = 'TICKET'";
+		$requete = "SELECT chemin, idhis, type, date FROM Historique WHERE idcli = ? AND type = 'TICKET'";
 		$tparam = array($idcli);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
@@ -531,7 +531,7 @@ class DB {
 
 	/** Get un historique via son id */
 	public function getHistoriquesById(int $idhist): string {
-		$requete = "SELECT chemin FROM historique WHERE idhis = ?";
+		$requete = "SELECT chemin FROM Historique WHERE idhis = ?";
 		$tparam = array($idhist);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
@@ -541,20 +541,20 @@ class DB {
 
 	/** Supprime un Historique */
 	public function suppHistoriqueById(int $idhist) {
-		$requete = "DELETE FROM historique WHERE idhis = ?";
+		$requete = "DELETE FROM Historique WHERE idhis = ?";
 		$tparam = array($idhist);
 		$this->execMaj($requete, $tparam);
 	}
 
 	/** Mise à jour d'un historique*/
 	public function updateHistorique(int $idhist) {
-		$requete = "UPDATE historique SET valide = 1 WHERE idhis = ?";
+		$requete = "UPDATE Historique SET valide = 1 WHERE idhis = ?";
 		$tparam = array($idhist);
 		$this->execMaj($requete, $tparam);
 	}
 
 	public function getHistoriquesSecuNonValide() {
-		$requete = "SELECT * FROM historique WHERE type = 'SECU' AND valide = 0";
+		$requete = "SELECT * FROM Historique WHERE type = 'SECU' AND valide = 0";
 		return $this->execQuery($requete, null, 'Historique');
 	}
 
