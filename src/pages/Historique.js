@@ -21,6 +21,7 @@ export default function Historique(){
 	useEffect(() => {
 		// Créer un objet FormData
 		const formData = new FormData();
+		console.log(idCli);
 		formData.append('idcli', idCli);
 
 		fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
@@ -115,11 +116,10 @@ export default function Historique(){
 
 	// Fonction pour récupérer les données des produits
 	const fetchHistoriqueData = async () => {
+		const formData = new FormData();
+		formData.append('idcli', idCli);
+
 		if(type === 'Ticket') {
-
-			const formData = new FormData();
-			formData.append('idcli', idCli);
-
 			fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
 				method: 'POST',
 				body: formData
@@ -143,9 +143,6 @@ export default function Historique(){
 				console.error('Erreur :', error);
 			});
 		} else {
-			const formData = new FormData();
-			formData.append('idcli', idCli);
-
 			fetch(cheminPHP + "historique/GetHistoriquesClientSecu.php", {
 				method: 'POST',
 				body: formData
