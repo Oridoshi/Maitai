@@ -78,6 +78,7 @@ function Navbar({ role })
 	const toggleModal = () =>
 	{
 		setShowModal(!showModal);
+		deconnect();
 	};
 
 	//retourne le code de chaque éléments de la nav

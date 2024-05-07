@@ -3,6 +3,7 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';
 
 function Client() {
+	if(sessionStorage.getItem('droit') !== 'Admin' || sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
 
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
