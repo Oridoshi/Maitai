@@ -133,13 +133,13 @@ const Log = ({ changeEtat }) =>
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
-	const placeholderText = isValid ? "Entrez le nouveau login" : "Cette identifiant n'existe pas";
+	const placeholderText = isValid ? "Entrez votre identifiant" : "Cet identifiant n'existe pas";
 
 	//retourne le code de la page de login
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h3 className="letitre">Login</h3>
+				<h3 className="letitre">Connexion</h3>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label">Identifiant</label>
 					<input required type="text" value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
@@ -195,12 +195,12 @@ const Mdp = ({ changeEtat }) =>
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
-	const placeholderText = isValid ? "Entrez le mot de passe" : "Mot de passe éronné";
+	const placeholderText = isValid ? "Entrez votre mot de passe" : "Mot de passe éronné";
 
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h3 className="letitre">Mot de passe</h3>
+				<h3 className="letitre">Connexion</h3>
 				<div className="mb-3">
 					<label htmlFor="exampleInputPassword1" className="form-label label">Mot de passe</label>
 					<input required type="password" value={ mdp } className={ inputClass } placeholder={ placeholderText } onChange={ changement } />
@@ -312,7 +312,7 @@ const Creer = ({ changeEtat }) =>
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
 	const mailClass = mailValid ? "form-control saisie" : "form-control saisie invalid";
-	const placeholderText = isValid ? "Entrez votre login" : "Cette identifiant existe déjà !";
+	const placeholderText = isValid ? "Entrez votre identifiant" : "Cette identifiant existe déjà !";
 	const placeholderMail = mailValid ? "Entrez votre mail" : "Ce mail existe déjà !";
 
 
@@ -455,7 +455,7 @@ const ConfMdp = ({ changeEtat }) =>
 
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
-	const placeholderText = isValid ? "Confirmer le mot de passe" : "Les mot de passes sont différents !";
+	const placeholderText = isValid ? "Confirmez le mot de passe" : "Les mot de passes sont différents !";
 
 	return (
 		<div>
@@ -550,7 +550,7 @@ const Code = ({ changeEtat }) =>
 			<form className="form" onSubmit={ envoyer }>
 				<h4 className="letitre">Mot de passe oublié</h4>
 				<div className="mb-3">
-					<label htmlFor="exampleInputEmail1" className="form-label label"> Code </label>
+					<label htmlFor="exampleInputEmail1" className="form-label label"> Code de réinitialisation </label>
 					<input required type="text" className={ inputClass }
 						aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ renvoyerMail }> Renvoyer un mail </button>
