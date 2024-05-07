@@ -4,7 +4,7 @@ import ExcelJS from 'exceljs';
 
 
 function FicheSecu() {
-
+	if(sessionStorage.getItem('droit') === '') window.location.href = '/';
 
 
 

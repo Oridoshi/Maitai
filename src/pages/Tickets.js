@@ -8,6 +8,7 @@ import Modal from 'react-bootstrap/Modal';
 
 export default function Ticket()
 {
+	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
 	const [modalOpen, setModalOpen] = useState(false);
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");

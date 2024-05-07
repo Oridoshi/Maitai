@@ -3,6 +3,8 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';  
 
 export default function Produits(){
+	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
+
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
 	const [datalistCateg, setDatalistCateg] = useState([]);
