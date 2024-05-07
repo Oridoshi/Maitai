@@ -3,6 +3,10 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';
 
 export default function Historique(){
+	
+	if(sessionStorage.getItem('droit') !== 'Admin') window.location.href = '/';
+
+
 	const [initialData  , setInitialData  ] = useState([]);
 	const [filterData   , setFilterData   ] = useState([]);
 	const [initialHeader, setInitialHeader] = useState([]);
