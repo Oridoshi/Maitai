@@ -446,6 +446,11 @@ class DB {
 	//	Methode permettant de récupérer tous les historiques de la base     //
 	/************************************************************************/
 
+	public function getHistoriques() {
+		$requete = 'SELECT * FROM historique';
+		return $this->execQuery($requete, null, 'Historique');
+	}
+
 	/** Insértion d'un historique */
 	public function insertHistorique(Historique $historique) {
 		$requete = "INSERT INTO historique (date, chemin, type, idcli) VALUES (NOW(), :chemin, :type, :idcli)";

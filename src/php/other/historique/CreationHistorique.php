@@ -9,20 +9,23 @@ $file = $_FILES['file'];
 $fileName = $_POST['name'];
 $fileTmpPath = $file['tmp_name'];
 
-$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
+$chemin = "/" . $type . "/";
+//$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
 
-echo $chemin . $fileName . "<br>";
+$val = count(DB::getInstance()->getHistoriques());
 
 $historique = new Historique();
-$historique->setChemin($chemin . $fileName);
+$historique->setChemin($chemin . $val . $fileName);
 $historique->setType($type);
 $historique->setIdCli($idcli);
 
+
 if(!DB::getInstance()->insertHistorique($historique)) {echo "Error inserting historique."; return;};
 
-$historique = DB::getInstance()->getHistoriqueByChemin($chemin . $fileName);
+$historique = DB::getInstance()->getHistoriqueByChemin($chemin . $val . $fileName);
 
-if(!move_uploaded_file($fileTmpPath, $chemin . $fileName)) {
+
+if(!move_uploaded_file($fileTmpPath, $chemin . $val . $fileName)) {
     echo "Error moving file.";
     DB::getInstance()->suppHistorique($historique->getIdHis());
     return;
