@@ -64,9 +64,9 @@ function Navbar({ role })
 	//retire l'utilisateur de la session quand on appuye sur deconnecter
 	const deconnect = () =>
 	{
-		sessionStorage.removeItem('login'); // Supprimer l'élément 'login' du sessionStorage
+		sessionStorage.removeItem('login');    // Supprimer l'élément 'login' du sessionStorage
 		sessionStorage.removeItem('mdpValid'); // Supprimer l'élément 'mdpValid' du sessionStorage
-		sessionStorage.removeItem('droit'); // Supprimer l'élément 'droit' du sessionStorage
+		sessionStorage.removeItem('droit');    // Supprimer l'élément 'droit' du sessionStorage
 	}
 	//affiche ou non le popup de login
 	const toggleModal = () =>

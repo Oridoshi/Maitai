@@ -312,25 +312,31 @@ export default function Ticket()
 	const handleChange = (e) => { filter(e.target.value); };
 	const handleCbChange = (e) => { filter(e.target.checked); };
 
-	function filter(value)
+
+	function filter (value)
 	{
 		// Filtrer les données en fonction de la valeur de recherche
-		const filteredData = initialData.filter((element) =>
-		{
-			// Parcourir les clés de l'en-tête initial
-			for (const key of initialHeader)
+		const filteredData = initialData.filter((element) => {
+
+			if (typeof value === 'boolean')
 			{
-				// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-				if (key.show)
-				{
-					// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-					if ((element[key.id] + '').toUpperCase().includes(value.toUpperCase()))
-					{
-						return true; // Si correspondance, conserver cet élément
+				if(element.present === value || element.present) return true;
+				else                          return false;
+			}
+			else
+			{
+				// Parcourir les clés de l'en-tête initial
+				for (const key of initialHeader) {
+					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+					if (key.show ) {
+						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
+							return true; // Si correspondance, conserver cet élément
+						}
 					}
 				}
+				return false; // Si aucune correspondance, exclure cet élément
 			}
-			return false; // Si aucune correspondance, exclure cet élément
 		});
 
 		// Mettre à jour les données filtrées
@@ -650,6 +656,7 @@ export default function Ticket()
 				<Table
 					header={ initialHeader }
 					data={ filterData }
+					keyGrayWhenFalse = 'present'
 				/>
 			</div>
 			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix("");} }>
