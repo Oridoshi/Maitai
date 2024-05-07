@@ -685,47 +685,47 @@ function FicheSecu() {
 		
 		let formData = new FormData();
 		formData.append('login'  , sessionStorage.getItem("login"));
+
+		console.log(formData.get('login'))
+
 		//On récupère id du login 
-		const response = await fetch(cheminPHP + "client/GetIdClient.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8'
-			},
+		let response = await fetch(cheminPHP + "client/GetIdClient.php", {
+			method: 'POST',
+			body: formData
+		});
+
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau lors de la récupération de l\'id.');
+		}
+
+		const id = await response.text();
+		console.log(id)
+		
+
+
+		// On envoie le fichier Excel au serveur
+		formData = new FormData();
+		formData.append('idcli'  , parseInt(id));
+		formData.append('type'   , 'SECU');
+		formData.append('file'   , blob);
+
+		const requestOptions = {
+			method: 'POST',
+			body: formData
+		};
+
+		response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
+			method: 'POST',
 			body: formData
 		});
 
 		if (!response.ok) {
-			throw new Error('Erreur de réseau lors de la récupération des données des utilisateurs.');
+			throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
 		}
 
-		const id = await response.text();
-		
-
-
-
-		formData = new FormData();
-		formData.append('idcli'  , id);
-		formData.append('type'   , 'SECU');
-		formData.append('file'   , blob);
-
-		// On 
-		fetch(cheminPHP + "historique/CreationHistorique.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-			},
-		})
-		.then(response => {
-			if (!response.ok) {
-				throw new Error('Erreur de réseau !');
-			}
-			return response.json();
-		})
-		.then(data => {
-		})
-		.catch(error => {
-			console.error('Erreur :', error);
-		});
+		const text = await response.text();
+		console.log(text)
 
 
 		/*
