@@ -4,7 +4,7 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 include_once '../../inc/DB.inc.php';
 
 $type = $_POST['type'];
-$idcli = $_POST['idcli'];
+$idcli = intval($_POST['idcli']);
 $file = $_FILES['file'];
 $fileName = $file['name'];
 $fileTmpPath = $file['tmp_name'];
