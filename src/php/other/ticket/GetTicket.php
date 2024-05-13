@@ -13,7 +13,7 @@ else {
 	$lstProdTicket = DB::getInstance()->getProdTicket(null);
 }
 
-if($lstProdTicket == null) {
+if($lstProdTicket == null || $lstProdTicket == false) {
 	$lstProdTicket = [];
 }
 

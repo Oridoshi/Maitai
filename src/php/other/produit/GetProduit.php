@@ -19,7 +19,7 @@ else
 	$prods = DB::getInstance()->getProduits();
 }
 
-if($prods == null) {
+if($prods == null || $prods == false) {
 	$prods = [];
 }
 

@@ -11,7 +11,7 @@ foreach ($historiques as $historique) {
     $historique->setChemin($filename);
 }
 
-if($historiques == null) {
+if($historiques == null || $historiques == false) {
 	$historiques = [];
 }
 

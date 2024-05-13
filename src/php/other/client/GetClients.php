@@ -13,7 +13,7 @@ else{
 
 }
 
-if($clients == null) {
+if($clients == null || $clients == false) {
 	$clients = [];
 }
 

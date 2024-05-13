@@ -11,7 +11,7 @@ foreach ($historiques as $historique) {
     $fichier[$historique->getId()] = base64_encode(file_get_contents($historique->getChemin()));
 }
 
-if($historiques == null) {
+if($historiques == null || $historiques == false) {
 	$historiques = [];
 }
 
