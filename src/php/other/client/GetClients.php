@@ -12,8 +12,4 @@ else{
     $clients = DB::getInstance()->getClients();
 }
 
-if($clients == null || $clients == false) {
-	$clients = [];
-}
-
 echo json_encode($clients);
