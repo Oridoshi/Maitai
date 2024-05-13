@@ -13,19 +13,19 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	// private static string $dbName   = "if0_36460769_maitai";
-	private static string $dbName   = "maitai";
+	private static string $dbName   = "if0_36460769_maitai";
+	// private static string $dbName   = "maitai";
 
-	// private static string $login    = "if0_36460769";
-	private static string $login    = "Admin";
+	private static string $login    = "if0_36460769";
+	// private static string $login    = "Admin";
 
-	// private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $password = "maitai";
+	private static string $password = "Sc4ZKSO8sanWyvz";
+	// private static string $password = "maitai";
 
 	private static string $port     = "3306";
 
-	// private static string $host     = "sql211.infinityfree.com";
-	private static string $host     = "localhost";
+	private static string $host     = "sql211.infinityfree.com";
+	// private static string $host     = "localhost";
 
 
 	/************************************************************************/
@@ -395,7 +395,7 @@ class DB {
 	 * @return void
 	 */
 	public function insertTicket(Ticket $ticket) {
-		$requete = "INSERT INTO ticket (idprod, idcli, qa, prixspe, prixtot) VALUES (?, ?, ?, ?, ?)";
+		$requete = "INSERT INTO Ticket (idprod, idcli, qa, prixspe, prixtot) VALUES (?, ?, ?, ?, ?)";
 		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixSpe(), $ticket->getPrixTot());
 		$this->execMaj($requete, $tparam);
 	}
@@ -418,7 +418,7 @@ class DB {
 	 * @return void
 	 */
 	public function suppTicket(int $idprod, int $idcli) {
-		$requete = "DELETE FROM ticket WHERE idprod = ? AND idcli = ?";
+		$requete = "DELETE FROM Ticket WHERE idprod = ? AND idcli = ?";
 		$tparam = array($idprod, $idcli);
 		$this->execMaj($requete, $tparam);
 	}
@@ -429,7 +429,7 @@ class DB {
 	 * @return void
 	 */
 	public function suppTicketCli(int $idcli) {
-		$requete = "DELETE FROM ticket WHERE idcli = ?";
+		$requete = "DELETE FROM Ticket WHERE idcli = ?";
 		$tparam = array($idcli);
 		$this->execMaj($requete, $tparam);
 	}
