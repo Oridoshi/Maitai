@@ -254,7 +254,7 @@ function Client() {
 				// Parcourir les clés de l'en-tête initial
 				for (const key of initialHeader) {
 					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-					if (key.show) {
+					if (key.show ) {
 						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
 						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
 							return true; // Si correspondance, conserver cet élément

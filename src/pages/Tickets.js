@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
+
 import Table from '../components/Table';
 import Compteur from '../components/Compteur';
+import { cheminPHP } from '../components/VarGlobal.js';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 export default function Ticket()
 {
-	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
+	//donnée tab
+	const [initialData, setInitialData] = useState([]);
+	const [tabCateg, setTabCateg] = useState([]);
+	const [tabProd, setTabProd] = useState([]);
+	//modal ajt prod
 	const [modalOpen, setModalOpen] = useState(false);
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");
+	const [lblErreur, setLblErreur] = useState("");
+	const [idCli,setIdCli] = useState("");
+	const [idProd,setIdProd] = useState("");
 	const [prix, setPrix] = useState("");
+	//bar de Recherche
+	const [filterData, setFilterData] = useState([]);
+
+
+	/*TABLEAU DE CLIENT*/
 
 	// En-tête de la table
 	const initialHeader = [
@@ -24,25 +38,31 @@ export default function Ticket()
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
 
-	// En-tête de la table
-	const initData = [
-		{ id: '1', nomcli: 'test', email: 't', prix: 2 },
-		{ id: '2', nomcli: 'test', email: 't', prix: 2 },
-		{ id: '3', nomcli: 'test', email: 't', prix: 2 },
-		{ id: '4', nomcli: 'test', email: 't', prix: 2 },
-	];
+	useEffect(() =>
+	{
+		async function fetchData()
+		{
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+			setTabCateg(await getCategProd());
+		}
+		fetchData();
+	}, []);
 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/*TICKET QUAND ON CLIQUE SUR LE BOUTON DEROULANT*/
 	//Gestion des tickets
-
 	function editTickets(ligne)
 	{
 		try
 		{
-			//récupère la ligne qui appel la méthode et celle qui suit
+			//récupère la ligne qui appel la méthode et celle d'après
 			const ligneAppel = document.getElementById('ligne ' + ligne.id);
 			const isligneEdit = ligneAppel.nextSibling;
 
-			//récupère tous les boutons et kes remets dans la même position
+			//récupère tous les boutons et les remets dans la position haute
 			var buttons = document.getElementsByTagName('button');
 			for (var i = 0; i < buttons.length; i++)
 			{
@@ -74,7 +94,7 @@ export default function Ticket()
 	}
 
 	//affcihage du ticket
-	function construitTicket(ligne)
+	const construitTicket = async (ligne) =>
 	{
 		//on récupère la ligne sous laquelle on doit insérer le ticket
 		const client = document.getElementById('ligne ' + ligne.id);
@@ -128,14 +148,10 @@ export default function Ticket()
 
 
 		//récupération des porduits du tickets
-		const Prod = [
-			{ nomP: 'Lampe', prix: 5, qt: 10 },
-			{ nomP: 'Combinaison', prix: 25, qt: 5 },
-			{ nomP: 'Lunette', prix: 10, qt: 2 },
-		];
+		const tabTicket = await getTabTicket(ligne.id);
 
 		// Création des lignes de produits
-		Prod.forEach(prod =>
+		for (const prod of tabTicket)
 		{
 			//ligne du produit
 			const ligneProd = document.createElement('tr');
@@ -144,14 +160,14 @@ export default function Ticket()
 
 			// Nom Produit
 			const nomP = document.createElement('td');
-			nomP.colSpan = 2;
-			nomP.textContent = prod.nomP;
+			nomP.colSpan = 1;
+			nomP.textContent = await getNomP(prod.idprod);
 			nomP.classList.add('edit');
 
 			// Prix Produit
 			const prix = document.createElement('td');
-			prix.colSpan = 2;
-			prix.textContent = prod.prix + " €";
+			prix.colSpan = 3;
+			prix.textContent = prod.prixspe + " €";
 			prix.classList.add('edit');
 
 			// Création de l'élément compteur
@@ -163,7 +179,13 @@ export default function Ticket()
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
-			compteurRoot.render(<Compteur valIni={ prod.qt } />);
+			compteurRoot.render(<Compteur
+				valIni={ prod.qa }
+				updateTotComm={ (idprod, idcli, qa ,prixspe) => updateTotComm(idprod, idcli, qa, prixspe) }
+				idprod={ prod.idprod }
+				idcli={ ligne.id }
+				prixspe={prod.prixspe}
+			/>);
 
 			// Ajout des colonnes à la ligne de produit
 			ligneProd.appendChild(nomP);
@@ -172,67 +194,58 @@ export default function Ticket()
 
 			// Ajout de la ligne de produit après la ligne d'ajout
 			client.parentNode.insertBefore(ligneProd, ligneBtnExport);
-		});
+		};
+		setIdCli(ligne.id);
 	}
 
-
-	//gère l'exportation
-	function exportation()
-	{
-		console.log("exportation");
-	}
-
-
-	// FILTRES
-	const handleChange = (e) => { filter(e.target.value); };
-	const handleCbChange = (e) => { filter(e.target.checked); };
-
-	function filter(value)
-	{
-		/*
-		// Filtrer les données en fonction de la valeur de recherche
-		const filteredData = initData.filter((element) =>
-		{
-			// Parcourir les clés de l'en-tête initial
-			for (const key of initialHeader)
-			{
-				// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-				if (key.show)
-				{
-					// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-					if ((element[key.id] + '').toUpperCase().includes(value.toUpperCase()))
-					{
-						return true; // Si correspondance, conserver cet élément
-					}
-				}
-			}
-			return false; // Si aucune correspondance, exclure cet élément
-		});
-
-		// Mettre à jour les données filtrées
-		setFilterData(filteredData);*/
-	}
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///code de tous ce que gère la pop up d'ajout de produit
+	const renderCateg = () =>
+	{
+		const elements = tabCateg.map(categ => (
+			<li key={ categ.categorie }>
+				<a className="dropdown-item" onClick={ () => { setLblCat(categ.categorie); activerProd(categ.categorie); } }>
+					{ categ.categorie }
+				</a>
+			</li>
+		));
+		return elements;
+	};
+
+	const renderProd = () =>
+	{
+		const elements = tabProd.map(prod => (
+			<li key={ prod.libprod}><a className="dropdown-item" onClick={ () => {setIdProd(prod.idprod); setLblProd(prod.libprod); setPrix(prod.prixuni); } }>{ prod.libprod }</a></li>
+		));
+		return elements;
+	};
 
 	//Ouvre la pop-up pour ajouter un nouveau produit
 	function nvProd()
 	{
 		setModalOpen(true);
 	}
+
 	//met à jour la liste des produits en fonction de la catégorie sélectionnée
-	function activerProd()
-	{
+	async function activerProd(categorie) {
+		const produits = await getProduitByCateg(categorie);
+		setTabProd(produits);
+
+		setLblProd("");
+		setLblErreur("");
+
 		const btnProd = document.getElementById("btnProdCat");
 		btnProd.disabled = false;
 	}
 
 	//ajoute un produit au ticket
-	function ajtProd()
+	async function ajtProd()
 	{
-		if (lblProd !== "")
+		if (lblProd !== "" && !(await ticketExist(idProd,idCli)))
 		{
+			insertProdTicket(idProd,idCli,prix);
+
 			//ligne du produit
 			const ligneProd = document.createElement('tr');
 			ligneProd.id = 'edit';
@@ -240,13 +253,13 @@ export default function Ticket()
 
 			// Nom Produit
 			const nomP = document.createElement('td');
-			nomP.colSpan = 2;
+			nomP.colSpan = 1;
 			nomP.textContent = lblProd;
 			nomP.classList.add('edit');
 
 			// Prix Produit
 			const lblprix = document.createElement('td');
-			lblprix.colSpan = 2;
+			lblprix.colSpan = 3;
 			lblprix.textContent = prix + " €";
 			lblprix.classList.add('edit');
 
@@ -259,7 +272,13 @@ export default function Ticket()
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
-			compteurRoot.render(<Compteur/>);
+			compteurRoot.render(<Compteur
+				valIni={ 1 }
+				updateTotComm={ (idprod, idcli, qa, prixspe) => updateTotComm(idprod, idcli, qa,prixspe) }
+				idprod={ idProd }
+				idcli={ idCli }
+				prixspe={prix}
+			/>);
 
 			// Ajout des colonnes à la ligne de produit
 			ligneProd.appendChild(nomP);
@@ -273,10 +292,363 @@ export default function Ticket()
 			//réinitialise les champs et ferme la pop-up
 			setLblCat("");
 			setLblProd("");
+			setLblErreur("");
 			setPrix("");
 			setModalOpen(false);
+
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+			setTabCateg(await getCategProd());
+		}
+		else{
+			setLblErreur("Erreur ce produit existe déjà !");
 		}
 	}
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//EVENEMENTTS
+
+	//gère l'exportation
+	function exportation()
+	{
+		console.log("exportation");
+	}
+
+
+	// FILTRES
+	const handleChange = (e) => { filter(e.target.value); };
+	const handleCbChange = (e) => { filter(e.target.checked); };
+
+
+	function filter (value)
+	{
+		// Filtrer les données en fonction de la valeur de recherche
+		const filteredData = initialData.filter((element) => {
+
+			if (typeof value === 'boolean')
+			{
+				if(element.present === value || element.present) return true;
+				else                          return false;
+			}
+			else
+			{
+				// Parcourir les clés de l'en-tête initial
+				for (const key of initialHeader) {
+					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+					if (key.show ) {
+						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
+							return true; // Si correspondance, conserver cet élément
+						}
+					}
+				}
+				return false; // Si aucune correspondance, exclure cet élément
+			}
+		});
+
+		// Mettre à jour les données filtrées
+		setFilterData(filteredData);
+	}
+
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	/*METHODE BADO*/
+
+	//récupère tous les Clients
+	const fetchClientData = async () =>
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "client/GetClients.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			const newData = await Promise.all(data.map(async (item) =>
+			{
+				const prix = await getTotCommCli(item.idcli) + " €";
+				return { id: item.idcli, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
+			}));
+			return newData;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	};
+
+	//retourne le prix total de la commande d'un client
+	const getTotCommCli = async (ncli) =>
+	{
+		const tabTicket = await getTabTicket(ncli);
+		let prixTot = 0;
+		tabTicket.forEach(prod =>
+		{
+			prixTot += prod.prixtot;
+		})
+		return prixTot.toFixed(2);
+	};
+
+	//récupère tous les tickets pour un client
+	const getTabTicket = async (ncli) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idcli', ncli);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/GetTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
+			console.log(error);
+			return false;
+		}
+	};
+
+	//récupère toutes les catégories
+	const getCategProd = async () =>
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "produit/GetCateg.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	}
+
+	//récupère tous les produits d'une Catégorie
+	const getProduitByCateg = async (nomCateg) =>
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			const tabProd = [];
+			data.forEach(prod =>
+			{
+				if (prod.categorie === nomCateg)
+				{
+					tabProd.push(prod);
+				}
+			})
+			return tabProd;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	}
+
+	//récupère le nom du produit idprod
+	const getNomP = async (idprod) =>
+	{
+		const prod = await getProduit(idprod);
+		return prod.libprod;
+	}
+
+	const getProduit = async (idprod) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idprod', idprod);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "produit/GetProduit.php", requestOptions);
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
+			console.log(error);
+			return false;
+		}
+	}
+
+	const getTickets = async () =>
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "ticket/GetTicket.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	}
+
+	const ticketExist = async (idprod,idcli)=>
+	{
+		const tabTicket = await getTickets();
+		return tabTicket.some(ticket => ticket.idprod === idprod && ticket.idcli === idcli);
+	}
+
+	//change le prix de la commande quand on modifie le nombre de produit
+	const updateTotComm = async (idprod, idcli, qa, prixspe) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idprod', idprod);
+			formData.append('idcli', idcli);
+			formData.append('qa', qa);
+			formData.append('prixspe', prixspe);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/ModificationTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+			// Récupérer les nouvelles données des clients après l'insertion réussie
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
+
+			return data === ""; // Retourne true si la suppression a réussi, sinon false
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+
+	};
+
+	const insertProdTicket = async (idprod,idcli) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idprod', idprod);
+			formData.append('idcli', idcli);
+			formData.append('qa', 1);
+			formData.append('prixspe', prix);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/CreationTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+
+			return data === ""; // Retourne true si la insert a réussi, sinon false
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	}
+
+	function afficherError(data)
+	{
+		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
+		const match = regex.exec(data);
+
+		if (match)
+		{
+			const sqlState = match[1]; // État SQL
+			const errorCode = match[2]; // Code d'erreur
+			const errorMessageText = match[3].trim(); // Texte du message d'erreur
+
+			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState, "] error code :", errorCode);
+			alert(errorMessageText);
+
+		} else
+		{
+			if (data !== "")
+				alert(data.replace('<br>', ''));
+		}
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///code html de la page des tickets
 	return (
@@ -295,10 +667,11 @@ export default function Ticket()
 			<div className='h-25'>
 				<Table
 					header={ initialHeader }
-					data={ initData }
+					data={ filterData }
+					keyGrayWhenFalse = 'present'
 				/>
 			</div>
-			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix(""); } }>
+			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblErreur("");setLblCat(""); setLblProd(""); setPrix("");} }>
 				<Modal.Header closeButton>
 					<Modal.Title>Ajouter un Produit</Modal.Title>
 				</Modal.Header>
@@ -309,8 +682,7 @@ export default function Ticket()
 								Catégorie Produit
 							</button>
 							<ul className="dropdown-menu">
-								<li><a className="dropdown-item" onClick={ () => { setLblCat("Matériel"); activerProd() } }>Matériel</a></li>
-								<li><a className="dropdown-item" onClick={ () => { setLblCat("Consomation"); activerProd() } }>Consomation</a></li>
+								{ renderCateg() }
 							</ul>
 						</div>
 						<label id="lblcat" className="lbl" >{ lblCat } </label>
@@ -319,18 +691,17 @@ export default function Ticket()
 								Produit
 							</button>
 							<ul className="dropdown-menu">
-								<li><a className="dropdown-item" onClick={ () => { setLblProd("Lampe"); setPrix(5); } }>Lampe</a></li>
-								<li><a className="dropdown-item" onClick={ () => { setLblProd("Combinaison"); setPrix(25); } }>Combinaison</a></li>
-								<li><a className="dropdown-item" onClick={ () => { setLblProd("Lunette"); setPrix("7"); } }>Lunette</a></li>
+								{ renderProd() }
 							</ul>
 						</div>
 						<label id="lblprod" className="lbl"> { lblProd } </label>
 					</div>
-					<input id="prix" defaultValue={ prix } type="number" className="saisieprix" placeholder="Entrez un prix" onChange={ (event) => setPrix(event.target.value) } />
+					<input id="prix" required defaultValue={ prix } type="number" className="saisieprix" placeholder="Entrez un prix" onChange={ (event) => setPrix(event.target.value) } />
 				</Modal.Body>
 				<Modal.Footer>
+					<label className="Error"> {lblErreur}</label>
 					<Button className="btnAjouter btn" onClick={ () => ajtProd() }></Button>
-					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix(""); } }>
+					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblErreur("");setLblCat(""); setLblProd(""); setPrix(""); } }>
 						Fermer
 					</Button>
 				</Modal.Footer>
