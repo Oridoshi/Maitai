@@ -7,7 +7,6 @@ import { cheminPHP } from '../components/VarGlobal.js';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { getAllByRole } from '@testing-library/react';
 
 export default function Ticket()
 {
@@ -19,6 +18,7 @@ export default function Ticket()
 	const [modalOpen, setModalOpen] = useState(false);
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");
+	const [lblErreur, setLblErreur] = useState("");
 	const [idCli,setIdCli] = useState("");
 	const [idProd,setIdProd] = useState("");
 	const [prix, setPrix] = useState("");
@@ -167,7 +167,7 @@ export default function Ticket()
 			// Prix Produit
 			const prix = document.createElement('td');
 			prix.colSpan = 3;
-			prix.textContent = (prod.prixtot / prod.qa).toFixed(2) + " €";
+			prix.textContent = prod.prixspe + " €";
 			prix.classList.add('edit');
 
 			// Création de l'élément compteur
@@ -181,9 +181,10 @@ export default function Ticket()
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
 			compteurRoot.render(<Compteur
 				valIni={ prod.qa }
-				updateTotComm={ (idprod, idcli, qa) => updateTotComm(idprod, idcli, qa) }
+				updateTotComm={ (idprod, idcli, qa ,prixspe) => updateTotComm(idprod, idcli, qa, prixspe) }
 				idprod={ prod.idprod }
 				idcli={ ligne.id }
+				prixspe={prod.prixspe}
 			/>);
 
 			// Ajout des colonnes à la ligne de produit
@@ -193,8 +194,8 @@ export default function Ticket()
 
 			// Ajout de la ligne de produit après la ligne d'ajout
 			client.parentNode.insertBefore(ligneProd, ligneBtnExport);
-			setIdCli(ligne.id);
 		};
+		setIdCli(ligne.id);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,6 +231,9 @@ export default function Ticket()
 	async function activerProd(categorie) {
 		const produits = await getProduitByCateg(categorie);
 		setTabProd(produits);
+
+		setLblProd("");
+		setLblErreur("");
 
 		const btnProd = document.getElementById("btnProdCat");
 		btnProd.disabled = false;
@@ -270,9 +274,10 @@ export default function Ticket()
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
 			compteurRoot.render(<Compteur
 				valIni={ 1 }
-				updateTotComm={ (idprod, idcli, qa) => updateTotComm(idprod, idcli, qa) }
+				updateTotComm={ (idprod, idcli, qa, prixspe) => updateTotComm(idprod, idcli, qa,prixspe) }
 				idprod={ idProd }
 				idcli={ idCli }
+				prixspe={prix}
 			/>);
 
 			// Ajout des colonnes à la ligne de produit
@@ -287,6 +292,7 @@ export default function Ticket()
 			//réinitialise les champs et ferme la pop-up
 			setLblCat("");
 			setLblProd("");
+			setLblErreur("");
 			setPrix("");
 			setModalOpen(false);
 
@@ -294,6 +300,9 @@ export default function Ticket()
 			setInitialData(newData);
 			setFilterData(newData);
 			setTabCateg(await getCategProd());
+		}
+		else{
+			setLblErreur("Erreur ce produit existe déjà !");
 		}
 	}
 
@@ -320,13 +329,11 @@ export default function Ticket()
 
 			if (typeof value === 'boolean')
 			{
-				console.log("bolean:",value);
 				if(element.present === value || element.present) return true;
 				else                          return false;
 			}
 			else
 			{
-				console.log("pas bolean:",value);
 				// Parcourir les clés de l'en-tête initial
 				for (const key of initialHeader) {
 					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
@@ -519,7 +526,7 @@ export default function Ticket()
 	{
 		try
 		{
-			const response = await fetch(cheminPHP + "client/GetClients.php", {
+			const response = await fetch(cheminPHP + "ticket/GetTicket.php", {
 				method: 'GET',
 				headers: {
 					'Content-Type': 'text/plain; charset=UTF-8'
@@ -547,7 +554,7 @@ export default function Ticket()
 	}
 
 	//change le prix de la commande quand on modifie le nombre de produit
-	const updateTotComm = async (idprod, idcli, qa) =>
+	const updateTotComm = async (idprod, idcli, qa, prixspe) =>
 	{
 		try
 		{
@@ -555,6 +562,7 @@ export default function Ticket()
 			formData.append('idprod', idprod);
 			formData.append('idcli', idcli);
 			formData.append('qa', qa);
+			formData.append('prixspe', prixspe);
 
 			const requestOptions = {
 				method: 'POST',
@@ -593,6 +601,7 @@ export default function Ticket()
 			formData.append('idprod', idprod);
 			formData.append('idcli', idcli);
 			formData.append('qa', 1);
+			formData.append('prixspe', prix);
 
 			const requestOptions = {
 				method: 'POST',
@@ -607,6 +616,7 @@ export default function Ticket()
 			}
 
 			const data = await response.text();
+			afficherError(data);
 
 
 			return data === ""; // Retourne true si la insert a réussi, sinon false
@@ -661,7 +671,7 @@ export default function Ticket()
 					keyGrayWhenFalse = 'present'
 				/>
 			</div>
-			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix("");} }>
+			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblErreur("");setLblCat(""); setLblProd(""); setPrix("");} }>
 				<Modal.Header closeButton>
 					<Modal.Title>Ajouter un Produit</Modal.Title>
 				</Modal.Header>
@@ -686,11 +696,12 @@ export default function Ticket()
 						</div>
 						<label id="lblprod" className="lbl"> { lblProd } </label>
 					</div>
-					<input id="prix" defaultValue={ prix } type="number" className="saisieprix" placeholder="Entrez un prix" onChange={ (event) => setPrix(event.target.value) } />
+					<input id="prix" required defaultValue={ prix } type="number" className="saisieprix" placeholder="Entrez un prix" onChange={ (event) => setPrix(event.target.value) } />
 				</Modal.Body>
 				<Modal.Footer>
+					<label className="Error"> {lblErreur}</label>
 					<Button className="btnAjouter btn" onClick={ () => ajtProd() }></Button>
-					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblCat(""); setLblProd(""); setPrix(""); } }>
+					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblErreur("");setLblCat(""); setLblProd(""); setPrix(""); } }>
 						Fermer
 					</Button>
 				</Modal.Footer>

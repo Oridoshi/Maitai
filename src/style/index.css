@@ -130,6 +130,9 @@
 	font-weight: bolder;
 	color: #949494;
 }
+.Error{
+	color: red;
+}
 
 input:read-only
 {

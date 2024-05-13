@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import '../style/compteur.css';
 
-const Compteur = ({ valIni = 0, updateTotComm, idprod,idcli}) =>
+const Compteur = ({ valIni = 0, updateTotComm, idprod,idcli,prixspe}) =>
 {
 	const [valeur, setVal] = useState(valIni);
 
@@ -9,7 +9,7 @@ const Compteur = ({ valIni = 0, updateTotComm, idprod,idcli}) =>
 	const augmente = () =>{
 		if(valeur < 1000){
 			setVal(val => val + 1);
-			updateTotComm(idprod,idcli,valeur+1);
+			updateTotComm(idprod,idcli,valeur+1,prixspe);
 		}
 	};
 
@@ -17,7 +17,7 @@ const Compteur = ({ valIni = 0, updateTotComm, idprod,idcli}) =>
 	const diminue = () =>{
 		if(valeur > 0){
 			setVal(val => val - 1);
-			updateTotComm(idprod,idcli,valeur-1);
+			updateTotComm(idprod,idcli,valeur-1,prixspe);
 		}
 	};
 
