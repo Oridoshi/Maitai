@@ -14,19 +14,19 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "if0_36460769_maitai";
-	//private static string $dbName   = "maitai";
+	// private static string $dbName   = "if0_36460769_maitai";
+	private static string $dbName   = "maitai";
 
-	private static string $login    = "if0_36460769";
-	//private static string $login    = "Admin";
+	// private static string $login    = "if0_36460769";
+	private static string $login    = "Admin";
 
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	//private static string $password = "maitai";
+	// private static string $password = "Sc4ZKSO8sanWyvz";
+	private static string $password = "maitai";
 
 	private static string $port     = "3306";
 
-	private static string $host     = "sql211.infinityfree.com";
-	//private static string $host     = "localhost";
+	// private static string $host     = "sql211.infinityfree.com";
+	private static string $host     = "localhost";
 
 
 	/************************************************************************/
