@@ -21,7 +21,7 @@ function FicheSecu() {
 	const [nombrePlaques    , setNombrePlaques    ] = useState(1);
 	const [encadreOuNon     , setEncadre          ] = useState({});
 	const [peutValide       , setValide           ] = useState(false);
-
+	const [formDataObject   , setFormDataObject   ] = useState({});
 
 	function getCurrentDate() {
 		const today = new Date();
@@ -445,25 +445,25 @@ function FicheSecu() {
 		worksheet.getCell('B4').value  = 'DATE : ';
 		worksheet.getCell('B4').font   = { bold: true, size: 12, name:'Arial'};
 		worksheet.getCell('B4').border = borderAll;
-		worksheet.getCell('C4').value  = sessionStorage.getItem("date");
+		worksheet.getCell('C4').value  = formDataObject["date"];
 		worksheet.getCell('C4').border = borderAll;
 
 		worksheet.getCell('D4').value  = 'LIEU : ';
 		worksheet.getCell('D4').border = borderAll;
 		worksheet.getCell('D4').font   = { bold: true, size: 12, name:'Arial'};
-		worksheet.getCell('E4').value  = sessionStorage.getItem("lieu");
+		worksheet.getCell('E4').value  = formDataObject["lieu"];
 		worksheet.getCell('E4').border = borderAll;
 
 		worksheet.getCell('B6').value  = 'Nom du club';   
 		worksheet.getCell('B6').border = borderAll;
 		worksheet.getCell('B6').font   = { bold: true, size: 16, name:'Arial'};
-		worksheet.getCell('C6').value  = sessionStorage.getItem("club")  ;
+		worksheet.getCell('C6').value  = formDataObject["club"];
 		worksheet.getCell('C6').border = borderAll;
 
 		worksheet.getCell('B8').value  = 'nombre plongeurs';   
 		worksheet.getCell('B8').font   = { bold: true, size: 12, name:'Arial'};
 		worksheet.getCell('B8').border = borderAll;
-		worksheet.getCell('C8').value  = sessionStorage.getItem("nbplong");
+		worksheet.getCell('C8').value  = formDataObject["nbplong"];
 		worksheet.getCell('C8').border = borderAll;
 
 		worksheet.getCell('M8').border = borderAll; //signature
@@ -478,9 +478,9 @@ function FicheSecu() {
 		lib.map((item) => {
 			worksheet.getCell('B' + item.ligne).value  = item.lib;   
 			worksheet.getCell('B' + item.ligne).font   = {size: 12, name:'Arial'};
-			worksheet.getCell('C' + item.ligne).value  = sessionStorage.getItem(item.key + "nom")   ;
-			worksheet.getCell('D' + item.ligne).value  = sessionStorage.getItem(item.key + "prenom");
-			worksheet.getCell('E' + item.ligne).value  = sessionStorage.getItem(item.key + "niveau");
+			worksheet.getCell('C' + item.ligne).value  = formDataObject[item.key + "nom"]   ;
+			worksheet.getCell('D' + item.ligne).value  = formDataObject[item.key + "prenom"];
+			worksheet.getCell('E' + item.ligne).value  = formDataObject[item.key + "niveau"];
 			worksheet.getCell('B' + item.ligne).border = borderAll;
 			worksheet.getCell('C' + item.ligne).border = borderAll;
 			worksheet.getCell('D' + item.ligne).border = borderAll;
@@ -497,7 +497,7 @@ function FicheSecu() {
 			worksheet.getCell('G'+item.ligne).value  = item.lib;   
 			worksheet.getCell('G'+item.ligne).font   = {size: 10, bold : true, name:'Arial'};
 			worksheet.getCell('G'+item.ligne).border = borderAll;
-			worksheet.getCell('J'+item.ligne).value  = sessionStorage.getItem(item.key)     
+			worksheet.getCell('J'+item.ligne).value  = formDataObject[item.key]    
 			worksheet.getCell('J'+item.ligne).border = borderAll;     
 		});  
 
@@ -575,9 +575,9 @@ function FicheSecu() {
 			{
 				let ind = String.fromCharCode(65 + i); // Convertit 0 à 'A', 1 à 'B', etc.
 
-				worksheet.getCell('B' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "nom"    );
-				worksheet.getCell('C' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "prenom" );
-				worksheet.getCell('D' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "niv"    );
+				worksheet.getCell('B' + ((16 + i) + index * 3)).value = formDataObject["p" + (index+1) + (ind) + "nom"    ];
+				worksheet.getCell('C' + ((16 + i) + index * 3)).value = formDataObject["p" + (index+1) + (ind) + "prenom" ];
+				worksheet.getCell('D' + ((16 + i) + index * 3)).value = formDataObject["p" + (index+1) + (ind) + "niv"    ];
 				worksheet.getCell('B' + ((16 + i) + index * 3)).border = borderAll;
 				worksheet.getCell('C' + ((16 + i) + index * 3)).border = borderAll;
 				worksheet.getCell('D' + ((16 + i) + index * 3)).border = borderAll;
@@ -594,8 +594,8 @@ function FicheSecu() {
 
 			}
 
-			if (sessionStorage.getItem("p" + (index+1) +"type") === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
-			else                                                             worksheet.getCell('E' + (16 + index * 3)).value = 'X'
+			if (formDataObject["p" + (index+1) +"type"] === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
+			else                                                     worksheet.getCell('E' + (16 + index * 3)).value = 'X'
 
 
 			//INFORMATIONS PLONGEE
@@ -613,16 +613,16 @@ function FicheSecu() {
 			worksheet.mergeCells('O' + (16 + index * 3) + ':' + 'O' + (18 + index * 3));
 			worksheet.mergeCells('P' + (16 + index * 3) + ':' + 'P' + (18 + index * 3));
 
-			worksheet.getCell('G' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"prof"    )
-			worksheet.getCell('H' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"temp"    )
-			worksheet.getCell('I' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"profrea" )
-			worksheet.getCell('J' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"tempsrea")
-			worksheet.getCell('K' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"3m"      )
-			worksheet.getCell('L' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"6m"      )
-			worksheet.getCell('M' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"HD"      )
-			worksheet.getCell('N' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"HS"      )
-			worksheet.getCell('O' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"gaz"     )
-			worksheet.getCell('P' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"rem"     )
+			worksheet.getCell('G' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"prof"    ]
+			worksheet.getCell('H' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"temp"    ]
+			worksheet.getCell('I' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"profrea" ]
+			worksheet.getCell('J' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"tempsrea"]
+			worksheet.getCell('K' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"3m"      ]
+			worksheet.getCell('L' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"6m"      ]
+			worksheet.getCell('M' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"HD"      ]
+			worksheet.getCell('N' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"HS"      ]
+			worksheet.getCell('O' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"gaz"     ]
+			worksheet.getCell('P' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"rem"     ]
 
 			worksheet.getCell('E' + (16 + index * 3)).border = borderAll;
 			worksheet.getCell('F' + (16 + index * 3)).border = borderAll;
@@ -706,7 +706,8 @@ function FicheSecu() {
 		formData.append('idcli'  , parseInt(id));
 		formData.append('type'   , 'SECU');
 		formData.append('file'   , blob);
-		formData.append('name'   , "_" + sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs");
+		formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs");
+		console.log( "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs")
 
 		const requestOptions = {
 			method: 'POST',
@@ -726,19 +727,19 @@ function FicheSecu() {
 		console.log(text)
 
 
-		/*
+		
 		// Créer un objet URL à partir du Blob
 		const url = window.URL.createObjectURL(blob);
 
 		// Créer un lien d'ancrage pour télécharger le fichier Excel
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = blob.name;
+		a.download = "HEYY_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx";
 		document.body.appendChild(a);
 		a.click();
 
 		// Libérer l'URL de l'objet Blob
-		window.URL.revokeObjectURL(url);*/
+		window.URL.revokeObjectURL(url);
 	}
 
 
@@ -772,23 +773,20 @@ function FicheSecu() {
 	 * Sauvegarde les informations du form dans les cookie de sessions
 	 * @param {*} formData 
 	 */
-	function saveInformations(formData)
-	{
-		// Créer un objet pour stocker les valeurs du formulaire
-		const formValues = {};
+	function saveInformations(formData) {
+
+		let nouvData = formDataObject 
 
 		// Parcourir toutes les entrées du formulaire
 		for (let [key, value] of formData.entries()) {
-			sessionStorage.setItem(key, value);
-			if (value !== '')
-				formValues[key] = value;
+			if (value !== '') {
+				// Mettre à jour les nouvelles données dans l'objet global
+				nouvData[key] = value;
+			}
 		}
 
-
-		console.log(sessionStorage)
-
+		setFormDataObject(nouvData)
 	}
-
 
 	/**
 	 * Fonction qui gère les changement du formulaire des palanquées.
