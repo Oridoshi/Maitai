@@ -10,7 +10,6 @@ if($present){
 }
 else{
     $clients = DB::getInstance()->getClients();
-
 }
 
 if($clients == null || $clients == false) {
