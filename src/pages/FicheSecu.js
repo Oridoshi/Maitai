@@ -349,7 +349,7 @@ function FicheSecu() {
 	 */
 	function generatehtmlAppercue() {
 
-		if(idHis === undefined) generateExcel();
+		generateExcel();
 
 		return (
 			<div className='m-5'>
@@ -701,7 +701,6 @@ function FicheSecu() {
 
 		
 
-
 		//SI CEST NOUVEAU 
 		if (idHis === undefined)
 		{
@@ -731,13 +730,8 @@ function FicheSecu() {
 			formData.append('idcli'  , parseInt(id));
 			formData.append('type'   , 'SECU');
 			formData.append('file'   , blob);
-			formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs");
+			formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
 			console.log( "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs")
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
 
 			response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
 				method: 'POST',
@@ -754,6 +748,30 @@ function FicheSecu() {
 		} else {
 
 			// ModificationFichierHistorique
+			// $idhist = $_POST['idhist'];
+			// $file = $_FILES['file'];
+			// $fileName = $_POST['name'];
+
+
+			// On envoie le nouveau fichier Excel au serveur
+			const formData = new FormData();
+			formData.append('idhist'  , idHis);
+			formData.append('file'   , blob);
+			formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
+			console.log( "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs")
+
+			const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
+				method: 'POST',
+				body: formData
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+			}
+
+			const text = await response.text();
+			console.log("un problemen ?", text)
+
 
 		}
 
@@ -785,26 +803,25 @@ function FicheSecu() {
 	async function lireFiche() 
 	{
 		// RECUPERER LES INFORMATIONS
-		setIdHis(sessionStorage.getItem('idHis'));
-		setnomFic(sessionStorage.getItem('nomFic'));
-		sessionStorage.removeItem("idHis");
-		sessionStorage.removeItem("nomFic");
+		const id = sessionStorage.getItem('idHis');
+		sessionStorage.removeItem("idHis");  
+
+		setIdHis(id);   
 
 		// RECUPERER LE FICHIER
 		const formData = new FormData();
-		formData.append('chemin', "C:\\Users\\sarah\\Downloads\\HEYY_2024-05-13_sarah_FICHESECU.xlsx");
+		formData.append('idhist', id);
 
 		const requestOptions = {
 			method: 'POST',
 			body: formData
 		};
 
-		const response = await fetch(cheminPHP + "GetFile.php", requestOptions);
+		const response = await fetch(cheminPHP + "historique/GetFilesIdHist.php", requestOptions);
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');
 		}
-
 		const blob = await response.blob();
 
 		// LIRE LES DONNEES

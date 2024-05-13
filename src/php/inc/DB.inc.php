@@ -1,5 +1,4 @@
 <?php
-
 //Mettre les objet a require ici /!\
 include_once 'Droit.inc.php';
 include_once 'Utilisateur.inc.php';
@@ -396,8 +395,8 @@ class DB {
 	 * @return void
 	 */
 	public function insertTicket(Ticket $ticket) {
-		$requete = "INSERT INTO ticket (idprod, idcli, qa, prixtot) VALUES (?, ?, ?, ?)";
-		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixTot());
+		$requete = "INSERT INTO Ticket (idprod, idcli, qa, prixspe, prixtot) VALUES (?, ?, ?, ?, ?)";
+		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixSpe(), $ticket->getPrixTot());
 		$this->execMaj($requete, $tparam);
 	}
 
@@ -407,7 +406,7 @@ class DB {
 	 * @return void
 	 */
 	public function updateTicket(Ticket $ticket) {
-		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
+		$requete = "UPDATE Ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
 		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
 		$this->execMaj($requete, $tparam);
 	}
@@ -419,8 +418,19 @@ class DB {
 	 * @return void
 	 */
 	public function suppTicket(int $idprod, int $idcli) {
-		$requete = "DELETE FROM ticket WHERE idprod = ? AND idcli = ?";
+		$requete = "DELETE FROM Ticket WHERE idprod = ? AND idcli = ?";
 		$tparam = array($idprod, $idcli);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Permet de supprimer tout les produit d'un ticket en fonction de l'id du client
+	 * @param int $idcli id du client
+	 * @return void
+	 */
+	public function suppTicketCli(int $idcli) {
+		$requete = "DELETE FROM Ticket WHERE idcli = ?";
+		$tparam = array($idcli);
 		$this->execMaj($requete, $tparam);
 	}
 
@@ -431,11 +441,11 @@ class DB {
 	 */
 	public function getProdTicket(?int $idcli) {
 		if ($idcli == null) {
-			$requete = "SELECT * FROM ticket";
+			$requete = "SELECT * FROM Ticket";
 			$tparam = null;
 		}
 		else {
-			$requete = "SELECT * FROM ticket WHERE idcli = ?";
+			$requete = "SELECT * FROM Ticket WHERE idcli = ?";
 			$tparam = array($idcli);
 		}
 
@@ -449,6 +459,16 @@ class DB {
 	public function getHistoriques() {
 		$requete = 'SELECT * FROM Historique';
 		return $this->execQuery($requete, null, 'Historique');
+	}
+
+	/**
+	 * Obtenir l'historique via sont ID
+	 * @param int $idhis id de l'historique
+	 * @return Historique l'historique
+	 */
+	public function getHistoriqueById(int $idhis) {
+		$requete = 'SELECT * FROM Historique WHERE idhis = ?';
+		return $this->execQuery($requete, array($idhis), 'Historique')[0];
 	}
 
 	/** Insértion d'un historique */
@@ -550,6 +570,17 @@ class DB {
 	public function updateHistorique(int $idhist) {
 		$requete = "UPDATE Historique SET valide = 1 WHERE idhis = ?";
 		$tparam = array($idhist);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Met à jour le chemin d'un historique.
+	 * @param Historique $historique l'historique à mettre à jour
+	 * @return void
+	 */
+	public function updateFichierHistorique(Historique $historique) {
+		$requete = "UPDATE Historique SET chemin = ? WHERE idhis = ?";
+		$tparam = array($historique->getChemin(), $historique->getIdHis());
 		$this->execMaj($requete, $tparam);
 	}
 

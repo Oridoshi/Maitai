@@ -6,7 +6,6 @@ include_once '../../inc/DB.inc.php';
 $idhist = $_POST['idhist'];
 $file = $_FILES['file'];
 $fileName = $_POST['name'];
-$fileTmpPath = $file['tmp_name'];
 
 // $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
 $chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
@@ -23,8 +22,8 @@ $historique->setChemin($chemin . $val . $fileName);
 DB::getInstance()->updateFichierHistorique($historique);
 
 
-if(!move_uploaded_file($fileTmpPath, $chemin . $val . $fileName)) {
-    echo "Error moving file : $fileTmpPath to $chemin$val$fileName.";
+if(!move_uploaded_file($chemin, $chemin . $val . $fileName)) {
+    echo "Error moving file : $chemin to $chemin$val$fileName.";
     $historique = DB::getInstance()->getHistoriqueByChemin($chemin . $val . $fileName);
     DB::getInstance()->suppHistorique($historique->getIdHis());
     return;
