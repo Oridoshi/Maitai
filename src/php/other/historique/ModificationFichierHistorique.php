@@ -4,33 +4,28 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 include_once '../../inc/DB.inc.php';
 
 $idhist = $_POST['idhist'];
-$type = $_POST['type'];
-$idcli = intval($_POST['idcli']);
 $file = $_FILES['file'];
 $fileName = $_POST['name'];
 $fileTmpPath = $file['tmp_name'];
 
 // $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
-$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
-
+$chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
 
 $val = date('H:i:s');
 
-$historique = new Historique();
+$historique = DB::getInstance()->getHistoriqueById( $idhist );
+
+// supprimer l'ancien fichier
+unlink($historique->getChemin());
+
 $historique->setChemin($chemin . $val . $fileName);
-$historique->setType($type);
-$historique->setIdCli($idcli);
 
-
-
-if(!DB::getInstance()->insertHistorique($historique)) {echo "Error inserting historique."; return;};
-
-$historique = DB::getInstance()->getHistoriqueByChemin($chemin . $val . $fileName);
+DB::getInstance()->updateFichierHistorique($historique);
 
 
 if(!move_uploaded_file($fileTmpPath, $chemin . $val . $fileName)) {
-    echo "Error moving file.";
-    echo $fileTmpPath;
+    echo "Error moving file : $fileTmpPath to $chemin$val$fileName.";
+    $historique = DB::getInstance()->getHistoriqueByChemin($chemin . $val . $fileName);
     DB::getInstance()->suppHistorique($historique->getIdHis());
     return;
 }
