@@ -12,7 +12,8 @@ $fileTmpPath = $file['tmp_name'];
 $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
 //$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
 
-$val = count(DB::getInstance()->getHistoriques());
+
+$val = date('H:i:s');
 
 $historique = new Historique();
 $historique->setChemin($chemin . $val . $fileName);
