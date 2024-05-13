@@ -32,7 +32,6 @@ function Secu() {
 			return response.text();
 		})
 		.then(idCli => {
-			console.log("ID du client:", idCli);
 
 			// Maintenant que nous avons l'ID du client, nous pouvons envoyer la deuxième requête
 			formData.append('idcli', parseInt(idCli)); // Ajouter l'ID du client au FormData
@@ -50,11 +49,11 @@ function Secu() {
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
-			const newData = data.map((item, index) => ({
+			const newData = data.filter(item => !item.valide).map((item, index) => ({
 				...item,
 				id: index + 1
 			}));
+
 			setInitialData(newData);
 		})
 		.catch(error => {
@@ -66,6 +65,7 @@ function Secu() {
 
 	const modifFiche = (item) => {
 		sessionStorage.setItem('idHis', item.idhis);
+		sessionStorage.setItem('nomFic', item.chemin);
 		window.location.href = '/fiche-de-sécurité';
 	};
 
@@ -89,10 +89,11 @@ function Secu() {
 		<Table
 			header={initialHeader}
 			data={initialData}
+			keyGrayWhenFalse={''}
 		/>
 
 		<div className="mx-4">
-			<button className="btn btn-primary btnSauvegarder" onClick={() => {sessionStorage.removeItem('idHis'); window.location.href = '/fiche-de-sécurité'}}>Créer une nouvelle fiche</button>
+			<button className="btn btn-primary btnSauvegarder" onClick={() => {sessionStorage.removeItem('idHis');sessionStorage.removeItem('nomFic'); window.location.href = '/fiche-de-sécurité'}}>Créer une nouvelle fiche</button>
 		</div>
 	</div>
 	);
