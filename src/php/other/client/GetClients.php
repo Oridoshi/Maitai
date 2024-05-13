@@ -13,4 +13,8 @@ else{
 
 }
 
+if($clients == null) {
+	$clients = [];
+}
+
 echo json_encode($clients);

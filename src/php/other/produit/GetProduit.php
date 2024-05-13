@@ -19,7 +19,8 @@ else
 	$prods = DB::getInstance()->getProduits();
 }
 
-/**
- * Retourne les produits récupéré au format JSON
- */
+if($prods == null) {
+	$prods = [];
+}
+
 echo json_encode($prods);

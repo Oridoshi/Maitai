@@ -10,4 +10,9 @@ foreach ($historiques as $historique) {
     $filename = basename($historique->getChemin());    
     $historique->setChemin($filename);
 }
+
+if($historiques == null) {
+	$historiques = [];
+}
+
 echo json_encode($historiques);
