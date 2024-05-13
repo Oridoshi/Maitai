@@ -13,8 +13,5 @@ else {
 	$lstProdTicket = DB::getInstance()->getProdTicket(null);
 }
 
-if($lstProdTicket == null || $lstProdTicket == false) {
-	$lstProdTicket = [];
-}
 
 echo json_encode($lstProdTicket);

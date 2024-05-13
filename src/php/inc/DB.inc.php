@@ -395,7 +395,7 @@ class DB {
 	 * @return void
 	 */
 	public function insertTicket(Ticket $ticket) {
-		$requete = "INSERT INTO ticket (idprod, idcli, qa, prixtot) VALUES (?, ?, ?, ?)";
+		$requete = "INSERT INTO Ticket (idprod, idcli, qa, prixtot) VALUES (?, ?, ?, ?)";
 		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixTot());
 		$this->execMaj($requete, $tparam);
 	}
@@ -406,7 +406,7 @@ class DB {
 	 * @return void
 	 */
 	public function updateTicket(Ticket $ticket) {
-		$requete = "UPDATE ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
+		$requete = "UPDATE Ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
 		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
 		$this->execMaj($requete, $tparam);
 	}
@@ -430,11 +430,11 @@ class DB {
 	 */
 	public function getProdTicket(?int $idcli) {
 		if ($idcli == null) {
-			$requete = "SELECT * FROM ticket";
+			$requete = "SELECT * FROM Ticket";
 			$tparam = null;
 		}
 		else {
-			$requete = "SELECT * FROM ticket WHERE idcli = ?";
+			$requete = "SELECT * FROM Ticket WHERE idcli = ?";
 			$tparam = array($idcli);
 		}
 
