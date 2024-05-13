@@ -5,6 +5,7 @@ import ExcelJS from 'exceljs';
 
 function FicheSecu() {
 	if(sessionStorage.getItem('droit') === '') window.location.href = '/';
+	if(sessionStorage.getItem('idHis') === '') console.log("Modifier");
 
 
 
@@ -350,7 +351,7 @@ function FicheSecu() {
 				La fiche à était générer et envoyé a l'administration. <br></br>
 				Vous pourez la modifié jusqu'à sa validation par le.s administateur.euse.s dans de futur fonctionnalités. <br></br>
 
-				<button className='btn mt-4 btnSauvegarder' onClick={() => {window.location.href = '/Acceuil'}}> Retourner à l'acceuil </button>
+				<button className='btn mt-4 btnSauvegarder' onClick={() => {window.location.href = '/fiches-de-sécurité'}}> Terminer </button>
 			</div>
 		);
 	}
@@ -728,18 +729,18 @@ function FicheSecu() {
 
 
 		
-		// Créer un objet URL à partir du Blob
-		const url = window.URL.createObjectURL(blob);
+		// // Créer un objet URL à partir du Blob
+		// const url = window.URL.createObjectURL(blob);
 
-		// Créer un lien d'ancrage pour télécharger le fichier Excel
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = "HEYY_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx";
-		document.body.appendChild(a);
-		a.click();
+		// // Créer un lien d'ancrage pour télécharger le fichier Excel
+		// const a = document.createElement('a');
+		// a.href = url;
+		// a.download = "HEYY_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx";
+		// document.body.appendChild(a);
+		// a.click();
 
-		// Libérer l'URL de l'objet Blob
-		window.URL.revokeObjectURL(url);
+		// // Libérer l'URL de l'objet Blob
+		// window.URL.revokeObjectURL(url);
 	}
 
 
@@ -939,8 +940,9 @@ function FicheSecu() {
 
 	return (
 		<div className="col-sm-12" style={{ overflowX: 'hidden' }}>
-			<h1 className='titre mt-1'>Création d'une fiche de sécurité - {etapesLib[etape]}</h1>
+			<h1 className='titre mt-1'> { sessionStorage.getItem('idHis') ? "Modification" : "Création"} d'une fiche de sécurité - {etapesLib[etape]}</h1>
 
+			{console.log("Id " ,  sessionStorage.getItem('idHis') )}
 			<form onSubmit={handleSubmit}>
 				{/* Pass formData and setFormData to the GeneratehtmlForm component */}
 				{etapesLib[etape] === 'En tête'        && generatehtmlFormEnTete()      }
