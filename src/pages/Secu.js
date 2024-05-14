@@ -66,7 +66,7 @@ function Secu() {
 	const modifFiche = (item) => {
 		sessionStorage.setItem('idHis', item.idhis);
 		sessionStorage.setItem('nomFic', item.chemin);
-		window.location.href = '/fiche-de-sécurité';
+		window.location.href = '/fiche-de-securite';
 	};
 
 
@@ -93,7 +93,7 @@ function Secu() {
 		/>
 
 		<div className="mx-4">
-			<button className="btn btn-primary btnSauvegarder" onClick={() => {sessionStorage.removeItem('idHis');sessionStorage.removeItem('nomFic'); window.location.href = '/fiche-de-sécurité'}}>Créer une nouvelle fiche</button>
+			<button className="btn btn-primary btnSauvegarder" onClick={() => {sessionStorage.removeItem('idHis');sessionStorage.removeItem('nomFic'); window.location.href = '/fiche-de-securite'}}>Créer une nouvelle fiche</button>
 		</div>
 	</div>
 	);

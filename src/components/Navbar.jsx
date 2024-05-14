@@ -209,6 +209,7 @@ function Navbar({ role }) {
 					<Route path="/produits" element={<Produits />} />
 					<Route path="/tickets" element={<Tickets />} />
 					<Route path="/fiches-de-securite" element={<Secu />} />
+					<Route path="/fiche-de-securite" element={<FicheSecu />} />
 					<Route path="/historique" element={<Historique/>} />
 				</Routes>
                 <Modal className="popup d-flex justify-content-center align-items-center" show={showModal} onHide={toggleModal}>
