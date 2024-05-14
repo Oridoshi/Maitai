@@ -22,7 +22,7 @@ window.addEventListener('load', async (event) =>	//recharge la page
 		window.location.reload();
 	}
 
-	if(sessionStorage.getItem('idSession') != null && !await mdpValid(sessionStorage.getItem('idSession'))){
+	if(sessionStorage.getItem('idSession') != null && !await mdpValid(sessionStorage.getItem('idSession'), false)){
 		sessionStorage.removeItem('login');
 		sessionStorage.removeItem('idSession');
 		sessionStorage.setItem('droit', "");
@@ -169,7 +169,7 @@ const Mdp = ({ changeEtat }) =>
 	const envoyer = async (event) =>
 	{
 		event.preventDefault(); // Obligatoire quand on a un chargement de page
-		if (await mdpValid(mdp))
+		if (await mdpValid(mdp, true))
 		{ // Utilisation directe de mdp
 			sessionStorage.setItem('mdpValid', "true");
 			sessionStorage.setItem('idSession', await getMdp());
@@ -706,11 +706,13 @@ const logExist = async ( log ) =>
 	return utilisateurs;
 }
 //test si le mdp correspond au user
-const mdpValid = async (pass) =>
+const mdpValid = async (pass, connexion) =>
 {
 	const data = new FormData();
 	data.append('login', sessionStorage.getItem('login'));
 	data.append('mdp', pass);
+	if(connexion == true) 
+		data.append('connexion', connexion);
 	const utilisateurs = await pwdValid(data);
 	return utilisateurs;
 }

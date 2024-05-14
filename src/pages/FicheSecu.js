@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
 
 function FicheSecu() {
-	// if(sessionStorage.getItem('droit') === '') window.location.href = '/';
-	// if(sessionStorage.getItem('idHis') === undefined && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+	if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
+	if(sessionStorage.getItem('idHis') === null && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
 
@@ -66,21 +66,21 @@ function FicheSecu() {
 			<div className='mt-5'>
 
 				<div className="row ms-4">
-					<div className="col col-sm-3 m-2 ">
+					<div className="col-sm-3 m-2 ">
 						<div className="d-flex align-items-center">
 							<label htmlFor="date" className="me-2 fw-bold">Date</label>
 							<input type="date" className="form-control" name='date' id="date" readOnly defaultValue={idHis ? formDataObject["date"] : getCurrentDate()} required/>
 						</div>
 					</div>
 
-					<div className="col col-sm-6 m-2 ms-5">
+					<div className="col-sm-6 m-2 ms-5">
 						<div className="d-flex align-items-center">
 							<label htmlFor="lieu" className="me-2 fw-bold">Lieu</label>
 							<input type="text" className="form-control" name='lieu' id="lieu" readOnly value="CARRIERE DE BECON LES GRANITS . chemin des coteaux, 49370 BECON LES GRANITS"/>
 						</div>
 					</div>
 
-					<div className="col col-sm-7 m-2 mt-3">
+					<div className="col-sm-7 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="club" className="me-2 fw-bold">Club</label>
 							<input type="text" className="form-control" name='club' id="club" readOnly value={sessionStorage.getItem('login')}/>
@@ -355,9 +355,15 @@ function FicheSecu() {
 				La {idHis && 'nouvelle'} fiche à était générer et envoyé a l'administration. <br></br>
 				Vous pourez la modifié jusqu'à sa validation par le.s administateur.euse.s dans de futur fonctionnalités. <br></br>
 
-				<button className='btn mt-4 btnSauvegarder' onClick={() => {window.location.href = '/fiches-de-sécurité'}}> Terminer </button>
+				<button className='btn mt-4 btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Terminer </button>
 			</div>
 		);
+	}
+
+	function redirigerAuDebut()
+	{
+		if (sessionStorage.getItem('droit') !== 'Client') window.location.href = '/historique';
+		else                                              window.location.href = '/fiches-de-securite';
 	}
 
 
@@ -914,7 +920,7 @@ function FicheSecu() {
 		})
 		.catch(error => {
 			// Gérer les erreurs de chargement du fichier Blob
-			window.location.href = '/fiches-de-sécurité';
+			window.location.href = '/fiches-de-securite';
 			console.log("Erreur", error)
 			alert('Le fichier sauvegarder ne semble pas être du bon format');
 		});
@@ -1127,9 +1133,8 @@ function FicheSecu() {
 				{etapesLib[etape] === 'Envoie'   && generatehtmlAppercue()        }
 
 				<div className="m-5 d-flex justify-content-end">
-					{/* {etape !== 0 &&
-						<button className="mx-2 col-sm-1 btn btn-secondary" onClick={etapePrecedente}>Précédent</button>
-					} */}
+					<button className="mx-2 col-sm-1 btn btn-secondary" onClick={redirigerAuDebut()}>Annuler</button>
+
 					{etape < etapesLib.length - 2 &&
 						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
