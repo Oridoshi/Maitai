@@ -41,9 +41,9 @@ function Navbar({ role }) {
 	role = sessionStorage.getItem('droit');
 	switch (role)
 	{
-		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiches de sécurité'];
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets'];
 			break;
-		case 'Maitai': navLinks = ['Clients', 'Fiches de sécurité'];
+		case 'Maitai': navLinks = ['Clients'];
 			break;
 		case 'Client' : navLinks = ['Fiches de sécurité'];
 			break;

@@ -3,7 +3,7 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';
 
 function Secu() {
-	if(sessionStorage.getItem('droit') === '') window.location.href = '/';
+	if(sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [initialData , setInitialData ] = useState([]);
 	const [idCli       , setIdClient    ] = useState();
