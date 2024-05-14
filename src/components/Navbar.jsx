@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 // import des pages pour les routes
 import Accueil from "../pages/Accueil";
 import Client from "../pages/Client";
-import FicheSecu from "../pages/FicheSecu";
+import Secu from "../pages/Secu";
 import Produits from "../pages/Produits";
 import Tickets from "../pages/Tickets";
 import Utilisateurs from "../pages/Utilisateurs";
 import Form from "../components/Form";
 import Historique from "../pages/Historique";
+import FicheSecu from "../pages/FicheSecu";
 
 import '../style/nav.css';
 import '../style/form.css';
@@ -29,24 +30,26 @@ function Navbar({ role }) {
         'Utilisateurs': useRef(null),
         'Produits': useRef(null),
         'Tickets': useRef(null),
-        'Fiche de sécurité': useRef(null),
+        'Fiches de sécurité': useRef(null),
     };
 
     const toggleForm = () => {
         setShowForm(!showForm);
     };
 
-    role = sessionStorage.getItem('droit');
-    switch (role) {
-        case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
-            break;
-        case 'Maitai': navLinks = ['Clients', 'Fiche de sécurité'];
-            break;
-        case 'Client': navLinks = ['Fiche de sécurité'];
-            break;
-        default: navLinks = [];
-            break;
-    }
+	//en fonction du paramètre on charge plus ou moins de role
+	role = sessionStorage.getItem('droit');
+	switch (role)
+	{
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiches de sécurité'];
+			break;
+		case 'Maitai': navLinks = ['Clients', 'Fiches de sécurité'];
+			break;
+		case 'Client' : navLinks = ['Fiches de sécurité'];
+			break;
+		default: navLinks = [];
+			break;
+	}
 
     useEffect(() => {
         const currentPath = location.pathname.toLowerCase();
@@ -205,7 +208,7 @@ function Navbar({ role }) {
 					<Route path="/utilisateurs" element={<Utilisateurs />} />
 					<Route path="/produits" element={<Produits />} />
 					<Route path="/tickets" element={<Tickets />} />
-					<Route path="/fiche-de-securite" element={<FicheSecu />} />
+					<Route path="/fiches-de-securite" element={<FicheSecu />} />
 					<Route path="/historique" element={<Historique/>} />
 				</Routes>
                 <Modal className="popup d-flex justify-content-center align-items-center" show={showModal} onHide={toggleModal}>
