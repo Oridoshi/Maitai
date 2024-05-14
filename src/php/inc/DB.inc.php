@@ -487,7 +487,7 @@ class DB {
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 		$tuple = $stmt->fetch();
-		return $tuple['Auto_increment'];
+		return $tuple['auto_increment'];
 	}
 
 	/** Insértion d'un historique */
