@@ -477,6 +477,19 @@ class DB {
 		return $this->execQuery($requete, array($idhis), 'Historique')[0];
 	}
 
+	/**
+	 * Obtenir l'ID du prochain historique
+	 * @return int l'ID du prochain historique
+	 */
+	public function getNextIdHistorique() {
+		$requete = 'SELECT MAX(idhis) FROM Historique';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tuple = $stmt->fetch();
+		return $tuple['max(idhis)'] + 1;
+	}
+
 	/** Insértion d'un historique */
 	public function insertHistorique(Historique $historique) {
 		$requete = "INSERT INTO Historique (date, chemin, type, idcli) VALUES (NOW(), :chemin, :type, :idcli)";
