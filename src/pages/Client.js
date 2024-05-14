@@ -39,6 +39,7 @@ function Client() {
 
 	const funHisto = (item) => {
 		sessionStorage.setItem('idCli', item.idcli);
+		sessionStorage.setItem('nomClub', item.nomclub);
 		window.location.href = '/historique';
 	};
 
