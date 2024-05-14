@@ -24,10 +24,17 @@
 }
 
 .slide {
-    height: 80%;
+    height:inherit;
     justify-content: center ;
 }
 
+.col {
+    height: 70vh;
+}
+
+.f {
+    height: fit-content;
+}
 
 .custom-img {
     max-width: 100%; /* Ajustez cette valeur selon vos besoins */

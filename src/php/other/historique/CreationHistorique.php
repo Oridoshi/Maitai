@@ -12,7 +12,7 @@ $fileTmpPath = $file['tmp_name'];
 $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
 //$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
 
-$val = count(DB::getInstance()->getHistoriques());
+$val = date('H-i-s');
 
 $historique = new Historique();
 $historique->setChemin($chemin . $val . $fileName);
@@ -27,6 +27,7 @@ $historique = DB::getInstance()->getHistoriqueByChemin($chemin . $val . $fileNam
 
 if(!move_uploaded_file($fileTmpPath, $chemin . $val . $fileName)) {
     echo "Error moving file.";
+    echo $fileTmpPath;
     echo $fileTmpPath;
     DB::getInstance()->suppHistorique($historique->getIdHis());
     return;

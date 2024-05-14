@@ -493,7 +493,7 @@ export default function Ticket()
 	//retourne le prix total de la commande d'un client
 	const getTotCommCli = async (ncli) =>
 	{
-		const tabTicket = await getTabTicket(ncli);
+		const tabTicket =  await getTabTicket(ncli);
 		let prixTot = 0;
 		tabTicket.forEach(prod =>
 		{

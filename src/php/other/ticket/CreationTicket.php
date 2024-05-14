@@ -20,9 +20,11 @@ $newTicket = new Ticket();
 $newTicket->setIdProd($_POST['idprod']);
 $newTicket->setIdCli($_POST['idcli']);
 $newTicket->setQa($_POST['qa']);
+$newTicket->setPrixSpe($_POST['prixspe']);
 if(isset($_POST['prixtot'])) {
 	$newTicket->setPrixTot($_POST['prixtot']);
 }
+
 
 /**
  * Insère le produit dans la base de données

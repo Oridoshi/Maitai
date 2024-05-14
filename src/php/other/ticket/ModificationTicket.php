@@ -9,6 +9,7 @@ $pdo = DB::getInstance();
  * @var int $idprod Numéro d'identification du produits commandés.
  * @var int $idcli Numéro d'identification du client qui commande.
  * @var int $qa Quantité du produit acheté.
+ * @var ?float $prixspe Prix Unitaire pour le produit propre au ticket
  * @var ?float $prixtot Prix total de la commande
  */
 $modifTicket = new Ticket();
@@ -19,8 +20,7 @@ if(isset($_POST['prixtot'])) {
 	$modifTicket->setPrixTot($_POST['prixtot']);
 }
 else {
-	$prod = $pdo->getProduit($modifTicket->getIdProd());
-	$modifTicket->setPrixTot($prod->getPrixUni() * $modifTicket->getQa());
+	$modifTicket->setPrixTot($_POST['prixspe'] * $_POST['qa']);
 }
 
 

@@ -11,4 +11,8 @@ foreach ($historiques as $historique) {
     $historique->setChemin($filename);
 }
 
+if($historiques == null || $historiques == false) {
+	$historiques = [];
+}
+
 echo json_encode($historiques);
