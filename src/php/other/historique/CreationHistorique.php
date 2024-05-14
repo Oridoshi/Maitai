@@ -12,7 +12,7 @@ $fileTmpPath = $file['tmp_name'];
 $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
 //$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
 
-$nf = date('H-i-s');
+$nf = "NF°" . DB::getInstance()->getNextIdHistorique() . "-";
 
 $historique = new Historique();
 $historique->setChemin($chemin . $nf . $fileName);
