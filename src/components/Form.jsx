@@ -91,7 +91,14 @@ const Log = ({ changeEtat }) =>
 		{
 			sessionStorage.setItem('login', login); // Stocke le login en session
 			setDroits();
-			changeEtat('mdp'); // Passe à la page de mot de passe
+			if(await mdpExist(login))
+				changeEtat('mdp'); // Passe à la page de mot de passe
+			else {
+				const mail = await getMail(login);
+				await recupCode(mail)
+				sessionStorage.setItem('mail', mail);
+				changeEtat('code');
+			}
 		}
 		else
 		{
@@ -620,6 +627,26 @@ const loginExist = async (data) => {
 	}
 }
 
+const pwdExist = async (data) => {
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/PwdExist.php", {
+			method: 'POST',
+			body: data
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat === "1";
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
+
 const pwdValid = async (data) => {
 	try {
 		const response = await fetch(cheminPHP + "utilisateur/PwdForLogin.php", {
@@ -705,6 +732,37 @@ const logExist = async ( log ) =>
 	const utilisateurs = await loginExist(data);
 	return utilisateurs;
 }
+
+const mdpExist = async (log) =>
+{
+	const data = new FormData();
+	data.append('login', log);
+	const utilisateurs = await pwdExist(data);
+	return utilisateurs;
+}
+
+const getMail = async (log) => {
+	const data = new FormData();
+	data.append('login', log);
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/GetMail.php", {
+			method: 'POST',
+			body: data
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat;
+	
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
 //test si le mdp correspond au user
 const mdpValid = async (pass, connexion) =>
 {
@@ -853,9 +911,6 @@ function afficherError(data)
 		console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState, "] error code :", errorCode);
 		alert(errorMessageText);
 
-	} else
-	{
-		console.log("Aucune erreur connue renvoyé. Retour du fetch ", data);
 	}
 }
 
