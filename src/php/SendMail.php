@@ -52,7 +52,8 @@ if(isset($_POST['file'])) {
 </body>";
 
 } else {
-    $mail->Subject = "Réinitialisation de votre mot de passe Maitai";
+    $recup = $_POST['recup'] == "true" ? "Réinitialisation" : "Création";
+    $mail->Subject = $recup . " de votre mot de passe Maitai";
     $mdp = generateMdp();
 
     $mail->Body = "
@@ -61,13 +62,13 @@ if(isset($_POST['file'])) {
 <head>
     <meta charset=\"UTF-8\">
     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">
-    <title>Récupération de mot de passe</title>
+    <title>" . $recup . " de mot de passe</title>
 </head>
     <body>
         <div style=\"max-width: 600px; margin: 0 auto; padding: 20px;\">
-            <h2 style=\"color: #005C8F\"><span style=\"background-color:#005C8F;\"></span>Récupération de mot de passe<br></h2>
+            <h2 style=\"color: #005C8F\"><span style=\"background-color:#005C8F;\"></span>" . $recup . "de mot de passe<br></h2>
             <p>Bonjour,</p>
-            <p>Vous avez demandé la réinitialisation de votre mot de passe pour votre compte.</p>
+            <p>Vous avez demandé la " . strtolower($recup) . " de votre mot de passe pour votre compte.</p>
             <p id=\"resetCode\" style=\"font-size: 31px; text-align: center; color: #ffffff; background-color: #005C8F\"><strong>" . $mdp . "</strong><br></p>
             <p>Si vous n'êtes pas à l'origine de cette demande, veuillez ignorer cet email.</p>
             <p>Merci.</p>

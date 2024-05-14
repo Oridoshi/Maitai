@@ -58,8 +58,11 @@ const Form = ({ etat }) =>
 		case 'confmdp':
 			ret = <ConfMdp changeEtat={ changeEtat } />;
 			break;
-		case 'code':
-			ret = <Code changeEtat={ changeEtat } />;
+		case 'codeRecup':
+			ret = <Code changeEtat={ changeEtat } recup={ true } />;
+			break;
+		case 'codeCreer':
+			ret = <Code changeEtat={ changeEtat } recup={ false } />;
 			break;
 		case 'creer':
 			ret = <Creer changeEtat={ changeEtat } />;
@@ -95,9 +98,9 @@ const Log = ({ changeEtat }) =>
 				changeEtat('mdp'); // Passe à la page de mot de passe
 			else {
 				const mail = await getMail(login);
-				await recupCode(mail)
+				await recupCode(mail, "false")
 				sessionStorage.setItem('mail', mail);
-				changeEtat('code');
+				changeEtat('codeCreer');
 			}
 		}
 		else
@@ -363,9 +366,9 @@ const Mail = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changement de page
 		if (await mailValid(mail))
 		{
-			await recupCode(mail)
+			await recupCode(mail, "true")
 			sessionStorage.setItem('mail', mail);
-			changeEtat('code');
+			changeEtat('codeRecup');
 		}
 		else
 		{
@@ -485,8 +488,9 @@ const ConfMdp = ({ changeEtat }) =>
 };
 
 /*-Page de code pour la récupération du compte-*/
-const Code = ({ changeEtat }) =>
+const Code = ({ changeEtat, recup }) =>
 {
+	console.log(recup);
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
@@ -552,12 +556,16 @@ const Code = ({ changeEtat }) =>
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
 	const placeholderText = isValid ? "Entrez votre code" : "Ce code n'existe pas";
 
+	const h4 = recup ? "Mot de passe oublié" : "Création mot de passe";
+	const label = recup ? "Code de récupération" : "Code de création";
+
+
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h4 className="letitre">Mot de passe oublié</h4>
+				<h4 className="letitre">{h4}</h4>
 				<div className="mb-3">
-					<label htmlFor="exampleInputEmail1" className="form-label label"> Code de réinitialisation </label>
+					<label htmlFor="exampleInputEmail1" className="form-label label">{label}</label>
 					<input required type="text" className={ inputClass }
 						aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ renvoyerMail }> Renvoyer un mail </button>
@@ -868,12 +876,15 @@ const funUpdate = async (mdp) => {
 	}
 };
 
-const recupCode = async (mail) =>
+const recupCode = async (mail, recup) =>
 {
+	console.log(recup);
+
 	try {
 
 		const formData = new FormData();
 		formData.append('email', mail);
+		formData.append('recup', recup);
 
 		const requestOptions = {
 			method: 'POST',
