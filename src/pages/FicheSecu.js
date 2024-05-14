@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
 
-
 function FicheSecu() {
-	if(sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+	if(sessionStorage.getItem('droit') === '') window.location.href = '/';
+	if(sessionStorage.getItem('idHis') === undefined && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
 
