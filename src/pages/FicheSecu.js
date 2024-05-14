@@ -66,21 +66,21 @@ function FicheSecu() {
 			<div className='mt-5'>
 
 				<div className="row ms-4">
-					<div className="col col-sm-3 m-2 ">
+					<div className="col-sm-3 m-2 ">
 						<div className="d-flex align-items-center">
 							<label htmlFor="date" className="me-2 fw-bold">Date</label>
 							<input type="date" className="form-control" name='date' id="date" readOnly defaultValue={idHis ? formDataObject["date"] : getCurrentDate()} required/>
 						</div>
 					</div>
 
-					<div className="col col-sm-6 m-2 ms-5">
+					<div className="col-sm-6 m-2 ms-5">
 						<div className="d-flex align-items-center">
 							<label htmlFor="lieu" className="me-2 fw-bold">Lieu</label>
 							<input type="text" className="form-control" name='lieu' id="lieu" readOnly value="CARRIERE DE BECON LES GRANITS . chemin des coteaux, 49370 BECON LES GRANITS"/>
 						</div>
 					</div>
 
-					<div className="col col-sm-7 m-2 mt-3">
+					<div className="col-sm-7 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="club" className="me-2 fw-bold">Club</label>
 							<input type="text" className="form-control" name='club' id="club" readOnly value={sessionStorage.getItem('login')}/>
