@@ -9,4 +9,8 @@ $pwd = $_POST['mdp'];
 
 $pdo = DB::getInstance();
 
-echo password_verify($pwd, $pdo->getUtilisateur($login)->getMdp()) || $pwd == $pdo->getUtilisateur($login)->getMdp();
+if(isset($_POST['connexion'])) {
+    echo password_verify($pwd, $pdo->getUtilisateur($login)->getMdp());
+} else {
+    echo $pwd == $pdo->getUtilisateur($login)->getMdp();
+}
