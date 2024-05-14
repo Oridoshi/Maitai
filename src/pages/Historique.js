@@ -364,7 +364,7 @@ export default function Historique(){
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre mt-1'>Gestion des historiques {sessionStorage.getItem('nomClub')}</h1>
+		<h1 className='titre mt-1'>Gestion des historiques - {sessionStorage.getItem('nomClub')}</h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
