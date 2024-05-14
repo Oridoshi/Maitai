@@ -54,6 +54,15 @@
 	text-underline-offset: 10px;
 }
 
+.selected {
+	color: #000000;
+	text-decoration: underline;
+	text-decoration-color: #005C8F;
+	text-decoration-thickness: 2px;
+	text-decoration-skip-ink: none;
+	text-underline-offset: 10px;
+}
+
 .login{
 	list-style-type: none;
 	margin-right: 5px;

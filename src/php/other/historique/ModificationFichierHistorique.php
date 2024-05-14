@@ -8,10 +8,10 @@ $file = $_FILES['file'];
 $fileName = $_POST['name'];
 $fileTmpPath = $file['tmp_name'];
 
-// $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
-$chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
+$chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
+// $chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
 
-$val = date('H:i:s');
+$val = date('H-i-s');
 
 $historique = DB::getInstance()->getHistoriqueById( $idhist );
 
