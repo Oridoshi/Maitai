@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
-import ExcelJS from 'exceljs';
 
 
 function FicheSecu() {
-	if(sessionStorage.getItem('droit') === '') window.location.href = '/';
+	if(sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
 
