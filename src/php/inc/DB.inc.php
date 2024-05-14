@@ -482,12 +482,12 @@ class DB {
 	 * @return int l'ID du prochain historique
 	 */
 	public function getNextIdHistorique() {
-		$requete = 'SELECT MAX(idhis) FROM Historique';
+		$requete = 'SHOW TABLE STATUS LIKE \'Historique\';';
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 		$tuple = $stmt->fetch();
-		return $tuple['max(idhis)'] + 1;
+		return $tuple['Auto_increment'];
 	}
 
 	/** Insértion d'un historique */
