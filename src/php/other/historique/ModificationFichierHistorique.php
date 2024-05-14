@@ -11,21 +11,21 @@ $fileTmpPath = $file['tmp_name'];
 $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
 // $chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
 
-$val = date('H-i-s');
+$nf = "NF°" . $idhist . "-";
 
 $historique = DB::getInstance()->getHistoriqueById( $idhist );
 
 // supprimer l'ancien fichier
 unlink($historique->getChemin());
 
-$historique->setChemin($chemin . $val . $fileName);
+$historique->setChemin($chemin . $nf . $fileName);
 
 DB::getInstance()->updateFichierHistorique($historique);
 
 
-if(!move_uploaded_file($fileTmpPath, $chemin . $val . $fileName)) {
-    echo "Error moving file : $fileTmpPath to $chemin$val$fileName.";
-    $historique = DB::getInstance()->getHistoriqueByChemin($chemin . $val . $fileName);
+if(!move_uploaded_file($fileTmpPath, $chemin . $nf . $fileName)) {
+    echo "Error moving file : $fileTmpPath to $chemin$nf$fileName.";
+    $historique = DB::getInstance()->getHistoriqueByChemin($chemin . $nf . $fileName);
     DB::getInstance()->suppHistorique($historique->getIdHis());
     return;
 }
