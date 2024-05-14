@@ -355,9 +355,15 @@ function FicheSecu() {
 				La {idHis && 'nouvelle'} fiche à était générer et envoyé a l'administration. <br></br>
 				Vous pourez la modifié jusqu'à sa validation par le.s administateur.euse.s dans de futur fonctionnalités. <br></br>
 
-				<button className='btn mt-4 btnSauvegarder' onClick={() => {window.location.href = '/fiches-de-sécurité'}}> Terminer </button>
+				<button className='btn mt-4 btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Terminer </button>
 			</div>
 		);
+	}
+
+	function redirigerAuDebut()
+	{
+		if (sessionStorage.getItem('droit') !== 'Client') window.location.href = '/historique';
+		else                                              window.location.href = '/fiches-de-securite';
 	}
 
 
@@ -914,7 +920,7 @@ function FicheSecu() {
 		})
 		.catch(error => {
 			// Gérer les erreurs de chargement du fichier Blob
-			window.location.href = '/fiches-de-sécurité';
+			window.location.href = '/fiches-de-securite';
 			console.log("Erreur", error)
 			alert('Le fichier sauvegarder ne semble pas être du bon format');
 		});
@@ -1127,9 +1133,8 @@ function FicheSecu() {
 				{etapesLib[etape] === 'Envoie'   && generatehtmlAppercue()        }
 
 				<div className="m-5 d-flex justify-content-end">
-					{/* {etape !== 0 &&
-						<button className="mx-2 col-sm-1 btn btn-secondary" onClick={etapePrecedente}>Précédent</button>
-					} */}
+					<button className="mx-2 col-sm-1 btn btn-secondary" onClick={redirigerAuDebut()}>Annuler</button>
+
 					{etape < etapesLib.length - 2 &&
 						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
