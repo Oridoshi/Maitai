@@ -21,6 +21,11 @@ function FicheSecu() {
 	const [nombrePlaques    , setNombrePlaques    ] = useState(1);
 	const [encadreOuNon     , setEncadre          ] = useState({});
 	const [peutValide       , setValide           ] = useState(false);
+	const [formDataObject   , setFormDataObject   ] = useState({});
+
+	const [idHis  , setIdHis  ] = useState();
+	const [nomFic , setnomFic ] = useState();
+
 
 
 	function getCurrentDate() {
@@ -65,7 +70,7 @@ function FicheSecu() {
 					<div className="col col-sm-3 m-2 ">
 						<div className="d-flex align-items-center">
 							<label htmlFor="date" className="me-2 fw-bold">Date</label>
-							<input type="date" className="form-control" name='date' id="date" readOnly defaultValue={getCurrentDate()} required/>
+							<input type="date" className="form-control" name='date' id="date" readOnly defaultValue={idHis ? formDataObject["date"] : getCurrentDate()} required/>
 						</div>
 					</div>
 
@@ -96,33 +101,33 @@ function FicheSecu() {
 						</div>
 
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1"                  id="dp"       value="DP"                                                 readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="dpnom"     id="dpnom"    placeholder="Nom"    onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="dpprenom"  id="dpprenom" placeholder="Prenom" onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="dpniveau"  id="dpniveau" placeholder="Niveau" onChange={() => handleChangeEnTete()}         />
+							<input type="text" className="form-control p-1 m-1"                  id="dp"       value="DP"           readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="dpnom"     id="dpnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["dpnom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="dpprenom"  id="dpprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["dpprenom"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="dpniveau"  id="dpniveau" placeholder="Niveau" defaultValue={idHis && formDataObject["dpniveau"]} onChange={() => handleChangeEnTete()} />
 						</div>
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1"                  id="ss1"       value="SECU.SURF"                                           readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="ss1nom"    id="ss1nom"    placeholder="Nom"    onChange={() => handleChangeEnTete()}          />
-							<input type="text" className="form-control p-1 m-1" name="ss1prenom" id="ss1prenom" placeholder="Prenom" onChange={() => handleChangeEnTete()}          />
-							<input type="text" className="form-control p-1 m-1" name="ss1niveau" id="ss1niveau" placeholder="Niveau" onChange={() => handleChangeEnTete()}          />
+							<input type="text" className="form-control p-1 m-1"                  id="ss1"       value="SECU.SURF"    readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="ss1nom"    id="ss1nom"    placeholder="Nom"    defaultValue={idHis && formDataObject["ss1nom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="ss1prenom" id="ss1prenom" placeholder="Prenom" defaultValue={idHis && formDataObject["ss1prenom"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="ss1niveau" id="ss1niveau" placeholder="Niveau" defaultValue={idHis && formDataObject["ss1niveau"]} onChange={() => handleChangeEnTete()} />
 						</div>
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1"                  id="ss2"       value="SECU.SURF"                                          readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="ss2nom"    id="ss2nom"    placeholder="Nom"    onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="ss2prenom" id="ss2prenom" placeholder="Prenom" onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="ss2niveau" id="ss2niveau" placeholder="Niveau" onChange={() => handleChangeEnTete()}         />
+							<input type="text" className="form-control p-1 m-1"                  id="ss2"       value="SECU.SURF"    readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="ss2nom"    id="ss2nom"    placeholder="Nom"    defaultValue={idHis && formDataObject["ss2nom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="ss2prenom" id="ss2prenom" placeholder="Prenom" defaultValue={idHis && formDataObject["ss2prenom"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="ss2niveau" id="ss2niveau" placeholder="Niveau" defaultValue={idHis && formDataObject["ss2niveau"]} onChange={() => handleChangeEnTete()} />
 						</div>
 						<div className="d-flex align-items-center">
-							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"                                          readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau" onChange={() => handleChangeEnTete()}         />
+							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"    readOnly/>
+							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()}         />
+							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()}         />
+							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau" defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()}         />
 						</div>
 
 						<div className="d-flex align-items-center mt-3">
 							<label type="text" className="fw-bold" htmlFor="tel"> Nombre plongeurs </label>
-							<input type="number" min="1" className="form-control p-1 m-1" name="nbplong"   id="nbplong"   placeholder="Nombre"    onChange={() => handleChangeEnTete()}/>
+							<input type="number" min="1" className="form-control p-1 m-1" name="nbplong"   id="nbplong"   placeholder="Nombre"  defaultValue={idHis && formDataObject["nbplong"]}  onChange={() => handleChangeEnTete()}/>
 						</div>
 					</div>
 
@@ -130,17 +135,17 @@ function FicheSecu() {
 					<div className="col-sm-5 ms-4 mt-4 ms-5">
 						<div className="d-flex align-items-center mt-5">
 							<label htmlFor="pa12" className="fw-bold col-sm-4 m-1">PA12 : NON AUTORISE</label>
-							<input type="text"    className="form-control p-1 m-1" onChange={() => handleChangeEnTete()} name='pa12' id="pa12" required/>
+							<input type="text"    className="form-control p-1 m-1" defaultValue={idHis && formDataObject["pa12"]} onChange={() => handleChangeEnTete()} name='pa12' id="pa12" required/>
 						</div>
 
 						<div className="d-flex align-items-center">
 							<label htmlFor="secu" className="fw-bold col-sm-4 m-1">Bloc de secu</label>
-							<input type="text"    className="form-control p-1 m-1" onChange={() => handleChangeEnTete()} name='secu' id="secu" required/>
+							<input type="text"    className="form-control p-1 m-1" defaultValue={idHis && formDataObject["secu"]} onChange={() => handleChangeEnTete()} name='secu' id="secu" required/>
 						</div>
 
 						<div className="d-flex align-items-center">
 							<label htmlFor="o2" className="fw-bold col-sm-4 m-1">O2</label>
-							<input type="text"  className="form-control p-1 m-1" onChange={() => handleChangeEnTete()} name='o2' id="o2" required/>
+							<input type="text"  className="form-control p-1 m-1" defaultValue={idHis && formDataObject["o2"]} onChange={() => handleChangeEnTete()} name='o2' id="o2" required/>
 						</div>
 					</div>
 				</div>
@@ -165,6 +170,7 @@ function FicheSecu() {
 					Array(nombrePlaques).fill().map((_, index) => generatePalanquee(index + 1))
 				}
 			</div>
+
 		);
 	}
 
@@ -197,8 +203,8 @@ function FicheSecu() {
 
 					<div className="d-flex align-items-center col-sm-12">
 						<div className="d-flex align-items-center col-sm-6">
-							<input type="text" className={`form-control p-1 m-1 ${encadreOuNon[num] ? 'bg-secondary text-light' : ''}`} name={`p${num}Anom`}    id={`p${num}Anom`}    onChange={() => handleChangePlaquee(num)} placeholder="Nom"   />
-							<input type="text" className={`form-control p-1 m-1 ${encadreOuNon[num] ? 'bg-secondary text-light' : ''}`} name={`p${num}Aprenom`} id={`p${num}Aprenom`} onChange={() => handleChangePlaquee(num)} placeholder="Prénom"/>
+							<input type="text" className={`form-control p-1 m-1 ${encadreOuNon[num] ? 'bg-secondary text-light' : ''}`} name={`p${num}Anom`}    id={`p${num}Anom`}    defaultValue={formDataObject[`p${num}Anom`   ] && formDataObject[`p${num}Anom`   ]} onChange={() => handleChangePlaquee(num)} placeholder="Nom"   />
+							<input type="text" className={`form-control p-1 m-1 ${encadreOuNon[num] ? 'bg-secondary text-light' : ''}`} name={`p${num}Aprenom`} id={`p${num}Aprenom`} defaultValue={formDataObject[`p${num}Aprenom`] && formDataObject[`p${num}Aprenom`]} onChange={() => handleChangePlaquee(num)} placeholder="Prénom"/>
 							{encadreOuNon[num] ? generateList(nivEncadrant, num, 'A') : generateList(nivGeneral, num, 'A')}
 						</div>
 
@@ -209,8 +215,8 @@ function FicheSecu() {
 						</div>
 						
 						<div className='d-flex align-items-center col-sm-2'>
-							<input type="number" min="0" className="form-control p-1 me-3" name={`p${num}prof`}  id={`p${num}prof`} onChange={() => handleChangePlaquee(num)} placeholder="En mètre" />
-							<input type="number" min="0" className="form-control p-1 ms-1" name={`p${num}temp`}  id={`p${num}temp`} onChange={() => handleChangePlaquee(num)} placeholder="En minute"/>
+							<input type="number" min="0" className="form-control p-1 me-3" name={`p${num}prof`}  id={`p${num}prof`} defaultValue={formDataObject[`p${num}prof`] && formDataObject[`p${num}prof`]} onChange={() => handleChangePlaquee(num)} placeholder="En mètre" />
+							<input type="number" min="0" className="form-control p-1 ms-1" name={`p${num}temp`}  id={`p${num}temp`} defaultValue={formDataObject[`p${num}temp`] && formDataObject[`p${num}temp`]} onChange={() => handleChangePlaquee(num)} placeholder="En minute"/>
 						</div>
 					</div>
 
@@ -218,8 +224,8 @@ function FicheSecu() {
 
 					<div className="d-flex align-items-center col-sm-12 mt-3">
 						<div className="d-flex align-items-center col-sm-6">
-							<input type="text" className="form-control p-1 m-1" name={`p${num}Bnom`}    id={`p${num}Bnom`}    onChange={() => handleChangePlaquee(num)} placeholder="Nom"   />
-							<input type="text" className="form-control p-1 m-1" name={`p${num}Bprenom`} id={`p${num}Bprenom`} onChange={() => handleChangePlaquee(num)} placeholder="Prénom"/>
+							<input type="text" className="form-control p-1 m-1" name={`p${num}Bnom`}    id={`p${num}Bnom`}    defaultValue={formDataObject[`p${num}Bnom`   ] && formDataObject[`p${num}Bnom`   ]} onChange={() => handleChangePlaquee(num)} placeholder="Nom"   />
+							<input type="text" className="form-control p-1 m-1" name={`p${num}Bprenom`} id={`p${num}Bprenom`} defaultValue={formDataObject[`p${num}Bprenom`] && formDataObject[`p${num}Bprenom`]} onChange={() => handleChangePlaquee(num)} placeholder="Prénom"/>
 							{generateList(nivGeneral, num, 'B')}
 						</div>
 						
@@ -234,8 +240,8 @@ function FicheSecu() {
 
 					<div className="d-flex align-items-center col-sm-12">
 						<div className="d-flex align-items-center col-sm-6">
-							<input type="text" className="form-control p-1 m-1" name={`p${num}Cnom`}    id={`p${num}Cnom`}    onChange={() => handleChangePlaquee(num)} placeholder="Nom"   />
-							<input type="text" className="form-control p-1 m-1" name={`p${num}Cprenom`} id={`p${num}Cprenom`} onChange={() => handleChangePlaquee(num)} placeholder="Prénom"/>
+							<input type="text" className="form-control p-1 m-1" name={`p${num}Cnom`}    id={`p${num}Cnom`}    defaultValue={formDataObject[`p${num}Cnom`   ] && formDataObject[`p${num}Cnom`   ]} onChange={() => handleChangePlaquee(num)} placeholder="Nom"   />
+							<input type="text" className="form-control p-1 m-1" name={`p${num}Cprenom`} id={`p${num}Cprenom`} defaultValue={formDataObject[`p${num}Cprenom`] && formDataObject[`p${num}Cprenom`]} onChange={() => handleChangePlaquee(num)} placeholder="Prénom"/>
 							{generateList(nivGeneral, num, 'C')}
 						</div>
 						
@@ -251,7 +257,7 @@ function FicheSecu() {
 	function generateList(datas, num, cat)
 	{
 		return (
-			<select name={`p${num}${cat}niv`} id={`p${num}${cat}niv`} className={`form-select ${encadreOuNon[num] && cat ==='A' ? 'bg-secondary text-light' : ''}`} onChange={() => handleChangePlaquee(num)}>
+			<select name={`p${num}${cat}niv`} id={`p${num}${cat}niv`} className={`form-select ${encadreOuNon[num] && cat ==='A' ? 'bg-secondary text-light' : ''}`} defaultValue={formDataObject[`p${num}${cat}niv`] && formDataObject[`p${num}${cat}niv`]} onChange={() => handleChangePlaquee(num)}>
 				{datas.map((niveau) => (
 					<option key={niveau}>{niveau}</option>
 				))}
@@ -290,43 +296,43 @@ function FicheSecu() {
 					<div className='d-flex mb-3'>
 						<div className='align-items-center col-sm-1'>
 							<label htmlFor={`profRea${num}`} className="me-2">Profondeur</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={sessionStorage.getItem(`p${num}prof`)} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center col-sm-1 me-3'>
 							<label htmlFor={`tempsRea${num}`} className="me-2">Temps</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={sessionStorage.getItem(`p${num}temp`)} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]} onChange={() => handleChangeRea()}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`palier3m${num}`} className="me-2">Palier 3m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`palier6m${num}`} className="me-2">Palier 6m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]} onChange={() => handleChangeRea()}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`HD${num}`} className="me-2">HD</label>
-							<input type="time" className="form-control" name={`p${num}HD`} id={`p${num}HD`} onChange={() => handleChangeRea()}/>
+							<input type="time" className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`HS${num}`} className="me-2">HS</label>
-							<input type="time" className="form-control" name={`p${num}HS`} id={`p${num}HS`} onChange={() => handleChangeRea()}/>
+							<input type="time" className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center '>
 							<label htmlFor={`gaz${num}`} className="me-2">Gaz</label>
-							<input type="text" className="form-control" name={`p${num}gaz`} id={`p${num}gaz`} onChange={() => handleChangeRea()}/>
+							<input type="text" className="form-control" name={`p${num}gaz`} id={`p${num}gaz`} defaultValue={idHis && formDataObject[`p${num}gaz`]} onChange={() => handleChangeRea()}/>
 						</div>
 					</div>
 
 					<div className='col-sm-6 mt-3'>
 						<label htmlFor={`remarque${num}`} className="me-2">Remarque</label>
-						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} onChange={() => handleChangeRea()}/>
+						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
 					</div>
 				</div>
 
@@ -343,14 +349,14 @@ function FicheSecu() {
 	 */
 	function generatehtmlAppercue() {
 
-		// remplirFiche();
-		generateExcel()
+		generateExcel();
+
 		return (
 			<div className='m-5'>
-				La fiche à était générer et envoyé a l'administration. <br></br>
+				La {idHis && 'nouvelle'} fiche à était générer et envoyé a l'administration. <br></br>
 				Vous pourez la modifié jusqu'à sa validation par le.s administateur.euse.s dans de futur fonctionnalités. <br></br>
 
-				<button className='btn mt-4 btnSauvegarder' onClick={() => {window.location.href = '/Acceuil'}}> Retourner à l'acceuil </button>
+				<button className='btn mt-4 btnSauvegarder' onClick={() => {window.location.href = '/fiches-de-sécurité'}}> Terminer </button>
 			</div>
 		);
 	}
@@ -359,8 +365,23 @@ function FicheSecu() {
 
 
 
+
+
+	/**********************************************************************/
+	/*                                                                    */
+	/*                       GESTION DES FICHIERS                         */
+	/*                                                                    */
+	/**********************************************************************/
+
+
+
+
+
 	const ExcelJS = require('exceljs');
 
+	/**
+	 * Création de la fiche de sécurité 
+	 */
 
 	async function generateExcel() {
 		// Créer un nouveau classeur Excel
@@ -370,6 +391,8 @@ function FicheSecu() {
 		const worksheet = workbook.addWorksheet('Sheet1');
 
 		const borderAll = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'}};
+		const grayFill = {type: 'pattern',pattern:'solid',fgColor:{argb:'FFCCCCCC'}};
+		const allVCHC = { vertical: 'middle', horizontal: 'center' };
 
 
 		//TAILLE COLONNE
@@ -445,25 +468,25 @@ function FicheSecu() {
 		worksheet.getCell('B4').value  = 'DATE : ';
 		worksheet.getCell('B4').font   = { bold: true, size: 12, name:'Arial'};
 		worksheet.getCell('B4').border = borderAll;
-		worksheet.getCell('C4').value  = sessionStorage.getItem("date");
+		worksheet.getCell('C4').value  = formDataObject["date"];
 		worksheet.getCell('C4').border = borderAll;
 
 		worksheet.getCell('D4').value  = 'LIEU : ';
 		worksheet.getCell('D4').border = borderAll;
 		worksheet.getCell('D4').font   = { bold: true, size: 12, name:'Arial'};
-		worksheet.getCell('E4').value  = sessionStorage.getItem("lieu");
+		worksheet.getCell('E4').value  = formDataObject["lieu"];
 		worksheet.getCell('E4').border = borderAll;
 
 		worksheet.getCell('B6').value  = 'Nom du club';   
 		worksheet.getCell('B6').border = borderAll;
 		worksheet.getCell('B6').font   = { bold: true, size: 16, name:'Arial'};
-		worksheet.getCell('C6').value  = sessionStorage.getItem("club")  ;
+		worksheet.getCell('C6').value  = formDataObject["club"];
 		worksheet.getCell('C6').border = borderAll;
 
 		worksheet.getCell('B8').value  = 'nombre plongeurs';   
 		worksheet.getCell('B8').font   = { bold: true, size: 12, name:'Arial'};
 		worksheet.getCell('B8').border = borderAll;
-		worksheet.getCell('C8').value  = sessionStorage.getItem("nbplong");
+		worksheet.getCell('C8').value  = formDataObject["nbplong"];
 		worksheet.getCell('C8').border = borderAll;
 
 		worksheet.getCell('M8').border = borderAll; //signature
@@ -478,9 +501,9 @@ function FicheSecu() {
 		lib.map((item) => {
 			worksheet.getCell('B' + item.ligne).value  = item.lib;   
 			worksheet.getCell('B' + item.ligne).font   = {size: 12, name:'Arial'};
-			worksheet.getCell('C' + item.ligne).value  = sessionStorage.getItem(item.key + "nom")   ;
-			worksheet.getCell('D' + item.ligne).value  = sessionStorage.getItem(item.key + "prenom");
-			worksheet.getCell('E' + item.ligne).value  = sessionStorage.getItem(item.key + "niveau");
+			worksheet.getCell('C' + item.ligne).value  = formDataObject[item.key + "nom"]   ;
+			worksheet.getCell('D' + item.ligne).value  = formDataObject[item.key + "prenom"];
+			worksheet.getCell('E' + item.ligne).value  = formDataObject[item.key + "niveau"];
 			worksheet.getCell('B' + item.ligne).border = borderAll;
 			worksheet.getCell('C' + item.ligne).border = borderAll;
 			worksheet.getCell('D' + item.ligne).border = borderAll;
@@ -497,7 +520,7 @@ function FicheSecu() {
 			worksheet.getCell('G'+item.ligne).value  = item.lib;   
 			worksheet.getCell('G'+item.ligne).font   = {size: 10, bold : true, name:'Arial'};
 			worksheet.getCell('G'+item.ligne).border = borderAll;
-			worksheet.getCell('J'+item.ligne).value  = sessionStorage.getItem(item.key)     
+			worksheet.getCell('J'+item.ligne).value  = formDataObject[item.key]    
 			worksheet.getCell('J'+item.ligne).border = borderAll;     
 		});  
 
@@ -557,9 +580,6 @@ function FicheSecu() {
 		});  
 
 
-
-		const grayFill = {type: 'pattern',pattern:'solid',fgColor:{argb:'FFCCCCCC'}};
-		const allVCHC = { vertical: 'middle', horizontal: 'center' };
 		//Pour chaque palanqué 
 		Array(nombrePlaques - 1).fill().map((_, index) => {
 
@@ -575,9 +595,9 @@ function FicheSecu() {
 			{
 				let ind = String.fromCharCode(65 + i); // Convertit 0 à 'A', 1 à 'B', etc.
 
-				worksheet.getCell('B' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "nom"    );
-				worksheet.getCell('C' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "prenom" );
-				worksheet.getCell('D' + ((16 + i) + index * 3)).value = sessionStorage.getItem("p" + (index+1) + (ind) + "niv"    );
+				worksheet.getCell('B' + ((16 + i) + index * 3)).value = formDataObject["p" + (index+1) + (ind) + "nom"    ];
+				worksheet.getCell('C' + ((16 + i) + index * 3)).value = formDataObject["p" + (index+1) + (ind) + "prenom" ];
+				worksheet.getCell('D' + ((16 + i) + index * 3)).value = formDataObject["p" + (index+1) + (ind) + "niv"    ];
 				worksheet.getCell('B' + ((16 + i) + index * 3)).border = borderAll;
 				worksheet.getCell('C' + ((16 + i) + index * 3)).border = borderAll;
 				worksheet.getCell('D' + ((16 + i) + index * 3)).border = borderAll;
@@ -594,8 +614,8 @@ function FicheSecu() {
 
 			}
 
-			if (sessionStorage.getItem("p" + (index+1) +"type") === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
-			else                                                             worksheet.getCell('E' + (16 + index * 3)).value = 'X'
+			if (formDataObject["p" + (index+1) +"type"] === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
+			else                                                     worksheet.getCell('E' + (16 + index * 3)).value = 'X'
 
 
 			//INFORMATIONS PLONGEE
@@ -613,16 +633,16 @@ function FicheSecu() {
 			worksheet.mergeCells('O' + (16 + index * 3) + ':' + 'O' + (18 + index * 3));
 			worksheet.mergeCells('P' + (16 + index * 3) + ':' + 'P' + (18 + index * 3));
 
-			worksheet.getCell('G' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"prof"    )
-			worksheet.getCell('H' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"temp"    )
-			worksheet.getCell('I' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"profrea" )
-			worksheet.getCell('J' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"tempsrea")
-			worksheet.getCell('K' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"3m"      )
-			worksheet.getCell('L' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"6m"      )
-			worksheet.getCell('M' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"HD"      )
-			worksheet.getCell('N' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"HS"      )
-			worksheet.getCell('O' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"gaz"     )
-			worksheet.getCell('P' + (16 + index * 3)).value = sessionStorage.getItem("p" + (index+1) +"rem"     )
+			worksheet.getCell('G' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"prof"    ]
+			worksheet.getCell('H' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"temp"    ]
+			worksheet.getCell('I' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"profrea" ]
+			worksheet.getCell('J' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"tempsrea"]
+			worksheet.getCell('K' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"3m"      ]
+			worksheet.getCell('L' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"6m"      ]
+			worksheet.getCell('M' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"HD"      ]
+			worksheet.getCell('N' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"HS"      ]
+			worksheet.getCell('O' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"gaz"     ]
+			worksheet.getCell('P' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"rem"     ]
 
 			worksheet.getCell('E' + (16 + index * 3)).border = borderAll;
 			worksheet.getCell('F' + (16 + index * 3)).border = borderAll;
@@ -680,67 +700,227 @@ function FicheSecu() {
 		/***************************************************/
 
 		
-		let formData = new FormData();
-		formData.append('login'  , sessionStorage.getItem("login"));
 
-		console.log(formData.get('login'))
+		//SI CEST NOUVEAU 
+		if (idHis === undefined)
+		{
+			let formData = new FormData();
+			formData.append('login'  , sessionStorage.getItem("login"));
 
-		//On récupère id du login 
-		let response = await fetch(cheminPHP + "client/GetIdClient.php", {
-			method: 'POST',
-			body: formData
-		});
+			console.log(formData.get('login'))
+
+			//On récupère id du login 
+			let response = await fetch(cheminPHP + "client/GetIdClient.php", {
+				method: 'POST',
+				body: formData
+			});
 
 
-		if (!response.ok) {
-			throw new Error('Erreur de réseau lors de la récupération de l\'id.');
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération de l\'id.');
+			}
+
+			const id = await response.text();
+			console.log(id)
+			
+
+
+			// On envoie le fichier Excel au serveur
+			formData = new FormData();
+			formData.append('idcli'  , parseInt(id));
+			formData.append('type'   , 'SECU');
+			formData.append('file'   , blob);
+			formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
+			console.log( "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs")
+
+			response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
+				method: 'POST',
+				body: formData
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+			}
+
+			const text = await response.text();
+			console.log(text)
+
+		} else {
+
+			// ModificationFichierHistorique
+			// $idhist = $_POST['idhist'];
+			// $file = $_FILES['file'];
+			// $fileName = $_POST['name'];
+
+
+			// On envoie le nouveau fichier Excel au serveur
+			const formData = new FormData();
+			formData.append('idhist'  , idHis);
+			formData.append('file'   , blob);
+			formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
+			console.log( "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs")
+
+			const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
+				method: 'POST',
+				body: formData
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+			}
+
+			const text = await response.text();
+			console.log("un problemen ?", text)
+
+
 		}
 
-		const id = await response.text();
-		console.log(id)
+
 		
+		// // Créer un objet URL à partir du Blob
+		// const url = window.URL.createObjectURL(blob);
+
+		// // Créer un lien d'ancrage pour télécharger le fichier Excel
+		// const a = document.createElement('a');
+		// a.href = url;
+		// a.download = "HEYY_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx";
+		// document.body.appendChild(a);
+		// a.click();
+
+		// // Libérer l'URL de l'objet Blob
+		// window.URL.revokeObjectURL(url);
+	}
 
 
-		// On envoie le fichier Excel au serveur
-		formData = new FormData();
-		formData.append('idcli'  , parseInt(id));
-		formData.append('type'   , 'SECU');
-		formData.append('file'   , blob);
-		formData.append('name'   , "_" + sessionStorage.getItem("date") + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
+
+	
+	// Si c'est une modification on lit la fiche 
+	if(sessionStorage.getItem('idHis')) { lireFiche() } 
+
+	/**
+	 * Si c'est une modif on lis les dataspour les mettres de base
+	 */
+	async function lireFiche() 
+	{
+		// RECUPERER LES INFORMATIONS
+		const id = sessionStorage.getItem('idHis');
+		sessionStorage.removeItem("idHis");  
+
+		setIdHis(id);   
+
+		// RECUPERER LE FICHIER
+		const formData = new FormData();
+		formData.append('idhist', id);
 
 		const requestOptions = {
 			method: 'POST',
 			body: formData
 		};
 
-		response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
-			method: 'POST',
-			body: formData
-		});
+		const response = await fetch(cheminPHP + "historique/GetFilesIdHist.php", requestOptions);
 
 		if (!response.ok) {
-			throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+			throw new Error('Une erreur s\'est produite.');
 		}
+		const blob = await response.blob();
 
-		const text = await response.text();
-		console.log(text)
+		// LIRE LES DONNEES
+		const workbook = new ExcelJS.Workbook();
+
+		// Lire le Blob en utilisant la méthode readFile() de ExcelJS
+		workbook.xlsx.load(blob).then(() => {
+			// Maintenant que le fichier est chargé, vous pouvez accéder à ses feuilles, etc.
+			const worksheet = workbook.getWorksheet(1); // Par exemple, accéder à la première feuille
+			
+			// Parcourir les cellules ou effectuer toute autre opération nécessaire
+			const nbPala = (worksheet.lastRow.number - 15) / 3;
+			setNombrePlaques(nbPala + 1);
+			setValide(true)
+			
+			let oldData = {};
+
+			//On lit les données, désolé c'est pas beau...
+			oldData["date"]    = worksheet.getCell('C4').value;
+			oldData["lieu"]    = worksheet.getCell('E4').value;
+			oldData["club"]    = worksheet.getCell('C6').value;
+			oldData["nbplong"] = worksheet.getCell('C8').value;
+
+			oldData["dpnom"   ] = worksheet.getCell('C9').value;
+			oldData["dpprenom"] = worksheet.getCell('D9').value;
+			oldData["dpniveau"] = worksheet.getCell('E9').value;
+
+			oldData["ss1nom"   ] = worksheet.getCell('C10').value;
+			oldData["ss1prenom"] = worksheet.getCell('D10').value;
+			oldData["ss1niveau"] = worksheet.getCell('E10').value;
+
+			oldData["ss2nom"   ] = worksheet.getCell('C11').value;
+			oldData["ss2prenom"] = worksheet.getCell('D11').value;
+			oldData["ss2niveau"] = worksheet.getCell('E11').value;
+
+			oldData["telnom"   ] = worksheet.getCell('C12').value;
+			oldData["telprenom"] = worksheet.getCell('D12').value;
+			oldData["telniveau"] = worksheet.getCell('E12').value;
+
+			oldData["pa12"] = worksheet.getCell('J8' ).value;
+			oldData["secu"] = worksheet.getCell('J9' ).value;
+			oldData["o2"  ] = worksheet.getCell('J10').value;
 
 
-		/*
-		// Créer un objet URL à partir du Blob
-		const url = window.URL.createObjectURL(blob);
 
-		// Créer un lien d'ancrage pour télécharger le fichier Excel
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = blob.name;
-		document.body.appendChild(a);
-		a.click();
 
-		// Libérer l'URL de l'objet Blob
-		window.URL.revokeObjectURL(url);*/
+			
+			Array(nbPala).fill().map((_, index) => {
+
+
+				//NOM PRENOM NIVEAU
+				for (let i = 0; i < 3; i++)
+				{
+					let ind = String.fromCharCode(65 + i); // Convertit 0 à 'A', 1 à 'B', etc.
+
+					console.log("p" + (index+1) + (ind) + "nom")
+
+					oldData["p" + (index+1) + (ind) + "nom"    ] = worksheet.getCell('B' + ((16 + i) + index * 3)).value;
+					oldData["p" + (index+1) + (ind) + "prenom" ] = worksheet.getCell('C' + ((16 + i) + index * 3)).value;
+					oldData["p" + (index+1) + (ind) + "niv"    ] = worksheet.getCell('D' + ((16 + i) + index * 3)).value;
+
+			
+				}
+
+				
+				console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC')
+				console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb)
+				console.log("Hye", 'B' + (16 + index * 3))
+
+				setEncadre(prevState => ({
+					...prevState,
+					[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
+				}));
+
+				// if (formDataObject["p" + (index+1) +"type"] === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
+				// else                                                     worksheet.getCell('E' + (16 + index * 3)).value = 'X'
+
+				oldData["p" + (index+1) +"prof"    ] = worksheet.getCell('G' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"temp"    ] = worksheet.getCell('H' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"profrea" ] = worksheet.getCell('I' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"tempsrea"] = worksheet.getCell('J' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"3m"      ] = worksheet.getCell('K' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"6m"      ] = worksheet.getCell('L' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"HD"      ] = worksheet.getCell('M' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"HS"      ] = worksheet.getCell('N' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"gaz"     ] = worksheet.getCell('O' + (16 + index * 3)).value;
+				oldData["p" + (index+1) +"rem"     ] = worksheet.getCell('P' + (16 + index * 3)).value;
+			})
+
+			setFormDataObject(oldData)
+		})
+		.catch(error => {
+			// Gérer les erreurs de chargement du fichier Blob
+			window.location.href = '/fiches-de-sécurité';
+			console.log("Erreur", error)
+			alert('Le fichier sauvegarder ne semble pas être du bon format');
+		});
+
 	}
-
 
 
 
@@ -764,7 +944,7 @@ function FicheSecu() {
 
 		// Afficher les valeurs du formulaire dans la console
 		setEtape(etape + 1);
-		setValide(false)
+		setValide(idHis !== undefined)
 	};
 
 
@@ -772,23 +952,20 @@ function FicheSecu() {
 	 * Sauvegarde les informations du form dans les cookie de sessions
 	 * @param {*} formData 
 	 */
-	function saveInformations(formData)
-	{
-		// Créer un objet pour stocker les valeurs du formulaire
-		const formValues = {};
+	function saveInformations(formData) {
+
+		let nouvData = formDataObject 
 
 		// Parcourir toutes les entrées du formulaire
 		for (let [key, value] of formData.entries()) {
-			sessionStorage.setItem(key, value);
-			if (value !== '')
-				formValues[key] = value;
+			if (value !== '') {
+				// Mettre à jour les nouvelles données dans l'objet global
+				nouvData[key] = value;
+			}
 		}
 
-
-		console.log(sessionStorage)
-
+		setFormDataObject(nouvData)
 	}
-
 
 	/**
 	 * Fonction qui gère les changement du formulaire des palanquées.
@@ -941,7 +1118,7 @@ function FicheSecu() {
 
 	return (
 		<div className="col-sm-12" style={{ overflowX: 'hidden' }}>
-			<h1 className='titre mt-1'>Création d'une fiche de sécurité - {etapesLib[etape]}</h1>
+			<h1 className='titre mt-1'> { idHis ? "Modification" : "Création"} d'une fiche de sécurité - {etapesLib[etape]}</h1>
 
 			<form onSubmit={handleSubmit}>
 				{/* Pass formData and setFormData to the GeneratehtmlForm component */}
@@ -961,7 +1138,6 @@ function FicheSecu() {
 						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnAnnuler' : 'btn-secondary'}`} type="submit">Envoyé</button>
 					}
 				</div>
-			
 			
 			
 			</form>

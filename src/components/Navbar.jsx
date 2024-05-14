@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 //import des pages pour les routes
 import Accueil from "../pages/Accueil";
 import Client from "../pages/Client";
-import FicheSecu from "../pages/FicheSecu";
+import Secu from "../pages/Secu";
 import Produits from "../pages/Produits";
 import Tickets from "../pages/Tickets";
 import Utilisateurs from "../pages/Utilisateurs";
 import Form from "../components/Form";
 import Historique from "../pages/Historique";
+import FicheSecu from "../pages/FicheSecu";
 
 import '../style/nav.css';
 import '../style/form.css';
@@ -32,11 +33,11 @@ function Navbar({ role })
 	role = sessionStorage.getItem('droit');
 	switch (role)
 	{
-		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiche de sécurité'];
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiches de sécurité'];
 			break;
-		case 'Maitai': navLinks = ['Clients', 'Fiche de sécurité'];
+		case 'Maitai': navLinks = ['Clients', 'Fiches de sécurité'];
 			break;
-		case 'Client' : navLinks = ['Fiche de sécurité'];
+		case 'Client' : navLinks = ['Fiches de sécurité'];
 			break;
 		default: navLinks = [];
 			break;
@@ -189,6 +190,7 @@ const sendMail = (mail) =>
 					<Route path="/utilisateurs" element={<Utilisateurs />} />
 					<Route path="/produits" element={<Produits />} />
 					<Route path="/tickets" element={<Tickets />} />
+					<Route path="/fiches-de-sécurité" element={<Secu />} />
 					<Route path="/fiche-de-sécurité" element={<FicheSecu />} />
 					<Route path="/historique" element={<Historique/>} />
 				</Routes>
