@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
 
 function FicheSecu() {
-	if(sessionStorage.getItem('droit') === '') window.location.href = '/';
-	if(sessionStorage.getItem('idHis') === undefined && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+	// if(sessionStorage.getItem('droit') === '') window.location.href = '/';
+	// if(sessionStorage.getItem('idHis') === undefined && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
 
@@ -1131,7 +1131,7 @@ function FicheSecu() {
 						<button className="mx-2 col-sm-1 btn btn-secondary" onClick={etapePrecedente}>Précédent</button>
 					} */}
 					{etape < etapesLib.length - 2 &&
-						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
+						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
 					{etape === etapesLib.length - 2 &&
 						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnAnnuler' : 'btn-secondary'}`} type="submit">Envoyé</button>
