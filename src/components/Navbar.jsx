@@ -41,9 +41,9 @@ function Navbar({ role }) {
 	role = sessionStorage.getItem('droit');
 	switch (role)
 	{
-		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Fiches de sécurité'];
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets'];
 			break;
-		case 'Maitai': navLinks = ['Clients', 'Fiches de sécurité'];
+		case 'Maitai': navLinks = ['Clients'];
 			break;
 		case 'Client' : navLinks = ['Fiches de sécurité'];
 			break;
@@ -209,6 +209,7 @@ function Navbar({ role }) {
 					<Route path="/produits" element={<Produits />} />
 					<Route path="/tickets" element={<Tickets />} />
 					<Route path="/fiches-de-securite" element={<Secu />} />
+					<Route path="/fiche-de-securite" element={<FicheSecu />} />
 					<Route path="/historique" element={<Historique/>} />
 				</Routes>
                 <Modal className="popup d-flex justify-content-center align-items-center" show={showModal} onHide={toggleModal}>
