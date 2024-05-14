@@ -19,8 +19,8 @@ export default function Ticket()
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");
 	const [lblErreur, setLblErreur] = useState("");
-	const [idCli,setIdCli] = useState("");
-	const [idProd,setIdProd] = useState("");
+	const [idCli, setIdCli] = useState("");
+	const [idProd, setIdProd] = useState("");
 	const [prix, setPrix] = useState("");
 	//bar de Recherche
 	const [filterData, setFilterData] = useState([]);
@@ -56,6 +56,7 @@ export default function Ticket()
 	//Gestion des tickets
 	function editTickets(ligne)
 	{
+		setIdCli(ligne.id);
 		try
 		{
 			//récupère la ligne qui appel la méthode et celle d'après
@@ -139,7 +140,10 @@ export default function Ticket()
 		btnExport.textContent = "Export (csv)";
 		btnExport.classList.add("btnExport");
 		btnExport.classList.add("btn");
-		btnExport.addEventListener('click', exportation);
+		btnExport.addEventListener('click', function ()
+		{
+			exportation(ligne.id);
+		});
 
 		//positonnement du bouton d'export
 		colBtnExport.appendChild(btnExport);		//dans sa colonne
@@ -181,10 +185,10 @@ export default function Ticket()
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
 			compteurRoot.render(<Compteur
 				valIni={ prod.qa }
-				updateTotComm={ (idprod, idcli, qa ,prixspe) => updateTotComm(idprod, idcli, qa, prixspe) }
+				updateTotComm={ (idprod, idcli, qa, prixspe) => updateTotComm(idprod, idcli, qa, prixspe) }
 				idprod={ prod.idprod }
 				idcli={ ligne.id }
-				prixspe={prod.prixspe}
+				prixspe={ prod.prixspe }
 			/>);
 
 			// Ajout des colonnes à la ligne de produit
@@ -195,7 +199,6 @@ export default function Ticket()
 			// Ajout de la ligne de produit après la ligne d'ajout
 			client.parentNode.insertBefore(ligneProd, ligneBtnExport);
 		};
-		setIdCli(ligne.id);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +219,7 @@ export default function Ticket()
 	const renderProd = () =>
 	{
 		const elements = tabProd.map(prod => (
-			<li key={ prod.libprod}><a className="dropdown-item" onClick={ () => {setIdProd(prod.idprod); setLblProd(prod.libprod); setPrix(prod.prixuni); } }>{ prod.libprod }</a></li>
+			<li key={ prod.libprod }><a className="dropdown-item" onClick={ () => { setIdProd(prod.idprod); setLblProd(prod.libprod); setPrix(prod.prixuni); } }>{ prod.libprod }</a></li>
 		));
 		return elements;
 	};
@@ -228,7 +231,8 @@ export default function Ticket()
 	}
 
 	//met à jour la liste des produits en fonction de la catégorie sélectionnée
-	async function activerProd(categorie) {
+	async function activerProd(categorie)
+	{
 		const produits = await getProduitByCateg(categorie);
 		setTabProd(produits);
 
@@ -242,9 +246,9 @@ export default function Ticket()
 	//ajoute un produit au ticket
 	async function ajtProd()
 	{
-		if (lblProd !== "" && !(await ticketExist(idProd,idCli)))
+		if (lblProd !== "" && !(await ticketExist(idProd, idCli)))
 		{
-			insertProdTicket(idProd,idCli,prix);
+			insertProdTicket(idProd, idCli, prix);
 
 			//ligne du produit
 			const ligneProd = document.createElement('tr');
@@ -273,11 +277,11 @@ export default function Ticket()
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
 			compteurRoot.render(<Compteur
-				valIni={ 1 }
-				updateTotComm={ (idprod, idcli, qa, prixspe) => updateTotComm(idprod, idcli, qa,prixspe) }
+				valIni={ 0 }
+				updateTotComm={ (idprod, idcli, qa, prixspe) => updateTotComm(idprod, idcli, qa, prixspe) }
 				idprod={ idProd }
 				idcli={ idCli }
-				prixspe={prix}
+				prixspe={ prix }
 			/>);
 
 			// Ajout des colonnes à la ligne de produit
@@ -301,7 +305,8 @@ export default function Ticket()
 			setFilterData(newData);
 			setTabCateg(await getCategProd());
 		}
-		else{
+		else
+		{
 			setLblErreur("Erreur ce produit existe déjà !");
 		}
 	}
@@ -311,35 +316,133 @@ export default function Ticket()
 	//EVENEMENTTS
 
 	//gère l'exportation
-	function exportation()
+	async function exportation(idcli)
 	{
-		console.log("exportation");
+		//génère le ticket de caisse du client en csv
+		await genereCSV(idcli);
+
+		//récupère tous les boutons et les remets dans la position haute
+		var buttons = document.getElementsByTagName('button');
+		for (var i = 0; i < buttons.length; i++)
+		{
+			var button = buttons[i];
+			button.style.transform = 'rotate(0deg)';
+		}
+
+		//masque tous les tickets
+		removeElementsByID('edit');
+
+		//supprime le tickets dans la bado
+		await supprTickets(idcli);
+
+		//maj des data
+		const newData = await fetchClientData();
+		setInitialData(newData);
+		setFilterData(newData);
 	}
 
+	//créer le fichier csv
+	async function genereCSV(idcli)
+	{
+		/* Contenu du fichier*/
+
+		const client = await getClient(idcli);
+		const tabDonneExport = await getTabDonneeExport();
+		const tabTicket = await getTabTicket(idcli);
+		const entete = ['nom produit;', 'prix unitaire;', 'quantité;', 'total;'];
+		let total = 0;
+
+		let contenu = "Nom du Club : ;" + client.nomclub + "\r\n\r\n";
+		//entete
+		entete.forEach(elt =>
+		{
+			contenu += elt;
+		});
+		contenu += "\r\n";
+
+		//produits
+		for (const ticket of tabTicket)
+		{
+			if (ticket.qa > 0)
+			{
+				const nomProduit = await getNomP(ticket.idprod);
+				contenu += nomProduit + ";" + ticket.prixspe + ";" + ticket.qa + ";" + ticket.prixtot + "\r\n";
+				total += ticket.prixtot;
+			}
+		}
+		contenu += "\r\n";
+
+		//total
+		contenu += ";; TOTAL;" + total;
+
+		/*Attribut du fichier */
+		if (total > 0)
+		{
+			// On crée le lien qui permet de télécharger
+			const element = document.createElement("a");
+
+			// Création du fichier
+			element.setAttribute("href", `data:text/csv;charset=utf-8,${ encodeURIComponent(contenu) }`);
+			element.setAttribute("download", client.nomclub + ".csv");
+			element.style.display = "none";
+
+			// On l'ajoute au bouton d'export
+			document.body.appendChild(element);
+			element.click();
+			document.body.removeChild(element);
+		}
+	}
+
+	//li le fichier de config et retorune les données à utiliser
+
+	async function getTabDonneeExport() {
+		try {
+			const cheminFichier = '../Export.ini'; // Assurez-vous que le chemin est correct par rapport à la structure de votre application
+			const reponse = await fetch(cheminFichier);
+
+			if (!reponse.ok) {
+				throw new Error('Erreur de chargement du fichier');
+			}
+
+			const contenu = await reponse.text();
+			console.log("Contenu du fichier INI :", contenu); // Vérifiez si le contenu est correctement importé
+			const lignes = contenu.split('\n');
+			lignes.forEach((ligne, index) => {
+				console.log(`Ligne ${index + 1}: ${ligne}`);
+				// Faites ici ce que vous voulez avec chaque ligne
+			});
+		} catch (erreur) {
+			console.error('Erreur de lecture du fichier INI:', erreur);
+		}
+	}
 
 	// FILTRES
 	const handleChange = (e) => { filter(e.target.value); };
 	const handleCbChange = (e) => { filter(e.target.checked); };
 
 
-	function filter (value)
+	function filter(value)
 	{
 		// Filtrer les données en fonction de la valeur de recherche
-		const filteredData = initialData.filter((element) => {
+		const filteredData = initialData.filter((element) =>
+		{
 
 			if (typeof value === 'boolean')
 			{
-				if(element.present === value || element.present) return true;
-				else                          return false;
+				if (element.present === value || element.present) return true;
+				else return false;
 			}
 			else
 			{
 				// Parcourir les clés de l'en-tête initial
-				for (const key of initialHeader) {
+				for (const key of initialHeader)
+				{
 					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-					if (key.show ) {
+					if (key.show)
+					{
 						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
+						if ((element[key.id] + '').toUpperCase().includes(value.toUpperCase()))
+						{
 							return true; // Si correspondance, conserver cet élément
 						}
 					}
@@ -547,12 +650,69 @@ export default function Ticket()
 		}
 	}
 
-	const ticketExist = async (idprod,idcli)=>
+	const getClient = async (idcli) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idcli', idcli);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "client/GetClient.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.json();
+			return data;
+		} catch (error)
+		{
+			return false;
+		}
+	}
+
+	const ticketExist = async (idprod, idcli) =>
 	{
 		const tabTicket = await getTickets();
 		return tabTicket.some(ticket => ticket.idprod === idprod && ticket.idcli === idcli);
 	}
 
+	const supprTickets = async (idcli) =>
+	{
+		try
+		{
+			const formData = new FormData();
+			formData.append('idcli', idcli);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/SuppressionTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+			return data === ""; // Retourne true si la insert a réussi, sinon false
+
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	}
 	//change le prix de la commande quand on modifie le nombre de produit
 	const updateTotComm = async (idprod, idcli, qa, prixspe) =>
 	{
@@ -593,14 +753,14 @@ export default function Ticket()
 
 	};
 
-	const insertProdTicket = async (idprod,idcli) =>
+	const insertProdTicket = async (idprod, idcli) =>
 	{
 		try
 		{
 			const formData = new FormData();
 			formData.append('idprod', idprod);
 			formData.append('idcli', idcli);
-			formData.append('qa', 1);
+			formData.append('qa', 0);
 			formData.append('prixspe', prix);
 
 			const requestOptions = {
@@ -668,10 +828,10 @@ export default function Ticket()
 				<Table
 					header={ initialHeader }
 					data={ filterData }
-					keyGrayWhenFalse = 'present'
+					keyGrayWhenFalse='present'
 				/>
 			</div>
-			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblErreur("");setLblCat(""); setLblProd(""); setPrix("");} }>
+			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblErreur(""); setLblCat(""); setLblProd(""); setPrix(""); } }>
 				<Modal.Header closeButton>
 					<Modal.Title>Ajouter un Produit</Modal.Title>
 				</Modal.Header>
@@ -699,9 +859,9 @@ export default function Ticket()
 					<input id="prix" required defaultValue={ prix } type="number" className="saisieprix" placeholder="Entrez un prix" onChange={ (event) => setPrix(event.target.value) } />
 				</Modal.Body>
 				<Modal.Footer>
-					<label className="Error"> {lblErreur}</label>
+					<label className="Error"> { lblErreur }</label>
 					<Button className="btnAjouter btn" onClick={ () => ajtProd() }></Button>
-					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblErreur("");setLblCat(""); setLblProd(""); setPrix(""); } }>
+					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblErreur(""); setLblCat(""); setLblProd(""); setPrix(""); } }>
 						Fermer
 					</Button>
 				</Modal.Footer>

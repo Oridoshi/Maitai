@@ -10,7 +10,6 @@ if($present){
 }
 else{
     $clients = DB::getInstance()->getClients();
-
 }
 
 echo json_encode($clients);
