@@ -275,6 +275,19 @@ export default function Historique(){
 		// Mettre à jour les données filtrées
 		setFilterData(filteredData);
 	}
+	
+	const modifFiche = (item) => {
+		
+		if(item.valide == true)
+		{
+			alert('La fiche a déja était validé, elle ne peut plus être modifié.')
+			return ;
+		}
+
+		sessionStorage.setItem('idHis', item.idhis);
+		sessionStorage.setItem('nomFic', item.chemin);
+		window.location.href = '/fiche-de-securite';
+	};
 
 	const affichageAutreFiche = async () => {
 		document.getElementById('btnChangerAffichage').innerHTML = 'Afficher fiche ' + type;
@@ -289,7 +302,8 @@ export default function Historique(){
 				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false , show : true },
 				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false , show : true },
 				{ id: 'valide' , name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
-				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+				{ id: 'btnHist', name: 'Historique'       , type:'button'  , required : true , editable : false, show : true, function : modifFiche, btn : 'Modifier'    , className:'btnSauvegarder'},
+				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true , function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
 			]);
 
 			const formData = new FormData();
