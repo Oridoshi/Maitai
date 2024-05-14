@@ -48,4 +48,9 @@ else
         $droituti->setIdDroit($iddroit);
         $pdo->updateUtilisateurDroit($droituti);
     }
+
+
+    $cli = $pdo->getClient($prevLogin)[0];
+    $cli->setNomClub($login);
+    $pdo->updateClient($cli);
 }

@@ -3,7 +3,6 @@ import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';
 
 function FicheSecu() {
 	if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
-	if(sessionStorage.getItem('idHis') === null && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
 
@@ -23,7 +22,7 @@ function FicheSecu() {
 	const [formDataObject   , setFormDataObject   ] = useState({});
 
 	const [idHis  , setIdHis  ] = useState();
-	const [nomFic , setnomFic ] = useState();
+	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
 
@@ -809,9 +808,9 @@ function FicheSecu() {
 	{
 		// RECUPERER LES INFORMATIONS
 		const id = sessionStorage.getItem('idHis');
+		setIdHis(id);   
 		sessionStorage.removeItem("idHis");  
 
-		setIdHis(id);   
 
 		// RECUPERER LE FICHIER
 		const formData = new FormData();
@@ -1127,13 +1126,16 @@ function FicheSecu() {
 
 			<form onSubmit={handleSubmit}>
 				{/* Pass formData and setFormData to the GeneratehtmlForm component */}
-				{etapesLib[etape] === 'En tête'        && generatehtmlFormEnTete()      }
-				{etapesLib[etape] === 'Palanquée'      && generatehtmlFormPalanquee()   }
-				{etapesLib[etape] === 'Réalisé'        && generatehtmlFormApresPlongee()}
-				{etapesLib[etape] === 'Envoie'   && generatehtmlAppercue()        }
+				{etapesLib[etape] === 'En tête'   && generatehtmlFormEnTete()      }
+				{etapesLib[etape] === 'Palanquée' && generatehtmlFormPalanquee()   }
+				{etapesLib[etape] === 'Réalisé'   && generatehtmlFormApresPlongee()}
+				{etapesLib[etape] === 'Envoie'    && generatehtmlAppercue()        }
 
 				<div className="m-5 d-flex justify-content-end">
-					<button className="mx-2 col-sm-1 btn btn-secondary" onClick={redirigerAuDebut()}>Annuler</button>
+
+					{etape < etapesLib.length - 2 &&
+						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={() => redirigerAuDebut()}>Annuler</button>
+					}
 
 					{etape < etapesLib.length - 2 &&
 						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>

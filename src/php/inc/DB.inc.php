@@ -457,6 +457,21 @@ class DB {
 
 		return $this->execQuery($requete, $tparam, 'Ticket');
 	}
+
+	/**
+	 * Récupère le nombre de produit du ticket en fonction de l'id du client
+	 * @param int $idcli id du client
+	 * @return int le nombre de produit du ticket
+	 */
+	public function getNbProdTicketCli(int $idcli) {
+		$requete = "SELECT COUNT(*) FROM Ticket WHERE idcli = ?";
+		$tparam = array($idcli);
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute($tparam);
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tuple = $stmt->fetch();
+		return $tuple['count(*)'];
+	}
 	
 	/************************************************************************/
 	//	Methode permettant de récupérer tous les historiques de la base     //
@@ -487,7 +502,7 @@ class DB {
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
 		$tuple = $stmt->fetch();
-		return $tuple['Auto_increment'];
+		return $tuple['auto_increment'];
 	}
 
 	/** Insértion d'un historique */

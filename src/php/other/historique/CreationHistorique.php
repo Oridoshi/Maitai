@@ -4,15 +4,15 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 include_once '../../inc/DB.inc.php';
 
 $type = $_POST['type'];
-$idcli = intnf($_POST['idcli']);
+$idcli = intval($_POST['idcli']);
 $file = $_FILES['file'];
 $fileName = $_POST['name'];
 $fileTmpPath = $file['tmp_name'];
 
-$chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
-//$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
+// $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
+$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
 
-$nf = "NF°" . DB::getInstance()->getNextIdHistorique() . "-";
+$nf = "NF°" . DB::getInstance()->getNextIdHistorique();
 
 $historique = new Historique();
 $historique->setChemin($chemin . $nf . $fileName);
