@@ -11,7 +11,7 @@ $fileTmpPath = $file['tmp_name'];
 // $chemin = $_SERVER['DOCUMENT_ROOT'] ."/SECU/";
 $chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
 
-$nf = "NF°" . $idhist;
+$nf = $idhist;
 
 $historique = DB::getInstance()->getHistoriqueById( $idhist );
 

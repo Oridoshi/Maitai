@@ -15,7 +15,7 @@ $mdp       = $_POST['mdp']  ;
 $pdo = DB::getInstance();
 
 if($prevLogin == null || $email == null || $actif == null || $iddroit == null) {
-    $pdo->majMdpUti($login, $mdp);
+    $pdo->majMdpUti($login, password_hash($mdp, PASSWORD_DEFAULT));
 }
 else
 {

@@ -58,8 +58,11 @@ const Form = ({ etat }) =>
 		case 'confmdp':
 			ret = <ConfMdp changeEtat={ changeEtat } />;
 			break;
-		case 'code':
-			ret = <Code changeEtat={ changeEtat } />;
+		case 'codeRecup':
+			ret = <Code changeEtat={ changeEtat } recup={ true } />;
+			break;
+		case 'codeCreer':
+			ret = <Code changeEtat={ changeEtat } recup={ false } />;
 			break;
 		case 'creer':
 			ret = <Creer changeEtat={ changeEtat } />;
@@ -91,7 +94,14 @@ const Log = ({ changeEtat }) =>
 		{
 			sessionStorage.setItem('login', login); // Stocke le login en session
 			setDroits();
-			changeEtat('mdp'); // Passe à la page de mot de passe
+			if(await mdpExist(login))
+				changeEtat('mdp'); // Passe à la page de mot de passe
+			else {
+				const mail = await getMail(login);
+				await recupCode(mail, "false")
+				sessionStorage.setItem('mail', mail);
+				changeEtat('codeCreer');
+			}
 		}
 		else
 		{
@@ -356,9 +366,9 @@ const Mail = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changement de page
 		if (await mailValid(mail))
 		{
-			await recupCode(mail)
+			await recupCode(mail, "true")
 			sessionStorage.setItem('mail', mail);
-			changeEtat('code');
+			changeEtat('codeRecup');
 		}
 		else
 		{
@@ -478,8 +488,9 @@ const ConfMdp = ({ changeEtat }) =>
 };
 
 /*-Page de code pour la récupération du compte-*/
-const Code = ({ changeEtat }) =>
+const Code = ({ changeEtat, recup }) =>
 {
+	console.log(recup);
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
@@ -545,12 +556,16 @@ const Code = ({ changeEtat }) =>
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
 	const placeholderText = isValid ? "Entrez votre code" : "Ce code n'existe pas";
 
+	const h4 = recup ? "Mot de passe oublié" : "Création mot de passe";
+	const label = recup ? "Code de récupération" : "Code de création";
+
+
 	return (
 		<div>
 			<form className="form" onSubmit={ envoyer }>
-				<h4 className="letitre">Mot de passe oublié</h4>
+				<h4 className="letitre">{h4}</h4>
 				<div className="mb-3">
-					<label htmlFor="exampleInputEmail1" className="form-label label"> Code de réinitialisation </label>
+					<label htmlFor="exampleInputEmail1" className="form-label label">{label}</label>
 					<input required type="text" className={ inputClass }
 						aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 					<button type="button" className="mdpOublie" onClick={ renvoyerMail }> Renvoyer un mail </button>
@@ -619,6 +634,26 @@ const loginExist = async (data) => {
 		return false; // Retourner une valeur par défaut en cas d'erreur
 	}
 }
+
+const pwdExist = async (data) => {
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/PwdExist.php", {
+			method: 'POST',
+			body: data
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat === "1";
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
 
 const pwdValid = async (data) => {
 	try {
@@ -705,6 +740,37 @@ const logExist = async ( log ) =>
 	const utilisateurs = await loginExist(data);
 	return utilisateurs;
 }
+
+const mdpExist = async (log) =>
+{
+	const data = new FormData();
+	data.append('login', log);
+	const utilisateurs = await pwdExist(data);
+	return utilisateurs;
+}
+
+const getMail = async (log) => {
+	const data = new FormData();
+	data.append('login', log);
+	try {
+		const response = await fetch(cheminPHP + "utilisateur/GetMail.php", {
+			method: 'POST',
+			body: data
+		});
+
+		if (!response.ok) {
+			throw new Error('Erreur de réseau !');
+		}
+
+		const dat = await response.text();
+		return dat;
+	
+	} catch (error) {
+		console.log("erreur", error);
+		return false; // Retourner une valeur par défaut en cas d'erreur
+	}
+}
+
 //test si le mdp correspond au user
 const mdpValid = async (pass, connexion) =>
 {
@@ -810,12 +876,15 @@ const funUpdate = async (mdp) => {
 	}
 };
 
-const recupCode = async (mail) =>
+const recupCode = async (mail, recup) =>
 {
+	console.log(recup);
+
 	try {
 
 		const formData = new FormData();
 		formData.append('email', mail);
+		formData.append('recup', recup);
 
 		const requestOptions = {
 			method: 'POST',
@@ -853,9 +922,6 @@ function afficherError(data)
 		console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState, "] error code :", errorCode);
 		alert(errorMessageText);
 
-	} else
-	{
-		console.log("Aucune erreur connue renvoyé. Retour du fetch ", data);
 	}
 }
 
