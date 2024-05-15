@@ -547,6 +547,15 @@ class DB {
 		return $tab;
 	}
 
+	/**
+	 * Mettre tout les client présent à non présent s'il n'ont pas de ticket en cours
+	 * @return void
+	 */
+	public function setClientNonPresent() {
+		$requete = "UPDATE Client SET present = 0 WHERE idcli NOT IN (SELECT idcli FROM Ticket)";
+		$this->execMaj($requete, null);
+	}
+
 	/** Get tout l'historique SECU d'un client */
 	public function getHistoriquesByClientSecu(int $idcli): array {
 		$requete = "SELECT chemin, idhis, type, date, valide FROM Historique WHERE idcli = ? AND type = 'SECU'";

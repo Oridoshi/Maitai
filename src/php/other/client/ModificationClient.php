@@ -11,12 +11,11 @@ $present = $_POST['present'];
 
 $pdo = DB::getInstance();
 
-if(($present == true || $present == 1 ) && $pdo->getNbProdTicketCli($prevNomClub) > 0)
-    die("SQLSTATE[45000] : erreur perso : 2255 Ce client a un ticket, il ne peut donc pas être modifié ! in C:\\xampp");
-
-
 // récupération du client à modifier
 $client = $pdo->getClient($prevNomClub)[0];
+
+if(($present == true || $present == 1 ) && $pdo->getNbProdTicketCli($client->getIdCli()) > 0)
+    die("SQLSTATE[45000] : erreur perso : 2255 Ce client a un ticket, il ne peut donc pas être modifié ! in");
 
 // modification des données du client si non null
 if($nomClub != "")

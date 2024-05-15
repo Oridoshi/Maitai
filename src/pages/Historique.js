@@ -226,7 +226,7 @@ export default function Historique(){
 
 	// Fonction pour afficher les erreurs
 	function afficherError(data) {
-		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in C:\\xampp/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
+		const regex = /SQLSTATE\[(\d+)\].+?(\d+)(.+?) in/g; // Expression régulière pour capturer le code d'erreur et le texte jusqu'à "in C:\\xampp..."
 		const match = regex.exec(data);
 
 		if (match) {
@@ -378,7 +378,7 @@ export default function Historique(){
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre mt-1'>Gestion des historiques - {sessionStorage.getItem('nomClub')}</h1>
+		<h1 className='titre mt-1'>Gestion des historiques {type} - {sessionStorage.getItem('nomClub')}</h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
