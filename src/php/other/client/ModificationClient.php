@@ -14,7 +14,7 @@ $pdo = DB::getInstance();
 // récupération du client à modifier
 $client = $pdo->getClient($prevNomClub)[0];
 
-if(($present == true || $present == 1 ) && $pdo->getNbProdTicketCli($client->getIdCli()) > 0)
+if(($present == false || $present == 0 ) && $pdo->getNbProdTicketCli($client->getIdCli()) > 0)
     die("SQLSTATE[45000] : erreur perso : 2255 Ce client a un ticket, il ne peut donc pas être modifié ! in");
 
 // modification des données du client si non null
@@ -31,6 +31,8 @@ $client->setPresent($present);
 $pdo->updateClient($client);
 
 
-$uti = $pdo->getUtilisateur($prevNomClub)[0];
-$uti->setLogin($nomClub);
-$pdo->updateUtilisateur($uti);
+if($prevNomClub != $nomClub) {
+    $uti = $pdo->getUtilisateur($prevNomClub);
+    $uti->setLogin($nomClub);
+    $pdo->updateUtilisateur($uti);
+}
