@@ -49,10 +49,17 @@ function Secu() {
 			return response.json();
 		})
 		.then(data => {
-			const newData = data.filter(item => !item.valide).map((item, index) => ({
-				...item,
-				id: index + 1
-			}));
+			
+			const newData = data.filter(item => !item.valide).map((item, index) => {
+				const matchResult = item.chemin.match(/\d{1,}_\d{4}-\d{2}-\d{2}_\w+_(.+)_FICHESECU\.xlsx/);
+				const nouveauChemin = matchResult ? matchResult[1].replace(/[-\s]+/g, ' ') : item.chemin;
+				
+				return {
+					...item,
+					chemin: nouveauChemin,
+					id: index + 1
+				};
+			});
 
 			setInitialData(newData);
 		})
