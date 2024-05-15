@@ -50,7 +50,10 @@ else
     }
 
 
-    $cli = $pdo->getClient($prevLogin)[0];
-    $cli->setNomClub($login);
-    $pdo->updateClient($cli);
+    $cli = $pdo->getClient($prevLogin);
+    if($cli != null) {
+        $cli = $cli[0];
+        $cli->setNomClub($login);
+        $pdo->updateClient($cli);
+    }
 }

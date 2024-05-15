@@ -346,73 +346,56 @@ export default function Ticket()
 	{
 		/* Contenu du fichier*/
 
-		const client = await getClient(idcli);
+		const client         = await getClient(idcli);
 		const tabDonneExport = await getTabDonneeExport();
-		const tabTicket = await getTabTicket(idcli);
-		const entete = ['nom produit;', 'prix unitaire;', 'quantité;', 'total;'];
+		const tabTicket      = await getTabTicket(idcli);
+		const separateur     = await getSeparateur();
+
+		let contenu = "";
 		let total = 0;
 
-		let contenu = "Nom du Club : ;" + client.nomclub + "\r\n\r\n";
 		//entete
-		entete.forEach(elt =>
-		{
-			contenu += elt;
+		tabDonneExport.forEach(donnee=>{
+			contenu += donnee + separateur;
 		});
 		contenu += "\r\n";
 
-		//produits
 		for (const ticket of tabTicket)
 		{
 			if (ticket.qa > 0)
 			{
 				const nomProduit = await getNomP(ticket.idprod);
-				contenu += nomProduit + ";" + ticket.prixspe + ";" + ticket.qa + ";" + ticket.prixtot + "\r\n";
+				tabDonneExport.forEach(donnee =>
+				{
+					switch(donnee)
+					{
+						case 'numero de client' : contenu += idcli+ separateur;
+							break;
+						case 'nom du client' : contenu += client.nomclub + separateur;
+							break;
+						case 'numero des produits' : contenu += ticket.idprod + separateur;
+							break;
+						case 'nom des produits' : contenu += nomProduit + separateur;
+							break;
+						case 'prix unitaire des produits' : contenu += ticket.prixspe + separateur;
+							break;
+						case 'quantite des produits' : contenu += ticket.qa + separateur;
+							break;
+						case 'prix total des produits' : contenu += ticket.prixtot + separateur;
+							break;
+					}
+				})
+				contenu += "\r\n";
 				total += ticket.prixtot;
 			}
 		}
-		contenu += "\r\n";
-
-		//total
-		contenu += ";; TOTAL;" + total;
 
 		/*Attribut du fichier */
 		if (total > 0)
 		{
-			// On crée le lien qui permet de télécharger
-			const element = document.createElement("a");
-
-			// Création du fichier
-			element.setAttribute("href", `data:text/csv;charset=utf-8,${ encodeURIComponent(contenu) }`);
-			element.setAttribute("download", client.nomclub + ".csv");
-			element.style.display = "none";
-
-			// On l'ajoute au bouton d'export
-			document.body.appendChild(element);
-			element.click();
-			document.body.removeChild(element);
-		}
-	}
-
-	//li le fichier de config et retorune les données à utiliser
-
-	async function getTabDonneeExport() {
-		try {
-			const cheminFichier = '../Export.ini'; // Assurez-vous que le chemin est correct par rapport à la structure de votre application
-			const reponse = await fetch(cheminFichier);
-
-			if (!reponse.ok) {
-				throw new Error('Erreur de chargement du fichier');
-			}
-
-			const contenu = await reponse.text();
-			console.log("Contenu du fichier INI :", contenu); // Vérifiez si le contenu est correctement importé
-			const lignes = contenu.split('\n');
-			lignes.forEach((ligne, index) => {
-				console.log(`Ligne ${index + 1}: ${ligne}`);
-				// Faites ici ce que vous voulez avec chaque ligne
-			});
-		} catch (erreur) {
-			console.error('Erreur de lecture du fichier INI:', erreur);
+			//ajoute en bado
+			const fichier = new Blob([contenu], { type: 'text/csv' });
+			exportCSV(fichier,client.nomclub + ".csv",idcli);
 		}
 	}
 
@@ -490,10 +473,68 @@ export default function Ticket()
 		}
 	};
 
+	async function getFichierConfig()
+	{
+		try
+		{
+			const response = await fetch(cheminPHP + "ticket/GetFichierConfig.php", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'text/plain; charset=UTF-8'
+				},
+			});
+
+			if (!response.ok)
+			{
+				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
+			}
+
+			const data = await response.text();
+			return data;
+		} catch (error)
+		{
+			console.error('Erreur :', error);
+			return [];
+		}
+	}
+
+	//récupère les données du fichier de config et renvoie un tableau de ce qu'on veut mettre dans le ticket
+	async function getTabDonneeExport()
+	{
+		const data   = await getFichierConfig()
+		const lignes = data.split('\n');
+		const tabDonneExport = [];
+
+		//parcours tout les données et stock celles qui sont décommentés
+		lignes.forEach(ligne =>
+		{
+			if (!ligne.startsWith(";") && !ligne.startsWith("~"))
+			{
+				const trimmedLigne = ligne.trim();
+				tabDonneExport.push(trimmedLigne);
+			}
+		});
+		return tabDonneExport;
+	}
+
+	//récupère les données du fichier de config et renvoie un tableau de ce qu'on veut mettre dans le ticket
+	async function getSeparateur()
+	{
+		const data   = await getFichierConfig()
+		const lignes = data.split('\n');
+		//parcours tout les données et stock celles qui sont décommentés
+		for (const ligne of lignes) {
+			if (ligne.startsWith("~") && ligne.length > 1) {
+				return ligne.charAt(1);
+			}
+		}
+		return ";";
+	}
+
 	//retourne le prix total de la commande d'un client
 	const getTotCommCli = async (ncli) =>
 	{
-		const tabTicket =  await getTabTicket(ncli);
+		const tabTicket = await getTabTicket(ncli);
 		let prixTot = 0;
 		tabTicket.forEach(prod =>
 		{
@@ -752,6 +793,44 @@ export default function Ticket()
 		}
 
 	};
+
+	const exportCSV = async (fichier,nomfichier,idcli) =>
+	{
+		try
+		{
+			console.log(fichier);
+
+			const formData = new FormData();
+			formData.append('type', 'TICKET');
+			formData.append('idcli', idcli);
+			formData.append('file',  fichier);
+			formData.append('name',  nomfichier);
+
+			console.log(formData);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "historique/CreationHistorique.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+
+			return data === ""; // Retourne true si la insert a réussi, sinon false
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	}
 
 	const insertProdTicket = async (idprod, idcli) =>
 	{
