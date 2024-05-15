@@ -43,7 +43,11 @@ function Navbar({ role }) {
 	{
 		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets'];
 			break;
+<<<<<<< HEAD
 		case 'Maitai': navLinks = ['Clients', 'Tickets'];
+=======
+		case 'Maitai': navLinks = ['Clients','Tickets'];
+>>>>>>> origin/exportTickets
 			break;
 		case 'Client' : navLinks = ['Fiches de sécurité'];
 			break;
