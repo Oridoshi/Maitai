@@ -1,35 +1,29 @@
-import React from 'react';
-import { Carousel } from 'react-bootstrap'; // Assurez-vous d'avoir installé react-bootstrap
-import image1 from "../img/image1.png";
-import image2 from "../img/image2.png";
-import image3 from "../img/maitai.png";
+    import React from 'react';
+    import { Carousel } from 'react-bootstrap';
 
-const ImageCarousel = () => {
+    // Importer toutes les images (.jpg et .png) du dossier img
+    function importAll(r) {
+        let images = {};
+        r.keys().map((item, index) => { images[item.replace('./', '')] = r(item); });
+        return images;
+    }
+    
+    const images = importAll(require.context('../img/', false, /\.(png|jpe?g)$/));
+
+    const ImageCarousel = () => {
     return (
         <Carousel>
-            <Carousel.Item>
-                <img
-                    className="d-block col w-100"
-                    src={image1}
-                    alt="First slide"
-                />
+        {Object.keys(images).map((image, index) => (
+            <Carousel.Item key={index}>
+            <img
+                className="d-block col w-100"
+                src={images[image]}
+                alt={`Slide ${index + 1}`}
+            />
             </Carousel.Item>
-            <Carousel.Item>
-                <img
-                    className="d-block col w-100"
-                    src={image2}
-                    alt="Second slide"
-                />
-            </Carousel.Item>
-            <Carousel.Item>
-                <img
-                    className="d-block col w-100"
-                    src={image3}
-                    alt="Third slide"
-                />
-            </Carousel.Item>
+        ))}
         </Carousel>
     );
-}
+    }
 
-export default ImageCarousel;
+    export default ImageCarousel;
