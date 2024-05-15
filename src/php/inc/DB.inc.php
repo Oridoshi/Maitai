@@ -18,12 +18,16 @@ class DB {
 	// private static string $password = "maitai";
 	// private static string $host     = "localhost";
 
-	private static string $port     = "3306";
 
 	private static string $dbName   = "if0_36460769_maitai";
 	private static string $login    = "if0_36460769";
 	private static string $password = "Sc4ZKSO8sanWyvz";
 	private static string $host     = "sql211.infinityfree.com";
+
+
+	private static string $port     = "3306";
+
+
 
 	/************************************************************************/
 	//	Constructeur gerant  la connexion à la base via PDO

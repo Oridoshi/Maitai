@@ -24,6 +24,7 @@ function FicheSecu() {
 	const [idHis  , setIdHis  ] = useState();
 	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
+	const [nomFic  , setNomFic  ] = useState();
 
 
 	function getCurrentDate() {
@@ -42,6 +43,32 @@ function FicheSecu() {
 
 		return `${year}-${month}-${day}`;
 	}
+
+	const [gazOptions, setGazOptions] = useState([]);
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                let formData = new FormData();
+                formData.append('categ', "Gaz");
+
+                const response = await fetch(cheminPHP + "produit/GetProduit.php", {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur de réseau lors de la récupération de l\'id.');
+                }
+
+                const datas = await response.json();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        fetchData();
+    }, []); // Effectué une seule fois au chargement du composant
 	
 
 
@@ -68,7 +95,7 @@ function FicheSecu() {
 					<div className="col-sm-3 m-2 ">
 						<div className="d-flex align-items-center">
 							<label htmlFor="date" className="me-2 fw-bold">Date</label>
-							<input type="date" className="form-control" name='date' id="date" readOnly defaultValue={idHis ? formDataObject["date"] : getCurrentDate()} required/>
+							<input type="date" className="form-control" name='date' id="date" defaultValue={idHis ? formDataObject["date"] : getCurrentDate()} required/>
 						</div>
 					</div>
 
@@ -79,7 +106,14 @@ function FicheSecu() {
 						</div>
 					</div>
 
-					<div className="col-sm-7 m-2 mt-3">
+					<div className="col-sm-5 m-2 mt-3">
+						<div className="d-flex align-items-center">
+							<label htmlFor="nomFic" className="me-2 fw-bold">Nom du fichier</label>
+							<input type="text" className="form-control" name='nomFic' id="club" required defaultValue={nomFic && nomFic}/>
+						</div>
+					</div>
+
+					<div className="col-sm-5 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="club" className="me-2 fw-bold">Club</label>
 							<input type="text" className="form-control" name='club' id="club" readOnly value={sessionStorage.getItem('login')}/>
@@ -293,12 +327,12 @@ function FicheSecu() {
 				<div className='ms-3'>
 					<div className='d-flex mb-3'>
 						<div className='align-items-center col-sm-1'>
-							<label htmlFor={`profRea${num}`} className="me-2">Profondeur</label>
+							<label htmlFor={`profRea${num}`} className="me-2">Prof. ({formDataObject[`p${num}prof`]})</label>
 							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center col-sm-1 me-3'>
-							<label htmlFor={`tempsRea${num}`} className="me-2">Temps</label>
+							<label htmlFor={`tempsRea${num}`} className="me-2">Temps ({formDataObject[`p${num}temp`]})</label>
 							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]} onChange={() => handleChangeRea()}/>
 						</div>
 
@@ -324,7 +358,7 @@ function FicheSecu() {
 						
 						<div className='align-items-center '>
 							<label htmlFor={`gaz${num}`} className="me-2">Gaz</label>
-							<input type="text" className="form-control" name={`p${num}gaz`} id={`p${num}gaz`} defaultValue={idHis && formDataObject[`p${num}gaz`]} onChange={() => handleChangeRea()}/>
+							{generateGaz()}
 						</div>
 					</div>
 
@@ -335,6 +369,19 @@ function FicheSecu() {
 				</div>
 
 			</div>
+		);
+	}
+
+
+	function generateGaz(num)
+	{
+		return (
+			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]}  onChange={() => handleChangeRea()}>
+				<option key={"Aire"}>{"Aire"}</option>
+				{gazOptions.map((niveau) => (
+					<option key={niveau}>{niveau}</option>
+				))}
+			</select>
 		);
 	}
 
@@ -704,6 +751,9 @@ function FicheSecu() {
 		/***************************************************/
 
 		
+		console.log(formDataObject)
+		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ ]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
+		nomFic = nomFic.replace(/-+/g, '-');
 
 		//SI CEST NOUVEAU 
 		if (idHis === undefined)
@@ -734,8 +784,7 @@ function FicheSecu() {
 			formData.append('idcli'  , parseInt(id));
 			formData.append('type'   , 'SECU');
 			formData.append('file'   , blob);
-			formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
-			console.log( "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs")
+			formData.append('name'   , nomFic);
 
 			response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
 				method: 'POST',
@@ -759,10 +808,9 @@ function FicheSecu() {
 
 			// On envoie le nouveau fichier Excel au serveur
 			const formData = new FormData();
-			formData.append('idhist'  , idHis);
-			formData.append('file'   , blob);
-			formData.append('name'   , "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx");
-			console.log( "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlxs")
+			formData.append('idhist', idHis );
+			formData.append('file'  , blob  );
+			formData.append('name'  , nomFic);
 
 			const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
 				method: 'POST',
@@ -810,6 +858,10 @@ function FicheSecu() {
 		const id = sessionStorage.getItem('idHis');
 		setIdHis(id);   
 		sessionStorage.removeItem("idHis");  
+
+		const nomFic = sessionStorage.getItem('nomFic');
+		setNomFic(nomFic);   
+		sessionStorage.removeItem("nomFic");  
 
 
 		// RECUPERER LE FICHIER
