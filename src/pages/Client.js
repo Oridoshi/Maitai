@@ -7,7 +7,8 @@ function Client() {
 
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
-
+	const [searchTerm  , setSearchTerm  ] = useState(''); // État pour stocker la valeur de recherche
+	const [checked     , setChecked     ] = useState(false); // État pour stocker la valeur de la case à cocher
 
 
 
@@ -99,8 +100,6 @@ function Client() {
 			console.log(error);
 			return false; // Retourne false en cas d'erreur
 		}
-
-		// TODO : Regenerer les data avec un fetch
 	};
 
 
@@ -236,41 +235,30 @@ function Client() {
 
 
 
-	const handleChange   = (e) => {filter( e.target.value);};
-	const handleCbChange = (e) => {filter( e.target.checked);};
+	const handleChange   = (e) => {setSearchTerm(e.target.value);};
+	const handleCbChange = (e) => {setChecked(e.target.checked);};
 
-
-	function filter (value)
-	{
-		// Filtrer les données en fonction de la valeur de recherche
-		const filteredData = initialData.filter((element) => {
-
-			if (typeof value === 'boolean')
-			{
-				if(element.present === value || element.present) return true;
-				else                          return false;
-			}
-			else
-			{
+	const applyFilter = (data, value, checked) => {
+		const filteredData = data.filter((element) => {
 				// Parcourir les clés de l'en-tête initial
 				for (const key of initialHeader) {
 					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
 					if (key.show ) {
 						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase()) && (element.present === checked || element.present)) {
 							return true; // Si correspondance, conserver cet élément
 						}
 					}
 				}
 				return false; // Si aucune correspondance, exclure cet élément
-			}
 		});
-
-		// Mettre à jour les données filtrées
 		setFilterData(filteredData);
 	}
 
 
+	useEffect(() => {
+		applyFilter(initialData, searchTerm, checked);
+	}, [initialData, searchTerm, checked]);
 
 
 	//Création du tableau

@@ -1,4 +1,4 @@
-// export const cheminPHP = "https://maitai-becon.wuaze.com/php/other/"; //chemin vers le php
+//export const cheminPHP = "https://maitai-becon.wuaze.com/php/other/"; //chemin vers le php
 export const cheminPHP = "http://172.26.4.207/Maitai/src/php/other/";
 // export const cheminPHP = "http://localhost/Maitai/src/php/other/";
 
