@@ -9,8 +9,8 @@ $file = $_FILES['file'];
 $fileName = $_POST['name'];
 $fileTmpPath = $file['tmp_name'];
 
-// $chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
-$chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
+$chemin = $_SERVER['DOCUMENT_ROOT'] ."/". $type . "/";
+// $chemin = "C:\\xampp\\htdocs\\historique\\" . $type . "\\";
 
 $nf = DB::getInstance()->getNextIdHistorique();
 

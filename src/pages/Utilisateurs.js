@@ -99,9 +99,9 @@ function Utilisateur() {
 	// En-tête de la table
 	const initialHeader = [
 		{ id: 'id'      , name: 'NB Ligne'     , type:'number'  , required : true , editable : false, show : false },
-		{ id: 'login'   , name: 'Login'        , type:'text'    , required : true , editable : true , show : true  },
+		{ id: 'login'   , name: 'Login'        , type:'text'    , required : true , editable : true , show : true, maxLength : 30},
 		{ id: 'mdp'     , name: 'Mots de passe', type:'text'    , required : true , editable : false, show : false },
-		{ id: 'email'   , name: 'Adresse email', type:'email'   , required : true , editable : true , show : true  },
+		{ id: 'email'   , name: 'Adresse email', type:'email'   , required : true , editable : true , show : true, maxLength : 60},
 		{ id: 'libdroit', name: 'Droit'        , type:'list'    , required : true , editable : true , show : true  , options:libDroit},
 		{ id: 'actif'   , name: 'Actif'        , type:'checkbox', required : true , editable : true , show : true  },
 	];
