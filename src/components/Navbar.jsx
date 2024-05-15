@@ -43,7 +43,7 @@ function Navbar({ role }) {
 	{
 		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets'];
 			break;
-		case 'Maitai': navLinks = ['Clients'];
+		case 'Maitai': navLinks = ['Clients','Tickets'];
 			break;
 		case 'Client' : navLinks = ['Fiches de sécurité'];
 			break;
