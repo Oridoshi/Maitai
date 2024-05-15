@@ -8,7 +8,7 @@
         return images;
     }
     
-    const images = importAll(require.context('../img/', false, /\.(png|jpe?g)$/));
+    const images = importAll(require.context('../img/imgAccueil/', false, /\.(png|jpe?g)$/));
 
     const ImageCarousel = () => {
     return (
