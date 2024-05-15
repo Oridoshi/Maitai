@@ -95,6 +95,7 @@ return (
 										value={formValues[head.id] || ''}
 										onChange={handleChange}
 										required={head.required ? true : false}
+										{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
 									/>
 
 									{head.datalist && (

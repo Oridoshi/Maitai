@@ -78,10 +78,10 @@ export default function Produits(){
 	const initialHeader = [
 		{ id: 'id'       , name: 'NB Ligne'      , type:'number' ,              required : true , editable : false, show : false                     },
 		{ id: 'idprod'   , name: 'ID du produit' , type:'number' ,              required : true , editable : false, show : false                     },
-		{ id: 'ref'      , name: 'Référence'     , type:'text'   ,              required : true , editable : true , show : true                      },
-		{ id: 'libprod'  , name: 'Libellé'       , type:'text'   ,              required : true , editable : true , show : true                      },
-		{ id: 'prixuni'  , name: 'Prix Unitaire' , type:'number' , step:'0.01', required : false, editable : true , show : true                      },
-		{ id: 'categorie', name: 'Catégorie'     , type:'text'   ,              required : true , editable : true , show : true , datalist : datalistCateg}
+		{ id: 'ref'      , name: 'Référence'     , type:'text'   ,              required : true , editable : true , show : true , maxLength : 255    },
+		{ id: 'libprod'  , name: 'Libellé'       , type:'text'   ,              required : true , editable : true , show : true , maxLength : 255    },
+		{ id: 'prixuni'  , name: 'Prix Unitaire' , type:'number' , step:'0.01', required : false, editable : true , show : true , maxLength : 12     },
+		{ id: 'categorie', name: 'Catégorie'     , type:'text'   ,              required : true , editable : true , show : true , maxLength : 30 , datalist : datalistCateg}
 	];
 
 
