@@ -26,7 +26,7 @@ else
 
     // vérification si l'utilisateur est le dernier admin actif
     if($pdo->getDroitUtilisateur($utilisateur->getIdUti()) == $idDroitAdmin && $pdo->getNbAdminActif() == 1 && ($iddroit != $idDroitAdmin || $actif == 0))
-        die("SQLSTATE[45000] : erreur perso : 2255 Vous ne pouvez pas modifier les droits du dernier administrateur ! in C:\\xampp");
+        die("SQLSTATE[45000] : erreur perso : 2255 Vous ne pouvez pas modifier les droits du dernier administrateur ! in");
 
     // modification des données de l'utilisateur si non null
     if($login != "")
