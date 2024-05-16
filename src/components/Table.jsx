@@ -220,14 +220,6 @@ function Checkbox({ id, name, defaultValue })
  */
 function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse })
 {
-	/**
-	 * Met les datas dans le tableau 
-	 */
-	const [datas, setTableData] = useState(data);
-	useEffect(() =>
-	{
-		setTableData(data);
-	}, [data]);
 
 	/**
 	 * Si le modal est open ou non, et la modification qu'on recois
@@ -359,25 +351,53 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 	/**************************************************************/
 
 	const [trierPar     , setTrierPar ] = useState();
-	const [sensCroissant, setCroissant] = useState();
+	const [sensCroissant, setCroissant] = useState(false);
+	const [triApplique, setTriApplique] = useState(false);
 
-	function trie(id)
+	
+	/**
+	 * Met les datas dans le tableau 
+	 */
+	const [datas, setTableData] = useState(data);
+
+	//Quand le data donné change on rappelle ca 
+	useEffect(() =>
 	{
-		console.log("Trier par", id, "en croissant ?", sensCroissant)
+		setTableData(data);
 
-		if(trierPar === id)
+		//Si le trie est applique on rappelle pas pour éviter une boucle.
+		if (trierPar && !triApplique) {
+			trie(trierPar, data, true, !sensCroissant);
+    	}
+	}, [data]);
+
+
+	// Les données en + c'est car React est pas async
+	function trie(id, data, trieAppliqueRapide, sensRapide)
+	{
+		console.log("Je dois pas changé de sens ?", triApplique)
+		console.log("Je passe dans la boucle ?", !triApplique)
+		console.log("Je trie par", trierPar)
+		console.log("Data", data)
+		console.log("Sens enregistre", sensCroissant, "sens rapide", sensRapide)
+
+
+		if (!triApplique && (!trieAppliqueRapide || triApplique == undefined))
 		{
-			setCroissant(!sensCroissant)
-		} else {
-			setTrierPar(id)
-			setCroissant(!sensCroissant)
+			if(trierPar === id)
+			{
+				setCroissant(!sensCroissant)
+			} else {
+				setTrierPar(id)
+				setCroissant(!sensCroissant)
+			}
 		}
 
-		setTableData(datas.sort((a, b) => a[id] - b[id]));
+		setTableData(data.sort((a, b) => a[id] - b[id]));
 
 		//Comparé si c'est une chaine 
-		if (sensCroissant) {
-			setTableData([...datas].sort((a, b) => {
+		if (sensRapide !== undefined ? sensRapide : sensCroissant) {
+			setTableData([...data].sort((a, b) => {
 				const valueA = isNaN(a[id]) ? a[id] : parseFloat(a[id]);
 				const valueB = isNaN(b[id]) ? b[id] : parseFloat(b[id]);
 				
@@ -388,7 +408,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 				}
 			}));
 		} else {
-			setTableData([...datas].sort((a, b) => {
+			setTableData([...data].sort((a, b) => {
 				const valueA = isNaN(a[id]) ? a[id] : parseFloat(a[id]);
 				const valueB = isNaN(b[id]) ? b[id] : parseFloat(b[id]);
 				
@@ -399,8 +419,10 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 				}
 			}));
 		}
-	}
 
+    	setTriApplique(false); // Réinitialiser le drapeau de tri appliqué
+
+	}
 
 
 
@@ -425,7 +447,9 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 							{ header.map(column => (
 								column.show && // Vérifier si la colonne doit être affichée
 								<th className= {`bg-primary text-white ${column.type === 'checkbox' || column.type === 'number' || column.type === 'prix' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={ column.id }>
-									<a href='#' className='text-white' onClick={(e) => trie(column.id)}> { column.name }</a>
+									{
+										column.type !== 'button' && column.type !== 'checkbox' ? <a href='#' className='text-white' onClick={(e) => trie(column.id, datas)}> { column.name }</a> :  (column.name) 
+									}
 								</th>
 							)) }
 							{ (funUpdate !== undefined || funDelete !== undefined) && <th className='bg-primary text-white celCenter'>Action</th> }
@@ -528,6 +552,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 			<div className='d-flex '>
 				{ funInsert !== undefined && <button className='btnAjouter btn btn-primary m-3 ' onClick={ () => openModal(null) }></button> }
 			</div>
+
 		</div>
 	);
 }
