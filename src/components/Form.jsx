@@ -30,6 +30,7 @@ window.addEventListener('load', async (event) =>	//recharge la page
 		window.location.reload();
 	}	
 });
+let codeVal;
 
 const Form = ({ etat }) =>
 {
@@ -367,7 +368,6 @@ const Mail = ({ changeEtat }) =>
 	//envoye vers la page de récupération du compte via un code
 	const envoyer = async (event) =>
 	{
-		sessionStorage.removeItem('code');
 		event.preventDefault();//obligatoire pour un changement de page
 		if (await mailValid(mail))
 		{
@@ -518,7 +518,7 @@ const Code = ({ changeEtat, recup }) =>
 		event.preventDefault();//obligatoire pour un changement de page
 		if (code.length === 9) // test si la longeur du code est bien de 6
 		{
-			if (code === sessionStorage.getItem('code'))
+			if (code === codeVal)
 			{
 				changeEtat('confmdp');//charge la page de choix du mot de passe
 			}
@@ -902,7 +902,7 @@ const recupCode = async (mail, recup) =>
 		}
 
 		const data = await response.text();
-		sessionStorage.setItem('code',data);
+		codeVal = data;
 		afficherError(data);
 		return data === ""; // Retourne true si la suppression a réussi, sinon false
 	} catch (error) {

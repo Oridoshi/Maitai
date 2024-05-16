@@ -205,8 +205,9 @@ class DB {
 
 	/** Obtenir un utilisateur à partir de son login */
 	public function getUtilisateur($login) {
-		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
-		return $this->execQuery($requete,array($login),'Utilisateur')[0];
+		$requete = 'SELECT * FROM Utilisateur WHERE lower(login) = ?';
+		return $this->execQuery($requete,array(strtolower($login)),'Utilisateur')[0];
+
 	}
 
 	/** Modifier les données d'un utilisateur. */
