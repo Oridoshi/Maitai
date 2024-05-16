@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+
 	<BrowserRouter>
 		<Navbar/>
 		<Footer />
