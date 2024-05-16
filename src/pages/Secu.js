@@ -52,7 +52,7 @@ function Secu() {
 			
 			const newData = data.filter(item => !item.valide).map((item, index) => {
 				const separer = item.chemin.split('_')
-				const nouveauChemin = separer[3];
+				const nouveauChemin = separer[3].replace(/-/g, ' ');
 				
 				return {
 					...item,
