@@ -197,10 +197,13 @@ const Mdp = ({ changeEtat }) =>
 	};
 
 	//charge la page des mail quand on oublie le mdp
-	const mdpOublie = (event) =>
+	const mdpOublie = async (event) =>
 	{
 		event.preventDefault();
-		changeEtat('mail');
+		const mail = await getMail(sessionStorage.getItem('login'));
+		await recupCode(mail, "true")
+		sessionStorage.setItem('mail', mail);
+		changeEtat('codeRecup');
 	};
 
 	//classes de style
@@ -490,7 +493,6 @@ const ConfMdp = ({ changeEtat }) =>
 /*-Page de code pour la récupération du compte-*/
 const Code = ({ changeEtat, recup }) =>
 {
-	console.log(recup);
 	//pour changer les contenus des inputs
 	const [code, setCode] = useState("");
 	const [isValid, setIsValid] = useState(true);
@@ -535,7 +537,7 @@ const Code = ({ changeEtat, recup }) =>
 	const renvoyerMail = (event) =>
 	{
 		event.preventDefault();
-		changeEtat('mail');
+		recupCode(sessionStorage.getItem('mail'), recup);
 	};
 
 	//test si on entre bien des chiffres

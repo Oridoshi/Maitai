@@ -66,7 +66,7 @@ if(isset($_POST['file'])) {
 </head>
     <body>
         <div style=\"max-width: 600px; margin: 0 auto; padding: 20px;\">
-            <h2 style=\"color: #005C8F\"><span style=\"background-color:#005C8F;\"></span>" . $recup . "de mot de passe<br></h2>
+            <h2 style=\"color: #005C8F\"><span style=\"background-color:#005C8F;\"></span>" . $recup . " de mot de passe<br></h2>
             <p>Bonjour,</p>
             <p>Vous avez demandé la " . strtolower($recup) . " de votre mot de passe pour votre compte.</p>
             <p id=\"resetCode\" style=\"font-size: 31px; text-align: center; color: #ffffff; background-color: #005C8F\"><strong>" . $mdp . "</strong><br></p>
