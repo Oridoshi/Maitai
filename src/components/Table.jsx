@@ -1,14 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import "../style/table.css"
 
+
+/**
+ * Modal (Pop-up) qui apparait lorsqu'on clique sur ajouter ou modifier
+ * @param {*} param0 
+ * @returns 
+ */
 function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 {
+	// Valeur du formulaire
 	const [formValues, setFormValues] = useState({});
 
+
+	/**
+	 * Permet de mettre les valeurs par défauts en cas de modification
+	 */
 	useEffect(() => {
 		setFormValues(rowData);
 	}, [rowData]);
 
+
+	/**
+	 * Modifier l'élément quand on change les valeurs.
+	 * @param {*} e 
+	 */
 	const handleChange = (e) => {
 		const { id, value } = e.target;
 		setFormValues(prevState => ({
@@ -17,6 +33,12 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 		}));
 	};
 
+
+	/**
+	 * Pour le numéro de téléphone : mettre les espaces automatiquement
+	 * @param {*} e 
+	 * @returns 
+	 */
 	const handleChangePhoneNumber = (e) => {
 		const { id, value } = e.target;
 		// Supprime tous les caractères non numériques du numéro de téléphone
@@ -36,109 +58,118 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 
 
 
+	/**
+	 * Reset le formulaire en cas d'erreur (c'est pour garder les infos mis)
+	 */
+	const resetForm = () => {
+		setFormValues(rowData);
+	};
 
-const resetForm = () => {
-	setFormValues(rowData);
-};
 
-return (
-	<div className={`modal fade ${isOpen ? 'show' : ''}`} tabIndex='-1' aria-labelledby='addLabel' aria-hidden={!isOpen} style={{ display: isOpen ? 'block' : 'none' }}>
-	<div className='modal-dialog modal-dialog-centered'>
-		<form onSubmit={handleSubmit}>
-		<div className='modal-content'>
-			<div className="modal-header">
-			<h4 className="modal-title">{rowData.id ? 'Modifier' : 'Ajouter'}</h4>
-			</div>
-			<div className='modal-body'>
-			{header.map((head) => (
-				<div key={head.id}>
-					{head.editable ? (
-						<div>
-							<label htmlFor={head.id} className="form-label">
-								{head.name}
-							</label>
-							{head.type === 'list' ? (
-								<select
-									className="form-control border-secondary"
+	return (
+		<div className={`modal fade ${isOpen ? 'show' : ''}`} tabIndex='-1' aria-labelledby='addLabel' aria-hidden={!isOpen} style={{ display: isOpen ? 'block' : 'none' }}>
+			<div className='modal-dialog modal-dialog-centered'>
+				<form onSubmit={handleSubmit}>
+				<div className='modal-content'>
+					<div className="modal-header">
+					<h4 className="modal-title">{rowData.id ? 'Modifier' : 'Ajouter'}</h4>
+					</div>
+					<div className='modal-body'>
+					{header.map((head) => (
+						<div key={head.id}>
+							{head.editable ? (
+								<div>
+									<label htmlFor={head.id} className="form-label">
+										{head.name}
+									</label>
+									{head.type === 'list' ? (
+										<select
+											className="form-control border-secondary"
+											id={head.id}
+											name={head.id}
+											value={formValues[head.id] || ''}
+											onChange={handleChange}
+										>
+											{head.options.map((option) => (
+												<option key={option} value={option}>
+													{option}
+												</option>
+											))}
+										</select>
+									) : head.type === 'checkbox' ? (
+										<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
+									) : head.type === 'tel' ? (
+										<input
+											type="tel"
+											id={head.id}
+											name={head.id}
+											className="form-control border-secondary"
+											pattern="0[1-9](\s?\d{2}){4}"
+											value={formValues[head.id] !== undefined ? formValues[head.id].replace(/(\d{2})(?=\d)/g, '$1 ') : ''}
+											onChange={handleChangePhoneNumber}
+											required={head.required ? true : false}
+										/>
+									) : (
+										<>
+											<input
+												{...head.datalist && { list: "list" + head.id }}
+												type={head.type === 'prix' ? 'number' : head.type}
+												className="form-control border-secondary"
+												id={head.id}
+												name={head.id}
+												value={formValues[head.id] || ''}
+												onChange={handleChange}
+												required={head.required ? true : false}
+												{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
+												{ ...(head.step      ? { step     : head.step } : {}) }
+											/>
+
+											{head.datalist && (
+												<datalist id={"list" + head.id}>
+													{head.datalist.map((option) => (
+														<option key={option} value={option}/>
+													))}
+												</datalist>
+											)}
+										</>
+									)}
+								</div>
+							) : (
+								<input
+									type="hidden"
 									id={head.id}
 									name={head.id}
 									value={formValues[head.id] || ''}
 									onChange={handleChange}
-								>
-									{head.options.map((option) => (
-										<option key={option} value={option}>
-											{option}
-										</option>
-									))}
-								</select>
-							) : head.type === 'checkbox' ? (
-								<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
-							) : head.type === 'tel' ? (
-								<input
-									type="tel"
-									id={head.id}
-									name={head.id}
-									className="form-control border-secondary"
-									pattern="0[1-9](\s?\d{2}){4}"
-									value={formValues[head.id] !== undefined ? formValues[head.id].replace(/(\d{2})(?=\d)/g, '$1 ') : ''}
-									onChange={handleChangePhoneNumber}
-									required={head.required ? true : false}
 								/>
-							) : (
-								<>
-									<input
-										{...head.datalist && { list: "list" + head.id }}
-										type={head.type}
-										className="form-control border-secondary"
-										id={head.id}
-										name={head.id}
-										value={formValues[head.id] || ''}
-										onChange={handleChange}
-										required={head.required ? true : false}
-										{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
-									/>
-
-									{head.datalist && (
-										<datalist id={"list" + head.id}>
-											{head.datalist.map((option) => (
-												<option key={option} value={option}/>
-											))}
-										</datalist>
-									)}
-								</>
 							)}
-						</div>
-					) : (
-						<input
-							type="hidden"
-							id={head.id}
-							name={head.id}
-							value={formValues[head.id] || ''}
-							onChange={handleChange}
-						/>
-					)}
 
+						</div>
+						))}
+
+							</div>
+							<div className='modal-footer'>
+								<button type='button' className='btnFermer btn btn-secondary' data-bs-dismiss='modal' onClick={ () => { closeModal(); resetForm(); } }>Fermer</button>
+								{ rowData.id !== undefined && (
+									<button type='submit' className='btn btn-primary'>Modifier</button>
+								) }
+								{ rowData.id === undefined && (
+									<button type='submit' className='btnAjouter btn 0btn-primary'></button>
+								) }
+							</div>
+						</div>
+					</form>
 				</div>
-				))}
-
-						</div>
-						<div className='modal-footer'>
-							<button type='button' className='btnFermer btn btn-secondary' data-bs-dismiss='modal' onClick={ () => { closeModal(); resetForm(); } }>Fermer</button>
-							{ rowData.id !== undefined && (
-								<button type='submit' className='btn btn-primary'>Modifier</button>
-							) }
-							{ rowData.id === undefined && (
-								<button type='submit' className='btnAjouter btn 0btn-primary'></button>
-							) }
-						</div>
-					</div>
-				</form>
 			</div>
-		</div>
 	);
 }
 
 
+/**
+ * Les checkbox affiché dans le pop-up : permet de cocher et decocher
+ * @param {*} param0 
+ * @returns 
+ */
 function Checkbox({ id, name, defaultValue })
 {
 	const [isChecked, setIsChecked] = useState(defaultValue);
@@ -171,16 +202,25 @@ function Checkbox({ id, name, defaultValue })
 
 
 
-
+/**
+ * Tableau affichant les données
+ * @param {*} param0 
+ * @returns 
+ */
 function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse })
 {
+	/**
+	 * Met les datas dans le tableau 
+	 */
 	const [datas, setTableData] = useState(data);
 	useEffect(() =>
 	{
 		setTableData(data);
 	}, [data]);
 
-
+	/**
+	 * Si le modal est open ou non, et la modification qu'on recois
+	 */
 	const [modalIsOpen, setModalIsOpen] = useState(false);
 	const [rowData, setRowData] = useState({});
 
@@ -301,6 +341,45 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 		setRowData({ ...rowData, [key]: value });
 	};
 
+
+	
+	/**************************************************************/
+	/*                     TRIE SELON HEADER                      */
+	/**************************************************************/
+
+	const [trierPar     , setTrierPar ] = useState();
+	const [sensCroissant, setCroissant] = useState();
+
+	function trie(id)
+	{
+		console.log("Trier par", id, " en croissant ?", sensCroissant)
+
+		if(trierPar === id)
+		{
+			setCroissant(!sensCroissant)
+		} else {
+			setTrierPar(id)
+			setCroissant(true)
+		}
+
+		if (setCroissant) datas.sort((a, b) => a.id - b.id);
+		else              datas.sort((a, b) => a.id - b.id);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	return (
 		<div className='m-4'>
 
@@ -310,7 +389,9 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 						<tr>
 							{ header.map(column => (
 								column.show && // Vérifier si la colonne doit être affichée
-								<th className= {`bg-primary text-white ${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={ column.id }>{ column.name }</th>
+								<th className= {`bg-primary text-white ${column.type === 'checkbox' || column.type === 'number' || column.type === 'prix' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={ column.id }>
+									<a href='#' className='text-white' onClick={(e) => trie(column.id)}> { column.name }</a>
+								</th>
 							)) }
 							{ (funUpdate !== undefined || funDelete !== undefined) && <th className='bg-primary text-white celCenter'>Action</th> }
 						</tr>
@@ -332,13 +413,12 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 									{header.map(column => (
 										column.show && (
 												<td className={
-														`bg-light
-														${column.type === 'checkbox' || column.type === 'number' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`
+														`bg-light ${column.type === 'checkbox' || column.type === 'number' || column.type === 'prix' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`
 													}
 													key={`${item.id}-${column.id}`}
 												>
 
-												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && (
+												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && column.type !== 'prix' && (
 													// Si ce n'est pas un checkbox ni un button, afficher la valeur de la colonne
 													`${item[column.id]}`
 												)}
@@ -367,6 +447,11 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 												{column.type === 'tel' && (
 													// Si c'est un numéro de téléphone, afficher les numéros avec un espace
 													`${item[column.id].replace(/(..)/g, '$1 ')}` // Retirez le caractère ")" en trop
+												)}
+
+												{column.type === 'prix' && (
+													// Si c'est un numéro de téléphone, afficher les numéros avec un espace
+													`${item[column.id].toFixed(2)} €` // Retirez le caractère ")" en trop
 												)}
 
 												{/* Si c'est un button */}
