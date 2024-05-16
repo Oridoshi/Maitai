@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
-import { PDFDocument } from 'pdf-lib';
 
 
 function FicheSecu() {
@@ -778,7 +777,7 @@ function FicheSecu() {
 
 		
 		console.log(formDataObject)
-		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xls";
+		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
 		nomFic = nomFic.replace(/-+/g, '-');
 		console.log(nomFic)
 
@@ -959,7 +958,10 @@ function FicheSecu() {
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');
 		}
-		const blob = await response.blob();
+		const rep = await response;
+		console.log(rep)
+
+		const blob = await rep.blob()
 
 		console.log(blob)
 
@@ -1025,15 +1027,17 @@ function FicheSecu() {
 			
 				}
 
-				
-				console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC')
-				console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb)
-				console.log("Hye", 'B' + (16 + index * 3))
+				try 
+				{
+					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC')
+					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb)
+					console.log("Hye", 'B' + (16 + index * 3))
 
-				setEncadre(prevState => ({
-					...prevState,
-					[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
-				}));
+					setEncadre(prevState => ({
+						...prevState,
+						[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
+					}));
+				} catch (error) {}
 
 				// if (formDataObject["p" + (index+1) +"type"] === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
 				// else                                                     worksheet.getCell('E' + (16 + index * 3)).value = 'X'
@@ -1054,6 +1058,7 @@ function FicheSecu() {
 		})
 		.catch(error => {
 			// Gérer les erreurs de chargement du fichier Blob
+			
 			window.location.href = '/fiches-de-securite';
 			console.log("Erreur", error)
 			alert('Le fichier sauvegarder ne semble pas être du bon format');
