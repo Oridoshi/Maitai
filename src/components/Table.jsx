@@ -75,77 +75,88 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 					<h4 className="modal-title">{rowData.id ? 'Modifier' : 'Ajouter'}</h4>
 					</div>
 					<div className='modal-body'>
-					{header.map((head) => (
-						<div key={head.id}>
-							{head.editable ? (
-								<div>
-									<label htmlFor={head.id} className="form-label">
-										{head.name}
-									</label>
-									{head.type === 'list' ? (
-										<select
-											className="form-control border-secondary"
-											id={head.id}
-											name={head.id}
-											value={formValues[head.id] || ''}
-											onChange={handleChange}
-										>
-											{head.options.map((option) => (
-												<option key={option} value={option}>
-													{option}
-												</option>
-											))}
-										</select>
-									) : head.type === 'checkbox' ? (
-										<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
-									) : head.type === 'tel' ? (
-										<input
-											type="tel"
-											id={head.id}
-											name={head.id}
-											className="form-control border-secondary"
-											pattern="0[1-9](\s?\d{2}){4}"
-											value={formValues[head.id] !== undefined ? formValues[head.id].replace(/(\d{2})(?=\d)/g, '$1 ') : ''}
-											onChange={handleChangePhoneNumber}
-											required={head.required ? true : false}
-										/>
-									) : (
-										<>
-											<input
-												{...head.datalist && { list: "list" + head.id }}
-												type={head.type === 'prix' ? 'number' : head.type}
+						{header.map((head) => (
+							<div key={head.id}>
+								{head.editable ? (
+									<div>
+										<label htmlFor={head.id} className="form-label">
+											{head.name}
+										</label>
+										{head.type === 'list' ? (
+											<select
 												className="form-control border-secondary"
 												id={head.id}
 												name={head.id}
 												value={formValues[head.id] || ''}
 												onChange={handleChange}
+											>
+												{head.options.map((option) => (
+													<option key={option} value={option}>
+														{option}
+													</option>
+												))}
+											</select>
+										) : head.type === 'checkbox' ? (
+											<Checkbox id={head.id} name={head.id} defaultValue={formValues[head.id] || false}/>
+										) : head.type === 'tel' ? (
+											<input
+												type="tel"
+												id={head.id}
+												name={head.id}
+												className="form-control border-secondary"
+												pattern="0[1-9](\s?\d{2}){4}"
+												value={formValues[head.id] !== undefined ? formValues[head.id].replace(/(\d{2})(?=\d)/g, '$1 ') : ''}
+												onChange={handleChangePhoneNumber}
+												required={head.required ? true : false}
+											/>
+										) : head.type === 'email' ? (
+											<input
+												type="email"
+												id={head.id}
+												name={head.id}
+												className="form-control border-secondary"
+												pattern="^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$"
+												value={formValues[head.id] || ''}
+												onChange={handleChange}
 												required={head.required ? true : false}
 												{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
-												{ ...(head.step      ? { step     : head.step } : {}) }
 											/>
+										) : (
+											<>
+												<input
+													{...head.datalist && { list: "list" + head.id }}
+													type={head.type}
+													className="form-control border-secondary"
+													id={head.id}
+													name={head.id}
+													value={formValues[head.id] || ''}
+													onChange={handleChange}
+													required={head.required ? true : false}
+													{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
+												/>
 
-											{head.datalist && (
-												<datalist id={"list" + head.id}>
-													{head.datalist.map((option) => (
-														<option key={option} value={option}/>
-													))}
-												</datalist>
-											)}
-										</>
-									)}
-								</div>
-							) : (
-								<input
-									type="hidden"
-									id={head.id}
-									name={head.id}
-									value={formValues[head.id] || ''}
-									onChange={handleChange}
-								/>
-							)}
+												{head.datalist && (
+													<datalist id={"list" + head.id}>
+														{head.datalist.map((option) => (
+															<option key={option} value={option}/>
+														))}
+													</datalist>
+												)}
+											</>
+										)}
+									</div>
+								) : (
+									<input
+										type="hidden"
+										id={head.id}
+										name={head.id}
+										value={formValues[head.id] || ''}
+										onChange={handleChange}
+									/>
+								)}
 
-						</div>
-						))}
+							</div>
+							))}
 
 							</div>
 							<div className='modal-footer'>
@@ -352,18 +363,42 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 	function trie(id)
 	{
-		console.log("Trier par", id, " en croissant ?", sensCroissant)
+		console.log("Trier par", id, "en croissant ?", sensCroissant)
 
 		if(trierPar === id)
 		{
 			setCroissant(!sensCroissant)
 		} else {
 			setTrierPar(id)
-			setCroissant(true)
+			setCroissant(!sensCroissant)
 		}
 
-		if (setCroissant) datas.sort((a, b) => a.id - b.id);
-		else              datas.sort((a, b) => a.id - b.id);
+		setTableData(datas.sort((a, b) => a[id] - b[id]));
+
+		//Comparé si c'est une chaine 
+		if (sensCroissant) {
+			setTableData([...datas].sort((a, b) => {
+				const valueA = isNaN(a[id]) ? a[id] : parseFloat(a[id]);
+				const valueB = isNaN(b[id]) ? b[id] : parseFloat(b[id]);
+				
+				if (typeof valueA === 'number' && typeof valueB === 'number') {
+					return valueA - valueB;
+				} else {
+					return valueA.toString().localeCompare(valueB.toString());
+				}
+			}));
+		} else {
+			setTableData([...datas].sort((a, b) => {
+				const valueA = isNaN(a[id]) ? a[id] : parseFloat(a[id]);
+				const valueB = isNaN(b[id]) ? b[id] : parseFloat(b[id]);
+				
+				if (typeof valueA === 'number' && typeof valueB === 'number') {
+					return valueB - valueA;
+				} else {
+					return valueB.toString().localeCompare(valueA.toString());
+				}
+			}));
+		}
 	}
 
 
