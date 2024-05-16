@@ -757,7 +757,7 @@ function FicheSecu() {
 
 		
 		console.log(formDataObject)
-		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
+		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.ods";
 		nomFic = nomFic.replace(/-+/g, '-');
 		console.log(nomFic)
 
@@ -841,7 +841,7 @@ function FicheSecu() {
 			link.href = url;
 
 			// Définir le nom du fichier à télécharger
-			link.download = nomFic;
+			link.download = formDataObject["nomFic"];
 
 			// Ajouter le lien au document
 			document.body.appendChild(link);
