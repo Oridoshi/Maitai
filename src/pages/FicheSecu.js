@@ -27,7 +27,6 @@ function FicheSecu() {
 	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [nomFic  , setNomFic  ] = useState();
-	const [blob    , setBlob     ] = useState();
 
 
 	function getCurrentDate() {
