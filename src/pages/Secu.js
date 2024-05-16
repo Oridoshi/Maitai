@@ -51,8 +51,8 @@ function Secu() {
 		.then(data => {
 			
 			const newData = data.filter(item => !item.valide).map((item, index) => {
-				const matchResult = item.chemin.match(/\d{1,}_\d{4}-\d{2}-\d{2}_\w+_(.+)_FICHESECU\.xlsx/);
-				const nouveauChemin = matchResult ? matchResult[1].replace(/[-\s]+/g, ' ') : item.chemin;
+				const separer = item.chemin.split('_')
+				const nouveauChemin = separer[3];
 				
 				return {
 					...item,
