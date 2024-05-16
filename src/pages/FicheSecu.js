@@ -244,8 +244,8 @@ function FicheSecu() {
 						
 						<div className='d-flex align-items-center col-sm-1 ms-5'>
 						{console.log(formDataObject[`p${num}type`])}
-							<input className='me-2'         type="radio" name={`p${num}type`} onChange={() => handleChangePlaquee(num)} value="tech"  checked={formDataObject[`p${num}type`] === "tech"} ></input> |
-							<input className='ms-2'         type="radio" name={`p${num}type`} onChange={() => handleChangePlaquee(num)} value="explo" checked={formDataObject[`p${num}type`] === "explo"} ></input> 
+							<input className='me-2'         type="radio" name={`p${num}type`} onChange={() => {formDataObject[`p${num}type`] = "tech" ; handleChangePlaquee(num)}} value="tech"  checked={formDataObject[`p${num}type`] === "tech"} ></input> |
+							<input className='ms-2'         type="radio" name={`p${num}type`} onChange={() => {formDataObject[`p${num}type`] = "explo"; handleChangePlaquee(num)}} value="explo" checked={formDataObject[`p${num}type`] === "explo"} ></input> 
 						</div>
 						
 						<div className='d-flex align-items-center col-sm-2'>
