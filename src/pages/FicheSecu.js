@@ -752,7 +752,7 @@ function FicheSecu() {
 			// Créer un lien <a> pour télécharger le fichier
 			const link = document.createElement('a');
 			link.href = url;
-			link.download =  formDataObject["nomFic"].replace(/[_ ]/g, '-') + ".xlsx";
+			link.download =  formDataObject["nomFic"].replace(/[_ .]/g, '-') + ".xlsx";
 
 			// Ajouter le lien à la page
 			document.body.appendChild(link);
@@ -778,8 +778,9 @@ function FicheSecu() {
 
 		
 		console.log(formDataObject)
-		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ ]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
+		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xls";
 		nomFic = nomFic.replace(/-+/g, '-');
+		console.log(nomFic)
 
 		//SI CEST NOUVEAU 
 		if (idHis === undefined)
