@@ -25,6 +25,9 @@ export default function Ticket()
 	//bar de Recherche
 	const [filterData, setFilterData] = useState([]);
 
+	const [searchTerm, setSearchTerm] = useState(''); // État pour stocker la valeur de recherche
+	const [checked, setChecked] = useState(true); // État pour stocker la valeur de la case à cocher
+
 
 	/*TABLEAU DE CLIENT*/
 
@@ -400,43 +403,30 @@ export default function Ticket()
 	}
 
 	// FILTRES
-	const handleChange = (e) => { filter(e.target.value); };
-	const handleCbChange = (e) => { filter(e.target.checked); };
+	const handleChange = (e) => { setSearchTerm(e.target.value); };
+	const handleCbChange = (e) => { setChecked(e.target.checked); };
 
-
-	function filter(value)
-	{
-		// Filtrer les données en fonction de la valeur de recherche
-		const filteredData = initialData.filter((element) =>
-		{
-
-			if (typeof value === 'boolean')
-			{
-				if (element.present === value || element.present) return true;
-				else return false;
-			}
-			else
-			{
+	const applyFilter = (data, value) => {
+		const filteredData = data.filter((element) => {
 				// Parcourir les clés de l'en-tête initial
-				for (const key of initialHeader)
-				{
+				for (const key of initialHeader) {
 					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-					if (key.show)
-					{
+					if (key.show ) {
 						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-						if ((element[key.id] + '').toUpperCase().includes(value.toUpperCase()))
-						{
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase()) && (element.present === checked || element.present)) {
 							return true; // Si correspondance, conserver cet élément
 						}
 					}
 				}
 				return false; // Si aucune correspondance, exclure cet élément
-			}
 		});
-
-		// Mettre à jour les données filtrées
 		setFilterData(filteredData);
 	}
+
+
+	useEffect(() => {
+		applyFilter(initialData, searchTerm, checked);
+	}, [initialData, searchTerm, checked]);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -899,7 +889,7 @@ export default function Ticket()
 					<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={ handleChange } />
 				</div>
 				<div className="form-check" style={ { marginLeft: '10em' } }>
-					<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={ handleCbChange } />
+					<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" checked={checked} onChange={ handleCbChange } />
 					<label className="form-check-label" htmlFor="afficherClients">Afficher seulement clients présents</label>
 				</div>
 			</div>

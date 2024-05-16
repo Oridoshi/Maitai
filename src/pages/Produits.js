@@ -8,7 +8,7 @@ export default function Produits(){
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
 	const [datalistCateg, setDatalistCateg] = useState([]);
-
+	const [searchTerm  , setSearchTerm  ] = useState(''); // État pour stocker la valeur de recherche
 
 
 	// Récupérer les données des produits
@@ -272,38 +272,23 @@ export default function Produits(){
 		}
 	}
 
-	const handleChange   = (e) => {filter( e.target.value);};
+	const handleChange   = (e) => {setSearchTerm( e.target.value);};
 
-
-	function filter (value)
-	{
-		// Filtrer les données en fonction de la valeur de recherche
-		const filteredData = initialData.filter((element) => {
-
-			if (typeof value === 'boolean')
-			{
-				if(element.present === value || element.present) return true;
-				else                          return false;
-			}
-			else
-			{
-				// Parcourir les clés de l'en-tête initial
-				for (const key of initialHeader) {
-					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-					if (key.show) {
-						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase())) {
-							return true; // Si correspondance, conserver cet élément
-						}
-					}
+	const applyFilter = (data, value) => {
+		const filteredData = data.filter((element) => {
+			for (const key of initialHeader) {
+				if (key.show && (element[key.id] + '').toUpperCase().includes(value.toUpperCase())) {
+					return true;
 				}
-				return false; // Si aucune correspondance, exclure cet élément
 			}
+			return false;
 		});
-
-		// Mettre à jour les données filtrées
 		setFilterData(filteredData);
 	}
+
+	useEffect(() => {
+		applyFilter(initialData, searchTerm);
+	}, [searchTerm, initialData]);
 
 
 
