@@ -9,21 +9,21 @@ const ImageCarousel = () => {
         <Carousel>
             <Carousel.Item>
                 <img
-                    className="d-block col w-100"
+                    className="d-block col mx-auto"
                     src={image1}
                     alt="First slide"
                 />
             </Carousel.Item>
             <Carousel.Item>
                 <img
-                    className="d-block col w-100"
+                    className="d-block col mx-auto"
                     src={image2}
                     alt="Second slide"
                 />
             </Carousel.Item>
             <Carousel.Item>
                 <img
-                    className="d-block col w-100"
+                    className="d-block col mx-auto"
                     src={image3}
                     alt="Third slide"
                 />
