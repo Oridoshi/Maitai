@@ -133,12 +133,13 @@ const Log = ({ changeEtat }) =>
 	const regex = (event) =>
 	{
 		let val = event.target.value;
-		const loginRegex = /^[A-Za-z\d]+$/;
+		val = val.replace(' ', '-');
+		const loginRegex = /^[A-Za-z\d-]+$/;
 		if (!loginRegex.test(val))
 		{
 			val = val.slice(0, -1);
-			event.target.value = val;
 		}
+		event.target.value = val;
 	};
 
 	//classes de style
@@ -297,12 +298,13 @@ const Creer = ({ changeEtat }) =>
 	const regexLog = (event) =>
 	{
 		let val = event.target.value;
-		const loginRegex = /^[A-Za-z\d]+$/;
+		val = val.replace(' ', '-');
+		const loginRegex = /^[A-Za-z\d-]+$/;
 		if (!loginRegex.test(val))
 		{
 			val = val.slice(0, -1);
-			event.target.value = val;
 		}
+		event.target.value = val;
 	};
 	const regexMail = (event) =>
 	{
