@@ -26,7 +26,7 @@ export default function Ticket()
 	const [filterData, setFilterData] = useState([]);
 
 	const [searchTerm, setSearchTerm] = useState(''); // État pour stocker la valeur de recherche
-	const [checked, setChecked] = useState(false); // État pour stocker la valeur de la case à cocher
+	const [checked, setChecked] = useState(true); // État pour stocker la valeur de la case à cocher
 
 
 	/*TABLEAU DE CLIENT*/
@@ -889,7 +889,7 @@ export default function Ticket()
 					<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={ handleChange } />
 				</div>
 				<div className="form-check" style={ { marginLeft: '10em' } }>
-					<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={ handleCbChange } />
+					<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" checked={checked} onChange={ handleCbChange } />
 					<label className="form-check-label" htmlFor="afficherClients">Afficher seulement clients présents</label>
 				</div>
 			</div>

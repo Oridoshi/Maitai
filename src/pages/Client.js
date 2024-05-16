@@ -207,6 +207,8 @@ function Client() {
 			}));
 			setInitialData(updatedData);
 			setFilterData(updatedData);
+			setChecked(false);
+			document.getElementById('afficherClients').checked = false;
 		} catch (error) {
 			console.log(error);
 		}
