@@ -11,7 +11,7 @@ $pdo = DB::getInstance();
 $tab = $pdo->getUtilisateursEtDroit();
 
 foreach ($tab as $uti) {
-    if ($uti["login"] == $login) {
+    if (strtolower($uti["login"]) == strtolower($login)) {
         echo $uti["libdroit"];
         break;
     }
