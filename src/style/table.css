@@ -1,5 +1,6 @@
 .tableau th {
 	background-color: #005C8F !important;
+	overflow: auto!important;
 }
 
 .tableau td {
@@ -136,4 +137,8 @@
 .btntickets:hover {
 	background-color: transparent!important;
 	border-color: transparent !important;
+}
+
+.btnreverse{
+	transform: rotate(180deg);
 }

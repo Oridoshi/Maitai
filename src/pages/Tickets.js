@@ -68,7 +68,7 @@ export default function Ticket()
 			for (var i = 0; i < buttons.length; i++)
 			{
 				var button = buttons[i];
-				button.style.transform = 'rotate(0deg)';
+				button.classList.remove('btnreverse');
 			}
 
 			//masque tous les tickets
@@ -102,7 +102,7 @@ export default function Ticket()
 
 		//retourne le bouton du ticket pour montrer qu'on l'edit
 		var button = document.getElementById('btn ' + ligne.id);
-		button.style.transform = 'rotate(180deg)';
+		button.classList.add('btnreverse');
 
 		/* Bouton Ajout de produit */
 
@@ -176,6 +176,7 @@ export default function Ticket()
 
 			// Création de l'élément compteur
 			const compteur = document.createElement('td');
+			compteur.colSpan = 1;
 			compteur.classList.add('edit');
 			compteur.classList.add('cpt');
 			const compteurComponent = document.createElement('div');
