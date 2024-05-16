@@ -243,8 +243,9 @@ function FicheSecu() {
 
 						
 						<div className='d-flex align-items-center col-sm-1 ms-5'>
-							<input className='me-2'         type="radio" name={`p${num}type`} onChange={() => handleChangePlaquee(num)} value="tech" ></input> |
-							<input className='ms-2'         type="radio" name={`p${num}type`} onChange={() => handleChangePlaquee(num)} value="explo"></input> 
+						{console.log(formDataObject[`p${num}type`])}
+							<input className='me-2'         type="radio" name={`p${num}type`} onChange={() => handleChangePlaquee(num)} value="tech"  checked={formDataObject[`p${num}type`] === "tech"} ></input> |
+							<input className='ms-2'         type="radio" name={`p${num}type`} onChange={() => handleChangePlaquee(num)} value="explo" checked={formDataObject[`p${num}type`] === "explo"} ></input> 
 						</div>
 						
 						<div className='d-flex align-items-center col-sm-2'>
@@ -742,27 +743,6 @@ function FicheSecu() {
 
 		});
 
-		function telecharger()
-		{
-			// convertXlsxToPdf(blob);
-			
-			const url = URL.createObjectURL(blob);
-
-			// Créer un lien <a> pour télécharger le fichier
-			const link = document.createElement('a');
-			link.href = url;
-			link.download =  formDataObject["nomFic"].replace(/[_ .]/g, '-') + ".xlsx";
-
-			// Ajouter le lien à la page
-			document.body.appendChild(link);
-
-			// Simuler le clic sur le lien pour déclencher le téléchargement
-			link.click();
-
-			// Supprimer le lien de la page une fois le téléchargement terminé
-			document.body.removeChild(link);
-		}
-
 
 		// Générer le fichier Excel
 		const buffer = await workbook.xlsx.writeBuffer();
@@ -1027,20 +1007,12 @@ function FicheSecu() {
 			
 				}
 
-				try 
-				{
-					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC')
-					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb)
-					console.log("Hye", 'B' + (16 + index * 3))
 
-					setEncadre(prevState => ({
-						...prevState,
-						[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
-					}));
-				} catch (error) {}
 
-				// if (formDataObject["p" + (index+1) +"type"] === 'explo') worksheet.getCell('F' + (16 + index * 3)).value = 'X'
-				// else                                                     worksheet.getCell('E' + (16 + index * 3)).value = 'X'
+				if (worksheet.getCell('F' + (16 + index * 3)).value === 'X') oldData["p" + (index+1) +"type"] = 'explo';
+				else                                                         oldData["p" + (index+1) +"type"] = 'tech' ;
+
+				console.log(formDataObject["p" + (index+1) +"type"])
 
 				oldData["p" + (index+1) +"prof"    ] = worksheet.getCell('G' + (16 + index * 3)).value;
 				oldData["p" + (index+1) +"temp"    ] = worksheet.getCell('H' + (16 + index * 3)).value;
@@ -1052,6 +1024,33 @@ function FicheSecu() {
 				oldData["p" + (index+1) +"HS"      ] = worksheet.getCell('N' + (16 + index * 3)).value;
 				oldData["p" + (index+1) +"gaz"     ] = worksheet.getCell('O' + (16 + index * 3)).value;
 				oldData["p" + (index+1) +"rem"     ] = worksheet.getCell('P' + (16 + index * 3)).value;
+
+
+
+				//Par rapport au info on détérmine si il fallait un encadrant.
+
+				
+				// Certain navigateur accepteront la couleur, donc on détermine les encadrant comme ca
+				try 
+				{
+					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC')
+					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb)
+					console.log("Hye", 'B' + (16 + index * 3))
+
+					setEncadre(prevState => ({
+						...prevState,
+						[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
+					}));
+				} catch (error) { //Sinon on calcule juste avec les conditions
+
+					setEncadre(prevState => ({
+						...prevState,
+						[index + 1]: ( oldData["p" + (index+1) + "type"] === "tech")       || 
+						             ( oldData["p" + (index+1) + "Bniv"] === "N1-PE20"     || oldData["p" + (index+1) + "Cniv"] === "N1-PE20") || //Pas la peine de verifier A, car ca serait lui l'intervenant
+									 ((oldData["p" + (index+1) + "Bniv"] === "N2-PA20PE40" || oldData["p" + (index+1) + "Cniv"] === "N2-PA20PE40") && oldData["p" + (index+1) +"prof"] > 20)
+					}));
+
+				}
 			})
 
 			setFormDataObject(oldData)
@@ -1112,6 +1111,7 @@ function FicheSecu() {
 
 		setFormDataObject(nouvData)
 	}
+
 
 	/**
 	 * Fonction qui gère les changement du formulaire des palanquées.
@@ -1276,7 +1276,7 @@ function FicheSecu() {
 				<div className="m-5 d-flex justify-content-end">
 
 					{etape < etapesLib.length - 2 &&
-						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={() => redirigerAuDebut()}>Annuler</button>
+						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={() => {setEtape(etape-1); redirigerAuDebut()}}>Annuler</button>
 					}
 
 					{etape < etapesLib.length - 2 &&
