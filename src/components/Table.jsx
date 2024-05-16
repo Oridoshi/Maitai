@@ -84,6 +84,18 @@ return (
 									onChange={handleChangePhoneNumber}
 									required={head.required ? true : false}
 								/>
+							) : head.type === 'email' ? (
+								<input
+									type="email"
+									id={head.id}
+									name={head.id}
+									className="form-control border-secondary"
+									pattern="^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$"
+									value={formValues[head.id] || ''}
+									onChange={handleChange}
+									required={head.required ? true : false}
+									{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
+								/>
 							) : (
 								<>
 									<input

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
+import { PDFDocument } from 'pdf-lib';
+
 
 function FicheSecu() {
 	if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
@@ -394,17 +396,20 @@ function FicheSecu() {
 	 */
 	function generatehtmlAppercue() {
 
-		generateExcel();
 
 		return (
 			<div className='m-5'>
 				La {idHis && 'nouvelle'} fiche à était générer et envoyé a l'administration. <br></br>
 				Vous pourez la modifié jusqu'à sa validation par le.s administateur.euse.s dans de futur fonctionnalités. <br></br>
 
-				<button className='btn mt-4 btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Terminer </button>
+				<button className='btn mt-4 btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Quitter </button>
+				<button id='tele' className='btn ms-4 mt-4 btn-secondary '> Quitter et telecharger un appercue </button>
+				{JSpuLaMerde()}
 			</div>
 		);
 	}
+
+	function JSpuLaMerde () {generateExcel();}
 
 	function redirigerAuDebut()
 	{
@@ -738,6 +743,27 @@ function FicheSecu() {
 
 		});
 
+		function telecharger()
+		{
+			// convertXlsxToPdf(blob);
+			
+			const url = URL.createObjectURL(blob);
+
+			// Créer un lien <a> pour télécharger le fichier
+			const link = document.createElement('a');
+			link.href = url;
+			link.download =  formDataObject["nomFic"].replace(/[_ ]/g, '-') + ".xlsx";
+
+			// Ajouter le lien à la page
+			document.body.appendChild(link);
+
+			// Simuler le clic sur le lien pour déclencher le téléchargement
+			link.click();
+
+			// Supprimer le lien de la page une fois le téléchargement terminé
+			document.body.removeChild(link);
+		}
+
 
 		// Générer le fichier Excel
 		const buffer = await workbook.xlsx.writeBuffer();
@@ -827,22 +853,77 @@ function FicheSecu() {
 
 		}
 
+		// Fonction pour gérer le téléchargement du blob
+		function telechargerBlob() {
+			// Créer un lien de téléchargement avec le blob
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement('a');
+			link.href = url;
 
-		
-		// // Créer un objet URL à partir du Blob
-		// const url = window.URL.createObjectURL(blob);
+			// Définir le nom du fichier à télécharger
+			link.download = nomFic;
 
-		// // Créer un lien d'ancrage pour télécharger le fichier Excel
-		// const a = document.createElement('a');
-		// a.href = url;
-		// a.download = "HEYY_" + formDataObject["date"] + "_" + sessionStorage.getItem("login") + "_FICHESECU.xlsx";
-		// document.body.appendChild(a);
-		// a.click();
+			// Ajouter le lien au document
+			document.body.appendChild(link);
 
-		// // Libérer l'URL de l'objet Blob
-		// window.URL.revokeObjectURL(url);
+			// Simuler un clic sur le lien pour déclencher le téléchargement
+			link.click();
+
+			// Supprimer le lien du document une fois le téléchargement terminé
+			document.body.removeChild(link);
+			setEtape(etape)
+
+			redirigerAuDebut();
+		}
+
+		try {
+			// Ajouter un gestionnaire d'événements au clic sur le bouton
+			const btn = document.getElementById('tele');
+			btn.addEventListener('click', telechargerBlob);
+		} catch (error) {
+			
+		}
+
 	}
 
+
+
+
+
+	// async function convertXlsxToPdf(blobExcel) {
+	// 	const workbook = new ExcelJS.Workbook();
+		
+	// 	// Chargement du Blob Excel
+	// 	const arrayBuffer = await blobExcel.arrayBuffer();
+	// 	await workbook.xlsx.load(arrayBuffer);
+
+	// 	// Création d'un nouveau document PDF
+	// 	const pdfDoc = await PDFDocument.create();
+
+	// 	// Ajout du contenu Excel au document PDF
+	// 	const excelData = await workbook.xlsx.write();
+	// 	const excelPdf = await PDFDocument.load(excelData);
+	// 	const copiedPages = await pdfDoc.copyPages(excelPdf, excelPdf.getPageIndices());
+	// 	copiedPages.forEach((page) => pdfDoc.addPage(page));
+
+	// 	// Générer le Blob PDF
+	// 	const pdfBytes = await pdfDoc.save();
+
+	// 	// Création d'un objet URL à partir du Blob PDF
+	// 	const pdfUrl = window.URL.createObjectURL(new Blob([pdfBytes]));
+
+	// 	// Création d'un lien d'ancrage pour télécharger le fichier PDF
+	// 	const a = document.createElement('a');
+	// 	a.href = pdfUrl;
+	// 	a.download = "NF°23_2024-05-14_sarah_FICHESECU.pdf";
+	// 	document.body.appendChild(a);
+	// 	a.click();
+
+	// 	// Libérer l'URL de l'objet Blob PDF
+	// 	window.URL.revokeObjectURL(pdfUrl);
+
+	// 	console.log('Conversion réussie !');
+	// }
 
 
 	
@@ -863,7 +944,6 @@ function FicheSecu() {
 		setNomFic(nomFic);   
 		sessionStorage.removeItem("nomFic");  
 
-
 		// RECUPERER LE FICHIER
 		const formData = new FormData();
 		formData.append('idhist', id);
@@ -879,6 +959,8 @@ function FicheSecu() {
 			throw new Error('Une erreur s\'est produite.');
 		}
 		const blob = await response.blob();
+
+		console.log(blob)
 
 		// LIRE LES DONNEES
 		const workbook = new ExcelJS.Workbook();
@@ -983,6 +1065,7 @@ function FicheSecu() {
 
 
 
+
 	/**********************************************************************/
 	/*                                                                    */
 	/*                    GESTION DES FORMULAIRES                         */
@@ -991,6 +1074,7 @@ function FicheSecu() {
 
 	// Function to handle going to the next step
 	const handleSubmit = async (e) => {
+
 		e.preventDefault();
 
 		if (!peutValide) return;
