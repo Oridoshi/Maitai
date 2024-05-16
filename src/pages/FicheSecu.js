@@ -861,7 +861,7 @@ function FicheSecu() {
 			link.href = url;
 
 			// Définir le nom du fichier à télécharger
-			link.download = 'nom_du_fichier.xlsx';
+			link.download = nomFic;
 
 			// Ajouter le lien au document
 			document.body.appendChild(link);
