@@ -210,8 +210,6 @@ function Utilisateur() {
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState, "] error code :", errorCode);
 			alert(errorMessageText);
-		} else {
-			console.log("Aucune erreur connue renvoyé. Retour du fetch ", data);
 		}
 	}
 

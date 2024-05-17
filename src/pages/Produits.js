@@ -131,8 +131,6 @@ export default function Produits(){
 	const funUpdate = async (upItem/*, oldItem*/) => {
 		try {
 
-			// console.log(oldItem);
-			console.log(upItem);
 
 			const formData = new FormData();
 			formData.append('idProd'   , parseInt(upItem.idprod ));

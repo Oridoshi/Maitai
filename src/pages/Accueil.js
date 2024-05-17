@@ -9,12 +9,10 @@ export default function Accueil(){
 	useEffect(() => {
 		fetch(cheminPHP + "config/GetTxtAcceuil.php")
 			.then((response) => {
-				// console.log(response);
 				return response.text()
 			})
 			.then((data) => {
 				const lignes = data.split("\n").filter(line => !line.startsWith(';'))
-				// console.log(lignes);
 				setTxt(lignes.join(" "));
 			})
 			.catch((error) => {

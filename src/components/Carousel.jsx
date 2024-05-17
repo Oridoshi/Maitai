@@ -9,11 +9,9 @@ export default function ImageCarousel(){
 	useEffect(() => {
 		fetch(cheminPHP + "config/GetImgAcceuil.php")
 			.then((response) => {
-				// console.log(response);
 				return response.json()
 			})
 			.then((data) => {
-				// console.log(data);
 				setImageUrls(data);
 			})
 			.catch((error) => {

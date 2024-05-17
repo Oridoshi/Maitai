@@ -21,7 +21,6 @@ export default function Historique(){
 	useEffect(() => {
 		// Créer un objet FormData
 		const formData = new FormData();
-		console.log(idCli);
 		formData.append('idcli', idCli);
 
 		fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
@@ -170,7 +169,6 @@ export default function Historique(){
 
 	const funDelete = async (item) => {
 
-		console.log(item)
 		if(item.valide === true || item.valide === 1) return false;
 
 		try {

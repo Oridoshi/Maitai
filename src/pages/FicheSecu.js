@@ -243,7 +243,6 @@ function FicheSecu() {
 
 						
 						<div className='d-flex align-items-center col-sm-1 ms-5'>
-						{console.log(formDataObject[`p${num}type`])}
 							<input className='me-2'         type="radio" name={`p${num}type`} onChange={() => {formDataObject[`p${num}type`] = "tech" ; handleChangePlaquee(num)}} value="tech"  checked={formDataObject[`p${num}type`] === "tech"} ></input> |
 							<input className='ms-2'         type="radio" name={`p${num}type`} onChange={() => {formDataObject[`p${num}type`] = "explo"; handleChangePlaquee(num)}} value="explo" checked={formDataObject[`p${num}type`] === "explo"} ></input> 
 						</div>
@@ -659,8 +658,6 @@ function FicheSecu() {
 				worksheet.getCell('D' + ((16 + i) + index * 3)).border = borderAll;
 
 
-				console.log(index, "encadreOuNon ?", encadreOuNon[index])
-				console.log(i, "i == 0 ?", i === 0)
 				if (encadreOuNon[index + 1] && i === 0)
 				{
 					worksheet.getCell('B' + ((16 + i) + index * 3)).fill = grayFill;
@@ -756,10 +753,8 @@ function FicheSecu() {
 		/***************************************************/
 
 		
-		console.log(formDataObject)
 		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
 		nomFic = nomFic.replace(/-+/g, '-');
-		console.log(nomFic)
 
 		//SI CEST NOUVEAU 
 		if (idHis === undefined)
@@ -767,7 +762,6 @@ function FicheSecu() {
 			let formData = new FormData();
 			formData.append('login'  , sessionStorage.getItem("login"));
 
-			console.log(formData.get('login'))
 
 			//On récupère id du login 
 			let response = await fetch(cheminPHP + "client/GetIdClient.php", {
@@ -781,9 +775,6 @@ function FicheSecu() {
 			}
 
 			const id = await response.text();
-			console.log(id)
-			
-
 
 			// On envoie le fichier Excel au serveur
 			formData = new FormData();
@@ -802,7 +793,6 @@ function FicheSecu() {
 			}
 
 			const text = await response.text();
-			console.log(text)
 
 		} else {
 
@@ -828,9 +818,6 @@ function FicheSecu() {
 			}
 
 			const text = await response.text();
-			console.log("un problemen ?", text)
-
-
 		}
 
 		// Fonction pour gérer le téléchargement du blob
@@ -939,11 +926,9 @@ function FicheSecu() {
 			throw new Error('Une erreur s\'est produite.');
 		}
 		const rep = await response;
-		console.log(rep)
 
 		const blob = await rep.blob()
 
-		console.log(blob)
 
 		// LIRE LES DONNEES
 		const workbook = new ExcelJS.Workbook();
@@ -998,8 +983,6 @@ function FicheSecu() {
 				{
 					let ind = String.fromCharCode(65 + i); // Convertit 0 à 'A', 1 à 'B', etc.
 
-					console.log("p" + (index+1) + (ind) + "nom")
-
 					oldData["p" + (index+1) + (ind) + "nom"    ] = worksheet.getCell('B' + ((16 + i) + index * 3)).value;
 					oldData["p" + (index+1) + (ind) + "prenom" ] = worksheet.getCell('C' + ((16 + i) + index * 3)).value;
 					oldData["p" + (index+1) + (ind) + "niv"    ] = worksheet.getCell('D' + ((16 + i) + index * 3)).value;
@@ -1011,8 +994,6 @@ function FicheSecu() {
 
 				if (worksheet.getCell('F' + (16 + index * 3)).value === 'X') oldData["p" + (index+1) +"type"] = 'explo';
 				else                                                         oldData["p" + (index+1) +"type"] = 'tech' ;
-
-				console.log(formDataObject["p" + (index+1) +"type"])
 
 				oldData["p" + (index+1) +"prof"    ] = worksheet.getCell('G' + (16 + index * 3)).value;
 				oldData["p" + (index+1) +"temp"    ] = worksheet.getCell('H' + (16 + index * 3)).value;
@@ -1033,10 +1014,6 @@ function FicheSecu() {
 				// Certain navigateur accepteront la couleur, donc on détermine les encadrant comme ca
 				try 
 				{
-					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC')
-					console.log("Hye", worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb)
-					console.log("Hye", 'B' + (16 + index * 3))
-
 					setEncadre(prevState => ({
 						...prevState,
 						[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'

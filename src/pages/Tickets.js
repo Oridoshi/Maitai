@@ -82,7 +82,6 @@ export default function Ticket()
 	//supprime toutes les instance de l'élement passé en paramètre
 	function removeElementsByID(id)
 	{
-		console.log(id);
 		//récupère tous les boutons et les remets dans la position haute
 		var buttons = document.getElementsByTagName('button');
 		for (var i = 0; i < buttons.length; i++)
@@ -799,15 +798,11 @@ export default function Ticket()
 	{
 		try
 		{
-			console.log(fichier);
-
 			const formData = new FormData();
 			formData.append('type', 'TICKET');
 			formData.append('idcli', idcli);
 			formData.append('file', fichier);
 			formData.append('name', nomfichier);
-
-			console.log(formData);
 
 			const requestOptions = {
 				method: 'POST',

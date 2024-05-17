@@ -882,8 +882,6 @@ const funUpdate = async (mdp) => {
 
 const recupCode = async (mail, recup) =>
 {
-	console.log(recup);
-
 	try {
 
 		const formData = new FormData();
