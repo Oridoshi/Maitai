@@ -218,7 +218,7 @@ function Checkbox({ id, name, defaultValue })
  * @param {*} param0 
  * @returns 
  */
-function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse })
+function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse, appellerQuandTrier })
 {
 
 	/**
@@ -412,6 +412,8 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 				}
 			}));
 		}
+
+		if (appellerQuandTrier !== undefined) data.map(item => (appellerQuandTrier(item.id)));
 
     	setTriApplique(false); // Réinitialiser le drapeau de tri appliqué
 	}
