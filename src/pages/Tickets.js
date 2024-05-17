@@ -82,7 +82,7 @@ export default function Ticket()
 	//supprime toutes les instance de l'élement passé en paramètre
 	function removeElementsByID(id)
 	{
-		console.log("prout");
+		console.log(id);
 		//récupère tous les boutons et les remets dans la position haute
 		var buttons = document.getElementsByTagName('button');
 		for (var i = 0; i < buttons.length; i++)
