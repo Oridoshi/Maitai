@@ -502,7 +502,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 												{column.type === 'prix' && (
 													// Si c'est un numéro de téléphone, afficher les numéros avec un espace
-													`${item[column.id].toFixed(2)} €` // Retirez le caractère ")" en trop
+													item[column.id] !== null ? `${item[column.id].toFixed(2)} €` : 'NR'
 												)}
 
 												{/* Si c'est un button */}
