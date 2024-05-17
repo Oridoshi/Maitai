@@ -111,11 +111,11 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 											/>
 										) : head.type === 'email' ? (
 											<input
-												type="emailPerso"
+												type="email"
 												id={head.id}
 												name={head.id}
 												className="form-control border-secondary"
-												pattern="^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$"
+												pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
 												value={formValues[head.id] || ''}
 												onChange={handleChange}
 												required={head.required ? true : false}

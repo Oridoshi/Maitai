@@ -28,7 +28,7 @@ window.addEventListener('load', async (event) =>	//recharge la page
 		sessionStorage.setItem('droit', "");
 		sessionStorage.removeItem('mdpValid');
 		window.location.reload();
-	}	
+	}
 });
 let codeVal;
 
@@ -342,7 +342,7 @@ const Creer = ({ changeEtat }) =>
 					<label htmlFor="exampleInputMail" className="form-label label">Mail</label>
 					<input type="email" required value={ mail } className={ mailClass } aria-describedby="emailHelp" placeholder={ placeholderMail } onChange={ changeMail } />
 					<label htmlFor="exampleInputPhone" className="form-label label"> Numéro de téléphone </label>
-					<input type="tel" required value={ tel } className="form-control saisie"  aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
+					<input type="tel" pattern="0[1-9](\s?\d{2}){4}" required value={ tel } className="form-control saisie"  aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
 				</div>
 				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
@@ -409,7 +409,7 @@ const Mail = ({ changeEtat }) =>
 				<h4 className="letitre">Mot de passe oublié</h4>
 				<div className="mb-3">
 					<label htmlFor="exampleInputEmail1" className="form-label label">Mail</label>
-					<input required type="email" value={ mail } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
+					<input required pattern="[^@\s]+@[^@\s]+\.[^@\s]+" type="email" value={ mail } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changement } />
 				</div>
 				<button id="btnSubmit" type="submit" className="btn btn-primary bouton container-fluid">Suivant</button>
 			</form>
@@ -612,7 +612,7 @@ const getMdp = async () => {
 		}
 
 		const dat = await response.text();
-	
+
 		return dat;
 	} catch (error) {
 		console.log("erreur", error);
@@ -768,7 +768,7 @@ const getMail = async (log) => {
 
 		const dat = await response.text();
 		return dat;
-	
+
 	} catch (error) {
 		console.log("erreur", error);
 		return false; // Retourner une valeur par défaut en cas d'erreur
@@ -781,7 +781,7 @@ const mdpValid = async (pass, connexion) =>
 	const data = new FormData();
 	data.append('login', sessionStorage.getItem('login'));
 	data.append('mdp', pass);
-	if(connexion == true) 
+	if(connexion == true)
 		data.append('connexion', connexion);
 	const utilisateurs = await pwdValid(data);
 	return utilisateurs;
