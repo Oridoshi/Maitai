@@ -11,9 +11,9 @@ DROP TABLE IF EXISTS Produit    ;
 
 
 /*******************************************/
-/**                                       **/
-/**               LIAISON 0               **/
-/**                                       **/
+/*                                         */
+/*                LIAISON 0                */
+/*                                         */
 /*******************************************/
 
 -- Création de la table utilisateur
@@ -31,12 +31,12 @@ CREATE TABLE Utilisateur
 	present   BOOLEAN     DEFAULT 1,
 
 	-- Partie droit : Seulement trois possible; 'Client, Maitai, Admin' 
-	droit     VARCHAR(6) NOT NULL CHECK (type IN ('Client', 'Maitai', 'Admin')),
+	droit     VARCHAR(6) NOT NULL CHECK (droit IN ('Client', 'Maitai', 'Admin'))
 );
 
 
 -- Insertion d'un utilisateur admin
-INSERT INTO Utilisateur (login, email, mdp, droit) VALUE ('admin1', 'votre.addresse@gmail.fr', 'mdp1', 'Admin');
+INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addresse@gmail.fr', 'mdp1', 'Admin');
 
 
 -- Création de la table produit
@@ -52,9 +52,9 @@ CREATE TABLE Produit
 
 
 /*******************************************/
-/**                                       **/
-/**               LIAISON 1               **/
-/**                                       **/
+/*                                         */
+/*               LIAISON 1                 */
+/*                                         */
 /*******************************************/
 
 -- Création de la table historique : permet de garder en mémoire les chemins menant au fichier sauvegarder sur le serveur.
