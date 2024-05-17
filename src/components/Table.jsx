@@ -405,6 +405,9 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 				setTrierPar(id)
 				setCroissant(!sensCroissant)
 			}
+			
+			if (appellerQuandTrier !== undefined) data.map(item => (appellerQuandTrier('edit')));
+
 		}
 
 		setTableData(data.sort((a, b) => a[id] - b[id]));
@@ -434,7 +437,6 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 			}));
 		}
 
-		if (appellerQuandTrier !== undefined) data.map(item => (appellerQuandTrier('edit')));
 
     	setTriApplique(false); // Réinitialiser le drapeau de tri appliqué
 	}
