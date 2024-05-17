@@ -131,6 +131,18 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 												required={head.required ? true : false}
 												{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
 											/>
+										) : head.type === 'prix' ? (
+											<input
+												type="number"
+												step="0.01"
+												id={head.id}
+												name={head.id}
+												className="form-control border-secondary"
+												value={formValues[head.id] || ''}
+												onChange={handleChange}
+												required={head.required ? true : false}
+												{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
+											/>
 										) : head.type === 'login' ? (
 											<input
 												type="text"
@@ -405,7 +417,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 				setTrierPar(id)
 				setCroissant(!sensCroissant)
 			}
-			
+
 			if (appellerQuandTrier !== undefined) data.map(item => (appellerQuandTrier('edit')));
 
 		}
