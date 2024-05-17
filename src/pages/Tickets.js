@@ -66,14 +66,6 @@ export default function Ticket()
 			const ligneAppel = document.getElementById('ligne ' + ligne.id);
 			const isligneEdit = ligneAppel.nextSibling;
 
-			//récupère tous les boutons et les remets dans la position haute
-			var buttons = document.getElementsByTagName('button');
-			for (var i = 0; i < buttons.length; i++)
-			{
-				var button = buttons[i];
-				button.classList.remove('btnreverse');
-			}
-
 			//masque tous les tickets
 			removeElementsByID('edit');
 
@@ -90,6 +82,15 @@ export default function Ticket()
 	//supprime toutes les instance de l'élement passé en paramètre
 	function removeElementsByID(id)
 	{
+		console.log("prout");
+		//récupère tous les boutons et les remets dans la position haute
+		var buttons = document.getElementsByTagName('button');
+		for (var i = 0; i < buttons.length; i++)
+		{
+			var button = buttons[i];
+			button.classList.remove('btnreverse');
+		}
+
 		const elements = document.querySelectorAll(`[id="${ id }"]`); // Sélectionne tous les éléments avec l'ID donné
 		elements.forEach(element =>
 		{
@@ -350,16 +351,17 @@ export default function Ticket()
 	{
 		/* Contenu du fichier*/
 
-		const client         = await getClient(idcli);
+		const client = await getClient(idcli);
 		const tabDonneExport = await getTabDonneeExport();
-		const tabTicket      = await getTabTicket(idcli);
-		const separateur     = await getSeparateur();
+		const tabTicket = await getTabTicket(idcli);
+		const separateur = await getSeparateur();
 
 		let contenu = "";
 		let total = 0;
 
 		//entete
-		tabDonneExport.forEach(donnee=>{
+		tabDonneExport.forEach(donnee =>
+		{
 			contenu += donnee + separateur;
 		});
 		contenu += "\r\n";
@@ -371,21 +373,21 @@ export default function Ticket()
 				const nomProduit = await getNomP(ticket.idprod);
 				tabDonneExport.forEach(donnee =>
 				{
-					switch(donnee)
+					switch (donnee)
 					{
-						case 'numero de client' : contenu += idcli+ separateur;
+						case 'numero de client': contenu += idcli + separateur;
 							break;
-						case 'nom du client' : contenu += client.nomclub + separateur;
+						case 'nom du client': contenu += client.nomclub + separateur;
 							break;
-						case 'numero des produits' : contenu += ticket.idprod + separateur;
+						case 'numero des produits': contenu += ticket.idprod + separateur;
 							break;
-						case 'nom des produits' : contenu += nomProduit + separateur;
+						case 'nom des produits': contenu += nomProduit + separateur;
 							break;
-						case 'prix unitaire des produits' : contenu += ticket.prixspe + separateur;
+						case 'prix unitaire des produits': contenu += ticket.prixspe + separateur;
 							break;
-						case 'quantite des produits' : contenu += ticket.qa + separateur;
+						case 'quantite des produits': contenu += ticket.qa + separateur;
 							break;
-						case 'prix total des produits' : contenu += ticket.prixtot + separateur;
+						case 'prix total des produits': contenu += ticket.prixtot + separateur;
 							break;
 					}
 				})
@@ -399,7 +401,7 @@ export default function Ticket()
 		{
 			//ajoute en bado
 			const fichier = new Blob([contenu], { type: 'text/csv' });
-			exportCSV(fichier,client.nomclub + ".csv",idcli);
+			exportCSV(fichier, client.nomclub + ".csv", idcli);
 		}
 	}
 
@@ -407,25 +409,31 @@ export default function Ticket()
 	const handleChange = (e) => { setSearchTerm(e.target.value); };
 	const handleCbChange = (e) => { setChecked(e.target.checked); };
 
-	const applyFilter = (data, value) => {
-		const filteredData = data.filter((element) => {
-				// Parcourir les clés de l'en-tête initial
-				for (const key of initialHeader) {
-					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
-					if (key.show ) {
-						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase()) && (element.present === checked || element.present)) {
-							return true; // Si correspondance, conserver cet élément
-						}
+	const applyFilter = (data, value) =>
+	{
+		const filteredData = data.filter((element) =>
+		{
+			// Parcourir les clés de l'en-tête initial
+			for (const key of initialHeader)
+			{
+				// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+				if (key.show)
+				{
+					// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+					if ((element[key.id] + '').toUpperCase().includes(value.toUpperCase()) && (element.present === checked || element.present))
+					{
+						return true; // Si correspondance, conserver cet élément
 					}
 				}
-				return false; // Si aucune correspondance, exclure cet élément
+			}
+			return false; // Si aucune correspondance, exclure cet élément
 		});
 		setFilterData(filteredData);
 	}
 
 
-	useEffect(() => {
+	useEffect(() =>
+	{
 		applyFilter(initialData, searchTerm, checked);
 	}, [initialData, searchTerm, checked]);
 
@@ -492,7 +500,7 @@ export default function Ticket()
 	//récupère les données du fichier de config et renvoie un tableau de ce qu'on veut mettre dans le ticket
 	async function getTabDonneeExport()
 	{
-		const data   = await getFichierConfig()
+		const data = await getFichierConfig()
 		const lignes = data.split('\n');
 		const tabDonneExport = [];
 
@@ -511,11 +519,13 @@ export default function Ticket()
 	//récupère les données du fichier de config et renvoie un tableau de ce qu'on veut mettre dans le ticket
 	async function getSeparateur()
 	{
-		const data   = await getFichierConfig()
+		const data = await getFichierConfig()
 		const lignes = data.split('\n');
 		//parcours tout les données et stock celles qui sont décommentés
-		for (const ligne of lignes) {
-			if (ligne.startsWith("~") && ligne.length > 1) {
+		for (const ligne of lignes)
+		{
+			if (ligne.startsWith("~") && ligne.length > 1)
+			{
 				return ligne.charAt(1);
 			}
 		}
@@ -785,7 +795,7 @@ export default function Ticket()
 
 	};
 
-	const exportCSV = async (fichier,nomfichier,idcli) =>
+	const exportCSV = async (fichier, nomfichier, idcli) =>
 	{
 		try
 		{
@@ -794,8 +804,8 @@ export default function Ticket()
 			const formData = new FormData();
 			formData.append('type', 'TICKET');
 			formData.append('idcli', idcli);
-			formData.append('file',  fichier);
-			formData.append('name',  nomfichier);
+			formData.append('file', fichier);
+			formData.append('name', nomfichier);
 
 			console.log(formData);
 
@@ -890,7 +900,7 @@ export default function Ticket()
 					<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={ handleChange } />
 				</div>
 				<div className="form-check" style={ { marginLeft: '10em' } }>
-					<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" checked={checked} onChange={ handleCbChange } />
+					<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" checked={ checked } onChange={ handleCbChange } />
 					<label className="form-check-label" htmlFor="afficherClients">Afficher seulement clients présents</label>
 				</div>
 			</div>
@@ -899,6 +909,7 @@ export default function Ticket()
 					header={ initialHeader }
 					data={ filterData }
 					keyGrayWhenFalse='present'
+					appellerQuandTrier={ removeElementsByID }
 				/>
 			</div>
 			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); setLblErreur(""); setLblCat(""); setLblProd(""); setPrix(""); } }>
