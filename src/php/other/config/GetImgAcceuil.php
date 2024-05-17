@@ -2,7 +2,7 @@
 header('Access-Control-Allow-Origin: *');
 
 $dir = '../../../config/imgAccueil';
-$cheminImg = 'https://maitai-becon.wuaze.com/config/imgAccueil/';
+$cheminImg = 'https://maitai-becon.wuaze.com/config/img/imgAccueil/';
 
 // Vérifiez si le répertoire existe et est accessible en lecture
 if (is_dir($dir) && is_readable($dir)) {
