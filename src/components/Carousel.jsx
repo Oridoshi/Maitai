@@ -13,7 +13,7 @@ export default function ImageCarousel(){
 				return response.json()
 			})
 			.then((data) => {
-				console.log(data);
+				// console.log(data);
 				setImageUrls(data);
 			})
 			.catch((error) => {
