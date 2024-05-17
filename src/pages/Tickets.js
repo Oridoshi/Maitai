@@ -37,7 +37,7 @@ export default function Ticket()
 		{ id: 'nomcli', name: 'Nom du Client', type: 'text', required: false, editable: false, show: true },
 		{ id: 'email', name: 'Email', type: 'email', required: false, editable: false, show: true },
 		{ id: 'prix', name: 'Total en cours', type: 'number', required: false, editable: false, show: true },
-		{ id: 'present', name: 'Présent sur le site', type: 'checkbox', required: true, editable: true, show: true, fastEditable: true },
+		{ id: 'present', name: 'Présent sur le site', type: 'checkbox', required: true, editable: true, show: false, fastEditable: true },
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
 
@@ -173,7 +173,7 @@ export default function Ticket()
 
 			// Prix Produit
 			const prix = document.createElement('td');
-			prix.colSpan = 3;
+			prix.colSpan = 2;
 			prix.textContent = prod.prixspe + " €";
 			prix.classList.add('edit');
 
@@ -267,7 +267,7 @@ export default function Ticket()
 
 			// Prix Produit
 			const lblprix = document.createElement('td');
-			lblprix.colSpan = 3;
+			lblprix.colSpan = 2;
 			lblprix.textContent = prix + " €";
 			lblprix.classList.add('edit');
 
