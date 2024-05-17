@@ -757,7 +757,7 @@ function FicheSecu() {
 
 		
 		console.log(formDataObject)
-		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.ods";
+		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
 		nomFic = nomFic.replace(/-+/g, '-');
 		console.log(nomFic)
 
