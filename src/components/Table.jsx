@@ -4,8 +4,8 @@ import "../style/table.css"
 
 /**
  * Modal (Pop-up) qui apparait lorsqu'on clique sur ajouter ou modifier
- * @param {*} param0 
- * @returns 
+ * @param {*} param0
+ * @returns
  */
 function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 {
@@ -23,7 +23,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 
 	/**
 	 * Modifier l'élément quand on change les valeurs.
-	 * @param {*} e 
+	 * @param {*} e
 	 */
 	const handleChange = (e) => {
 		const { id, value } = e.target;
@@ -36,8 +36,8 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 
 	/**
 	 * Pour le numéro de téléphone : mettre les espaces automatiquement
-	 * @param {*} e 
-	 * @returns 
+	 * @param {*} e
+	 * @returns
 	 */
 	const handleChangePhoneNumber = (e) => {
 		const { id, value } = e.target;
@@ -178,8 +178,8 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 
 /**
  * Les checkbox affiché dans le pop-up : permet de cocher et decocher
- * @param {*} param0 
- * @returns 
+ * @param {*} param0
+ * @returns
  */
 function Checkbox({ id, name, defaultValue })
 {
@@ -215,8 +215,8 @@ function Checkbox({ id, name, defaultValue })
 
 /**
  * Tableau affichant les données
- * @param {*} param0 
- * @returns 
+ * @param {*} param0
+ * @returns
  */
 function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse, appellerQuandTrier })
 {
@@ -345,7 +345,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 	};
 
 
-	
+
 	/**************************************************************/
 	/*                     TRIE SELON HEADER                      */
 	/**************************************************************/
@@ -354,13 +354,13 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 	const [sensCroissant, setCroissant] = useState(false);
 	const [triApplique, setTriApplique] = useState(false);
 
-	
+
 	/**
-	 * Met les datas dans le tableau 
+	 * Met les datas dans le tableau
 	 */
 	const [datas, setTableData] = useState(data);
 
-	//Quand le data donné change on rappelle ca 
+	//Quand le data donné change on rappelle ca
 	useEffect(() =>
 	{
 		setTableData(data);
@@ -388,12 +388,12 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 		setTableData(data.sort((a, b) => a[id] - b[id]));
 
-		//Comparé si c'est une chaine 
+		//Comparé si c'est une chaine
 		if (sensRapide !== undefined ? sensRapide : sensCroissant) {
 			setTableData([...data].sort((a, b) => {
 				const valueA = isNaN(a[id]) ? a[id] : parseFloat(a[id]);
 				const valueB = isNaN(b[id]) ? b[id] : parseFloat(b[id]);
-				
+
 				if (typeof valueA === 'number' && typeof valueB === 'number') {
 					return valueA - valueB;
 				} else {
@@ -404,7 +404,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 			setTableData([...data].sort((a, b) => {
 				const valueA = isNaN(a[id]) ? a[id] : parseFloat(a[id]);
 				const valueB = isNaN(b[id]) ? b[id] : parseFloat(b[id]);
-				
+
 				if (typeof valueA === 'number' && typeof valueB === 'number') {
 					return valueB - valueA;
 				} else {
@@ -413,7 +413,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 			}));
 		}
 
-		if (appellerQuandTrier !== undefined) data.map(item => (appellerQuandTrier(item.id)));
+		if (appellerQuandTrier !== undefined) data.map(item => (appellerQuandTrier('edit')));
 
     	setTriApplique(false); // Réinitialiser le drapeau de tri appliqué
 	}
@@ -442,7 +442,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 								column.show && // Vérifier si la colonne doit être affichée
 								<th className= {`bg-primary text-white ${column.type === 'checkbox' || column.type === 'number' || column.type === 'prix' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`} key={ column.id }>
 									{
-										column.type !== 'button' && column.type !== 'checkbox' ? <a href='#' className='text-white' onClick={(e) => trie(column.id, datas)}> { column.name }</a> :  (column.name) 
+										column.type !== 'button' && column.type !== 'checkbox' ? <a href='#' className='text-white' onClick={(e) => trie(column.id, datas)}> { column.name }</a> :  (column.name)
 									}
 								</th>
 							)) }
