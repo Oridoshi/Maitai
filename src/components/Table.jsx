@@ -56,6 +56,16 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 		}));
 	};
 
+	const handleChangeLogin = (e) => {
+		const { id, value } = e.target;
+		const login = value.replace(/ /g, "-");
+
+		setFormValues(prevState => ({
+			...prevState,
+			[id]: login
+		}));
+	};
+
 
 
 	/**
@@ -118,6 +128,17 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 												pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
 												value={formValues[head.id] || ''}
 												onChange={handleChange}
+												required={head.required ? true : false}
+												{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
+											/>
+										) : head.type === 'login' ? (
+											<input
+												type="text"
+												id={head.id}
+												name={head.id}
+												className="form-control border-secondary"
+												value={formValues[head.id] || ''}
+												onChange={handleChangeLogin}
 												required={head.required ? true : false}
 												{ ...(head.maxLength ? { maxLength: head.maxLength } : {}) }
 											/>
