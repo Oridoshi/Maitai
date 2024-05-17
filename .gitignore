@@ -1,2 +1,4 @@
 .vscode
-table-front/
+.git
+node_modules/
+build/
