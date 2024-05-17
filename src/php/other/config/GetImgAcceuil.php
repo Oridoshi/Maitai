@@ -1,7 +1,7 @@
 <?php
 header('Access-Control-Allow-Origin: *');
 
-$dir = '../../../config/imgAccueil';
+$dir = '../../../config/img/imgAccueil';
 $cheminImg = 'https://maitai-becon.wuaze.com/config/img/imgAccueil/';
 
 // Vérifiez si le répertoire existe et est accessible en lecture
@@ -28,5 +28,5 @@ if (is_dir($dir) && is_readable($dir)) {
     echo json_encode($imagesUrl);
 } else {
     http_response_code(404);
-    echo json_encode(array('error' => 'Le répertoire spécifié n\'existe pas ou n\'est pas accessible en lecture.'));
+    echo json_encode(array('error' => 'Le répertoire' + $dir + ' n\'existe pas ou n\'est pas accessible en lecture.'));
 }
