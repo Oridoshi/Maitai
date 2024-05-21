@@ -2,6 +2,7 @@
 DROP TABLE IF EXISTS UtilisateurDroit;
 DROP TABLE IF EXISTS Historique      ;
 DROP TABLE IF EXISTS Ticket          ;
+DROP TABLE IF EXISTS Demande         ;
 
 -- Suppression des tables non-lié.
 DROP TABLE IF EXISTS Utilisateur;
@@ -36,7 +37,7 @@ CREATE TABLE Utilisateur
 
 
 -- Insertion d'un utilisateur admin
-INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addresse@gmail.fr', '', 'Admin'); -- NE PAS METTRE DE MDP EN BRUT DANS LA BASE DE DONNEE
+INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'sarah.hautot76@gmail.com', '', 'Admin'); -- NE PAS METTRE DE MDP EN BRUT DANS LA BASE DE DONNEE
 
 
 -- Création de la table produit

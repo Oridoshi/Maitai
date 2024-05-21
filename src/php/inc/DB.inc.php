@@ -7,22 +7,23 @@ include_once 'Client.inc.php';
 include_once 'Produit.inc.php';
 include_once 'Ticket.inc.php';
 include_once 'Historique.inc.php';
+include_once 'Demande.inc.php';
 
 class DB {
 
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	// private static string $dbName   = "maitai";
-	// private static string $login    = "Admin";
-	// private static string $password = "maitai";
-	// private static string $host     = "localhost";
+	private static string $dbName   = "maitai";
+	private static string $login    = "Admin";
+	private static string $password = "maitai";
+	private static string $host     = "localhost";
 
 
-	private static string $dbName   = "if0_36460769_maitai";
-	private static string $login    = "if0_36460769";
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $host     = "sql211.infinityfree.com";
+	// private static string $dbName   = "if0_36460769_maitai";
+	// private static string $login    = "if0_36460769";
+	// private static string $password = "Sc4ZKSO8sanWyvz";
+	// private static string $host     = "sql211.infinityfree.com";
 
 
 	private static string $port     = "3306";
@@ -700,7 +701,7 @@ class DB {
 	 * @param bool $pourMatin matin ou après-midi
 	 */
 	public function getDemandesProduit($date, $pourMatin) {
-		$requete = "SELECT idProd, ref, libProd, SUM(qa) as \"qa\", MIN(valider) FROM Demande d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? GROUP BY idProd; ";
+		$requete = "SELECT p.idProd, ref, libProd, SUM(qa) as \"qa\", MIN(valider) FROM Demande d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? GROUP BY idProd; ";
 		$tparam = array($date, $pourMatin);
 		return $this->execQuery($requete, $tparam, 'Demande');
 	}

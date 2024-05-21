@@ -893,7 +893,7 @@ const recupCode = async (mail, recup) =>
 			body: formData
 		};
 
-		const response = await fetch("https://maitai-becon.wuaze.com/php/SendMail.php", requestOptions);
+		const response = await fetch(cheminPHP + "../SendMail.php", requestOptions);
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');

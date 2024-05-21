@@ -3,7 +3,7 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';  
 
 export default function Resume(){
-	if(sessionStorage.getItem('droit') !== 'Admin' || sessionStorage.getItem('date') === null || sessionStorage.getItem('pourMatin') === null) window.location.href = '/';
+	// if(qssessionStorage.getItem('droit') !== 'Admin' || sessionStorage.getItem('date') === null || sessionStorage.getItem('pourMatin') === null) window.location.href = '/';
 
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
@@ -28,9 +28,10 @@ export default function Resume(){
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
-			return response.json();
+			return response.text();
 		})
 		.then(data => {
+			console.log(data)
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1
