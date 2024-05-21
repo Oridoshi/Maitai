@@ -36,7 +36,7 @@ export default function Ticket()
 		{ id: 'id', name: 'NB Ligne', type: 'number', required: false, editable: false, show: false },
 		{ id: 'nomcli', name: 'Nom du Client', type: 'text', required: false, editable: false, show: true },
 		{ id: 'email', name: 'Email', type: 'email', required: false, editable: false, show: true },
-		{ id: 'prix', name: 'Total en cours', type: 'prix', required: false, editable: false, show: true },
+		{ id: 'prix', name: 'Total en cours(TTC)', type: 'prix', required: false, editable: false, show: true },
 		{ id: 'present', name: 'Présent sur le site', type: 'checkbox', required: true, editable: true, show: false, fastEditable: true },
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
@@ -268,7 +268,7 @@ export default function Ticket()
 			// Prix Produit
 			const lblprix = document.createElement('td');
 			lblprix.colSpan = 2;
-			lblprix.textContent = prix;
+			lblprix.textContent = prix + " €";
 			lblprix.classList.add('edit');
 
 			// Création de l'élément compteur
@@ -460,7 +460,7 @@ export default function Ticket()
 			const data = await response.json();
 			const newData = await Promise.all(data.map(async (item) =>
 			{
-				const prix = await getTotCommCli(item.idcli) + " €";
+				const prix = await getTotCommCli(item.idcli);
 				return { id: item.idcli, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
 			}));
 			return newData;
