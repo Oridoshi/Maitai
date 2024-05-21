@@ -45,6 +45,7 @@ CREATE TABLE Produit
 	idProd    INTEGER       PRIMARY KEY,
 	libProd   VARCHAR(255)  NOT NULL   ,
 	prixUni   DECIMAL(12,2)            ,
+	prixUniHT DECIMAL(12,2)            ,
 	categorie VARCHAR(30)   NOT NULL
 );
 
@@ -85,5 +86,6 @@ CREATE TABLE Demande
 	qa       INTEGER NOT NULL CHECK (qa >0),
 	date     DATE    NOT NULL,
 	pourMidi BOOLEAN NOT NULL,
+	valider  BOOLEAN DEFAULT 1,
 	PRIMARY KEY (idProd, idUti)
 );
