@@ -11,13 +11,18 @@ export default function Resume(){
 
 
 
-	// Récupérer les données des demandes
+	
+	// Récupérer les données du resume
 	useEffect(() => {
-		fetch(cheminPHP + "produit/GetProduit.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8' // Spécifiez l'encodage ici
-			},
+		// Créer un objet FormData
+		const formData = new FormData();
+		formData.append('prod'     , 'prod'); // Signal pour un get spécifique dans le php
+		formData.append('date'     , sessionStorage.getItem('date')     );
+		formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
+
+		fetch(cheminPHP + "demande/GetDemandes.php", {
+			method: 'POST',
+			body: formData
 		})
 		.then(response => {
 			if (!response.ok) {
@@ -55,20 +60,20 @@ export default function Resume(){
 	const funUpdate = async (upItem) => {
 		try {
 
+			// $pdo->updateValide($_POST['idProd'], $_POST['date'], $_POST['pourMatin'], $_POST['valide']);
 
 			const formData = new FormData();
-			formData.append('idProd'   , parseInt(upItem.idprod ));
-			formData.append('ref'      , upItem.ref);
-			formData.append('libProd'  , upItem.libprod);
-			formData.append('prixUni'  , upItem.prixuni===""?"":parseFloat(upItem.prixuni));
-			formData.append('categorie', upItem.categorie);
+			formData.append('idProd'   , parseInt(upItem.idprod )           );
+			formData.append('date'     , sessionStorage.getItem('date')     );
+			formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
+			formData.append('pourMatin', upItem.valide                      );
 
 			const requestOptions = {
 				method: 'POST',
 				body: formData
 			};
 
-			const response = await fetch(cheminPHP + "produit/ModificationProduit.php", requestOptions);
+			const response = await fetch(cheminPHP + "demande/ModificationDemande.php", requestOptions);
 
 			if (!response.ok) {
 				throw new Error('Une erreur s\'est produite.');
@@ -78,10 +83,9 @@ export default function Resume(){
 			afficherError(data);
 
 			// Récupérer les nouvelles données des produits après l'insertion réussie
-			const newData = await fetchProduitData();
+			const newData = await fetchResumeData();
 			setInitialData(newData);
 			setFilterData(newData);
-			await fetchCategData();
 
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
 		} catch (error) {
@@ -92,57 +96,37 @@ export default function Resume(){
 
 
 	// Fonction pour récupérer les données des produits
-	const fetchProduitData = async () => {
-		try {
-			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'text/plain; charset=UTF-8'
-				},
-			});
+	const fetchResumeData = async () => {
+		
+		// Créer un objet FormData
+		const formData = new FormData();
+		formData.append('prod'     , 'prod'); // Signal pour un get spécifique dans le php
+		formData.append('date'     , sessionStorage.getItem('date')     );
+		formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
 
+		fetch(cheminPHP + "demande/GetDemandes.php", {
+			method: 'POST',
+			body: formData
+		})
+		.then(response => {
 			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de la récupération des données des produits.');
+				throw new Error('Erreur de réseau !');
 			}
-
-			const data = await response.json();
+			return response.json();
+		})
+		.then(data => {
 			return data.map((item, index) => ({
 				...item,
 				id: index + 1
 			}));
-		} catch (error) {
+		})
+		.catch(error => {
 			console.error('Erreur :', error);
 			return [];
-		}
+		})
 	};
 
 
-
-	// Fonction pour recupérer les données pour les datalist
-	const fetchCategData = async () => {
-		try {
-			const response = await fetch(cheminPHP + "produit/GetCateg.php", {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'text/plain; charset=UTF-8'
-				},
-			});
-
-			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de la récupération des données des produits.');
-			}
-
-			const data = await response.json();
-			let lstTemp = [];
-			data.forEach(element => {
-				lstTemp.push(element.categorie);
-			});
-			setDatalistCateg(lstTemp);
-		} catch (error) {
-			console.error('Erreur :', error);
-			return [];
-		}
-	};
 
 
 	// Fonction pour afficher les erreurs
