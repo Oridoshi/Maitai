@@ -3,15 +3,15 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';  
 
 export default function Resume(){
-	if(sessionStorage.getItem('droit') !== 'Admin') window.location.href = '/';
+	if(sessionStorage.getItem('droit') !== 'Admin' || sessionStorage.getItem('date') === null || sessionStorage.getItem('pourMatin') === null) window.location.href = '/';
 
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
 	const [searchTerm  , setSearchTerm  ] = useState(''); // État pour stocker la valeur de recherche
 
 
+
 	// Récupérer les données des demandes
-	/*
 	useEffect(() => {
 		fetch(cheminPHP + "produit/GetProduit.php", {
 			method: 'GET',
@@ -36,65 +36,23 @@ export default function Resume(){
 		.catch(error => {
 			console.error('Erreur :', error);
 		})
-	}, []);*/
+	}, []);
 
-
+	
 
 	// En-tête de la table
 	const initialHeader = [
-		{ id: 'ref'      , name: 'NB Ligne'           , type:'number' ,              required : true , editable : false, show : false                     },
-		{ id: 'idprod'   , name: 'ID du produit'      , type:'number' ,              required : true , editable : false, show : false                     },
-		{ id: 'ref'      , name: 'Référence'          , type:'text'   ,              required : true , editable : true , show : true , maxLength : 255    },
-		{ id: 'libprod'  , name: 'Libellé'            , type:'text'   ,              required : true , editable : true , show : true , maxLength : 255    },
-		{ id: 'prixuni'  , name: 'Prix Unitaire (TTC)', type:'prix'   , step:'0.01', required : false, editable : true , show : true , maxLength : 12     },
-		{ id: 'categorie', name: 'Catégorie'          , type:'text'   ,              required : true , editable : true , show : true , maxLength : 30 , datalist : datalistCateg}
+		{ id: 'id'       , name: 'NB Ligne'           , type:'number'  , required : true , editable : false, show : false                      },
+		{ id: 'idprod'   , name: 'ID Produit'         , type:'number'  , required : true , editable : false, show : false                      },
+		{ id: 'ref'      , name: 'Référence'          , type:'text'    , required : true , editable : false, show : true                       },
+		{ id: 'libprod'  , name: 'Libellé'            , type:'text'    , required : true , editable : false, show : true                       },
+		{ id: 'qa'       , name: 'Quantité demandé'   , type:'number'  , required : true , editable : false, show : true                       },
+		{ id: 'valider'  , name: 'Préparer ?'         , type:'checkbox', required : true , editable : true , show : true , fastEditable : true },
 	];
 
 
-
-
-	// Fonction pour l'insertion
-	const funInsert = async (nouvItem) => {
-		try {
-			const formData = new FormData();
-
-			formData.append('ref'      , nouvItem.ref);
-			formData.append('libProd'  , nouvItem.libprod);
-			formData.append('prixUni'  , nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
-			formData.append('categorie', nouvItem.categorie);
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "produit/CreationProduit.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const data = await response.text();
-			afficherError(data);
-
-			// Récupérer les nouvelles données des produits après l'insertion réussie
-			const newData = await fetchProduitData();
-			setInitialData(newData);
-			setFilterData(newData);
-			await fetchCategData();
-
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
-		}
-
-		// TODO : Regenerer les data avec un fetch
-	};
-
-
 	// Fonction pour l'update
-	const funUpdate = async (upItem/*, oldItem*/) => {
+	const funUpdate = async (upItem) => {
 		try {
 
 
@@ -120,39 +78,6 @@ export default function Resume(){
 			afficherError(data);
 
 			// Récupérer les nouvelles données des produits après l'insertion réussie
-			const newData = await fetchProduitData();
-			setInitialData(newData);
-			setFilterData(newData);
-			await fetchCategData();
-
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
-		}
-	};
-
-	// Fonction pour la suppression
-	const funDelete = async (item) => {
-		try {
-			const formData = new FormData();
-			formData.append('idProd', parseInt(item.idprod));
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "produit/SuppressionProduit.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const data = await response.text();
-			afficherError(data);
-
-			// Récupérer les nouvelles données des produits après la suppression réussie
 			const newData = await fetchProduitData();
 			setInitialData(newData);
 			setFilterData(newData);
@@ -191,6 +116,8 @@ export default function Resume(){
 		}
 	};
 
+
+
 	// Fonction pour recupérer les données pour les datalist
 	const fetchCategData = async () => {
 		try {
@@ -216,6 +143,7 @@ export default function Resume(){
 			return [];
 		}
 	};
+
 
 	// Fonction pour afficher les erreurs
 	function afficherError(data) {
@@ -261,7 +189,7 @@ export default function Resume(){
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre mt-1'>Gestion des produits </h1>
+		<h1 className='titre mt-1'>Resume des produits demande</h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
@@ -275,10 +203,8 @@ export default function Resume(){
 		<Table 
 			header={initialHeader} 
 			data={filterData} 
-			funInsert={funInsert} 
 			funUpdate={funUpdate} 
-			funDelete={funDelete}
-			keyGrayWhenFalse = 'present'
+			keyGrayWhenFalse = 'valider'
 		/>
 	</div>
 	);
