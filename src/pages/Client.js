@@ -280,7 +280,7 @@ function Client() {
 
 			{/* Bouton checkbox avec style CSS pour la marge gauche */}
 			<div className="form-check" style={{ marginLeft: '10em' }}>
-				<input type='checkbox' className="form-check-input border-secondary" id="afficherClients" onChange={handleCbChange}/>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={handleCbChange}/>
 				<label className="form-check-label" htmlFor="afficherClients">Afficher seulement clients présents</label>
 			</div>
 		</div>
