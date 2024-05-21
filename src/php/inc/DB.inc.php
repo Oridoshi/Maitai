@@ -666,7 +666,7 @@ class DB {
 	}
 
 	public function updateValide($idProd, $date, $pourMatin, $valide) {
-		$requete = "UPDATE Demande SET valide = ? WHERE idProd = ? AND date = ? AND pourMatin = ?";
+		$requete = "UPDATE Demande SET valider = ? WHERE idProd = ? AND date = ? AND pourMatin = ?";
 		$tparam = array($valide, $idProd, $date, $pourMatin);
 		$this->execMaj($requete, $tparam);
 	}
@@ -701,7 +701,7 @@ class DB {
 	 * @param bool $pourMatin matin ou après-midi
 	 */
 	public function getDemandesProduit($date, $pourMatin) {
-		$requete = "SELECT p.idProd, ref, libProd, SUM(qa) as \"qa\", MIN(valider) FROM Demande d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? GROUP BY idProd; ";
+		$requete = "SELECT p.idProd, ref, libProd, SUM(qa) as \"qa\", MIN(valider) as \"valider\" FROM Demande d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? GROUP BY idProd; ";
 		$tparam = array($date, $pourMatin);
 		return $this->execQuery($requete, $tparam, 'Demande');
 	}

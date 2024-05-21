@@ -28,7 +28,7 @@ export default function Resume(){
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
-			return response.text();
+			return response.json();
 		})
 		.then(data => {
 			console.log(data)
@@ -67,7 +67,7 @@ export default function Resume(){
 			formData.append('idProd'   , parseInt(upItem.idprod )           );
 			formData.append('date'     , sessionStorage.getItem('date')     );
 			formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
-			formData.append('pourMatin', upItem.valide                      );
+			formData.append('valide'   , upItem.valide                      );
 
 			const requestOptions = {
 				method: 'POST',
@@ -189,7 +189,6 @@ export default function Resume(){
 			header={initialHeader} 
 			data={filterData} 
 			funUpdate={funUpdate} 
-			keyGrayWhenFalse = 'valider'
 		/>
 	</div>
 	);
