@@ -539,7 +539,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 												{column.type === 'prix' && (
 													// Si c'est un numéro de téléphone, afficher les numéros avec un espace
-													item[column.id] !== null ? `${item[column.id].toFixed(2)} €` : 'NR'
+													item[column.id] !== null && !isNaN(item[column.id]) ? `${parseFloat(item[column.id]).toFixed(2)} €` : 'NR'
 												)}
 
 												{/* Si c'est un button */}
