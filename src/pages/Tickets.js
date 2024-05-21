@@ -36,7 +36,7 @@ export default function Ticket()
 		{ id: 'id', name: 'NB Ligne', type: 'number', required: false, editable: false, show: false },
 		{ id: 'nomcli', name: 'Nom du Client', type: 'text', required: false, editable: false, show: true },
 		{ id: 'email', name: 'Email', type: 'email', required: false, editable: false, show: true },
-		{ id: 'prix', name: 'Total en cours', type: 'prix', required: false, editable: false, show: true },
+		{ id: 'prix', name: 'Total en cours(TTC)', type: 'prix', required: false, editable: false, show: true },
 		{ id: 'present', name: 'Présent sur le site', type: 'checkbox', required: true, editable: true, show: false, fastEditable: true },
 		{ id: 'btn', name: '', type: 'button', show: true, function: editTickets, btn: '', className: 'btntickets' },
 	];
