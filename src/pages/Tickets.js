@@ -174,7 +174,7 @@ export default function Ticket()
 			// Prix Produit
 			const prix = document.createElement('td');
 			prix.colSpan = 2;
-			prix.textContent = prod.prixspe + " €";
+			prix.textContent = prod.prixspe;
 			prix.classList.add('edit');
 
 			// Création de l'élément compteur
