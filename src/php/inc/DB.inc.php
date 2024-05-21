@@ -634,4 +634,85 @@ class DB {
 		return $this->execQuery($requete, null, 'Historique');
 	}
 
+	/* Méthodes pour les demandes */
+
+	/**
+	 * Insère une demande dans la base de données.
+	 * @param int $idProd id du produit
+	 * @param int $idUti id de l'utilisateur
+	 * @param int $qa quantité achetée
+	 * @param string $date date de la demande
+	 * @param bool $pourMatin matin ou après-midi
+	 */
+	public function insertDemande($idProd, $idUti, $qa, $date, $pourMatin) {
+		$requete = "INSERT INTO Demande (idProd, idUti, qa, date, pourMatin, valide) VALUES (?, ?, ?, ?, ?, ?)";
+		$tparam = array($idProd, $idUti, $qa, $date, $pourMatin, false);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Met à jour une demande dans la base de données.
+	 * @param int $idProd id du produit
+	 * @param int $idUti id de l'utilisateur
+	 * @param int $qa quantité achetée
+	 * @param string $date date de la demande
+	 * @param bool $pourMatin matin ou après-midi
+	 */
+	public function updateDemande($idProd, $idUti, $qa, $date, $pourMatin) {
+		$requete = "UPDATE Demande SET qa = ?, date = ?, pourMatin = ? WHERE idProd = ? AND idUti = ?";
+		$tparam = array($qa, $date, $pourMatin, $idProd, $idUti);
+		$this->execMaj($requete, $tparam);
+	}
+
+	public function updateValide($idProd, $date, $pourMatin, $valide) {
+		$requete = "UPDATE Demande SET valide = ? WHERE idProd = ? AND date = ? AND pourMatin = ?";
+		$tparam = array($valide, $idProd, $date, $pourMatin);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Récupère une demande dans la base de données.
+	 * @param string $date date de la demande
+	 * @param bool $pourMatin matin ou après-midi
+	 */
+	public function getDemandes($date, $pourMatin) {
+		$requete = "SELECT u.login, SUM(qa), MIN(valide) FROM Demande d JOIN Utilisateur u ON d.idUti = u.idUti WHERE date = ? AND pourMatin = ? GROUP BY login";
+		$tparam = array($date, $pourMatin);
+		return $this->execQuery($requete, $tparam, 'Demande');
+	}
+
+	/**
+	 * Récupère une demande dans la base de données.
+	 * @param string $date date de la demande
+	 * @param bool $pourMatin matin ou après-midi
+	 * @param int $idUti id de l'utilisateur
+	 */
+	public function getDemandesUti($date, $pourMatin, $idUti) {
+		$requete = "SELECT p.idProd, p.libProd, p.categorie, d.qa FROM Demanded d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? AND idUti = ?";
+		$tparam = array($date, $pourMatin, $idUti);
+		return $this->execQuery($requete, $tparam, 'Demande');
+	}
+
+	/**
+	 * Récupère une demande dans la base de données.
+	 * @param int $idProd id du produit
+	 * @param string $date date de la demande
+	 * @param bool $pourMatin matin ou après-midi
+	 */
+	public function getDemandesProduit($date, $pourMatin) {
+		$requete = "SELECT idProd, ref, libProd, SUM(qa) as \"qa\", MIN(valider) FROM Demande d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? GROUP BY idProd; ";
+		$tparam = array($date, $pourMatin);
+		return $this->execQuery($requete, $tparam, 'Demande');
+	}
+
+	/**
+	 * Supprime une demande dans la base de données.
+	 * @param int $idProd id du produit
+	 * @param int $idUti id de l'utilisateur
+	 */
+	public function suppDemande($idProd, $idUti) {
+		$requete = "DELETE FROM Demande WHERE idProd = ? AND idUti = ?";
+		$tparam = array($idProd, $idUti);
+		$this->execMaj($requete, $tparam);
+	}
 } //fin classe DB
