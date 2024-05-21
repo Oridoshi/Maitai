@@ -4,6 +4,6 @@ include_once '../../inc/DB.inc.php';
 
 $login = $_POST['login'];
 
-$client = DB::getInstance()->getClient($login)[0];
+$client = DB::getInstance()->getUtilisateurByLogin($login);
 
-echo $client->getIdCli();
+echo $client->getIdUti();

@@ -778,7 +778,7 @@ function FicheSecu() {
 
 			// On envoie le fichier Excel au serveur
 			formData = new FormData();
-			formData.append('idcli'  , parseInt(id));
+			formData.append('iduti'  , parseInt(id));
 			formData.append('type'   , 'SECU');
 			formData.append('file'   , blob);
 			formData.append('name'   , nomFic);

@@ -19,7 +19,7 @@ export default function Ticket()
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");
 	const [lblErreur, setLblErreur] = useState("");
-	const [idCli, setIdCli] = useState("");
+	const [idUti, setIdCli] = useState("");
 	const [idProd, setIdProd] = useState("");
 	const [prix, setPrix] = useState("");
 	//bar de Recherche
@@ -189,9 +189,9 @@ export default function Ticket()
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
 			compteurRoot.render(<Compteur
 				valIni={ prod.qa }
-				updateTotComm={ (idprod, idcli, qa, prixspe) => updateTotComm(idprod, idcli, qa, prixspe) }
+				updateTotComm={ (idprod, iduti, qa, prixspe) => updateTotComm(idprod, iduti, qa, prixspe) }
 				idprod={ prod.idprod }
-				idcli={ ligne.id }
+				iduti={ ligne.id }
 				prixspe={ prod.prixspe }
 			/>);
 
@@ -250,9 +250,9 @@ export default function Ticket()
 	//ajoute un produit au ticket
 	async function ajtProd()
 	{
-		if (lblProd !== "" && !(await ticketExist(idProd, idCli)))
+		if (lblProd !== "" && !(await ticketExist(idProd, idUti)))
 		{
-			insertProdTicket(idProd, idCli, prix);
+			insertProdTicket(idProd, idUti, prix);
 
 			//ligne du produit
 			const ligneProd = document.createElement('tr');
@@ -282,9 +282,9 @@ export default function Ticket()
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
 			compteurRoot.render(<Compteur
 				valIni={ 0 }
-				updateTotComm={ (idprod, idcli, qa, prixspe) => updateTotComm(idprod, idcli, qa, prixspe) }
+				updateTotComm={ (idprod, iduti, qa, prixspe) => updateTotComm(idprod, iduti, qa, prixspe) }
 				idprod={ idProd }
-				idcli={ idCli }
+				iduti={ idUti }
 				prixspe={ prix }
 			/>);
 
@@ -320,10 +320,10 @@ export default function Ticket()
 	//EVENEMENTTS
 
 	//gère l'exportation
-	async function exportation(idcli)
+	async function exportation(iduti)
 	{
 		//génère le ticket de caisse du client en csv
-		await genereCSV(idcli);
+		await genereCSV(iduti);
 
 		//récupère tous les boutons et les remets dans la position haute
 		var buttons = document.getElementsByTagName('button');
@@ -337,7 +337,7 @@ export default function Ticket()
 		removeElementsByID('edit');
 
 		//supprime le tickets dans la bado
-		await supprTickets(idcli);
+		await supprTickets(iduti);
 
 		//maj des data
 		const newData = await fetchClientData();
@@ -346,13 +346,13 @@ export default function Ticket()
 	}
 
 	//créer le fichier csv
-	async function genereCSV(idcli)
+	async function genereCSV(iduti)
 	{
 		/* Contenu du fichier*/
 
-		const client = await getClient(idcli);
+		const client = await getClient(iduti);
 		const tabDonneExport = await getTabDonneeExport();
-		const tabTicket = await getTabTicket(idcli);
+		const tabTicket = await getTabTicket(iduti);
 		const separateur = await getSeparateur();
 
 		let contenu = "";
@@ -374,7 +374,7 @@ export default function Ticket()
 				{
 					switch (donnee)
 					{
-						case 'numero de client': contenu += idcli + separateur;
+						case 'numero de client': contenu += iduti + separateur;
 							break;
 						case 'nom du client': contenu += client.nomclub + separateur;
 							break;
@@ -400,7 +400,7 @@ export default function Ticket()
 		{
 			//ajoute en bado
 			const fichier = new Blob([contenu], { type: 'text/csv' });
-			exportCSV(fichier, client.nomclub + ".csv", idcli);
+			exportCSV(fichier, client.nomclub + ".csv", iduti);
 		}
 	}
 
@@ -460,8 +460,8 @@ export default function Ticket()
 			const data = await response.json();
 			const newData = await Promise.all(data.map(async (item) =>
 			{
-				const prix = await getTotCommCli(item.idcli);
-				return { id: item.idcli, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
+				const prix = await getTotCommCli(item.iduti);
+				return { id: item.iduti, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
 			}));
 			return newData;
 		} catch (error)
@@ -549,7 +549,7 @@ export default function Ticket()
 		try
 		{
 			const formData = new FormData();
-			formData.append('idcli', ncli);
+			formData.append('iduti', ncli);
 
 			const requestOptions = {
 				method: 'POST',
@@ -691,12 +691,12 @@ export default function Ticket()
 		}
 	}
 
-	const getClient = async (idcli) =>
+	const getClient = async (iduti) =>
 	{
 		try
 		{
 			const formData = new FormData();
-			formData.append('idcli', idcli);
+			formData.append('iduti', iduti);
 
 			const requestOptions = {
 				method: 'POST',
@@ -718,18 +718,18 @@ export default function Ticket()
 		}
 	}
 
-	const ticketExist = async (idprod, idcli) =>
+	const ticketExist = async (idprod, iduti) =>
 	{
 		const tabTicket = await getTickets();
-		return tabTicket.some(ticket => ticket.idprod === idprod && ticket.idcli === idcli);
+		return tabTicket.some(ticket => ticket.idprod === idprod && ticket.iduti === iduti);
 	}
 
-	const supprTickets = async (idcli) =>
+	const supprTickets = async (iduti) =>
 	{
 		try
 		{
 			const formData = new FormData();
-			formData.append('idcli', idcli);
+			formData.append('iduti', iduti);
 
 			const requestOptions = {
 				method: 'POST',
@@ -755,13 +755,13 @@ export default function Ticket()
 		}
 	}
 	//change le prix de la commande quand on modifie le nombre de produit
-	const updateTotComm = async (idprod, idcli, qa, prixspe) =>
+	const updateTotComm = async (idprod, iduti, qa, prixspe) =>
 	{
 		try
 		{
 			const formData = new FormData();
 			formData.append('idprod', idprod);
-			formData.append('idcli', idcli);
+			formData.append('iduti', iduti);
 			formData.append('qa', qa);
 			formData.append('prixspe', prixspe);
 
@@ -794,13 +794,13 @@ export default function Ticket()
 
 	};
 
-	const exportCSV = async (fichier, nomfichier, idcli) =>
+	const exportCSV = async (fichier, nomfichier, iduti) =>
 	{
 		try
 		{
 			const formData = new FormData();
 			formData.append('type', 'TICKET');
-			formData.append('idcli', idcli);
+			formData.append('iduti', iduti);
 			formData.append('file', fichier);
 			formData.append('name', nomfichier);
 
@@ -828,13 +828,13 @@ export default function Ticket()
 		}
 	}
 
-	const insertProdTicket = async (idprod, idcli) =>
+	const insertProdTicket = async (idprod, iduti) =>
 	{
 		try
 		{
 			const formData = new FormData();
 			formData.append('idprod', idprod);
-			formData.append('idcli', idcli);
+			formData.append('iduti', iduti);
 			formData.append('qa', 0);
 			formData.append('prixspe', prix);
 

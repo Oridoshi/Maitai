@@ -18,7 +18,7 @@ if($cli->getPresent() == 0 || !$cli->getPresent()) {
  */
 $newTicket = new Ticket();
 $newTicket->setIdProd($_POST['idprod']);
-$newTicket->setIdCli($_POST['idcli']);
+$newTicket->setIdUti($_POST['idcli']);
 $newTicket->setQa($_POST['qa']);
 $newTicket->setPrixSpe($_POST['prixspe']);
 if(isset($_POST['prixtot'])) {

@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $pdo = DB::getInstance();
 
 // Récupération des utilisateurs et de leur droit
-$utilisateurs = $pdo->getUtilisateursEtDroit();
+$utilisateurs = $pdo->getUtilisateurs();
 
 // Envoi des données au format JSON
 echo json_encode($utilisateurs);
