@@ -174,7 +174,7 @@ export default function Ticket()
 			// Prix Produit
 			const prix = document.createElement('td');
 			prix.colSpan = 2;
-			prix.textContent = prod.prixspe;
+			prix.textContent = prod.prixspe + " €";
 			prix.classList.add('edit');
 
 			// Création de l'élément compteur
@@ -268,7 +268,7 @@ export default function Ticket()
 			// Prix Produit
 			const lblprix = document.createElement('td');
 			lblprix.colSpan = 2;
-			lblprix.textContent = prix;
+			lblprix.textContent = prix + " €";
 			lblprix.classList.add('edit');
 
 			// Création de l'élément compteur
@@ -460,7 +460,7 @@ export default function Ticket()
 			const data = await response.json();
 			const newData = await Promise.all(data.map(async (item) =>
 			{
-				const prix = await getTotCommCli(item.idcli) + " €";
+				const prix = await getTotCommCli(item.idcli);
 				return { id: item.idcli, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
 			}));
 			return newData;
