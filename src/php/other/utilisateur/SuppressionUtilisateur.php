@@ -11,12 +11,11 @@ $login = $_POST['login'];
 $pdo = DB::getInstance();
 
 $idDroitAdmin = 1;
-$utilisateur = $pdo->getUtilisateur($login);
+$utilisateur = $pdo->getUtilisateurByLogin($login);
 
 // vérification si l'utilisateur est le dernier admin actif
-if($pdo->getDroitUtilisateur($utilisateur->getIdUti()) == $idDroitAdmin && $pdo->getNbAdminActif() == 1)
-	die("SQLSTATE[45000] : erreur perso : 5552 Vous ne pouvez pas supprimer le dernier administrateur ! in C:\\xampp");
+if($utilisateur->getDroit() === "Admin" && $pdo->getNbAdminActif() == 1)
+	die("SQLSTATE[45000] : erreur perso : 5552 Vous ne pouvez pas supprimer le dernier administrateur ! in C:");
 
 // Suppression de l'utilisateur
-$pdo->suppDroitUtilisateur($utilisateur->getIdUti());
 $pdo->suppUtilisateur($utilisateur->getIdUti());

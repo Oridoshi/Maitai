@@ -6,7 +6,7 @@ class Ticket {
     public int $idprod;
 
     /** Numéro d'identification du client qui commande. */
-    public int $idcli;
+    public int $iduti;
 
     /** Quantité du produit acheté. */
     public int $qa;
@@ -19,15 +19,15 @@ class Ticket {
 
     /**
      * @var int $idprod Numéro d'identification du produits commandés.
-     * @var int $idcli Numéro d'identification du client qui commande.
+     * @var int $iduti Numéro d'identification du client qui commande.
      * @var int $qa Quantité du produit acheté.
      * @var ?float $prixspe Prix Unitaire pour le produit
      * @var ?float $prixtot Prix total de la commande
      * Constructeur de la classe Ticket.
      */
-    public function __construct(int $idprod = 0, int $idcli = 0, int $qa = 0, float $prixspe = 0, ?float $prixtot = null) {
+    public function __construct(int $idprod = 0, int $iduti = 0, int $qa = 0, float $prixspe = 0, ?float $prixtot = null) {
         $this->idprod = $idprod;
-        $this->idcli = $idcli;
+        $this->iduti = $iduti;
         $this->prixspe = $prixspe;
         $this->qa = $qa;
         $this->prixtot = $prixtot;
@@ -37,7 +37,7 @@ class Ticket {
     public function getIdProd(): int {return $this->idprod;}
 
     /** Getter de l'id du client qui commande */
-    public function getIdCli(): int {return $this->idcli;}
+    public function getIdUti(): int {return $this->iduti;}
     
     /** Getter de la quantité du produit acheté */
     public function getQa(): int {return $this->qa;}
@@ -52,7 +52,7 @@ class Ticket {
     public function setIdProd(int $idprod): void {$this->idprod = $idprod;}
 
     /** Setter de l'id du client qui commande */
-    public function setIdCli(int $idcli): void {$this->idcli = $idcli;}
+    public function setIdUti(int $iduti): void {$this->iduti = $iduti;}
 
     /** Setter de la quantité du produit acheté */
     public function setQa(int $qa): void {$this->qa = $qa;}

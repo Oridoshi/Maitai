@@ -9,7 +9,7 @@ $pwd = $_POST['mdp'];
 
 $pdo = DB::getInstance();
 
-$uti = $pdo->getUtilisateur($login);
+$uti = $pdo->getUtilisateurByLogin($login);
 $mdp = $uti->getMdp();
 
 if(isset($_POST['connexion'])) {

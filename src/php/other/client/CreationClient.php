@@ -5,22 +5,14 @@ include_once '../../inc/DB.inc.php';
 
 $pdo = DB::getInstance();
 // création du client
-$client = new Client();
-$client->setNomClub($_POST['nomClub']);
+$client = new Utilisateur();
+$client->setLogin($_POST['login']);
 $client->setEmail($_POST['email']);
 $client->setTelephone($_POST['telephone']);
-
-// insertion du client
-$valide = $pdo->insertClient($client);
-
-// création de l'utilisateur
-$utilisateur = new Utilisateur();
-$utilisateur->setLogin($_POST['nomClub']);
-$utilisateur->setEmail($_POST['email']);
+$client->setActif(true);
+$client->setDroit("Client");
+$client->setMdp(password_hash($_POST['mdp'], PASSWORD_DEFAULT));
+$client->setPresent(false);
 
 // insertion de l'utilisateur dans la base de données
-$pdo->insertUtilisateur($utilisateur);
-
-$uti = $pdo->getUtilisateur($_POST['nomClub']);
-
-$pdo->insertUtilisateurDroit($uti->getIdUti(), 3);
+$pdo->insertUtilisateur($client);

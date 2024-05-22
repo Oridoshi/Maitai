@@ -18,7 +18,7 @@ class Historique {
     public bool $valide;
 
     /** Client attachés au fichiers générés. */
-    public int $idcli;
+    public int $iduti;
 
     /**
      * @var int $idhis Numéro d'identification du fichier stockés.
@@ -26,16 +26,16 @@ class Historique {
      * @var string $chemin Chemin pour retrouver le fichier.
      * @var string $type Type de fichier (Ticket ou fiche de secu).
      * @var bool $valide Si le ficher a était validé par un admin
-     * @var int $idcli Client attachés au fichiers générés.
+     * @var int $iduti Client attachés au fichiers générés.
      * Constructeur de la classe Historique.
      */
-    public function __construct(int $idhis = 0, string $date = "", string $chemin = "", string $type = "", bool $valide=false, int $idcli = 0) {
+    public function __construct(int $idhis = 0, string $date = "", string $chemin = "", string $type = "", bool $valide=false, int $iduti = 0) {
         $this->idhis = $idhis;
         $this->date = $date;
         $this->chemin = $chemin;
         $this->type = $type;
         $this->valide = $valide;
-        $this->idcli = $idcli;
+        $this->iduti = $iduti;
     }
 
     /** Getter de l'id du fichier stockés */
@@ -54,7 +54,7 @@ class Historique {
     public function getValide(): bool {return $this->valide;}
 
     /** Getter de l'id du client attachés au fichiers générés */
-    public function getIdCli(): int {return $this->idcli;}
+    public function getIdUti(): int {return $this->iduti;}
 
     /** Setter de l'id du fichier stockés */
     public function setIdHis(int $idhis): void {$this->idhis = $idhis;}
@@ -72,5 +72,5 @@ class Historique {
     public function setValide(bool $valide): void {$this->valide = $valide;}
 
     /** Setter de l'id du client attachés au fichiers générés */
-    public function setIdCli(int $idcli): void {$this->idcli = $idcli;}
+    public function setIdUTi(int $iduti): void {$this->iduti = $iduti;}
 }

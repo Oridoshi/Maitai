@@ -9,6 +9,6 @@ $mail = $_POST['email'];
 
 $pdo = DB::getInstance();
 
-$uti = $pdo->getUtilisateur($login);
+$uti = $pdo->getUtilisateurByLogin($login);
 
 echo $uti->getEmail() == $mail;

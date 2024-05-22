@@ -1,9 +1,6 @@
 <?php
 //Mettre les objet a require ici /!\
-include_once 'Droit.inc.php';
 include_once 'Utilisateur.inc.php';
-include_once 'UtilisateurDroit.inc.php';
-include_once 'Client.inc.php';
 include_once 'Produit.inc.php';
 include_once 'Ticket.inc.php';
 include_once 'Historique.inc.php';
@@ -14,16 +11,16 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	// private static string $dbName   = "maitai";
-	// private static string $login    = "Admin";
-	// private static string $password = "maitai";
-	// private static string $host     = "localhost";
+	private static string $dbName   = "maitai";
+	private static string $login    = "Admin";
+	private static string $password = "maitai";
+	private static string $host     = "localhost";
 
 
-	private static string $dbName   = "if0_36460769_maitai";
-	private static string $login    = "if0_36460769";
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $host     = "sql211.infinityfree.com";
+	// private static string $dbName   = "if0_36460769_maitai";
+	// private static string $login    = "if0_36460769";
+	// private static string $password = "Sc4ZKSO8sanWyvz";
+	// private static string $host     = "sql211.infinityfree.com";
 
 
 	private static string $port     = "3306";
@@ -146,31 +143,12 @@ class DB {
 	* Fonctions qui peuvent être utilisées dans les scripts PHP
 	*************************************************************************/
 
-	/** Retourne tout les droits de la table droit. */
-	public function getDroits() {
-		$requete = 'SELECT * FROM Droit';
-		return $this->execQuery($requete,null,'Droit');
-	}
-
-	/**
-	 * Récupère un droit à partir de son id.
-	 * @param int $idDroit id du droit à récupérer
-	 * @return Droit le droit récupéré
-	 */
-	public function getDroitUtilisateur($iduti) {
-		$requete = 'SELECT iddroit FROM UtilisateurDroit WHERE iduti = ?';
-		$stmt = $this->connect->prepare($requete);
-		$stmt->execute(array($iduti));
-		$tuple = $stmt->fetch();
-		return $tuple['iddroit'];
-	}
-
 	/**
 	 * Récupère le nombre d'administrateurs actifs.
 	 * @return int le nombre d'administrateurs actifs
 	 */
 	public function getNbAdminActif() {
-		$requete = 'SELECT COUNT(*) FROM Utilisateur, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Utilisateur.actif = 1 AND UtilisateurDroit.idDroit = 1';
+		$requete = 'SELECT COUNT(*) FROM Utilisateur, UtilisateurDroit WHERE Utilisateur.iduti = UtilisateurDroit.iduti AND Utilisateur.actif = 1 AND UtilisateurDroit.idDroit = 1';
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -179,73 +157,79 @@ class DB {
 		return $tuple['count(*)'];
 	}
 
-
-	/** Récupérer le login, mdp, email, libdroit et actif des tout utilisateurs */
-	public function getUtilisateursEtDroit() {
-		$requete = 'SELECT login, mdp, email, libdroit, actif FROM Utilisateur, Droit, UtilisateurDroit WHERE Utilisateur.idUti = UtilisateurDroit.idUti AND Droit.iddroit = UtilisateurDroit.iddroit ORDER BY Droit.idDroit,login';
-		$stmt = $this->connect->prepare($requete);
-		$stmt->execute();
-		$stmt->setFetchMode(PDO::FETCH_ASSOC);
-		$tab = array();
-		$tuple = $stmt->fetch();
-		if ($tuple) {
-			while ($tuple != false) {
-				$tab[]=$tuple;
-				$tuple = $stmt->fetch();
-			}
-		}
-		return $tab;
-	}
-
+	
+	/****************/
+	//  Utilisateur //
+	/****************/
+	
+	/**
+	 * Permet de savoir si un email existe déjà dans la base de données.
+	 * @param string $mail email à vérifier
+	 * @return ?array null si l'email n'existe pas, un tableau sinon
+	 */
 	public function getUtilisateurByMail($mail) {
 		$requete = 'SELECT * FROM Utilisateur WHERE email = ?';
 		return $this->execQuery($requete,array($mail),'Utilisateur');
 	}
 
-	/*** METHODES POUR LES UTILISATEURS ****/
-
-	/** Obtenir un utilisateur à partir de son login */
-	public function getUtilisateur($login) {
+	/** 
+	 * Obtenir un utilisateur à partir de son login
+	 * @param string $login login de l'utilisateur à récupérer
+	 * @return Utilisateur l'utilisateur récupéré ou null
+	 */
+	public function getUtilisateurByLogin($login) {
 		$requete = 'SELECT * FROM Utilisateur WHERE lower(login) = ?';
-		return $this->execQuery($requete,array(strtolower($login)),'Utilisateur')[0];
-
+		return $this->execQuery($requete,array(strtolower($login)),'Utilisateur') == null ? null:$this->execQuery($requete,array(strtolower($login)),'Utilisateur')[0];
 	}
 
-	/** Modifier les données d'un utilisateur. */
+	/** 
+	 * Obtenir tout les utilisateurs
+	 * @return array tableau d'objets de la classe Utilisateur
+	 */
+	public function getUtilisateurs() {
+		$requete = 'SELECT * FROM Utilisateur WHERE droit != "Client"';
+		return $this->execQuery($requete, null,'Utilisateur');
+	}
+
+	/** 
+	 * Modifier les données d'un utilisateur.
+	 * @param Utilisateur $utilisateur l'utilisateur à modifier
+	 * @return void
+	 */
 	public function updateUtilisateur($utilisateur) {
-		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE idUti = ?';
-		return $this->execMaj($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()));
+		$requete = 'UPDATE Utilisateur SET login = ?, mdp = ?, email = ?, actif = ? WHERE iduti = ?';
+		$this->execMaj($requete,array($utilisateur->getLogin(),$utilisateur->getMdp(),$utilisateur->getEmail(),$utilisateur->getActif(),$utilisateur->getIdUti()));
 	}
 
-	public function updateUtilisateurDroit($droituti) {
-		$this->suppDroitUtilisateur($droituti->getIdUti());
-		$this->insertUtilisateurDroit($droituti->getIdUti(), $droituti->getIdDroit());
+	/**
+	 * Mettre à jour le champ droit d'un utilisateur.
+	 * @param int $iduti id de l'utilisateur à mettre à jour
+	 * @param string $droit nouveau droit de l'utilisateur
+	 * @return void
+	 */
+	public function majDroitUti($iduti, $droit) {
+		$requete = 'UPDATE Utilisateur SET droit = ? WHERE iduti = ?';
+		$this->execMaj($requete, array($droit, $iduti));
 	}
 
-
-	/** Supprimer les droits d'un utilisateur. */
-	public function suppDroitUtilisateur($iduti) {
-		$requete = 'DELETE FROM UtilisateurDroit WHERE idUti = ?';
-		return $this->execQuery($requete,array($iduti),'UtilisateurDroit');
-	}
-
-	/** Supprimer un utilisateur. */
+	/** 
+	 * Supprimer un utilisateur.
+	 * @param int $iduti id de l'utilisateur à supprimer
+	 * @return void
+	 */
 	public function suppUtilisateur($iduti) {
-		$requete = 'DELETE FROM Utilisateur WHERE idUti = ?';
-		return $this->execQuery($requete,array($iduti),'Utilisateur');
+		$requete = 'DELETE FROM Utilisateur WHERE iduti = ?';
+		$this->execQuery($requete,array($iduti),'Utilisateur');
 	}
 	
-	/** Ajouter un utilisateur uniquement s'il n'existe pas déjà. */
-	public function insertUtilisateur($utilisateur) {		
-		// Insérer l'utilisateur s'il n'existe pas déjà
-		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif) VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif()), 'Utilisateur');
-	}
-
-	/** Ajouter un UtilisateurDroit si l'utilisateur n'a pas déjà de droit */
-	public function insertUtilisateurDroit($idUti, $droit) {
-		$requete = 'INSERT INTO UtilisateurDroit (idUti, idDroit) VALUES (?, ?)';
-		return $this->execQuery($requete, array($idUti, $droit), 'UtilisateurDroit');
+	/** 
+	 * Ajouter un utilisateur.
+	 * @param Utilisateur $utilisateur l'utilisateur à ajouter
+	 * @return void
+	 */
+	public function insertUtilisateur($utilisateur) {
+		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif, droit) VALUES (?, ?, ?, ?, ?)';
+		$this->execQuery($requete, array($utilisateur->getLogin(), $utilisateur->getMdp(), $utilisateur->getEmail(), $utilisateur->getActif(), $utilisateur->getDroit()), 'Utilisateur');
 	}
 
 	/**
@@ -260,68 +244,84 @@ class DB {
 	}
 
 
-	/*** METHODES POUR LES CLIENTS ****/
+	/****************/
+	//    Client    //
+	/****************/
 
-	/** Récuperer les clients. */
+	/** 
+	 * Récuperer les clients.
+	 * @return array tableau d'objets de la classe Client
+	 */
 	public function getClients() {
-		$requete = 'SELECT * FROM Client';
+		$requete = 'SELECT * FROM Utilisateur WHERE droit = "Client"';
+		return $this->execQuery($requete,null,'Utilisateur');
+	}
+
+	/** 
+	 * Récuperer les clients présents.
+	 * @return array tableau d'objets de la classe Client
+	 */
+	public function getClientsPresent() {
+		$requete = 'SELECT * FROM Utilisateur WHERE present = 1 AND droit = "Client"';
 		return $this->execQuery($requete,null,'Client');
 	}
 
-	/** Récuperer les clients présents. */
-	public function getClientsPresent() {
-		$requete = 'SELECT * FROM Client WHERE present = 1';
-		return $this->execQuery($requete,null,'Client');
-	}
-	/** Récuperer le client à l'aide du nom du club */
+	/**
+	 * Récuperer le client à l'aide du nom du club.
+	 * @param string $nomClub nom du club du client à récupérer
+	 * @return Utilisateur le client récupéré
+	 */
 	public function getClient($nomClub) {
-		$requete = 'SELECT * FROM Client WHERE nomClub = ?';
-		return $this->execQuery($requete,array($nomClub),'Client');
+		$requete = 'SELECT * FROM Utilisateur WHERE login = ?';
+		return $this->execQuery($requete,array($nomClub),'Utilisateur')[0];
 	}
 
 	/**
 	 * Récupérer un client à partir de son id.
-	 * @param int $idCli id du client à récupérer
-	 * @return Client le client récupéré
+	 * @param int $idUti id du client à récupérer
+	 * @return Utilisateur le client récupéré
 	 */
-	public function getClientById($idCli) {
-		$requete = 'SELECT * FROM Client WHERE idCli = ?';
-		return $this->execQuery($requete,array($idCli),'Client')[0];
+	public function getClientById($idUti) {
+		$requete = 'SELECT * FROM Utilisateur WHERE iduti = ?';
+		return $this->execQuery($requete,array($idUti),'Utilisateur')[0];
 	}
 
 	/**
 	 * Met à jour le champ actif d'un client.
-	 * @param int $idCli id du client à mettre à jour
+	 * @param int $idUti id du client à mettre à jour
 	 * @param bool $actif valeur du champ actif
 	 * @return void
 	 */
-	public function majActifCli($idCli, $actif) {
-		$requete = 'UPDATE Client SET present = ? WHERE idCli = ?';
-		$this->execMaj($requete, array($actif, $idCli));
+	public function majActifCli($idUti, $actif) {
+		$requete = 'UPDATE Utilisateur SET present = ? WHERE iduti = ?';
+		$this->execMaj($requete, array($actif, $idUti));
 	}
 
-	/** Modifier les données d'un client. */
+	/**
+	 * Modifier les données d'un client.
+	 * @param Utilisateur $client le client à modifier
+	 * @return void
+	 */
 	public function updateClient($client) {
-		$requete = 'UPDATE Client SET nomClub = ?, email = ?, telephone = ?, present = ? WHERE idCli = ?';
-		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getIdCli()),'Client');
+		$requete = 'UPDATE Utilisateur SET login = ?, email = ?, telephone = ?, present = ? WHERE iduti = ?';
+		$this->execQuery($requete,array($client->getLogin(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getidUti()),'Client');
 	}
 
-	/** Ajouter un client. */
+	/** 
+	 * Ajouter un client.
+	 * @param Utilisateur $client le client à ajouter
+	 * @return void
+	 */
 	public function insertClient($client) {
-
-		$existingClient = $this->getClient($client->getNomClub());
-		if ($existingClient) {
-			echo "Le club '{$client->getNomClub()}' est déjà dans la base. <br>";
-			return false; // Sortir de la fonction si l'utilisateur existe déjà
-		}
-
-		$requete = 'INSERT INTO Client (nomClub, email, telephone, present) VALUES (?, ?, ?, ?)';
-		return $this->execQuery($requete,array($client->getNomClub(),$client->getEmail(),$client->getTelephone(),$client->getPresent()),'Client');
+		$requete = 'INSERT INTO Utilisateur (login, mdp, email, actif, droit, telephone, present) VALUES (?, ?, ?, ?, ?, ?, ?)';
+		$this->execMaj($requete,array($client->getLogin(), $client->getMdp(),$client->getEmail(),$client->getActif(), $client->getDroit(),$client->getTelephone(),$client->getPresent()));
 	}
 
-	/*** METHODES POUR LES PRODUITS ***/
+	/****************/
+	//   Produits   //
+	/****************/
 
-	/** Récuperer les produits. Trier par categorie.
+	/** Récuperer les produits, trier par categorie.
 	 * @return array tableau d'objets de la classe Produit
 	 */
 	public function getProduits() {
@@ -390,7 +390,9 @@ class DB {
 		$this->execMaj($requete,array($produits->getIdProd()));
 	}
 
-	/*** METHODES POUR LES TICKETS ***/
+	/****************/
+	//    Ticket    //
+	/****************/
 
 	/**
 	 * Insère un ticket dans la base de données.
@@ -398,10 +400,10 @@ class DB {
 	 * @return void
 	 */
 	public function insertTicket(Ticket $ticket) {
-		$requete = "INSERT INTO Ticket (idprod, idcli, qa, prixspe, prixtot) VALUES (?, ?, ?, ?, ?)";
-		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixSpe(), $ticket->getPrixTot());
-		$requete = "INSERT INTO Ticket (idprod, idcli, qa, prixspe, prixtot) VALUES (?, ?, ?, ?, ?)";
-		$tparam = array($ticket->getIdProd(), $ticket->getIdCli(), $ticket->getQa(), $ticket->getPrixSpe(), $ticket->getPrixTot());
+		$requete = "INSERT INTO Ticket (idprod, iduti, qa, prixspe, prixtot) VALUES (?, ?, ?, ?, ?)";
+		$tparam = array($ticket->getIdProd(), $ticket->getIdUti(), $ticket->getQa(), $ticket->getPrixSpe(), $ticket->getPrixTot());
+		$requete = "INSERT INTO Ticket (idprod, iduti, qa, prixspe, prixtot) VALUES (?, ?, ?, ?, ?)";
+		$tparam = array($ticket->getIdProd(), $ticket->getIdUti(), $ticket->getQa(), $ticket->getPrixSpe(), $ticket->getPrixTot());
 		$this->execMaj($requete, $tparam);
 	}
 
@@ -411,51 +413,51 @@ class DB {
 	 * @return void
 	 */
 	public function updateTicket(Ticket $ticket) {
-		$requete = "UPDATE Ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
-		$requete = "UPDATE Ticket SET qa=?, prixtot=? WHERE idprod=? AND idcli=?";
-		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdCli());
+		$requete = "UPDATE Ticket SET qa=?, prixtot=? WHERE idprod=? AND iduti=?";
+		$requete = "UPDATE Ticket SET qa=?, prixtot=? WHERE idprod=? AND iduti=?";
+		$tparam = array($ticket->getQa(), $ticket->getPrixTot(), $ticket->getIdProd(), $ticket->getIdUti());
 		$this->execMaj($requete, $tparam);
 	}
 
 	/**
 	 * Permet de récupérer les produits du ticket
-	 * @param int $idcli id du client
+	 * @param int $idUti id du client
 	 * @param int $idprod id du produit
 	 * @return void
 	 */
-	public function suppTicket(int $idprod, int $idcli) {
-		$requete = "DELETE FROM Ticket WHERE idprod = ? AND idcli = ?";
-		$requete = "DELETE FROM Ticket WHERE idprod = ? AND idcli = ?";
-		$tparam = array($idprod, $idcli);
+	public function suppTicket(int $idprod, int $idUti) {
+		$requete = "DELETE FROM Ticket WHERE idprod = ? AND iduti = ?";
+		$requete = "DELETE FROM Ticket WHERE idprod = ? AND iduti = ?";
+		$tparam = array($idprod, $idUti);
 		$this->execMaj($requete, $tparam);
 	}
 
 	/**
 	 * Permet de supprimer tout les produit d'un ticket en fonction de l'id du client
-	 * @param int $idcli id du client
+	 * @param int $idUti id du client
 	 * @return void
 	 */
-	public function suppTicketCli(int $idcli) {
-		$requete = "DELETE FROM Ticket WHERE idcli = ?";
-		$tparam = array($idcli);
+	public function suppTicketCli(int $idUti) {
+		$requete = "DELETE FROM Ticket WHERE iduti = ?";
+		$tparam = array($idUti);
 		$this->execMaj($requete, $tparam);
 	}
 
 	/**
 	 * Récupère les produits du ticket en fonction de l'id du client
-	 * @param int $idcli id du client ou null pour tous les clients
+	 * @param int $idUti id du client ou null pour tous les clients
 	 * @return array de produit de Ticket
 	 */
-	public function getProdTicket(?int $idcli) {
-		if ($idcli == null) {
+	public function getProdTicket(?int $idUti) {
+		if ($idUti == null) {
 			$requete = "SELECT * FROM Ticket";
 			$requete = "SELECT * FROM Ticket";
 			$tparam = null;
 		}
 		else {
-			$requete = "SELECT * FROM Ticket WHERE idcli = ?";
-			$requete = "SELECT * FROM Ticket WHERE idcli = ?";
-			$tparam = array($idcli);
+			$requete = "SELECT * FROM Ticket WHERE iduti = ?";
+			$requete = "SELECT * FROM Ticket WHERE iduti = ?";
+			$tparam = array($idUti);
 		}
 
 		return $this->execQuery($requete, $tparam, 'Ticket');
@@ -463,12 +465,12 @@ class DB {
 
 	/**
 	 * Récupère le nombre de produit du ticket en fonction de l'id du client
-	 * @param int $idcli id du client
+	 * @param int $idUti id du client
 	 * @return int le nombre de produit du ticket
 	 */
-	public function getNbProdTicketCli(int $idcli) {
-		$requete = "SELECT COUNT(*) FROM Ticket WHERE idcli = ?";
-		$tparam = array($idcli);
+	public function getNbProdTicketCli(int $idUti) {
+		$requete = "SELECT COUNT(*) FROM Ticket WHERE iduti = ?";
+		$tparam = array($idUti);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -476,9 +478,9 @@ class DB {
 		return $tuple['count(*)'];
 	}
 	
-	/************************************************************************/
-	//	Methode permettant de récupérer tous les historiques de la base     //
-	/************************************************************************/
+	/****************/
+	//  Historique  //
+	/****************/
 
 	public function getHistoriques() {
 		$requete = 'SELECT * FROM Historique';
@@ -508,34 +510,47 @@ class DB {
 		return $tuple['auto_increment'];
 	}
 
-	/** Insértion d'un historique */
+	/** 
+	 * Insértion d'un historique
+	 * @param Historique $historique l'historique à insérer
+	 * @return void
+	 */
 	public function insertHistorique(Historique $historique) {
-		$requete = "INSERT INTO Historique (date, chemin, type, idcli) VALUES (NOW(), :chemin, :type, :idcli)";
-		$tparam = array(':chemin' => $historique->getChemin(), ':type' => $historique->getType(), ':idcli' => $historique->getIdCli());
+		$requete = "INSERT INTO Historique (date, chemin, type, iduti) VALUES (NOW(), :chemin, :type, :idUti)";
+		$tparam = array(':chemin' => $historique->getChemin(), ':type' => $historique->getType(), ':idUti' => $historique->getIdUti());
 		$this->execMaj($requete, $tparam);
-		return true;
 	}
 
-	/** Suppression d'un historique */
+	/**
+	 * Suppression d'un historique
+	 * @param int $idhis id de l'historique à supprimer
+	 * @return void
+	 */
 	public function suppHistorique(int $idhis) {
 		$requete = "DELETE FROM Historique WHERE idhis = :idhis";
 		$tparam = array(':idhis' => $idhis);
 		$this->execMaj($requete, $tparam);
-		return true;
 	}
 
-	/** Get historique en fonction du chemin */
+	/** 
+	 * Get historique en fonction du chemin
+	 * @param string $chemin chemin de l'historique
+	 * @return Historique l'historique
+	 */
 	public function getHistoriqueByChemin(string $chemin) {
 		$requete = "SELECT * FROM Historique WHERE chemin = :chemin";
 		$tparam = array(':chemin' => $chemin);
-		$tab = $this->execQuery($requete, $tparam, 'Historique');
-		return $tab[0];
+		return $this->execQuery($requete, $tparam, 'Historique')[0];
 	}
 
-	/** Get tout l'historique d'un client */
-	public function getHistoriquesByClient(int $idcli): array {
-		$requete = "SELECT chemin, idhis, type, date FROM Historique WHERE idcli = ?";
-		$tparam = array($idcli);
+	/** 
+	 * Get tout l'historique d'un client
+	 * @param int $idUti id du client
+	 * @return array tableau d'objets de la classe Historique
+	 */
+	public function getHistoriquesByClient(int $idUti): array {
+		$requete = "SELECT chemin, idhis, type, date FROM Historique WHERE iduti = ?";
+		$tparam = array($idUti);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
 		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
@@ -555,14 +570,18 @@ class DB {
 	 * @return void
 	 */
 	public function setClientNonPresent() {
-		$requete = "UPDATE Client SET present = 0 WHERE idcli NOT IN (SELECT idcli FROM Ticket)";
+		$requete = "UPDATE Client SET present = 0";
 		$this->execMaj($requete, null);
 	}
 
-	/** Get tout l'historique SECU d'un client */
-	public function getHistoriquesByClientSecu(int $idcli): array {
-		$requete = "SELECT chemin, idhis, type, date, valide FROM Historique WHERE idcli = ? AND type = 'SECU'";
-		$tparam = array($idcli);
+	/** 
+	 * Get tout l'historique SECU d'un client.
+	 * @param int $idUti id du client
+	 * @return array tableau d'objets de la classe Historique
+	 */
+	public function getHistoriquesByClientSecu(int $idUti): array {
+		$requete = "SELECT chemin, idhis, type, date, valide FROM Historique WHERE iduti = ? AND type = 'SECU'";
+		$tparam = array($idUti);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
 		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
@@ -577,10 +596,14 @@ class DB {
 		return $tab;
 	}
 
-	/** Get tout l'historique TICKET d'un client */
-	public function getHistoriquesByClientTicket(int $idcli): array {
-		$requete = "SELECT chemin, idhis, type, date FROM Historique WHERE idcli = ? AND type = 'TICKET'";
-		$tparam = array($idcli);
+	/** 
+	 * Get tout l'historique TICKET d'un client
+	 * @param int $idUti id du client
+	 * @return array tableau d'objets de la classe Historique
+	 */
+	public function getHistoriquesByClientTicket(int $idUti): array {
+		$requete = "SELECT chemin, idhis, type, date FROM Historique WHERE iduti = ? AND type = 'TICKET'";
+		$tparam = array($idUti);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);
 		$stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Historique');
@@ -595,7 +618,11 @@ class DB {
 		return $tab;
 	}
 
-	/** Get un historique via son id */
+	/** 
+	 * Get un historique via son id
+	 * @param int $idhist id de l'historique
+	 * @return string le chemin de l'historique
+	 */
 	public function getHistoriquesById(int $idhist): string {
 		$requete = "SELECT chemin FROM Historique WHERE idhis = ?";
 		$tparam = array($idhist);
@@ -605,14 +632,22 @@ class DB {
 		return $tuple['chemin'];
 	}
 
-	/** Supprime un Historique */
+	/**
+	 * Supprime un Historique
+	 * @param int $idhist id de l'historique
+	 * @return void
+	 */
 	public function suppHistoriqueById(int $idhist) {
 		$requete = "DELETE FROM Historique WHERE idhis = ?";
 		$tparam = array($idhist);
 		$this->execMaj($requete, $tparam);
 	}
 
-	/** Mise à jour d'un historique*/
+	/**
+	 * Mise à jour d'un historique
+	 * @param int $idhist id de l'historique
+	 * @return void
+	 */
 	public function updateHistorique(int $idhist) {
 		$requete = "UPDATE Historique SET valide = 1 WHERE idhis = ?";
 		$tparam = array($idhist);
@@ -630,6 +665,10 @@ class DB {
 		$this->execMaj($requete, $tparam);
 	}
 
+	/**
+	 * Récupère tout les historiques non validé
+	 * @return array tableau d'objets de la classe Historique
+	 */
 	public function getHistoriquesSecuNonValide() {
 		$requete = "SELECT * FROM Historique WHERE type = 'SECU' AND valide = 0";
 		return $this->execQuery($requete, null, 'Historique');

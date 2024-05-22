@@ -6,9 +6,6 @@ function Secu() {
 	if(sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [initialData , setInitialData ] = useState([]);
-	const [idCli       , setIdClient    ] = useState();
-
-
 
 
 	useEffect(() => {
@@ -31,10 +28,10 @@ function Secu() {
 			}
 			return response.text();
 		})
-		.then(idCli => {
+		.then(idUti => {
 
 			// Maintenant que nous avons l'ID du client, nous pouvons envoyer la deuxième requête
-			formData.append('idcli', parseInt(idCli)); // Ajouter l'ID du client au FormData
+			formData.append('iduti', parseInt(idUti)); // Ajouter l'ID du client au FormData
 
 			// Envoyer la deuxième requête pour obtenir les historiques du client
 			return fetch(cheminPHP + "historique/GetHistoriquesClientSecu.php", {
