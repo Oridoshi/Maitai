@@ -3,10 +3,10 @@ header("Access-Control-Allow-Origin: *");
 include_once '../../inc/DB.inc.php';
 
 // initialisations des variables à null
-$prevNomClub = $_POST['prevNomClub'];
-$nomClub = $_POST['nomClub'];
+$prevNomClub = $_POST['prevLogin'];
+$nomClub = $_POST['login'];
 $email = $_POST['email'];
-$telephone = $_POST['telephone'];
+$telephone = $_POST['tel'];
 $present = $_POST['present'];
 
 $pdo = DB::getInstance();

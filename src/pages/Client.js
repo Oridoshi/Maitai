@@ -58,21 +58,13 @@ function Client() {
 	const funInsert = async (nouvItem) => {
 		try {
 			const formData = new FormData();
-			formData.append('nomClub'  , nouvItem.login);
+			formData.append('login'  , nouvItem.login);
 			formData.append('email'    , nouvItem.email);
-			formData.append('telephone', nouvItem.telephone);
+			formData.append('tel', nouvItem.telephone);
 
 
 			if (nouvItem.present) formData.append('present', 1);
 			else                  formData.append('present', 0);
-
-
-			/*
-				$client->setNomClub  ($_POST['nomClub']);
-				$client->setEmail    ($_POST['email']);
-				$client->setTelephone($_POST['telephone']);
-				$client->setPresent  ($_POST['present']);
-			 */
 
 			const requestOptions = {
 				method: 'POST',
@@ -107,10 +99,10 @@ function Client() {
 
 
 			const formData = new FormData();
-			formData.append('prevNomClub', oldItem.login   );
-			formData.append('nomClub'    , nouvItem.login  );
-			formData.append('email'      , nouvItem.email    );
-			formData.append('telephone'  , nouvItem.telephone);
+			formData.append('prevLogin', oldItem.login   );
+			formData.append('login'    , nouvItem.login  );
+			formData.append('email'    , nouvItem.email    );
+			formData.append('tel'      , nouvItem.telephone);
 
 			if (nouvItem.present) formData.append('present', 1);
 			else                  formData.append('present', 0);

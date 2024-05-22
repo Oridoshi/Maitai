@@ -102,7 +102,9 @@ function Utilisateur() {
 			formData.append('login', nouvItem.login);
 			formData.append('email', nouvItem.email);
 			formData.append('actif', nouvItem.actif ? 1 : 0);
-			formData.append('droit', nouvItem.libdroit);
+			formData.append('droit', nouvItem.droit);
+
+			console.log(nouvItem.droit);
 
 			const requestOptions = {
 				method: 'POST',
@@ -137,7 +139,7 @@ function Utilisateur() {
 			formData.append('mdp', nouvItem.mdp);
 			formData.append('email', nouvItem.email);
 			formData.append('actif', nouvItem.actif ? 1 : 0);
-			formData.append('droit', nouvItem.libdroit);
+			formData.append('droit', nouvItem.droit);
 
 			const requestOptions = {
 				method: 'POST',

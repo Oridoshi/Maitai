@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { nivEncadrant,nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
+import nivEncadrant, { nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 
 
 function FicheSecu() {
@@ -155,7 +155,7 @@ function FicheSecu() {
 							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"    readOnly/>
 							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()} />
 							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau" defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau"                      defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()} />
 						</div>
 
 						<div className="d-flex align-items-center mt-3">
@@ -377,7 +377,7 @@ function FicheSecu() {
 
 					<div className='col-sm-6 mt-3'>
 						<label htmlFor={`remarque${num}`} className="me-2">Remarque</label>
-						<textarea type="textarea" required className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
+						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
 					</div>
 				</div>
 
@@ -1050,7 +1050,7 @@ function FicheSecu() {
 			
 			window.location.href = '/fiches-de-securite';
 			console.log("Erreur", error)
-			alert('Le fichier sauvegarder ne semble pas être du bon format');
+			alert('Le fichier sauvegarder ne semble pas être du bon format ou n\'est plus accessible. Merci de contacter l\'administrateur.');
 		});
 
 	}
@@ -1118,6 +1118,7 @@ function FicheSecu() {
 
 		// Vérification de remplissage pour crée un autre palanquee si deux première lignes complète
 		var tousRemplis = lignePalanqueeComplete(num, 'A') && lignePalanqueeComplete(num, 'B');
+		setValide(tousRemplis)
 
 		if (tousRemplis && num === nombrePlaques && nombrePlaques < 8)
 			setNombrePlaques(nombrePlaques+1)
@@ -1127,9 +1128,8 @@ function FicheSecu() {
 			setNombrePlaques(nombrePlaques - 1)
 
 
-		if (num === nombrePlaques && num > 1 && lignePalanqueeVide(num, 'A') && lignePalanqueeVide(num, 'B') && lignePalanqueeVide(num, 'C') && lignePalanqueeComplete(num - 1, 'A') && lignePalanqueeComplete(num - 1, 'B') && lignePalanqueeComplete(num - 1, 'C'))
+		if (num === nombrePlaques && num > 1 && lignePalanqueeVide(num, 'A') && lignePalanqueeVide(num, 'B') && lignePalanqueeVide(num, 'C') && lignePalanqueeComplete(num - 1, 'A') && lignePalanqueeComplete(num - 1, 'B'))
 			setValide(true);
-
 
 		
 		//Verifie si tout est valide
