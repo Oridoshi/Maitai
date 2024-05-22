@@ -2,28 +2,28 @@
 class Utilisateur {
 
     /** Numéro d'identification de l'utilisateur. */
-    private int $iduti;
+    public int $iduti;
 
     /** Login de l'utilisateur. */
-    private string $login;
+    public string $login;
 
     /** Mot de passe encrypté de l'utilisateur. */
-    private string $mdp;
+    public string $mdp;
 
     /** Email de récupération du compte */
-    private string $email;
+    public string $email;
 
     /** Si le compte est actif ou non. Peut être activer ou désactiver à volonter */
-    private bool $actif;
+    public bool $actif;
 
     /** Numéro de téléphone de l'utilisateur. */
-    private ?string $telephone;
+    public ?string $telephone;
 
     /** Si l'utilisateur est présent ou non. */
-    private ?bool $present;
+    public ?bool $present;
 
     /** Droit de l'utilisateur. Peut être 'Client', 'Maitai' ou 'Admin'. */
-    private string $droit;
+    public string $droit;
 
     /**
      * @var int $iduti Numéro d'identification de l'utilisateur.

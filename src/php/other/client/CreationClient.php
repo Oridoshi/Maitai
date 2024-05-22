@@ -6,12 +6,12 @@ include_once '../../inc/DB.inc.php';
 $pdo = DB::getInstance();
 // création du client
 $client = new Utilisateur();
-$client->setLogin($_POST['nomClub']);
+$client->setLogin($_POST['login']);
 $client->setEmail($_POST['email']);
 $client->setTelephone($_POST['telephone']);
 $client->setActif(true);
 $client->setDroit("Client");
-$client->setMdp($_POST['mdp']);
+$client->setMdp(password_hash($_POST['mdp'], PASSWORD_DEFAULT));
 $client->setPresent(false);
 
 // insertion de l'utilisateur dans la base de données

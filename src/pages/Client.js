@@ -57,8 +57,6 @@ function Client() {
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {
 		try {
-
-
 			const formData = new FormData();
 			formData.append('nomClub'  , nouvItem.login);
 			formData.append('email'    , nouvItem.email);

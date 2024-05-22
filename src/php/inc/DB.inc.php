@@ -10,16 +10,16 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	// private static string $dbName   = "maitai";
-	// private static string $login    = "Admin";
-	// private static string $password = "maitai";
-	// private static string $host     = "localhost";
+	private static string $dbName   = "maitai";
+	private static string $login    = "Admin";
+	private static string $password = "maitai";
+	private static string $host     = "localhost";
 
 
-	private static string $dbName   = "if0_36460769_maitai";
-	private static string $login    = "if0_36460769";
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $host     = "sql211.infinityfree.com";
+	// private static string $dbName   = "if0_36460769_maitai";
+	// private static string $login    = "if0_36460769";
+	// private static string $password = "Sc4ZKSO8sanWyvz";
+	// private static string $host     = "sql211.infinityfree.com";
 
 
 	private static string $port     = "3306";
@@ -174,12 +174,11 @@ class DB {
 	/** 
 	 * Obtenir un utilisateur à partir de son login
 	 * @param string $login login de l'utilisateur à récupérer
-	 * @return Utilisateur l'utilisateur récupéré
+	 * @return Utilisateur l'utilisateur récupéré ou null
 	 */
 	public function getUtilisateurByLogin($login) {
-		$requete = 'SELECT * FROM Utilisateur WHERE lower(login) = ? and droit not "Client"';
-		return $this->execQuery($requete,array(strtolower($login)),'Utilisateur')[0];
-
+		$requete = 'SELECT * FROM Utilisateur WHERE lower(login) = ?';
+		return $this->execQuery($requete,array(strtolower($login)),'Utilisateur') == null ? null:$this->execQuery($requete,array(strtolower($login)),'Utilisateur')[0];
 	}
 
 	/** 
@@ -187,8 +186,8 @@ class DB {
 	 * @return array tableau d'objets de la classe Utilisateur
 	 */
 	public function getUtilisateurs() {
-		$requete = 'SELECT * FROM Utilisateur WHERE droit not "Client"';
-		return $this->execQuery($requete,null,'Utilisateur');
+		$requete = 'SELECT * FROM Utilisateur WHERE droit != "Client"';
+		return $this->execQuery($requete, null,'Utilisateur');
 	}
 
 	/** 
@@ -283,7 +282,7 @@ class DB {
 	 */
 	public function getClientById($idUti) {
 		$requete = 'SELECT * FROM Utilisateur WHERE iduti = ?';
-		return $this->execQuery($requete,array($idUti),'Client')[0];
+		return $this->execQuery($requete,array($idUti),'Utilisateur')[0];
 	}
 
 	/**

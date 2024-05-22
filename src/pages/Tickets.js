@@ -19,7 +19,7 @@ export default function Ticket()
 	const [lblCat, setLblCat] = useState("");
 	const [lblProd, setLblProd] = useState("");
 	const [lblErreur, setLblErreur] = useState("");
-	const [idUti, setIdCli] = useState("");
+	const [idUti, setIdUti] = useState("");
 	const [idProd, setIdProd] = useState("");
 	const [prix, setPrix] = useState("");
 	//bar de Recherche
@@ -34,7 +34,7 @@ export default function Ticket()
 	// En-tête de la table
 	const initialHeader = [
 		{ id: 'id', name: 'NB Ligne', type: 'number', required: false, editable: false, show: false },
-		{ id: 'nomcli', name: 'Nom du Client', type: 'text', required: false, editable: false, show: true },
+		{ id: 'login', name: 'Nom du Client', type: 'text', required: false, editable: false, show: true },
 		{ id: 'email', name: 'Email', type: 'email', required: false, editable: false, show: true },
 		{ id: 'prix', name: 'Total en cours(TTC)', type: 'prix', required: false, editable: false, show: true },
 		{ id: 'present', name: 'Présent sur le site', type: 'checkbox', required: true, editable: true, show: false, fastEditable: true },
@@ -59,7 +59,7 @@ export default function Ticket()
 	//Gestion des tickets
 	function editTickets(ligne)
 	{
-		setIdCli(ligne.id);
+		setIdUti(ligne.id);
 		try
 		{
 			//récupère la ligne qui appel la méthode et celle d'après
@@ -280,6 +280,7 @@ export default function Ticket()
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
+			console.log(idUti)
 			compteurRoot.render(<Compteur
 				valIni={ 0 }
 				updateTotComm={ (idprod, iduti, qa, prixspe) => updateTotComm(idprod, iduti, qa, prixspe) }
@@ -372,11 +373,12 @@ export default function Ticket()
 				const nomProduit = await getNomP(ticket.idprod);
 				tabDonneExport.forEach(donnee =>
 				{
+					console.log(client)
 					switch (donnee)
 					{
 						case 'numero de client': contenu += iduti + separateur;
 							break;
-						case 'nom du client': contenu += client.nomclub + separateur;
+						case 'nom du client': contenu += client.login + separateur;
 							break;
 						case 'numero des produits': contenu += ticket.idprod + separateur;
 							break;
@@ -400,7 +402,7 @@ export default function Ticket()
 		{
 			//ajoute en bado
 			const fichier = new Blob([contenu], { type: 'text/csv' });
-			exportCSV(fichier, client.nomclub + ".csv", iduti);
+			exportCSV(fichier, client.login + ".csv", iduti);
 		}
 	}
 
@@ -461,7 +463,7 @@ export default function Ticket()
 			const newData = await Promise.all(data.map(async (item) =>
 			{
 				const prix = await getTotCommCli(item.iduti);
-				return { id: item.iduti, nomcli: item.nomclub, email: item.email, prix: prix, present: item.present };
+				return { id: item.iduti, login: item.login, email: item.email, prix: prix, present: item.present };
 			}));
 			return newData;
 		} catch (error)
@@ -759,6 +761,7 @@ export default function Ticket()
 	{
 		try
 		{
+			console.log(iduti)
 			const formData = new FormData();
 			formData.append('idprod', idprod);
 			formData.append('iduti', iduti);
