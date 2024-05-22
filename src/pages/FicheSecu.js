@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { nivEncadrant,nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
+import nivEncadrant, { nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 
 
 function FicheSecu() {
