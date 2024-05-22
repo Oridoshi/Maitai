@@ -17,7 +17,7 @@ class Demande {
     public bool $pourMatin;
 
     /** Si la demande est validé ou non */
-    public bool $valide;
+    public bool $valider;
 
     /**
      * @var int $idProd identidifiant du produit
@@ -25,16 +25,16 @@ class Demande {
      * @var int $qa quantité acheté
      * @var string $date date de la demande
      * @var bool $pourMatin Matin ou apès midi
-     * @var bool $valide Si la demande est validé ou non
+     * @var bool $valider Si la demande est validé ou non
      * Constructeur de la classe Demande.
      */
-    public function __construct(int $idProd = 0, int $idUti = 0, int $qa = 0, string $date = "", bool $pourMatin = true, bool $valide = false) {
+    public function __construct(int $idProd = 0, int $idUti = 0, int $qa = 0, string $date = "", bool $pourMatin = true, bool $valider = false) {
         $this->idProd = $idProd;
         $this->idUti = $idUti;
         $this->qa = $qa;
         $this->date = $date;
         $this->pourMatin = $pourMatin;
-        $this->valide = $valide;
+        $this->valider = $valider;
     }
 
     /** Getter de l'id du produit */
@@ -53,7 +53,7 @@ class Demande {
     public function getPourMatin(): bool {return $this->pourMatin;}
 
     /** Getter de la validation de la demande */
-    public function getValide(): bool {return $this->valide;}
+    public function getvalider(): bool {return $this->valider;}
 
 
     /** Setter de l'id du produit */
@@ -72,5 +72,5 @@ class Demande {
     public function setPourMatin(bool $pourMatin): void {$this->pourMatin = $pourMatin;}
 
     /** Setter de la validation de la demande */
-    public function setValide(bool $valide): void {$this->valide = $valide;}
+    public function setvalider(bool $valider): void {$this->valider = $valider;}
 }

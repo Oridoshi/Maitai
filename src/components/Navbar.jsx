@@ -13,6 +13,7 @@ import Form from "../components/Form";
 import Historique from "../pages/Historique";
 import FicheSecu from "../pages/FicheSecu";
 import Planning from "../pages/Planning"
+import Resume from "../pages/Resume";
 
 import '../style/nav.css';
 import '../style/form.css';
@@ -234,6 +235,7 @@ function Navbar({ role })
                     <Route path="/fiche-de-securite" element={ <FicheSecu /> } />
                     <Route path="/historique" element={ <Historique /> } />
                     <Route path="/planning" element={ <Planning /> } />
+					<Route path="/resume" element={<Resume/>} />
                 </Routes>
                 <Modal className="popup d-flex justify-content-center align-items-center" show={ showModal } onHide={ toggleModal }>
                     <Modal.Body>
