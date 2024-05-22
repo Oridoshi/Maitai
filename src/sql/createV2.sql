@@ -36,7 +36,7 @@ CREATE TABLE Utilisateur
 
 
 -- Insertion d'un utilisateur admin
-INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addresse@gmail.fr', 'mdp1', 'Admin');
+INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addresse@gmail.fr', '', 'Admin'); -- NE PAS METTRE DE MDP EN BRUT DANS LA BASE DE DONNEE
 
 
 -- Création de la table produit
@@ -88,7 +88,7 @@ CREATE TABLE Demande
 	idUti    INTEGER REFERENCES Utilisateur(idUti),
 	qa       INTEGER NOT NULL CHECK (qa >0),
 	date     DATE    NOT NULL,
-	pourMidi BOOLEAN NOT NULL,
+	pourMatin BOOLEAN NOT NULL,
 	valider  BOOLEAN DEFAULT 1,
 	PRIMARY KEY (idProd, idUti)
 );
