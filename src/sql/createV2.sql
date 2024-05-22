@@ -32,12 +32,12 @@ CREATE TABLE Utilisateur
 	present   BOOLEAN     DEFAULT 1,
 
 	-- Partie droit : Seulement trois possible; 'Client, Maitai, Admin' 
-	droit     VARCHAR(6) NOT NULL CHECK (droit IN ('Client', 'Maitai', 'Admin'))
+	droit     VARCHAR(6) NOT NULL CHECK (droit IN ("Client", "Maitai", "Admin"))
 );
 
 
 -- Insertion d'un utilisateur admin
-INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'sarah.hautot76@gmail.com', '', 'Admin'); -- NE PAS METTRE DE MDP EN BRUT DANS LA BASE DE DONNEE
+INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addresse@gmail.fr', '', 'Admin');
 
 
 -- Création de la table produit
@@ -76,7 +76,7 @@ CREATE TABLE Ticket
 (
 	idProd  INTEGER REFERENCES Produit(idProd),
 	idUti   INTEGER REFERENCES Utilisateur(idUti),
-	qa      INTEGER NOT NULL CHECK (qa >0),
+	qa      INTEGER NOT NULL CHECK (qa >= 0),
 	prixTot DECIMAL(12,2) DEFAULT NULL,
 	prixSpe DECIMAL(12,2) DEFAULT NULL,
 	PRIMARY KEY (idProd, idUti)

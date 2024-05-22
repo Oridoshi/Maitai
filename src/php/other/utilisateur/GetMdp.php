@@ -8,4 +8,4 @@ $login = $_POST['login'];
 
 $pdo = DB::getInstance();
 
-echo $pdo->getUtilisateur($login)->getMdp();
+echo $pdo->getUtilisateurByLogin($login)->getMdp();

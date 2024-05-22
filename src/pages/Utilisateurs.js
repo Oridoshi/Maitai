@@ -7,10 +7,8 @@ function Utilisateur() {
 
 	const [initialData, setInitialData] = useState([]);
 	const [filterData, setFilterData] = useState([]);
-	const [initialDroit, setInitialDroit] = useState([]);
-	const [libDroit, setLibDroit] = useState([]);
 	const [searchTerm, setSearchTerm] = useState(''); // État pour stocker la valeur de recherche
-
+	
 	useEffect(() => {
 		fetch(cheminPHP + "utilisateur/GetUtilisateurs.php", {
 			method: 'GET',
@@ -29,6 +27,7 @@ function Utilisateur() {
 					...item,
 					id: index + 1
 				}));
+				console.log(data[0])
 				setInitialData(newData);
 				setFilterData(newData);
 			})
@@ -37,29 +36,7 @@ function Utilisateur() {
 			});
 	}, []);
 
-	useEffect(() => {
-		fetch(cheminPHP + "GetDroits.php", {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'text/plain; charset=UTF-8'
-			},
-		})
-			.then(response => {
-				if (!response.ok) {
-					throw new Error('Erreur de réseau !');
-				}
-				return response.json();
-			})
-			.then(data => {
-				const newLibDroit = data.map(item => item.libdroit);
-				const droit = [...data];
-				setLibDroit(newLibDroit);
-				setInitialDroit(droit);
-			})
-			.catch(error => {
-				console.error('Erreur :', error);
-			});
-	}, []);
+	const libDroit = ["Admin", "Maitai"];
 
 	const fetchUtilisateurData = async () => {
 		try {
@@ -86,11 +63,11 @@ function Utilisateur() {
 	};
 
 	const initialHeader = [
-		{ id: 'id', name: 'NB Ligne', type: 'number', required: true, editable: false, show: false },
+		{ id: 'id'   , name: 'NB Ligne', type: 'number', required: true, editable: false, show: false },
 		{ id: 'login', name: 'Login', type: 'login', required: true, editable: true, show: true, maxLength: 30 },
-		{ id: 'mdp', name: 'Mots de passe', type: 'text', required: true, editable: false, show: false },
+		{ id: 'mdp'  , name: 'Mots de passe', type: 'text', required: true, editable: false, show: false },
 		{ id: 'email', name: 'Adresse email', type: 'email', required: true, editable: true, show: true, maxLength: 60 },
-		{ id: 'libdroit', name: 'Droit', type: 'list', required: true, editable: true, show: true, options: libDroit },
+		{ id: 'droit', name: 'Droit', type: 'list', required: true, editable: true, show: true, options: libDroit },
 		{ id: 'actif', name: 'Actif', type: 'checkbox', required: true, editable: true, show: true },
 	];
 
@@ -119,24 +96,13 @@ function Utilisateur() {
 		}
 	};
 
-	function getIdDroit(libDroit) {
-		var id = -1;
-
-		initialDroit.forEach(droit => {
-			if (droit.libdroit === libDroit)
-				id = droit.iddroit;
-		});
-
-		return id;
-	}
-
 	const funInsert = async (nouvItem) => {
 		try {
 			const formData = new FormData();
 			formData.append('login', nouvItem.login);
 			formData.append('email', nouvItem.email);
 			formData.append('actif', nouvItem.actif ? 1 : 0);
-			formData.append('droit', getIdDroit(nouvItem.libdroit));
+			formData.append('droit', nouvItem.libdroit);
 
 			const requestOptions = {
 				method: 'POST',
@@ -171,7 +137,7 @@ function Utilisateur() {
 			formData.append('mdp', nouvItem.mdp);
 			formData.append('email', nouvItem.email);
 			formData.append('actif', nouvItem.actif ? 1 : 0);
-			formData.append('iddroit', getIdDroit(nouvItem.libdroit));
+			formData.append('droit', nouvItem.libdroit);
 
 			const requestOptions = {
 				method: 'POST',

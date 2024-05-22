@@ -632,6 +632,7 @@ const loginExist = async (data) => {
 		}
 
 		const dat = await response.text();
+		console.log(dat);
 		return dat === "1";
 	} catch (error) {
 		console.log("erreur", error);
@@ -826,9 +827,7 @@ const funInsert = async (mdp) => {
 		const formData = new FormData();
 		formData.append('login', sessionStorage.getItem('login'));
 		formData.append('mdp',mdp);
-		formData.append('email', sessionStorage.getItem('mail'));
-		formData.append('actif',true);
-		formData.append('droit',3);
+		formData.append('email', sessionStorage.getItem('mail'));	
 		formData.append('tel',tel);
 
 		const requestOptions = {
@@ -836,7 +835,7 @@ const funInsert = async (mdp) => {
 			body: formData
 		};
 
-		const response = await fetch(cheminPHP + "utilisateur/CreationUtilisateur.php", requestOptions);
+		const response = await fetch(cheminPHP + "client/CreationClient.php", requestOptions);
 
 
 		if (!response.ok) {
@@ -894,6 +893,7 @@ const recupCode = async (mail, recup) =>
 		};
 
 		const response = await fetch(cheminPHP + "../SendMail.php", requestOptions);
+		// const response = await fetch("http://172.26.4.207/Maitai/src/php/SendMail.php", requestOptions);
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');
