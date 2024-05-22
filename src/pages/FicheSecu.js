@@ -110,7 +110,7 @@ function FicheSecu() {
 					<div className="col-sm-5 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="nomFic" className="me-2 fw-bold">Nom du fichier</label>
-							<input type="text" className="form-control" name='nomFic' id="club" required defaultValue={nomFic && nomFic}/>
+							<input type="text" className="form-control" name='nomFic' id="club" required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
 						</div>
 					</div>
 
@@ -794,6 +794,7 @@ function FicheSecu() {
 
 			const text = await response.text();
 
+			console.log(text);
 		} else {
 
 			// ModificationFichierHistorique
