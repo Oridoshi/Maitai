@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { nivEncadrant,nivGeneral, cheminPHP } from '../components/VarGlobal.js';  
+import { nivEncadrant,nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 
 
 function FicheSecu() {
-	if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
+	// if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
 
 
 
@@ -23,7 +23,7 @@ function FicheSecu() {
 	const [formDataObject   , setFormDataObject   ] = useState({});
 
 	const [idHis  , setIdHis  ] = useState();
-	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+	// if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [nomFic  , setNomFic  ] = useState();
 
@@ -135,40 +135,39 @@ function FicheSecu() {
 
 						<div className="d-flex align-items-center">
 							<input type="text" className="form-control p-1 m-1"                  id="dp"       value="DP"           readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="dpnom"     id="dpnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["dpnom"   ]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="dpprenom"  id="dpprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["dpprenom"]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="dpniveau"  id="dpniveau" placeholder="Niveau" defaultValue={idHis && formDataObject["dpniveau"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="dpnom"     id="dpnom"    placeholder="Nom"    required defaultValue={idHis && formDataObject["dpnom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="dpprenom"  id="dpprenom" placeholder="Prenom" required defaultValue={idHis && formDataObject["dpprenom"]} onChange={() => handleChangeEnTete()} />
+							{generateListEnTete(nivDP, 'dpniveau')}
 						</div>
 						<div className="d-flex align-items-center">
 							<input type="text" className="form-control p-1 m-1"                  id="ss1"       value="SECU.SURF"    readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="ss1nom"    id="ss1nom"    placeholder="Nom"    defaultValue={idHis && formDataObject["ss1nom"   ]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="ss1prenom" id="ss1prenom" placeholder="Prenom" defaultValue={idHis && formDataObject["ss1prenom"]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="ss1niveau" id="ss1niveau" placeholder="Niveau" defaultValue={idHis && formDataObject["ss1niveau"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="ss1nom"    id="ss1nom"    placeholder="Nom"    required defaultValue={idHis && formDataObject["ss1nom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="ss1prenom" id="ss1prenom" placeholder="Prenom" required defaultValue={idHis && formDataObject["ss1prenom"]} onChange={() => handleChangeEnTete()} />
+							{generateListEnTete(nivSecu, 'ss1niveau')}
 						</div>
 						<div className="d-flex align-items-center">
 							<input type="text" className="form-control p-1 m-1"                  id="ss2"       value="SECU.SURF"    readOnly/>
 							<input type="text" className="form-control p-1 m-1" name="ss2nom"    id="ss2nom"    placeholder="Nom"    defaultValue={idHis && formDataObject["ss2nom"   ]} onChange={() => handleChangeEnTete()} />
 							<input type="text" className="form-control p-1 m-1" name="ss2prenom" id="ss2prenom" placeholder="Prenom" defaultValue={idHis && formDataObject["ss2prenom"]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="ss2niveau" id="ss2niveau" placeholder="Niveau" defaultValue={idHis && formDataObject["ss2niveau"]} onChange={() => handleChangeEnTete()} />
+							{generateListEnTete(nivSecu, 'ss2niveau')}
 						</div>
 						<div className="d-flex align-items-center">
 							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"    readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()}         />
-							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau" defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()}         />
+							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau" defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()} />
 						</div>
 
 						<div className="d-flex align-items-center mt-3">
 							<label type="text" className="fw-bold" htmlFor="tel"> Nombre plongeurs </label>
-							<input type="number" min="1" className="form-control p-1 m-1" name="nbplong"   id="nbplong"   placeholder="Nombre"  defaultValue={idHis && formDataObject["nbplong"]}  onChange={() => handleChangeEnTete()}/>
+							<input type="number" min="1" className="form-control p-1 m-1" name="nbplong"   id="nbplong"   placeholder="Nombre"  required defaultValue={idHis && formDataObject["nbplong"]}  onChange={() => handleChangeEnTete()}/>
 						</div>
 					</div>
 
 
 					<div className="col-sm-5 ms-4 mt-4 ms-5">
 						<div className="d-flex align-items-center mt-5">
-							<label htmlFor="pa12" className="fw-bold col-sm-4 m-1">PA12 : NON AUTORISE</label>
-							<input type="text"    className="form-control p-1 m-1" defaultValue={idHis && formDataObject["pa12"]} onChange={() => handleChangeEnTete()} name='pa12' id="pa12" required/>
+							<label htmlFor="pa12" className="fw-bold col-sm-4 m-1">PA12 NON AUTORISE</label>
 						</div>
 
 						<div className="d-flex align-items-center">
@@ -183,6 +182,19 @@ function FicheSecu() {
 					</div>
 				</div>
 			</div>
+		);
+	}
+	
+
+
+	function generateListEnTete(datas, id)
+	{
+		return (
+			<select name={id} id={id} className={`form-control p-1 m-1`} defaultValue={formDataObject[id] && formDataObject[id]} required={id !== 'ss2niveau'} onChange={() => handleChangeEnTete()}>
+				{datas.map((niveau) => (
+					<option key={niveau}>{niveau}</option>
+				))}
+			</select>
 		);
 	}
 
@@ -329,32 +341,32 @@ function FicheSecu() {
 					<div className='d-flex mb-3'>
 						<div className='align-items-center col-sm-1'>
 							<label htmlFor={`profRea${num}`} className="me-2">Prof. ({formDataObject[`p${num}prof`]})</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" required className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center col-sm-1 me-3'>
 							<label htmlFor={`tempsRea${num}`} className="me-2">Temps ({formDataObject[`p${num}temp`]})</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" required className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]} onChange={() => handleChangeRea()}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`palier3m${num}`} className="me-2">Palier 3m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" required className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`palier6m${num}`} className="me-2">Palier 6m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" required className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]} onChange={() => handleChangeRea()}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`HD${num}`} className="me-2">HD</label>
-							<input type="time" className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]} onChange={() => handleChangeRea()}/>
+							<input type="time" required className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`HS${num}`} className="me-2">HS</label>
-							<input type="time" className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]} onChange={() => handleChangeRea()}/>
+							<input type="time" required className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center '>
@@ -365,7 +377,7 @@ function FicheSecu() {
 
 					<div className='col-sm-6 mt-3'>
 						<label htmlFor={`remarque${num}`} className="me-2">Remarque</label>
-						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
+						<textarea type="textarea" required className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
 					</div>
 				</div>
 
@@ -1103,17 +1115,16 @@ function FicheSecu() {
 		}));
 
 
-		// Vérification de remplissage pour crée un autre palanquee
-		var tousRemplis = lignePalanqueeComplete(num, 'A') && lignePalanqueeComplete(num, 'B') && lignePalanqueeComplete(num, 'C');
+		// Vérification de remplissage pour crée un autre palanquee si deux première lignes complète
+		var tousRemplis = lignePalanqueeComplete(num, 'A') && lignePalanqueeComplete(num, 'B');
 
 		if (tousRemplis && num === nombrePlaques && nombrePlaques < 8)
 			setNombrePlaques(nombrePlaques+1)
 
-		if (nombrePlaques > 1 && nombrePlaques !== num && !tousRemplis && ((lignePalanqueeVide(nombrePlaques, 'A') && lignePalanqueeVide(nombrePlaques, 'B') && lignePalanqueeVide(nombrePlaques, 'C'))))
+		//Si on avait rien rempli, on enlève celui crée
+		if (nombrePlaques > 1 && nombrePlaques !== num && !tousRemplis && ((lignePalanqueeVide(nombrePlaques, 'A') && lignePalanqueeVide(nombrePlaques, 'B') && lignePalanqueeVide(nombrePlaques, 'C') && document.getElementById(`p${nombrePlaques}temp`).value === '' && document.getElementById(`p${nombrePlaques}prof`).value === '' && getValueRB(`p${nombrePlaques}type`) === '')))
 			setNombrePlaques(nombrePlaques - 1)
 
-		//On met setValide a si tout est remplis.
-		setValide(tousRemplis);
 
 		if (num === nombrePlaques && num > 1 && lignePalanqueeVide(num, 'A') && lignePalanqueeVide(num, 'B') && lignePalanqueeVide(num, 'C') && lignePalanqueeComplete(num - 1, 'A') && lignePalanqueeComplete(num - 1, 'B') && lignePalanqueeComplete(num - 1, 'C'))
 			setValide(true);
@@ -1124,7 +1135,7 @@ function FicheSecu() {
 		for (let nb = 1; nb <= nombrePlaques; nb++)
 		{
 			//Si tous n'est pas complet mais que tous n'est pa vide
-			if (!(lignePalanqueeComplete(nb, 'A') && lignePalanqueeComplete(nb, 'B') && lignePalanqueeComplete(nb, 'C')) && 
+			if (!(lignePalanqueeComplete(nb, 'A') && lignePalanqueeComplete(nb, 'B')) && 
 				!(lignePalanqueeVide    (nb, 'A') && lignePalanqueeVide    (nb, 'B') && lignePalanqueeVide    (nb, 'C')))
 				setValide (false);
 		}
@@ -1146,24 +1157,25 @@ function FicheSecu() {
 			// Initialize a flag to track form validity
 			let estRempli = true;
 
-			// Recursively check for non-empty input fields
-			const checkNonEmpty = (element) => {
-				// Check if the element is an input field
-				if (element.tagName === 'INPUT' && element.value === '' && !element.readOnly ) {
+			// Function to check if required input fields are non-empty
+			const checkRequiredFields = (element) => {
+				// Check if the element is an input, textarea, or select field and is required
+				if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT') &&
+					element.required && element.value === '' && !element.readOnly) {
 					estRempli = false;
 				}
 
 				// Iterate over child nodes of the element
 				if (element.childNodes && element.childNodes.length > 0) {
 					for (let i = 0; i < element.childNodes.length; i++) {
-						checkNonEmpty(element.childNodes[i]);
+						checkRequiredFields(element.childNodes[i]);
 					}
 				}
 			};
 
-			// Call checkNonEmpty for each child node of the form
+			// Call checkRequiredFields for each child node of the form
 			form.childNodes.forEach((child) => {
-				checkNonEmpty(child);
+				checkRequiredFields(child);
 			});
 
 			// Update the state based on form validity
@@ -1234,7 +1246,7 @@ function FicheSecu() {
 	 */
 	function lignePalanqueeVide(num, car)
 	{
-		return document.getElementById(`p${num}${car}nom`).value === '' && document.getElementById(`p${num}${car}prenom`).value === '' && document.getElementById(`p${num}${car}niv`).value === '' && document.getElementById(`p${num}temp`).value === '' && document.getElementById(`p${num}prof`).value === '' ;
+		return document.getElementById(`p${num}${car}nom`).value === '' && document.getElementById(`p${num}${car}prenom`).value === '' && document.getElementById(`p${num}${car}niv`).value === '';
 	}
 
 
