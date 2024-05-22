@@ -56,7 +56,7 @@ export default function Planning() {
 			// Créer un objet FormData avec la date et pourMatin
 			formData.append('date'     , date     );
 			formData.append('pourMatin', pourMatin);
-			// formData.append('idUti'    , 4        );
+			formData.append('idUti'    , 4        );
 
 
 			const response = await fetch(cheminPHP + "demande/GetDemandes.php", {
@@ -69,7 +69,6 @@ export default function Planning() {
 			}
 
 			const data = await response.json();
-			console.log(data)
 			return data;
 
 		} catch (error) {
@@ -129,8 +128,6 @@ export default function Planning() {
 		// Réorganise le tableau de jours, si on est mercredi il ira du mercredi au mardi
 		const joursSemaine = [...jours.slice(jourActuel - 1), ...jours.slice(0, jourActuel - 1)];
 
-		console.log(data)
-		
 		/** Code HTML du tableau */
 		return (
 			<table className="tabSemaine mb-5">
@@ -199,7 +196,7 @@ export default function Planning() {
 			
 			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: '#DAE9EA'} : {}}> 
 				<div className="rotate"> 
-					{qa !== 0 && qa} {/* Affiche qa seulement si il n'est pas égal à 0 */}
+					{qa !== 0 && qa + " Produit(s)"} {/* Affiche qa seulement si il n'est pas égal à 0 */}
 
 				</div>
 			</td>
@@ -236,7 +233,7 @@ export default function Planning() {
 	return (
 		<div>
 			<h1 className="titre">Planning semaine {numeroSemaineActuelle(new Date())}</h1>
-			<div className='planning-container'>
+			<div className='planning-container mb-5'>
 				<div className="legend">
 					<div className="itemlegend">Matin</div>
 					<div className="itemlegend">Soir</div>
