@@ -3,11 +3,13 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';  
 
 export default function Resume(){
-	// if(qssessionStorage.getItem('droit') !== 'Admin' || sessionStorage.getItem('date') === null || sessionStorage.getItem('pourMatin') === null) window.location.href = '/';
+	
+	if(sessionStorage.getItem('droit') !== 'Admin' || sessionStorage.getItem('date') === null || sessionStorage.getItem('pourMatin') === null) window.location.href = '/';
 
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
 	const [searchTerm  , setSearchTerm  ] = useState(''); // État pour stocker la valeur de recherche
+	const [checked     , setChecked     ] = useState(true); // État pour stocker la valeur de la case à cocher
 
 
 
@@ -31,13 +33,13 @@ export default function Resume(){
 			return response.json();
 		})
 		.then(data => {
-			console.log(data)
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
+
 		})
 		.catch(error => {
 			console.error('Erreur :', error);
@@ -67,7 +69,9 @@ export default function Resume(){
 			formData.append('idProd'   , parseInt(upItem.idprod )           );
 			formData.append('date'     , sessionStorage.getItem('date')     );
 			formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
-			formData.append('valide'   , upItem.valide                      );
+
+			if(upItem.valider) formData.append('valide', 1);
+			else               formData.append('valide', 0);
 
 			const requestOptions = {
 				method: 'POST',
@@ -83,7 +87,7 @@ export default function Resume(){
 			const data = await response.text();
 			afficherError(data);
 
-			// Récupérer les nouvelles données des produits après l'insertion réussie
+			// Récupérer les nouvelles données du resume après l'insertion réussie
 			const newData = await fetchResumeData();
 			setInitialData(newData);
 			setFilterData(newData);
@@ -98,33 +102,33 @@ export default function Resume(){
 
 	// Fonction pour récupérer les données des produits
 	const fetchResumeData = async () => {
-		
-		// Créer un objet FormData
-		const formData = new FormData();
-		formData.append('prod'     , 'prod'); // Signal pour un get spécifique dans le php
-		formData.append('date'     , sessionStorage.getItem('date')     );
-		formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
 
-		fetch(cheminPHP + "demande/GetDemandes.php", {
-			method: 'POST',
-			body: formData
-		})
-		.then(response => {
+		try {
+			
+			// Créer un objet FormData
+			const formData = new FormData();
+			formData.append('prod'     , 'prod'); // Signal pour un get spécifique dans le php
+			formData.append('date'     , sessionStorage.getItem('date')     );
+			formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
+
+			const response = await fetch(cheminPHP + "demande/GetDemandes.php", {
+				method: 'POST',
+				body : formData
+			});
+
 			if (!response.ok) {
-				throw new Error('Erreur de réseau !');
+				throw new Error('Erreur de réseau lors de la récupération des données des utilisateurs.');
 			}
-			return response.json();
-		})
-		.then(data => {
+
+			const data = await response.json();
 			return data.map((item, index) => ({
 				...item,
 				id: index + 1
 			}));
-		})
-		.catch(error => {
+		} catch (error) {
 			console.error('Erreur :', error);
 			return [];
-		})
+		}
 	};
 
 
@@ -150,22 +154,31 @@ export default function Resume(){
 	}
 
 	const handleChange   = (e) => {setSearchTerm( e.target.value);};
+	const handleCbChange = (e) => {setChecked(e.target.checked);};
 
-	const applyFilter = (data, value) => {
+	const applyFilter = (data, value, checked) => {
 		const filteredData = data.filter((element) => {
-			for (const key of initialHeader) {
-				if (key.show && (element[key.id] + '').toUpperCase().includes(value.toUpperCase())) {
-					return true;
+				// Parcourir les clés de l'en-tête initial
+				for (const key of initialHeader) {
+					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+					if (key.show ) {
+						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
+						console.log(element)
+						console.log("checked : ", checked)
+						console.log("valider : ", element.valider)
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase()) && (checked !== element.valider || !element.valider)) {
+							return true; // Si correspondance, conserver cet élément
+						}
+					}
 				}
-			}
-			return false;
+				return false; // Si aucune correspondance, exclure cet élément
 		});
 		setFilterData(filteredData);
 	}
 
 	useEffect(() => {
-		applyFilter(initialData, searchTerm);
-	}, [searchTerm, initialData]);
+		applyFilter(initialData, searchTerm, checked);
+	}, [searchTerm, initialData, checked]);
 
 
 
@@ -181,6 +194,12 @@ export default function Resume(){
 			<div className="col-sm-3">
 				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
 			</div>
+
+			{/* Bouton checkbox avec style CSS pour la marge gauche */}
+			<div className="form-check" style={{ marginLeft: '10em' }}>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherDemandes" checked={checked} onChange={handleCbChange}/>
+				<label className="form-check-label" htmlFor="afficherDemandes">Afficher seulement les demandes non validé</label>
+			</div>
 		</div>
 
 
@@ -188,7 +207,8 @@ export default function Resume(){
 		<Table 
 			header={initialHeader} 
 			data={filterData} 
-			funUpdate={funUpdate} 
+			funUpdate={funUpdate}
+			keyGrayWhenFalse = '' 
 		/>
 	</div>
 	);
