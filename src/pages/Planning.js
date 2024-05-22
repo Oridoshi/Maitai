@@ -1,15 +1,91 @@
-import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import PopUpPlanning from '../components/PopUpPlanning';
+import { cheminPHP } from '../components/VarGlobal.js'; 
+import React, { useState, useEffect } from 'react';
+
 
 export default function Planning() {
 
 	const [modalOpen, setModalOpen] = useState(false);
+	const [data, setData] = useState({}); // Initialiser avec un tableau de 7 sous-tableaux vides
 
 	//sotck les droits de l'utilisateur
 	const droit = sessionStorage.getItem('droit');
 
-	// Retourne le numéro de la semaine actuelle
+
+
+	/** Use effect pour récupérer les données au début */
+	useEffect(() => {
+        const fetchData = async () => {
+            const dateActuelle = new Date();
+
+            const newData = {};
+            await Promise.all([...Array(7).keys()].map(async (i) => {
+                const date = new Date(dateActuelle);
+                date.setDate(dateActuelle.getDate() + i);
+
+                const matinData = await fetchDemandeData(formatDate(date), 1);
+                const soirData  = await fetchDemandeData(formatDate(date), 0);
+
+                newData[`${i}1`] = matinData;
+                newData[`${i}0`] = soirData;
+            }));
+
+            setData(newData);
+        };
+
+        fetchData();
+    }, []);
+
+
+	/**
+	 * Récupérer les dats d'une demi journée.
+	 * @param {*} date 
+	 * @param {*} pourMatin 
+	 * @returns 
+	 */
+	const fetchDemandeData = async (date, pourMatin) => {
+
+		try {
+			const formData = new FormData();
+
+			if (droit === "Client")
+				formData.append('date'     , sessionStorage.getItem('date'));
+
+
+			// Créer un objet FormData avec la date et pourMatin
+			formData.append('date'     , date     );
+			formData.append('pourMatin', pourMatin);
+			// formData.append('idUti'    , 4        );
+
+
+			const response = await fetch(cheminPHP + "demande/GetDemandes.php", {
+				method: 'POST',
+				body : formData
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des demandes.');
+			}
+
+			const data = await response.json();
+			console.log(data)
+			return data;
+
+		} catch (error) {
+			console.error('Erreur :', error);
+			return [];
+		}
+	};
+
+
+
+	
+	/**
+	 * Retourne le numéro de la semaine actuelle
+	 * @param {*} date 
+	 * @returns 
+	 */
 	function numeroSemaineActuelle(date) {
 		const joursPassesAnnee = (date - new Date(date.getFullYear(), 0, 1)) / 86400000;
 		const premierJourAnneeAjuste = (new Date(date.getFullYear(), 0, 1).getDay() + 6) % 7; // Ajustement du premier jour de l'année
@@ -20,7 +96,13 @@ export default function Planning() {
 		return numeroSemaine;
 	}
 
-	//retourne la date passe en parametre au format YYYY-MM-DD
+
+
+	/**
+	 * Retourne la date passe en parametre au format YYYY-MM-DD
+	 * @param {*} date 
+	 * @returns 
+	 */
 	function formatDate(date) {
 		const year = date.getFullYear();
 		const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
@@ -29,7 +111,12 @@ export default function Planning() {
 		return `${year}-${month}-${day}`;
 	}
 
-	//Affichage du planning en format de tableau
+
+
+	/**
+	 * Affichage du planning en format de tableau
+	 * @returns 
+	 */
 	function genererSemaine() {
 		// Stock le nom des jours et des mois
 		const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
@@ -42,9 +129,11 @@ export default function Planning() {
 		// Réorganise le tableau de jours, si on est mercredi il ira du mercredi au mardi
 		const joursSemaine = [...jours.slice(jourActuel - 1), ...jours.slice(0, jourActuel - 1)];
 
-		// Code HTML du tableau
+		console.log(data)
+		
+		/** Code HTML du tableau */
 		return (
-			<table className="tabSemaine">
+			<table className="tabSemaine mb-5">
 				<thead>
 					<tr>
 						{
@@ -68,27 +157,15 @@ export default function Planning() {
 						{
 							// Place chaque jour de la ligne du Matin
 							joursSemaine.map((jour, index) => {
-								const dateJour = new Date(dateActuelle);
-								dateJour.setDate(dateActuelle.getDate() + index);
-
-								return (
-									//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
-									<td key={index} onClick={() => ouvrirPlanning(dateJour,1)}> </td>
-								);
+								return genererJour(dateActuelle, index, 1)
 							})
 						}
-					</tr>
+						</tr>
 					<tr>
 						{
 							// Place chaque jour de la ligne du Soir
 							joursSemaine.map((jour, index) => {
-								const dateJour = new Date(dateActuelle);
-								dateJour.setDate(dateActuelle.getDate() + index);
-
-								return (
-									//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
-									<td key={index} onClick={() => ouvrirPlanning(dateJour,0)}> </td>
-								);
+								return genererJour(dateActuelle, index, 0)
 							})
 						}
 					</tr>
@@ -97,7 +174,45 @@ export default function Planning() {
 		);
 	}
 
-	//ouvrir planning
+
+	/**
+	 * Generer le jour
+	 * @param {*} dateActuelle 
+	 * @param {*} index 
+	 * @param {*} matinOuSoir 
+	 * @returns 
+	 */
+	function genererJour(dateActuelle, index, matinOuSoir)
+	{
+		const dateJour = new Date(dateActuelle);
+		dateJour.setDate(dateActuelle.getDate() + index);
+
+		const obj = data[ "" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
+
+		let qa = 0; // Déclaration de qa en dehors du retour de la fonction
+
+		for (let key in obj) 
+			qa += parseInt(obj[key].qa); // Concaténation des valeurs de qa
+		
+		return (
+			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
+			
+			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: '#DAE9EA'} : {}}> 
+				<div className="rotate"> 
+					{qa !== 0 && qa} {/* Affiche qa seulement si il n'est pas égal à 0 */}
+
+				</div>
+			</td>
+		);
+	}
+
+
+
+	/**
+	 * ouvrir planning
+	 * @param {*} date 
+	 * @param {*} horaire 
+	 */
 	function ouvrirPlanning(date,horaire)
 	{
 		//stock la date et l'horaire selectionne
@@ -117,7 +232,7 @@ export default function Planning() {
 		}
 	}
 
-	//code html de la page de planning
+	/** Code html de la page de planning */
 	return (
 		<div>
 			<h1 className="titre">Planning semaine {numeroSemaineActuelle(new Date())}</h1>

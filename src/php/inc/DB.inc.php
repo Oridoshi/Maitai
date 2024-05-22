@@ -14,16 +14,16 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	// private static string $dbName   = "maitai";
-	// private static string $login    = "Admin";
-	// private static string $password = "maitai";
-	// private static string $host     = "localhost";
+	private static string $dbName   = "maitai";
+	private static string $login    = "Admin";
+	private static string $password = "maitai";
+	private static string $host     = "localhost";
 
 
-	private static string $dbName   = "if0_36460769_maitai";
-	private static string $login    = "if0_36460769";
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $host     = "sql211.infinityfree.com";
+	// private static string $dbName   = "if0_36460769_maitai";
+	// private static string $login    = "if0_36460769";
+	// private static string $password = "Sc4ZKSO8sanWyvz";
+	// private static string $host     = "sql211.infinityfree.com";
 
 
 	private static string $port     = "3306";
@@ -677,7 +677,7 @@ class DB {
 	 * @param bool $pourMatin matin ou après-midi
 	 */
 	public function getDemandes($date, $pourMatin) {
-		$requete = "SELECT u.login, SUM(qa), MIN(valide) FROM Demande d JOIN Utilisateur u ON d.idUti = u.idUti WHERE date = ? AND pourMatin = ? GROUP BY login";
+		$requete = "SELECT u.login, SUM(qa) as \"qa\", MIN(valider) FROM Demande d JOIN Utilisateur u ON d.idUti = u.idUti WHERE date = ? AND pourMatin = ? GROUP BY login";
 		$tparam = array($date, $pourMatin);
 		return $this->execQuery($requete, $tparam, 'Demande');
 	}
@@ -689,7 +689,7 @@ class DB {
 	 * @param int $idUti id de l'utilisateur
 	 */
 	public function getDemandesUti($date, $pourMatin, $idUti) {
-		$requete = "SELECT p.idProd, p.libProd, p.categorie, d.qa FROM Demanded d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? AND idUti = ?";
+		$requete = "SELECT p.idProd, p.libProd, p.categorie, d.qa FROM Demande d JOIN Produit p ON d.idprod = p.idProd WHERE date = ? AND pourMatin = ? AND idUti = ?";
 		$tparam = array($date, $pourMatin, $idUti);
 		return $this->execQuery($requete, $tparam, 'Demande');
 	}
