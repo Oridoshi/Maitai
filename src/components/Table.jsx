@@ -470,7 +470,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 		<div className='m-4'>
 
 			<div className="panel" style={ { maxHeight: '50vh', overflowY: 'auto' } }>
-				<table className='tableau table table-hover my-0'>
+				<table className='tableau table my-0'>
 					<thead className='position-sticky top-0'>
 						<tr>
 							{ header.map(column => (

@@ -15,8 +15,8 @@
 	padding-top: 20px;
 	padding-bottom: 20px;
 
-	background-color: #F2EEEB!important;
-	color: #005C8F!important;
+	background-color: #F2EEEB !important;
+	color: #005C8F !important;
 
 	font-size: 30px;
 	font-weight: bolder;
@@ -32,8 +32,8 @@
 }
 
 .btnAnnuler {
-	background-color: #DD6565!important;
-	border-color:  #DD6565!important;
+	background-color: #DD6565 !important;
+	border-color: #DD6565 !important;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
@@ -45,8 +45,9 @@
 	background-color: rgb(176, 47, 47) !important;
 	color: #FFFFFF !important;
 }
+
 .btnSauvegarder {
-	background-color: #006DAA!important;
+	background-color: #006DAA !important;
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
@@ -58,22 +59,23 @@
 	color: #FFFFFF !important;
 }
 
-.btnExport{
-	background-color: #006DAA!important;
-	color: #FFFFFF!important;
+.btnExport {
+	background-color: #006DAA !important;
+	color: #FFFFFF !important;
 	font-weight: bolder;
 	border: 0px;
 	width: 200px;
 
 	background-image: url('../img/Export.svg');
 	background-size: 30px;
-	background-position:calc(95%);
+	background-position: calc(95%);
 	/* Décaler de 5px vers la gauche */
 	background-repeat: no-repeat;
 }
+
 .btnExport:hover,
 .btnExport:focus,
-.btnExport:active{
+.btnExport:active {
 	background-color: #005C8F !important;
 }
 
@@ -82,9 +84,9 @@
 }
 
 .barre {
-	background-color: #F2EEEB!important;
-	border-color: #006DAA!important;
-	border-width: 2px!important;
+	background-color: #F2EEEB !important;
+	border-color: #006DAA !important;
+	border-width: 2px !important;
 	border-radius: 15px !important;
 
 	background-image: url('../img/loupe.svg');
@@ -94,12 +96,12 @@
 	background-repeat: no-repeat;
 }
 
-.Modal{
+.Modal {
 	display: grid;
-	grid-template-columns:60% 40%;
+	grid-template-columns: 60% 40%;
 }
 
-.saisieprix{
+.saisieprix {
 	margin-top: 5px;
 	background-color: #F2EEEB;
 	border: solid #006DAA;
@@ -109,32 +111,128 @@
 	text-align: center;
 }
 
-.itemModal{
+.itemModal {
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
 
-.btnProd{
-	background-color: #006DAA!important;
+.btnProd {
+	background-color: #006DAA !important;
 	width: 223px;
 	border: 2px !important;
-	border-radius: 10px!important;
+	border-radius: 10px !important;
 }
+
 .btnProd:hover,
 .btnProd:active,
-.btnProd:focus{
-	background-color: #005C8F!important;
+.btnProd:focus {
+	background-color: #005C8F !important;
 }
-.lbl{
+
+.lbl {
 	align-self: center;
 	font-weight: bolder;
 	color: #949494;
 }
-.Error{
+
+.Error {
 	color: red;
 }
 
-input:read-only
-{
+
+
+.tabSemaine {
+	width: 85%;
+	table-layout: fixed;
+}
+
+.tabSemaine th {
+	background-color: #005C8F;
+	overflow: auto;
+	color: #FFFFFF;
+	text-align: center;
+	border: solid 1px #005C8F;
+	height: 50px;
+}
+
+.tabSemaine td {
+	border: solid 1px #006DAA;
+	height: 300px;
+	background-color: #ede4dd;
+	transition: background-color 0.3s ease;
+}
+
+.tabSemaine td:hover {
+	background-color: #d5cfca;
+}
+
+.legend {
+	margin-top: 50px;
+	margin-right: 10px;
+	height: 600px;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	justify-content: space-around;
+}
+
+.planning-container {
+	display: flex;
+	margin-left: 5%;
+	margin-top: 30px;
+}
+
+.itemlegend {
+	text-align: right;
+	color: #006DAA;
+}
+
+@media only screen and (max-width: 600px) {
+	.planning-container {
+		margin-top: 0px;
+		display: flex;
+		flex-direction: column;
+		gap: 40px;
+		height: 500px;
+	}
+
+	.legend {
+		align-self: flex-end;
+		margin-top: 0px;
+		margin-right: 15%;
+		height: 30px;
+		width: 55%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		justify-content: space-around;
+	}
+
+	.tabSemaine {
+		transform: rotate(-90deg);
+		transform-origin: left;
+		width: 600px;
+		margin-left: 48%;
+		margin-top: 400px;
+		display: grid;
+		direction: rtl;
+	}
+
+	.tabSemaine td {
+		height: 120px;
+		width: 65px;
+	}
+	.tabSemaine th {
+		width: 65px;
+		height: 80px;
+		font-size: 12px;
+	}
+	.rotate{
+		transform: rotate(90deg);
+	}
+}
+
+input:read-only {
 	background-color: #F2EEEB;
 }
