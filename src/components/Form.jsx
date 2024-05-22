@@ -135,7 +135,7 @@ const Log = ({ changeEtat }) =>
 	{
 		let val = event.target.value;
 		val = val.replace(' ', '-');
-		const loginRegex = /^[A-Za-z\d-]+$/;
+		const loginRegex = /^[A-Za-z\d\-àâäéèêëîïôöùûüç]+$/;
 		if (!loginRegex.test(val))
 		{
 			val = val.slice(0, -1);
@@ -300,7 +300,7 @@ const Creer = ({ changeEtat }) =>
 	{
 		let val = event.target.value;
 		val = val.replace(' ', '-');
-		const loginRegex = /^[A-Za-z\d-]+$/;
+		const loginRegex = /^[A-Za-z\d\-àâäéèêëîïôöùûüç]+$/;
 		if (!loginRegex.test(val))
 		{
 			val = val.slice(0, -1);
