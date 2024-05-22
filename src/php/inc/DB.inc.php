@@ -304,7 +304,7 @@ class DB {
 	 */
 	public function updateClient($client) {
 		$requete = 'UPDATE Utilisateur SET login = ?, email = ?, telephone = ?, present = ? WHERE iduti = ?';
-		$this->execQuery($requete,array($client->getLogin(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getidUti()),'Client');
+		$this->execQuery($requete,array($client->getLogin(),$client->getEmail(),$client->getTelephone(),$client->getPresent(),$client->getidUti()),'Utilisateur');
 	}
 
 	/** 

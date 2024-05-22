@@ -11,8 +11,8 @@ $client->setEmail($_POST['email']);
 $client->setTelephone($_POST['telephone']);
 $client->setActif(true);
 $client->setDroit("Client");
-$client->setMdp(password_hash($_POST['mdp'], PASSWORD_DEFAULT));
-$client->setPresent(false);
+$client->setMdp(isset($_POST['mdp'])?password_hash($_POST['mdp'], PASSWORD_DEFAULT):"");
+$client->setPresent(isset($_POST['present'])?$_POST['present']:true);
 
 // insertion de l'utilisateur dans la base de données
 $pdo->insertUtilisateur($client);
