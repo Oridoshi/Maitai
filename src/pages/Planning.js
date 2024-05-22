@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from 'react';
+import Modal from 'react-bootstrap/Modal';
+import PopUpPlanning from '../components/PopUpPlanning';
 
 export default function Planning() {
+
+	const [modalOpen, setModalOpen] = useState(false);
 
 	//sotck les droits de l'utilisateur
 	const droit = sessionStorage.getItem('droit');
@@ -109,7 +113,7 @@ export default function Planning() {
 		//ouvre la pop-up de réservation des clients
 		if(droit === 'Client')
 		{
-			console.log('pop-up ');
+			setModalOpen(true);
 		}
 	}
 
@@ -124,6 +128,9 @@ export default function Planning() {
 				</div>
 				{genererSemaine()}
 			</div>
+			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false);} }>
+				<PopUpPlanning/>
+			</Modal>
 		</div>
 	);
 }
