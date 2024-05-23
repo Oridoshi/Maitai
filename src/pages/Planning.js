@@ -10,6 +10,7 @@ export default function Planning() {
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [data, setData] = useState({}); // Initialiser les données
+	const [indexNav, setIndex] = useState({}); // Index de page pour l'admin
 
 	//sotck les droits de l'utilisateur
 	const droit = sessionStorage.getItem('droit');
@@ -56,7 +57,8 @@ export default function Planning() {
         const fetchData = async () => {
             const dateActuelle = new Date();
 
-            const newData = {};
+            const newData  = {};
+            const newIndex = {};
             await Promise.all([...Array(7).keys()].map(async (i) => {
                 const date = new Date(dateActuelle);
                 date.setDate(dateActuelle.getDate() + i);
@@ -66,9 +68,14 @@ export default function Planning() {
 
                 newData[`${i}1`] = matinData;
                 newData[`${i}0`] = soirData;
+
+				newIndex[`${i}1`] = 0;
+				newIndex[`${i}0`] = 0;
+
             }));
 
             setData(newData);
+			setIndex(newIndex);
         };
 
         fetchData();
@@ -277,28 +284,71 @@ export default function Planning() {
 
 		const obj = data[ "" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
 
-		const objVide = Object.keys(obj).length !== 0;
+		// Récupèrer dans objet l'objet a l'index correpondant
+		const objTaille = Object.keys(obj).length;
+		const indexObj = indexNav["" + index + matinOuSoir];
+
+		// Récupèrer dans objet l'objet a l'index correpondant
+		const cellContent = objTaille !== 0 && (
+			<div className='rotate d-flex justify-content-center align-items-center mx-2 text-center' style={{ height: '100%' }}>
+				{objTaille !== 1 && (
+				<button className="btn" onClick={(e) => { e.stopPropagation(); changerIndex(-1, "" + index + matinOuSoir); }}>
+					{"<"}
+				</button>
+				)}
+
+				<div>
+				{obj[indexObj]?.login} <br />
+				({obj[indexObj]?.qa} produits)
+				</div>
+
+				{objTaille !== 1 && (
+				<button className="btn" onClick={(e) => { e.stopPropagation(); changerIndex(1, "" + index + matinOuSoir); }}>
+					{">"}
+				</button>
+				)}
+			</div>
+		);
+
+
+
 
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
 			
-			{ Object.keys(obj).length !== 0 ? (
-					<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: '#B2DADD'} : {}}> 
-						<div className="rotate"> 
-							
-							
-
-						</div>
-					</td>
-
-				) : (
-					<td> </td>
-				)
-			}
+			<td key={index} style={objTaille === 0 ? {} : { background: '#B2DADD' }}  onClick={objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined}>
+				{cellContent && <div>{cellContent}</div>}
+			</td>
 		);
 	}
 
-	const [index, setIndex] = useState()
+
+	/**
+	 * Changer l'index
+	 * @param {*} delta 
+	 * @param {*} index 
+	 */
+	function changerIndex (delta, index)
+	{
+		let nouvIndex = indexNav[ "" + index] + delta;
+
+		const obj = data[ "" + index] || {}; // Provide a default empty object if undefined
+		let taille    = Object.keys(obj).length - 1; 
+
+		// On verifie si c'est trop grand ou trop bas
+		if (nouvIndex > taille) nouvIndex = 0;
+		if (nouvIndex <  0    ) nouvIndex = taille;
+
+		console.log("Taille", taille)
+		console.log("Index nom", index)
+		console.log("Delta", delta)
+		console.log("old index", indexNav[ "" + index])
+		console.log("Nou index", nouvIndex)
+
+
+		setIndex(prevIndex => ({ ...prevIndex, ["" + index]: nouvIndex }))
+	}
+
 
 
 
