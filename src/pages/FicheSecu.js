@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import nivEncadrant, { nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
+import {nivEncadrant, nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 
 
 function FicheSecu() {
-	// if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
+	if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
 
 
 
@@ -23,7 +23,8 @@ function FicheSecu() {
 	const [formDataObject   , setFormDataObject   ] = useState({});
 
 	const [idHis  , setIdHis  ] = useState();
-	// if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+	
+	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [nomFic  , setNomFic  ] = useState();
 
@@ -63,6 +64,7 @@ function FicheSecu() {
                 }
 
                 const datas = await response.json();
+				setGazOptions(datas)
             } catch (error) {
                 console.error(error);
             }
