@@ -96,5 +96,5 @@ CREATE TABLE Demande
 	date     DATE    NOT NULL,
 	pourMatin BOOLEAN NOT NULL,
 	valider  BOOLEAN DEFAULT 1,
-	PRIMARY KEY (idProd, idUti)
+	PRIMARY KEY (idProd, idUti, date, pourMatin)
 );
