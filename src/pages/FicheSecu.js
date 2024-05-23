@@ -46,7 +46,7 @@ function FicheSecu() {
 		return `${year}-${month}-${day}`;
 	}
 
-	const [gazOptions, setGazOptions] = useState([]);
+	const [gazOptions, setGazOptions] = useState({});
 
     useEffect(() => {
         async function fetchData() {
@@ -393,9 +393,10 @@ function FicheSecu() {
 		return (
 			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]}  onChange={() => handleChangeRea()}>
 				<option key={"Aire"}>{"Aire"}</option>
+				{ console.log (gazOptions)}
 				{gazOptions.map((niveau) => (
-					<option key={niveau}>{niveau}</option>
-				))}
+                    <option key={niveau.idprod} value={niveau.libprod}>{niveau.libprod}</option>
+                ))}
 			</select>
 		);
 	}
