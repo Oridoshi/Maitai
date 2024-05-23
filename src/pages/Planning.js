@@ -5,17 +5,54 @@ import React, { useState, useEffect } from 'react';
 
 
 export default function Planning() {
+	
+	if(sessionStorage.getItem('droit') !== 'Admin'&& sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [modalOpen, setModalOpen] = useState(false);
-	const [data, setData] = useState({}); // Initialiser avec un tableau de 7 sous-tableaux vides
+	const [data, setData] = useState({}); // Initialiser les données
 
 	//sotck les droits de l'utilisateur
 	const droit = sessionStorage.getItem('droit');
 
 
 
+
+	/*****************************************/
+	/* */
+	/*****************************************/
+
+
 	/** Use effect pour récupérer les données au début */
 	useEffect(() => {
+
+		// Récuperer l'id de l'utilisateur
+		const fetchIdUti = async () => {
+
+			const formData = new FormData();
+			formData.append('login', sessionStorage.getItem('login'));
+
+
+			const response = await fetch(cheminPHP + "client/GetIdClient.php", {
+				method: 'POST',
+				body : formData
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération des données des demandes.');
+			}
+
+			const data = await response.json();
+			return data;
+		}
+
+		let idUti;
+		if (droit === 'Client')
+			idUti = fetchIdUti();
+
+
+
+
+		// Récuperer les données de la semaines 
         const fetchData = async () => {
             const dateActuelle = new Date();
 
@@ -24,8 +61,8 @@ export default function Planning() {
                 const date = new Date(dateActuelle);
                 date.setDate(dateActuelle.getDate() + i);
 
-                const matinData = await fetchDemandeData(formatDate(date), 1);
-                const soirData  = await fetchDemandeData(formatDate(date), 0);
+                const matinData = await fetchDemandeData(formatDate(date), 1, idUti);
+                const soirData  = await fetchDemandeData(formatDate(date), 0, idUti);
 
                 newData[`${i}1`] = matinData;
                 newData[`${i}0`] = soirData;
@@ -35,7 +72,9 @@ export default function Planning() {
         };
 
         fetchData();
+
     }, []);
+
 
 
 	/**
@@ -44,19 +83,35 @@ export default function Planning() {
 	 * @param {*} pourMatin 
 	 * @returns 
 	 */
-	const fetchDemandeData = async (date, pourMatin) => {
+	const fetchDemandeData = async (date, pourMatin, idUti) => {
 
 		try {
 			const formData = new FormData();
 
 			if (droit === "Client")
-				formData.append('date'     , sessionStorage.getItem('date'));
+			{
+				const formDataBis = new FormData();
+				formDataBis.append('login', sessionStorage.getItem('login'));
+
+
+				const response = await fetch(cheminPHP + "client/GetIdClient.php", {
+					method: 'POST',
+					body : formDataBis
+				});
+
+				if (!response.ok) {
+					throw new Error('Erreur de réseau lors de la récupération des données des demandes.');
+				}
+
+				const idUti = await response.json();
+				formData.append('idUti', idUti)
+			}
+
 
 
 			// Créer un objet FormData avec la date et pourMatin
 			formData.append('date'     , date     );
 			formData.append('pourMatin', pourMatin);
-			formData.append('idUti'    , 4        );
 
 
 			const response = await fetch(cheminPHP + "demande/GetDemandes.php", {
@@ -69,6 +124,7 @@ export default function Planning() {
 			}
 
 			const data = await response.json();
+
 			return data;
 
 		} catch (error) {
@@ -154,7 +210,8 @@ export default function Planning() {
 						{
 							// Place chaque jour de la ligne du Matin
 							joursSemaine.map((jour, index) => {
-								return genererJour(dateActuelle, index, 1)
+								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 1)
+								else                   return genererDemiJourUti  (dateActuelle, index, 1)
 							})
 						}
 						</tr>
@@ -162,7 +219,8 @@ export default function Planning() {
 						{
 							// Place chaque jour de la ligne du Soir
 							joursSemaine.map((jour, index) => {
-								return genererJour(dateActuelle, index, 0)
+								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 0)
+								else                   return genererDemiJourUti  (dateActuelle, index, 0)
 							})
 						}
 					</tr>
@@ -173,13 +231,13 @@ export default function Planning() {
 
 
 	/**
-	 * Generer le jour
+	 * Generer la demi journée (vue utilisateur)
 	 * @param {*} dateActuelle 
 	 * @param {*} index 
 	 * @param {*} matinOuSoir 
 	 * @returns 
 	 */
-	function genererJour(dateActuelle, index, matinOuSoir)
+	function genererDemiJourUti(dateActuelle, index, matinOuSoir)
 	{
 		const dateJour = new Date(dateActuelle);
 		dateJour.setDate(dateActuelle.getDate() + index);
@@ -194,7 +252,7 @@ export default function Planning() {
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
 			
-			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: '#DAE9EA'} : {}}> 
+			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: '#B2DADD'} : {}}> 
 				<div className="rotate"> 
 					{qa !== 0 && qa + " Produit(s)"} {/* Affiche qa seulement si il n'est pas égal à 0 */}
 
@@ -202,6 +260,45 @@ export default function Planning() {
 			</td>
 		);
 	}
+
+
+
+	/**
+	 * Generer la demi journée (vue administrateur)
+	 * @param {*} dateActuelle 
+	 * @param {*} index 
+	 * @param {*} matinOuSoir 
+	 * @returns 
+	 */
+	function genererDemiJourAdmin(dateActuelle, index, matinOuSoir)
+	{
+		const dateJour = new Date(dateActuelle);
+		dateJour.setDate(dateActuelle.getDate() + index);
+
+		const obj = data[ "" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
+
+		const objVide = Object.keys(obj).length !== 0;
+
+		return (
+			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
+			
+			{ Object.keys(obj).length !== 0 ? (
+					<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: '#B2DADD'} : {}}> 
+						<div className="rotate"> 
+							
+							
+
+						</div>
+					</td>
+
+				) : (
+					<td> </td>
+				)
+			}
+		);
+	}
+
+	const [index, setIndex] = useState()
 
 
 
