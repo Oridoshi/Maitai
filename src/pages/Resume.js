@@ -187,7 +187,7 @@ export default function Resume(){
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre mt-1'>Resume des produits demande</h1>
+		<h1 className='titre mt-1'>Resume des produits demandés pour le {sessionStorage.getItem('pourMatin') == 1 ? 'matin' : 'soir'} du {sessionStorage.getItem('date')}</h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
