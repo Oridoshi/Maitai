@@ -92,7 +92,7 @@ CREATE TABLE Demande
 (
 	idProd   INTEGER REFERENCES Produit(idProd),
 	idUti    INTEGER REFERENCES Utilisateur(idUti),
-	qa       INTEGER NOT NULL CHECK (qa >0),
+	qa       INTEGER NOT NULL CHECK (qa >= 0),
 	date     DATE    NOT NULL,
 	pourMatin BOOLEAN NOT NULL,
 	valider  BOOLEAN DEFAULT 1,

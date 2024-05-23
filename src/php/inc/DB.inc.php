@@ -570,7 +570,7 @@ class DB {
 	 * @return void
 	 */
 	public function setClientNonPresent() {
-		$requete = "UPDATE Utilisateur SET present = 0";
+		$requete = "UPDATE Utilisateur SET present = 0 WHERE iduti NOT IN (SELECT iduti FROM Ticket WHERE iduti = Utilisateur.iduti) AND droit = 'Client'";
 		$this->execMaj($requete, null);
 	}
 
