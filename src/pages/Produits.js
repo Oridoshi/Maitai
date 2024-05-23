@@ -115,6 +115,7 @@ export default function Produits(){
 			const newData = await fetchProduitData();
 			setInitialData(newData);
 			setFilterData(newData);
+
 			await fetchCategData();
 
 			return data === ""; // Retourne true si la suppression a réussi, sinon false
@@ -123,7 +124,6 @@ export default function Produits(){
 			return false; // Retourne false en cas d'erreur
 		}
 
-		// TODO : Regenerer les data avec un fetch
 	};
 
 

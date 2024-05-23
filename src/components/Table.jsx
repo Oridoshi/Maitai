@@ -291,21 +291,11 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 		{
 			const oldRowData = datas.find(item => item.id + "" === id);
 
-			const updatedData = datas.map(item =>
-			{
-				if (item.id + "" === id)
-				{
-					return { ...item, ...updatedRowData };
-				}
-				return item;
-			});
-
 			// Appel de funUpdate
 			const updateSuccess = await funUpdate(updatedRowData, oldRowData);
 
 			if (updateSuccess)
 			{
-				setTableData(updatedData);
 				setModalIsOpen(false);
 			} else
 			{
@@ -319,8 +309,6 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 			if (insertSuccess)
 			{
-				updatedRowData.id = Math.max(...datas.map(item => item.id), 0) + 1;
-				setTableData(prevData => [...prevData, updatedRowData]);
 				setModalIsOpen(false);
 			} else
 			{
