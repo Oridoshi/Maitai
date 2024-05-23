@@ -63,6 +63,7 @@ function FicheSecu() {
                 }
 
                 const datas = await response.json();
+				setGazOptions(datas)
             } catch (error) {
                 console.error(error);
             }
