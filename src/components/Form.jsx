@@ -827,7 +827,7 @@ const funInsert = async (mdp) => {
 		const formData = new FormData();
 		formData.append('login', sessionStorage.getItem('login'));
 		formData.append('mdp',mdp);
-		formData.append('email', sessionStorage.getItem('mail'));	
+		formData.append('email', sessionStorage.getItem('mail'));
 		formData.append('tel',tel);
 
 		const requestOptions = {

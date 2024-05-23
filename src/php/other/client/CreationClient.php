@@ -15,4 +15,4 @@ $client->setMdp(isset($_POST['mdp'])?password_hash($_POST['mdp'], PASSWORD_DEFAU
 $client->setPresent(isset($_POST['present'])?$_POST['present']:true);
 
 // insertion de l'utilisateur dans la base de données
-$pdo->insertUtilisateur($client);
+$pdo->insertClient($client);
