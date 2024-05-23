@@ -3,7 +3,7 @@ import {nivEncadrant, nivGeneral,nivDP, nivSecu, cheminPHP } from '../components
 
 
 function FicheSecu() {
-	// if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
+	if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
 
 
 
