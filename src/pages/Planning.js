@@ -255,13 +255,16 @@ export default function Planning() {
 
 		for (let key in obj) 
 			qa += parseInt(obj[key].qa); // Concaténation des valeurs de qa
+
+
+		const color = matinOuSoir === 0 ? '#B2DADD' :'#DAE9EA';
 		
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
 			
-			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: '#B2DADD'} : {}}> 
+			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: color} : {}}> 
 				<div className="rotate"> 
-					{qa !== 0 && qa + " Produit(s)"} {/* Affiche qa seulement si il n'est pas égal à 0 */}
+					{qa !== 0 && "(" + qa + " produit.s)"} {/* Affiche qa seulement si il n'est pas égal à 0 */}
 
 				</div>
 			</td>
@@ -287,6 +290,7 @@ export default function Planning() {
 		// Récupèrer dans objet l'objet a l'index correpondant
 		const objTaille = Object.keys(obj).length;
 		const indexObj = indexNav["" + index + matinOuSoir];
+		const color = matinOuSoir === 0 ? '#B2DADD' :'#DAE9EA';
 
 		// Récupèrer dans objet l'objet a l'index correpondant
 		const cellContent = objTaille !== 0 && (
@@ -299,7 +303,7 @@ export default function Planning() {
 
 				<div>
 				{obj[indexObj]?.login} <br />
-				({obj[indexObj]?.qa} produits)
+				({obj[indexObj]?.qa} produit.s)
 				</div>
 
 				{objTaille !== 1 && (
@@ -316,7 +320,7 @@ export default function Planning() {
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
 			
-			<td key={index} style={objTaille === 0 ? {} : { background: '#B2DADD' }}  onClick={objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined}>
+			<td key={index} style={objTaille === 0 ? {} : { background: color }}  onClick={objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined}>
 				{cellContent && <div>{cellContent}</div>}
 			</td>
 		);
