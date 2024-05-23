@@ -1,3 +1,8 @@
+-- Suppression des table Fantome
+DROP TABLE IF EXISTS UtilisateurDroit;
+DROP TABLE IF EXISTS Client          ;
+DROP TABLE IF EXISTS Droit           ;
+
 -- Suppression des tables de premier niveau de liaison
 DROP TABLE IF EXISTS UtilisateurDroit;
 DROP TABLE IF EXISTS Historique      ;

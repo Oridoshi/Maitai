@@ -570,7 +570,7 @@ class DB {
 	 * @return void
 	 */
 	public function setClientNonPresent() {
-		$requete = "UPDATE Client SET present = 0";
+		$requete = "UPDATE Utilisateur SET present = 0";
 		$this->execMaj($requete, null);
 	}
 
