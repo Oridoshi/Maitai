@@ -13,7 +13,7 @@ $pdo = DB::getInstance();
 $utilisateur = $pdo->getUtilisateurByLogin($login);
 
 // vérification si l'utilisateur est le dernier admin actif
-if($utilisateur->getDroit() === "Admin" && $pdo->getNbAdminActif() == 1)
+if($utilisateur->getDroit() === "Admin" && $pdo->getNbAdminActif() == 1 && $utilisateur->getActif() == 1)
 	die("SQLSTATE[45000] : erreur perso : 5552 Vous ne pouvez pas supprimer le dernier administrateur ! in C:");
 
 // Suppression de l'utilisateur
