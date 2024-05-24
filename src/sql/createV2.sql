@@ -49,11 +49,11 @@ INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addr
 CREATE TABLE Produit
 (
 	idProd    INTEGER       PRIMARY KEY,
-	ref       VARCHAR(255)  NOT NULL   ,
-	libProd   VARCHAR(255)  NOT NULL   ,
+	ref       VARCHAR( 50)  NOT NULL   ,
+	libProd   VARCHAR(100)  NOT NULL   ,
 	prixUni   DECIMAL(12,2)            ,
 	prixUniHT DECIMAL(12,2)            ,
-	categorie VARCHAR(30)   NOT NULL
+	categorie VARCHAR(100)   NOT NULL
 );
 
 
