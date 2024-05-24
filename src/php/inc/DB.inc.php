@@ -685,7 +685,7 @@ class DB {
 	 * @param bool $pourMatin matin ou après-midi
 	 */
 	public function insertDemande($idProd, $idUti, $qa, $date, $pourMatin) {
-		$requete = "INSERT INTO Demande (idProd, idUti, qa, date, pourMatin, valide) VALUES (?, ?, ?, ?, ?, ?)";
+		$requete = "INSERT INTO Demande (idProd, idUti, qa, date, pourMatin, valider) VALUES (?, ?, ?, ?, ?, ?)";
 		$tparam = array($idProd, $idUti, $qa, $date, $pourMatin, false);
 		$this->execMaj($requete, $tparam);
 	}
@@ -699,8 +699,8 @@ class DB {
 	 * @param bool $pourMatin matin ou après-midi
 	 */
 	public function updateDemande($idProd, $idUti, $qa, $date, $pourMatin) {
-		$requete = "UPDATE Demande SET qa = ?, date = ?, pourMatin = ? WHERE idProd = ? AND idUti = ?";
-		$tparam = array($qa, $date, $pourMatin, $idProd, $idUti);
+		$requete = "UPDATE Demande SET qa = ?, valider = false WHERE idProd = ? AND idUti = ? AND date = ? AND pourMatin = ?";
+		$tparam = array($qa, $idProd, $idUti, $date, $pourMatin);
 		$this->execMaj($requete, $tparam);
 	}
 
@@ -750,9 +750,9 @@ class DB {
 	 * @param int $idProd id du produit
 	 * @param int $idUti id de l'utilisateur
 	 */
-	public function suppDemande($idProd, $idUti) {
-		$requete = "DELETE FROM Demande WHERE idProd = ? AND idUti = ?";
-		$tparam = array($idProd, $idUti);
+	public function suppDemande($idProd, $idUti, $date, $pourMatin) {
+		$requete = "DELETE FROM Demande WHERE idProd = ? AND idUti = ? AND date = ? AND pourMatin = ?";
+		$tparam = array($idProd, $idUti, $date, $pourMatin);
 		$this->execMaj($requete, $tparam);
 	}
 } //fin classe DB
