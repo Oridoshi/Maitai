@@ -148,7 +148,7 @@ class DB {
 	 * @return int le nombre d'administrateurs actifs
 	 */
 	public function getNbAdminActif() {
-		$requete = 'SELECT COUNT(*) FROM Utilisateur, UtilisateurDroit WHERE Utilisateur.iduti = UtilisateurDroit.iduti AND Utilisateur.actif = 1 AND UtilisateurDroit.idDroit = 1';
+		$requete = 'SELECT COUNT(*) FROM Utilisateur WHERE Utilisateur.droit = "Admin" AND Utilisateur.actif = 1';
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_ASSOC);

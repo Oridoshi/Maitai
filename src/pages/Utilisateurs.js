@@ -64,7 +64,7 @@ function Utilisateur() {
 
 	const initialHeader = [
 		{ id: 'id'   , name: 'NB Ligne', type: 'number', required: true, editable: false, show: false },
-		{ id: 'login', name: 'Login', type: 'login', required: true, editable: true, show: true, maxLength: 30 },
+		{ id: 'login', name: 'Login', type: 'login', required: true, editable: true, show: true, maxLength: 20 },
 		{ id: 'mdp'  , name: 'Mots de passe', type: 'text', required: true, editable: false, show: false },
 		{ id: 'email', name: 'Adresse email', type: 'email', required: true, editable: true, show: true, maxLength: 60 },
 		{ id: 'droit', name: 'Droit', type: 'list', required: true, editable: true, show: true, options: libDroit },

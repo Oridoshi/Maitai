@@ -10,7 +10,6 @@ $login = $_POST['login'];
 
 $pdo = DB::getInstance();
 
-$idDroitAdmin = 1;
 $utilisateur = $pdo->getUtilisateurByLogin($login);
 
 // vérification si l'utilisateur est le dernier admin actif

@@ -47,7 +47,7 @@ function Client() {
 	// En-tête de la table
 	const initialHeader = [
 		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false                     },
-		{ id: 'login'    , name: 'Nom du Club'          , type:'login'   , required : true , editable : true , show : true, maxLength : 30      },
+		{ id: 'login'    , name: 'Nom du Club'          , type:'login'   , required : true , editable : true , show : true, maxLength : 20      },
 		{ id: 'telephone', name: 'Numero de téléphone'  , type:'tel'     , required : true , editable : true , show : true                      },
 		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true, maxLength : 60      },
 		{ id: 'btnHisto' , name: 'Historique'           , type:'button'  , required : true , editable : false, show : true, function : funHisto, btn : 'Historique', className:'btnSauvegarder'},
