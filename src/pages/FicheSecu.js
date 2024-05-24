@@ -1028,22 +1028,22 @@ function FicheSecu() {
 
 				
 				// Certain navigateur accepteront la couleur, donc on détermine les encadrant comme ca
-				try 
-				{
-					setEncadre(prevState => ({
-						...prevState,
-						[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
-					}));
-				} catch (error) { //Sinon on calcule juste avec les conditions
+				// try 
+				// {
+					// setEncadre(prevState => ({
+					// 	...prevState,
+					// 	[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
+					// }));
+				// } catch (error) { //Sinon on calcule juste avec les conditions
 
-					setEncadre(prevState => ({
-						...prevState,
-						[index + 1]: ( oldData["p" + (index+1) + "type"] === "tech")       || 
-						             ( oldData["p" + (index+1) + "Bniv"] === "N1-PE20"     || oldData["p" + (index+1) + "Cniv"] === "N1-PE20") || //Pas la peine de verifier A, car ca serait lui l'intervenant
-									 ((oldData["p" + (index+1) + "Bniv"] === "N2-PA20PE40" || oldData["p" + (index+1) + "Cniv"] === "N2-PA20PE40") && oldData["p" + (index+1) +"prof"] > 20)
-					}));
+				setEncadre(prevState => ({
+					...prevState,
+					[index + 1]: ( oldData["p" + (index+1) + "type"] === "tech")       || 
+									( oldData["p" + (index+1) + "Bniv"] === "N1-PE20"     || oldData["p" + (index+1) + "Cniv"] === "N1-PE20") || //Pas la peine de verifier A, car ca serait lui l'intervenant
+									((oldData["p" + (index+1) + "Bniv"] === "N2-PA20PE40" || oldData["p" + (index+1) + "Cniv"] === "N2-PA20PE40") && oldData["p" + (index+1) +"prof"] > 20)
+				}));
 
-				}
+				// }
 			})
 
 			setFormDataObject(oldData)
