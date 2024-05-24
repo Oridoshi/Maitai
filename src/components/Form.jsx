@@ -310,7 +310,7 @@ const Creer = ({ changeEtat }) =>
 	const regexMail = (event) =>
 	{
 		let mailVal = event.target.value;
-		const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+		const regex = /^[a-zA-Z0-9@\.\-]+$/;
 		if (!regex.test(mailVal))
 		{
 			mailVal = mailVal.slice(0, -1);
@@ -391,7 +391,7 @@ const Mail = ({ changeEtat }) =>
 	const regexMail = (event) =>
 	{
 		let mailVal = event.target.value;
-		const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+		const regex = /^[a-zA-Z0-9@\.\-]+$/;
 		if (!regex.test(mailVal))
 		{
 			mailVal = mailVal.slice(0, -1);
