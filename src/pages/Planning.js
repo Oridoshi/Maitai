@@ -391,8 +391,8 @@ export default function Planning() {
 				</div>
 				{genererSemaine()}
 			</div>
-			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false);} }>
-				<PopUpPlanning/>
+			<Modal  show={ modalOpen } onHide={ () => { setModalOpen(false);} }>
+				<PopUpPlanning />
 			</Modal>
 		</div>
 	);

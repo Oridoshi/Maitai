@@ -357,6 +357,15 @@ class DB {
 		return $this->execQuery($requete,array($idProd),'Produit')[0];
 	}
 
+	/** Récuperer un produit en fonction de sa référence.
+	 * @param string $ref la référence du produit à récupérer
+	 * @return Produit le produit récupéré
+	 */
+	public function getProduitByRef($ref) {
+		$requete = 'SELECT * FROM Produit WHERE ref = ?';
+		return $this->execQuery($requete,array($ref),'Produit')[0];
+	}
+
 	/** Récuperer toute les catégories de produits. 
 	 * @return array tableau d'objets de la classe Produit
 	 */
