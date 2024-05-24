@@ -836,7 +836,7 @@ const funInsert = async (mdp) => {
 			body: formData
 		};
 
-		const response = await fetch(cheminPHP + "utilisateur/CreationUtilisateur.php", requestOptions);
+		const response = await fetch(cheminPHP + "client/CreationClient.php", requestOptions);
 
 
 		if (!response.ok) {

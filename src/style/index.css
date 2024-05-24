@@ -38,6 +38,7 @@
 	font-weight: bolder;
 	border: 0px;
 	margin-right: 20px;
+	transition: background-color 0.3s ease;
 }
 
 .btnAnnuler:hover,
@@ -51,6 +52,7 @@
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
+	transition: background-color 0.3s ease;
 }
 
 .btnSauvegarder:hover,
@@ -71,6 +73,7 @@
 	background-position: calc(95%);
 	/* Décaler de 5px vers la gauche */
 	background-repeat: no-repeat;
+	transition: background-color 0.3s ease;
 }
 
 .btnExport:hover,
@@ -121,6 +124,7 @@
 	width: 223px;
 	border: 2px !important;
 	border-radius: 10px !important;
+	transition: background-color 0.3s ease;
 }
 
 .btnProd:hover,
@@ -138,8 +142,6 @@
 .Error {
 	color: red;
 }
-
-
 
 .tabSemaine {
 	width: 85%;
@@ -232,7 +234,6 @@
 		transform: rotate(90deg);
 	}
 }
-
 input:read-only {
 	background-color: #F2EEEB;
 }
