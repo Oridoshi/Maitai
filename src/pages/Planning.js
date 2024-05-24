@@ -1,16 +1,18 @@
 import Modal from 'react-bootstrap/Modal';
 import PopUpPlanning from '../components/PopUpPlanning';
-import { cheminPHP } from '../components/VarGlobal.js'; 
+import { cheminPHP } from '../components/VarGlobal.js';
 import React, { useState, useEffect } from 'react';
 
 
-export default function Planning() {
-	
-	if(sessionStorage.getItem('droit') !== 'Admin'&& sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+export default function Planning()
+{
+
+	if (sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [modalOpen, setModalOpen] = useState(false);
 	const [data, setData] = useState({}); // Initialiser les données
 	const [indexNav, setIndex] = useState({}); // Index de page pour l'admin
+	const [tabProd, setTabProd] = useState();
 
 	//sotck les droits de l'utilisateur
 	const droit = sessionStorage.getItem('droit');
@@ -24,10 +26,12 @@ export default function Planning() {
 
 
 	/** Use effect pour récupérer les données au début */
-	useEffect(() => {
+	useEffect(() =>
+	{
 
 		// Récuperer l'id de l'utilisateur
-		const fetchIdUti = async () => {
+		const fetchIdUti = async () =>
+		{
 
 			const formData = new FormData();
 			formData.append('login', sessionStorage.getItem('login'));
@@ -35,10 +39,11 @@ export default function Planning() {
 
 			const response = await fetch(cheminPHP + "client/GetIdClient.php", {
 				method: 'POST',
-				body : formData
+				body: formData
 			});
 
-			if (!response.ok) {
+			if (!response.ok)
+			{
 				throw new Error('Erreur de réseau lors de la récupération des données des demandes.');
 			}
 
@@ -50,49 +55,48 @@ export default function Planning() {
 		if (droit === 'Client')
 			idUti = fetchIdUti();
 
+		// Récuperer les données de la semaines
+		const fetchData = async () =>
+		{
+			const dateActuelle = new Date();
 
+			const newData = {};
+			const newIndex = {};
+			await Promise.all([...Array(7).keys()].map(async (i) =>
+			{
+				const date = new Date(dateActuelle);
+				date.setDate(dateActuelle.getDate() + i);
 
+				const matinData = await fetchDemandeData(formatDate(date), 1, idUti);
+				const soirData = await fetchDemandeData(formatDate(date), 0, idUti);
 
-		// Récuperer les données de la semaines 
-        const fetchData = async () => {
-            const dateActuelle = new Date();
+				newData[`${ i }1`] = matinData;
+				newData[`${ i }0`] = soirData;
 
-            const newData  = {};
-            const newIndex = {};
-            await Promise.all([...Array(7).keys()].map(async (i) => {
-                const date = new Date(dateActuelle);
-                date.setDate(dateActuelle.getDate() + i);
+				newIndex[`${ i }1`] = 0;
+				newIndex[`${ i }0`] = 0;
 
-                const matinData = await fetchDemandeData(formatDate(date), 1, idUti);
-                const soirData  = await fetchDemandeData(formatDate(date), 0, idUti);
+			}));
 
-                newData[`${i}1`] = matinData;
-                newData[`${i}0`] = soirData;
-
-				newIndex[`${i}1`] = 0;
-				newIndex[`${i}0`] = 0;
-
-            }));
-
-            setData(newData);
+			setData(newData);
 			setIndex(newIndex);
-        };
+		};
 
-        fetchData();
-
-    }, []);
-
+		fetchData();
+	}, [modalOpen]);
 
 
 	/**
 	 * Récupérer les dats d'une demi journée.
-	 * @param {*} date 
-	 * @param {*} pourMatin 
-	 * @returns 
+	 * @param {*} date
+	 * @param {*} pourMatin
+	 * @returns
 	 */
-	const fetchDemandeData = async (date, pourMatin, idUti) => {
+	const fetchDemandeData = async (date, pourMatin, idUti) =>
+	{
 
-		try {
+		try
+		{
 			const formData = new FormData();
 
 			if (droit === "Client")
@@ -103,10 +107,11 @@ export default function Planning() {
 
 				const response = await fetch(cheminPHP + "client/GetIdClient.php", {
 					method: 'POST',
-					body : formDataBis
+					body: formDataBis
 				});
 
-				if (!response.ok) {
+				if (!response.ok)
+				{
 					throw new Error('Erreur de réseau lors de la récupération des données des demandes.');
 				}
 
@@ -117,16 +122,17 @@ export default function Planning() {
 
 
 			// Créer un objet FormData avec la date et pourMatin
-			formData.append('date'     , date     );
+			formData.append('date', date);
 			formData.append('pourMatin', pourMatin);
 
 
 			const response = await fetch(cheminPHP + "demande/GetDemandes.php", {
 				method: 'POST',
-				body : formData
+				body: formData
 			});
 
-			if (!response.ok) {
+			if (!response.ok)
+			{
 				throw new Error('Erreur de réseau lors de la récupération des données des demandes.');
 			}
 
@@ -134,7 +140,8 @@ export default function Planning() {
 
 			return data;
 
-		} catch (error) {
+		} catch (error)
+		{
 			console.error('Erreur :', error);
 			return [];
 		}
@@ -142,13 +149,14 @@ export default function Planning() {
 
 
 
-	
+
 	/**
 	 * Retourne le numéro de la semaine actuelle
-	 * @param {*} date 
-	 * @returns 
+	 * @param {*} date
+	 * @returns
 	 */
-	function numeroSemaineActuelle(date) {
+	function numeroSemaineActuelle(date)
+	{
 		const joursPassesAnnee = (date - new Date(date.getFullYear(), 0, 1)) / 86400000;
 		const premierJourAnneeAjuste = (new Date(date.getFullYear(), 0, 1).getDay() + 6) % 7; // Ajustement du premier jour de l'année
 
@@ -162,24 +170,26 @@ export default function Planning() {
 
 	/**
 	 * Retourne la date passe en parametre au format YYYY-MM-DD
-	 * @param {*} date 
-	 * @returns 
+	 * @param {*} date
+	 * @returns
 	 */
-	function formatDate(date) {
+	function formatDate(date)
+	{
 		const year = date.getFullYear();
 		const month = String(date.getMonth() + 1).padStart(2, '0'); // Les mois sont indexés à partir de 0
 		const day = String(date.getDate()).padStart(2, '0');
 
-		return `${year}-${month}-${day}`;
+		return `${ year }-${ month }-${ day }`;
 	}
 
 
 
 	/**
 	 * Affichage du planning en format de tableau
-	 * @returns 
+	 * @returns
 	 */
-	function genererSemaine() {
+	function genererSemaine()
+	{
 		// Stock le nom des jours et des mois
 		const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 		const mois = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
@@ -198,14 +208,15 @@ export default function Planning() {
 					<tr>
 						{
 							// Place chaque jour de la semaine en entête de colonne
-							joursSemaine.map((jour, index) => {
+							joursSemaine.map((jour, index) =>
+							{
 								// Crée une nouvelle date basée sur la date actuelle et ajoute le nombre de jour qu'on a iterre
 								const dateJour = new Date(dateActuelle);
 								dateJour.setDate(dateActuelle.getDate() + index);
 
 								return (
-									<th key={index}>
-										<div className="rotate">{jour + " "}{dateJour.getDate() + " "}{mois[dateJour.getMonth()]}</div>
+									<th key={ index }>
+										<div className="rotate">{ jour + " " }{ dateJour.getDate() + " " }{ mois[dateJour.getMonth()] }</div>
 									</th>
 								);
 							})
@@ -216,18 +227,20 @@ export default function Planning() {
 					<tr>
 						{
 							// Place chaque jour de la ligne du Matin
-							joursSemaine.map((jour, index) => {
+							joursSemaine.map((jour, index) =>
+							{
 								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 1)
-								else                   return genererDemiJourUti  (dateActuelle, index, 1)
+								else return genererDemiJourUti(dateActuelle, index, 1)
 							})
 						}
-						</tr>
+					</tr>
 					<tr>
 						{
 							// Place chaque jour de la ligne du Soir
-							joursSemaine.map((jour, index) => {
+							joursSemaine.map((jour, index) =>
+							{
 								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 0)
-								else                   return genererDemiJourUti  (dateActuelle, index, 0)
+								else return genererDemiJourUti(dateActuelle, index, 0)
 							})
 						}
 					</tr>
@@ -239,32 +252,32 @@ export default function Planning() {
 
 	/**
 	 * Generer la demi journée (vue utilisateur)
-	 * @param {*} dateActuelle 
-	 * @param {*} index 
-	 * @param {*} matinOuSoir 
-	 * @returns 
+	 * @param {*} dateActuelle
+	 * @param {*} index
+	 * @param {*} matinOuSoir
+	 * @returns
 	 */
 	function genererDemiJourUti(dateActuelle, index, matinOuSoir)
 	{
 		const dateJour = new Date(dateActuelle);
 		dateJour.setDate(dateActuelle.getDate() + index);
 
-		const obj = data[ "" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
+		const obj = data["" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
 
 		let qa = 0; // Déclaration de qa en dehors du retour de la fonction
 
-		for (let key in obj) 
+		for (let key in obj)
 			qa += parseInt(obj[key].qa); // Concaténation des valeurs de qa
 
 
-		const color = matinOuSoir === 0 ? '#B2DADD' :'#DAE9EA';
-		
+		const color = matinOuSoir === 0 ? '#B2DADD' : '#DAE9EA';
+
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
-			
-			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir)} className={'text-center'} style={Object.keys(obj).length !== 0 ? {background: color} : {}}> 
-				<div className="rotate"> 
-					{qa !== 0 && "(" + qa + " produit.s)"} {/* Affiche qa seulement si il n'est pas égal à 0 */}
+
+			<td key={ index } onClick={ () => ouvrirPlanning(dateJour, matinOuSoir, index) } className={ 'text-center' } style={ Object.keys(obj).length !== 0 ? { background: color } : {} }>
+				<div className="rotate">
+					{ qa !== 0 && "(" + qa + " produit.s)" } {/* Affiche qa seulement si il n'est pas égal à 0 */ }
 
 				</div>
 			</td>
@@ -275,42 +288,42 @@ export default function Planning() {
 
 	/**
 	 * Generer la demi journée (vue administrateur)
-	 * @param {*} dateActuelle 
-	 * @param {*} index 
-	 * @param {*} matinOuSoir 
-	 * @returns 
+	 * @param {*} dateActuelle
+	 * @param {*} index
+	 * @param {*} matinOuSoir
+	 * @returns
 	 */
 	function genererDemiJourAdmin(dateActuelle, index, matinOuSoir)
 	{
 		const dateJour = new Date(dateActuelle);
 		dateJour.setDate(dateActuelle.getDate() + index);
 
-		const obj = data[ "" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
+		const obj = data["" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
 
 		// Récupèrer dans objet l'objet a l'index correpondant
 		const objTaille = Object.keys(obj).length;
 		const indexObj = indexNav["" + index + matinOuSoir];
-		const color = matinOuSoir === 0 ? '#B2DADD' :'#DAE9EA';
+		const color = matinOuSoir === 0 ? '#B2DADD' : '#DAE9EA';
 
 		// Récupèrer dans objet l'objet a l'index correpondant
 		const cellContent = objTaille !== 0 && (
-			<div className='rotate d-flex justify-content-center align-items-center mx-2 text-center' style={{ height: '100%' }}>
-				{objTaille !== 1 && (
-				<button className="btn" onClick={(e) => { e.stopPropagation(); changerIndex(-1, "" + index + matinOuSoir); }}>
-					{"<"}
-				</button>
-				)}
+			<div className='rotate d-flex justify-content-center align-items-center mx-2 text-center' style={ { height: '100%' } }>
+				{ objTaille !== 1 && (
+					<button className="btn" onClick={ (e) => { e.stopPropagation(); changerIndex(-1, "" + index + matinOuSoir); } }>
+						{ "<" }
+					</button>
+				) }
 
 				<div>
-				{obj[indexObj]?.login} <br />
-				({obj[indexObj]?.qa} produit.s)
+					{ obj[indexObj]?.login } <br />
+					({ obj[indexObj]?.qa } produit.s)
 				</div>
 
-				{objTaille !== 1 && (
-				<button className="btn" onClick={(e) => { e.stopPropagation(); changerIndex(1, "" + index + matinOuSoir); }}>
-					{">"}
-				</button>
-				)}
+				{ objTaille !== 1 && (
+					<button className="btn" onClick={ (e) => { e.stopPropagation(); changerIndex(1, "" + index + matinOuSoir); } }>
+						{ ">" }
+					</button>
+				) }
 			</div>
 		);
 
@@ -319,9 +332,9 @@ export default function Planning() {
 
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
-			
-			<td key={index} style={objTaille === 0 ? {} : { background: color }}  onClick={objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined}>
-				{cellContent && <div>{cellContent}</div>}
+
+			<td key={ index } style={ objTaille === 0 ? {} : { background: color } } onClick={ objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined }>
+				{ cellContent && <div>{ cellContent }</div> }
 			</td>
 		);
 	}
@@ -329,24 +342,24 @@ export default function Planning() {
 
 	/**
 	 * Changer l'index
-	 * @param {*} delta 
-	 * @param {*} index 
+	 * @param {*} delta
+	 * @param {*} index
 	 */
-	function changerIndex (delta, index)
+	function changerIndex(delta, index)
 	{
-		let nouvIndex = indexNav[ "" + index] + delta;
+		let nouvIndex = indexNav["" + index] + delta;
 
-		const obj = data[ "" + index] || {}; // Provide a default empty object if undefined
-		let taille    = Object.keys(obj).length - 1; 
+		const obj = data["" + index] || {}; // Provide a default empty object if undefined
+		let taille = Object.keys(obj).length - 1;
 
 		// On verifie si c'est trop grand ou trop bas
 		if (nouvIndex > taille) nouvIndex = 0;
-		if (nouvIndex <  0    ) nouvIndex = taille;
+		if (nouvIndex < 0) nouvIndex = taille;
 
 		console.log("Taille", taille)
 		console.log("Index nom", index)
 		console.log("Delta", delta)
-		console.log("old index", indexNav[ "" + index])
+		console.log("old index", indexNav["" + index])
 		console.log("Nou index", nouvIndex)
 
 
@@ -358,24 +371,37 @@ export default function Planning() {
 
 	/**
 	 * ouvrir planning
-	 * @param {*} date 
-	 * @param {*} horaire 
-	 */
-	function ouvrirPlanning(date,horaire)
+	 * @param {*} date
+	 * @param {*} horaire
+	*/
+	async function ouvrirPlanning(date, horaire, index)
 	{
 		//stock la date et l'horaire selectionne
-		sessionStorage.setItem('date',formatDate(date));
-		sessionStorage.setItem('pourMatin',horaire);
+		sessionStorage.setItem('date', formatDate(date));
+		sessionStorage.setItem('pourMatin', horaire);
 
 		//ouvre la page de planning des admin
-		if(droit === 'Admin')
+		if (droit === 'Admin')
 		{
 			window.location.href = "/resume";
 		}
 
 		//ouvre la pop-up de réservation des clients
-		if(droit === 'Client')
+		if (droit === 'Client')
 		{
+			const tab = data[index + "" + horaire];
+			const newTabProd = [];
+			tab.forEach(elt =>
+			{
+				const prod = {
+					idprod: elt.idprod,
+					categorie: elt.categorie,
+					produit: elt.libprod,
+					quantite: elt.qa
+				};
+				newTabProd.push(prod);
+			});
+			setTabProd(newTabProd);
 			setModalOpen(true);
 		}
 	}
@@ -383,16 +409,16 @@ export default function Planning() {
 	/** Code html de la page de planning */
 	return (
 		<div>
-			<h1 className="titre">Planning semaine {numeroSemaineActuelle(new Date())}</h1>
+			<h1 className="titre">Planning semaine { numeroSemaineActuelle(new Date()) }</h1>
 			<div className='planning-container mb-5'>
 				<div className="legend">
 					<div className="itemlegend">Matin</div>
 					<div className="itemlegend">Soir</div>
 				</div>
-				{genererSemaine()}
+				{ genererSemaine() }
 			</div>
-			<Modal  show={ modalOpen } onHide={ () => { setModalOpen(false);} }>
-				<PopUpPlanning />
+			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); } }>
+				<PopUpPlanning tabProd={ tabProd } />
 			</Modal>
 		</div>
 	);
