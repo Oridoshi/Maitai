@@ -10,6 +10,9 @@ import Modal from 'react-bootstrap/Modal';
 
 export default function Ticket()
 {
+	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
+
+
 	//donnée tab
 	const [initialData, setInitialData] = useState([]);
 	const [tabCateg, setTabCateg] = useState([]);
