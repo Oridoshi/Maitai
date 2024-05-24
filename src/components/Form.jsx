@@ -135,7 +135,7 @@ const Log = ({ changeEtat }) =>
 	{
 		let val = event.target.value;
 		val = val.replace(' ', '-');
-		const loginRegex = /^[A-Za-z\d-]+$/;
+		const loginRegex = /^[A-Za-z\d\-àâäéèêëîïôöùûüç]+$/;
 		if (!loginRegex.test(val))
 		{
 			val = val.slice(0, -1);
@@ -300,7 +300,7 @@ const Creer = ({ changeEtat }) =>
 	{
 		let val = event.target.value;
 		val = val.replace(' ', '-');
-		const loginRegex = /^[A-Za-z\d-]+$/;
+		const loginRegex = /^[A-Za-z\d\-àâäéèêëîïôöùûüç]+$/;
 		if (!loginRegex.test(val))
 		{
 			val = val.slice(0, -1);
@@ -310,7 +310,7 @@ const Creer = ({ changeEtat }) =>
 	const regexMail = (event) =>
 	{
 		let mailVal = event.target.value;
-		const regex = /^[a-z0-9@.]+$/;
+		const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 		if (!regex.test(mailVal))
 		{
 			mailVal = mailVal.slice(0, -1);
@@ -391,7 +391,7 @@ const Mail = ({ changeEtat }) =>
 	const regexMail = (event) =>
 	{
 		let mailVal = event.target.value;
-		const regex = /^[a-z0-9@.]+$/;
+		const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 		if (!regex.test(mailVal))
 		{
 			mailVal = mailVal.slice(0, -1);
@@ -632,6 +632,7 @@ const loginExist = async (data) => {
 		}
 
 		const dat = await response.text();
+		console.log(dat);
 		return dat === "1";
 	} catch (error) {
 		console.log("erreur", error);
@@ -827,8 +828,6 @@ const funInsert = async (mdp) => {
 		formData.append('login', sessionStorage.getItem('login'));
 		formData.append('mdp',mdp);
 		formData.append('email', sessionStorage.getItem('mail'));
-		formData.append('actif',true);
-		formData.append('droit',3);
 		formData.append('tel',tel);
 
 		const requestOptions = {
@@ -894,6 +893,7 @@ const recupCode = async (mail, recup) =>
 		};
 
 		const response = await fetch(cheminPHP + "../SendMail.php", requestOptions);
+		// const response = await fetch("http://172.26.4.207/Maitai/src/php/SendMail.php", requestOptions);
 
 		if (!response.ok) {
 			throw new Error('Une erreur s\'est produite.');

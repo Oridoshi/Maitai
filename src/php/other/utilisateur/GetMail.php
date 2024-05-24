@@ -8,6 +8,6 @@ $login = $_POST['login'];
 
 $pdo = DB::getInstance();
 
-$uti = $pdo->getUtilisateur($login);
+$uti = $pdo->getUtilisateurByLogin($login);
 
 echo $uti->getEmail();

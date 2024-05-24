@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { nivEncadrant,nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
+import {nivEncadrant, nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 
 
 function FicheSecu() {
-	// if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
+	if(sessionStorage.getItem('droit') === ''   || sessionStorage.getItem('droit') === 'Maitai') window.location.href = '/';
 
 
 
@@ -23,7 +23,8 @@ function FicheSecu() {
 	const [formDataObject   , setFormDataObject   ] = useState({});
 
 	const [idHis  , setIdHis  ] = useState();
-	// if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+	
+	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 	const [nomFic  , setNomFic  ] = useState();
 
@@ -45,7 +46,7 @@ function FicheSecu() {
 		return `${year}-${month}-${day}`;
 	}
 
-	const [gazOptions, setGazOptions] = useState([]);
+	const [gazOptions, setGazOptions] = useState({});
 
     useEffect(() => {
         async function fetchData() {
@@ -63,6 +64,7 @@ function FicheSecu() {
                 }
 
                 const datas = await response.json();
+				setGazOptions(datas)
             } catch (error) {
                 console.error(error);
             }
@@ -110,7 +112,7 @@ function FicheSecu() {
 					<div className="col-sm-5 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="nomFic" className="me-2 fw-bold">Nom du fichier</label>
-							<input type="text" className="form-control" name='nomFic' id="club" required defaultValue={nomFic && nomFic}/>
+							<input type="text" className="form-control" name='nomFic' id="club" required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
 						</div>
 					</div>
 
@@ -155,7 +157,7 @@ function FicheSecu() {
 							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"    readOnly/>
 							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()} />
 							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau" placeholder="Niveau" defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau"                      defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()} />
 						</div>
 
 						<div className="d-flex align-items-center mt-3">
@@ -377,7 +379,7 @@ function FicheSecu() {
 
 					<div className='col-sm-6 mt-3'>
 						<label htmlFor={`remarque${num}`} className="me-2">Remarque</label>
-						<textarea type="textarea" required className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
+						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
 					</div>
 				</div>
 
@@ -391,9 +393,10 @@ function FicheSecu() {
 		return (
 			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]}  onChange={() => handleChangeRea()}>
 				<option key={"Aire"}>{"Aire"}</option>
+				{ console.log (gazOptions)}
 				{gazOptions.map((niveau) => (
-					<option key={niveau}>{niveau}</option>
-				))}
+                    <option key={niveau.idprod} value={niveau.libprod}>{niveau.libprod}</option>
+                ))}
 			</select>
 		);
 	}
@@ -790,7 +793,7 @@ function FicheSecu() {
 
 			// On envoie le fichier Excel au serveur
 			formData = new FormData();
-			formData.append('idcli'  , parseInt(id));
+			formData.append('iduti'  , parseInt(id));
 			formData.append('type'   , 'SECU');
 			formData.append('file'   , blob);
 			formData.append('name'   , nomFic);
@@ -806,6 +809,7 @@ function FicheSecu() {
 
 			const text = await response.text();
 
+			console.log(text);
 		} else {
 
 			// ModificationFichierHistorique
@@ -1049,7 +1053,7 @@ function FicheSecu() {
 			
 			window.location.href = '/fiches-de-securite';
 			console.log("Erreur", error)
-			alert('Le fichier sauvegarder ne semble pas être du bon format');
+			alert('Le fichier sauvegarder ne semble pas être du bon format ou n\'est plus accessible. Merci de contacter l\'administrateur.');
 		});
 
 	}
@@ -1117,6 +1121,7 @@ function FicheSecu() {
 
 		// Vérification de remplissage pour crée un autre palanquee si deux première lignes complète
 		var tousRemplis = lignePalanqueeComplete(num, 'A') && lignePalanqueeComplete(num, 'B');
+		setValide(tousRemplis)
 
 		if (tousRemplis && num === nombrePlaques && nombrePlaques < 8)
 			setNombrePlaques(nombrePlaques+1)
@@ -1126,9 +1131,8 @@ function FicheSecu() {
 			setNombrePlaques(nombrePlaques - 1)
 
 
-		if (num === nombrePlaques && num > 1 && lignePalanqueeVide(num, 'A') && lignePalanqueeVide(num, 'B') && lignePalanqueeVide(num, 'C') && lignePalanqueeComplete(num - 1, 'A') && lignePalanqueeComplete(num - 1, 'B') && lignePalanqueeComplete(num - 1, 'C'))
+		if (num === nombrePlaques && num > 1 && lignePalanqueeVide(num, 'A') && lignePalanqueeVide(num, 'B') && lignePalanqueeVide(num, 'C') && lignePalanqueeComplete(num - 1, 'A') && lignePalanqueeComplete(num - 1, 'B'))
 			setValide(true);
-
 
 		
 		//Verifie si tout est valide

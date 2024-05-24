@@ -2,9 +2,9 @@
 header('Access-Control-Allow-Origin: *');
 include_once '../../inc/DB.inc.php';
 
-$idcli = $_POST['idcli'];
+$iduti = $_POST['iduti'];
 
-$historiques = DB::getInstance()->getHistoriquesByClient($idcli);
+$historiques = DB::getInstance()->getHistoriquesByClient($iduti);
 
 foreach ($historiques as $historique) {
     $filename = basename($historique->getChemin());    

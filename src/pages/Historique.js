@@ -13,15 +13,15 @@ export default function Historique(){
 	const [type         , setType         ] = useState('Ticket');
 	
 	// Récupérer l'ID de l'utilisateur au quelle on veut afficher les historiques
-	// console.log(sessionStorage.getItem('idCli'));
-	const idCli = parseInt(sessionStorage.getItem('idCli'));
+	// console.log(sessionStorage.getItem('idUti'));
+	const idUti = parseInt(sessionStorage.getItem('idUti'));
 
 	
 	// Récupérer les données des produits
 	useEffect(() => {
 		// Créer un objet FormData
 		const formData = new FormData();
-		formData.append('idcli', idCli);
+		formData.append('iduti', idUti);
 
 		fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
 			method: 'POST',
@@ -45,7 +45,7 @@ export default function Historique(){
 		.catch(error => {
 			console.error('Erreur :', error);
 		})
-	}, [idCli]);
+	}, [idUti]);
 
 	const funGetFile = async (item) => {
 		try {
@@ -96,14 +96,14 @@ export default function Historique(){
 		date   DATE         DEFAULT CURRENT_DATE NOT NULL,
 		chemin VARCHAR(255) NOT NULL,
 		type   VARCHAR(6)   NOT NULL CHECK (type IN ('TICKET', 'SECU')),
-		idCli  INTEGER      NOT NULL REFERENCES Client(idCli)
+		idUti  INTEGER      NOT NULL REFERENCES Client(idUti)
 	*/
 	// En-tête de la table
 	useEffect(() => {
 		setInitialHeader([
 			{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
 			{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
-			{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+			{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 			{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
 			{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
 			{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
@@ -116,7 +116,7 @@ export default function Historique(){
 	// Fonction pour récupérer les données des produits
 	const fetchHistoriqueData = async () => {
 		const formData = new FormData();
-		formData.append('idcli', idCli);
+		formData.append('iduti', idUti);
 
 		if(type === 'Ticket') {
 			fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
@@ -295,7 +295,7 @@ export default function Historique(){
 			setInitialHeader([
 				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
 				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
-				{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false , show : true },
 				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false , show : true },
 				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false , show : true },
@@ -305,7 +305,7 @@ export default function Historique(){
 			]);
 
 			const formData = new FormData();
-			formData.append('idcli', idCli);
+			formData.append('iduti', idUti);
 
 			fetch(cheminPHP + "historique/GetHistoriquesClientSecu.php", {
 				method: 'POST',
@@ -335,7 +335,7 @@ export default function Historique(){
 			setInitialHeader([
 				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
 				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
-				{ id: 'idCli'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
 				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
 				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
@@ -344,7 +344,7 @@ export default function Historique(){
 			]);
 
 			const formData = new FormData();
-			formData.append('idcli', idCli);
+			formData.append('iduti', idUti);
 
 			fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
 				method: 'POST',

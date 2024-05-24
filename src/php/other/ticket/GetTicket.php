@@ -4,10 +4,10 @@ include_once '../../inc/DB.inc.php';
 
 
 /**
- * Get Produit du Ticket en fonction de client si idcli est set sinon get all
+ * Get Produit du Ticket en fonction de client si iduti est set sinon get all
  */
-if(isset($_POST['idcli'])) {
-	$lstProdTicket = DB::getInstance()->getProdTicket($_POST['idcli']);
+if(isset($_POST['iduti'])) {
+	$lstProdTicket = DB::getInstance()->getProdTicket($_POST['iduti']);
 }
 else {
 	$lstProdTicket = DB::getInstance()->getProdTicket(null);

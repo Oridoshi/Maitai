@@ -39,15 +39,15 @@ function Client() {
 	}, []);
 
 	const funHisto = (item) => {
-		sessionStorage.setItem('idCli', item.idcli);
-		sessionStorage.setItem('nomClub', item.nomclub);
+		sessionStorage.setItem('idUti', item.iduti);
+		sessionStorage.setItem('nomClub', item.login);
 		window.location.href = '/historique';
 	};
 
 	// En-tête de la table
 	const initialHeader = [
 		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false                     },
-		{ id: 'nomclub'  , name: 'Nom du Club'          , type:'login'    , required : true , editable : true , show : true, maxLength : 30      },
+		{ id: 'login'    , name: 'Nom du Club'          , type:'login'   , required : true , editable : true , show : true, maxLength : 30      },
 		{ id: 'telephone', name: 'Numero de téléphone'  , type:'tel'     , required : true , editable : true , show : true                      },
 		{ id: 'email'    , name: 'Email'                , type:'email'   , required : true , editable : true , show : true, maxLength : 60      },
 		{ id: 'btnHisto' , name: 'Historique'           , type:'button'  , required : true , editable : false, show : true, function : funHisto, btn : 'Historique', className:'btnSauvegarder'},
@@ -57,24 +57,14 @@ function Client() {
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {
 		try {
-
-
 			const formData = new FormData();
-			formData.append('nomClub'  , nouvItem.nomclub);
+			formData.append('login'  , nouvItem.login);
 			formData.append('email'    , nouvItem.email);
-			formData.append('telephone', nouvItem.telephone);
+			formData.append('tel', nouvItem.telephone);
 
 
 			if (nouvItem.present) formData.append('present', 1);
 			else                  formData.append('present', 0);
-
-
-			/*
-				$client->setNomClub  ($_POST['nomClub']);
-				$client->setEmail    ($_POST['email']);
-				$client->setTelephone($_POST['telephone']);
-				$client->setPresent  ($_POST['present']);
-			 */
 
 			const requestOptions = {
 				method: 'POST',
@@ -109,10 +99,10 @@ function Client() {
 
 
 			const formData = new FormData();
-			formData.append('prevNomClub', oldItem.nomclub   );
-			formData.append('nomClub'    , nouvItem.nomclub  );
-			formData.append('email'      , nouvItem.email    );
-			formData.append('telephone'  , nouvItem.telephone);
+			formData.append('prevLogin', oldItem.login   );
+			formData.append('login'    , nouvItem.login  );
+			formData.append('email'    , nouvItem.email    );
+			formData.append('tel'      , nouvItem.telephone);
 
 			if (nouvItem.present) formData.append('present', 1);
 			else                  formData.append('present', 0);

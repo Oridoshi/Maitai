@@ -4,7 +4,7 @@ header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
 include_once '../../inc/DB.inc.php';
 
 $type = $_POST['type'];
-$idcli = intval($_POST['idcli']);
+$iduti = intval($_POST['iduti']);
 $file = $_FILES['file'];
 $fileName = $_POST['name'];
 $fileTmpPath = $file['tmp_name'];
@@ -17,7 +17,7 @@ $nf = DB::getInstance()->getNextIdHistorique();
 $historique = new Historique();
 $historique->setChemin($chemin . $nf . $fileName);
 $historique->setType($type);
-$historique->setIdCli($idcli);
+$historique->setIdUti($iduti);
 
 
 if(!DB::getInstance()->insertHistorique($historique)) {echo "Error inserting historique."; return;};

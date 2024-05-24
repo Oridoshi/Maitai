@@ -8,11 +8,8 @@ $login = $_POST['login'];
 
 $pdo = DB::getInstance();
 
-$tab = $pdo->getUtilisateursEtDroit();
+$uti = $pdo->getUtilisateurByLogin($login);
 
-foreach ($tab as $uti) {
-    if (strtolower($uti["login"]) == strtolower($login)) {
-        echo $uti["libdroit"];
-        break;
-    }
+if($uti != null){
+    echo $uti->getDroit();
 }

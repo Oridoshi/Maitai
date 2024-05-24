@@ -14,7 +14,7 @@ $pdo = DB::getInstance();
  */
 $modifTicket = new Ticket();
 $modifTicket->setIdProd($_POST['idprod']);
-$modifTicket->setIdCli($_POST['idcli']);
+$modifTicket->setIdUti($_POST['iduti']);
 $modifTicket->setQa($_POST['qa']);
 if(isset($_POST['prixtot'])) {
 	$modifTicket->setPrixTot($_POST['prixtot']);
