@@ -49,6 +49,7 @@
 
 .btnModif {
 	background-image: url('../img/update.svg');
+	transition: background-color 0.3s ease;
 }
 
 .btnModif:hover {
@@ -57,6 +58,7 @@
 
 .btnSuppr {
 	background-image: url('../img/suppr.svg');
+	transition: background-color 0.3s ease;
 }
 
 .btnSuppr:hover {
@@ -78,6 +80,7 @@
 
 	background-color: #006DAA!important;
 	border-color: #006DAA!important;
+	transition: background-color 0.3s ease;
 }
 .btnAjouter:hover{
 	background-color: #005C8F!important;
@@ -94,6 +97,7 @@
 	font-weight: bolder;
 	border: 0px;
 	margin-right: 20px;
+	transition: background-color 0.3s ease;
 }
 
 .btnFermer:hover,
@@ -107,6 +111,7 @@
 	color: #FFFFFF;
 	font-weight: bolder;
 	border: 0px;
+	transition: background-color 0.3s ease;
 }
 
 .btnAdd:hover,
@@ -129,7 +134,6 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	transition: transform 0.3s;
-	/* Ajoute une transition pour une animation fluide */
 }
 
 .btntickets:focus,

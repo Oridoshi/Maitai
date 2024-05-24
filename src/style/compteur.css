@@ -1,17 +1,15 @@
 .compteur{
-	display: flex;
-	width: 100px;
-	justify-content: center;
+	display: grid;
+	grid-template-columns: 33% 33% 33%;
+	width: 100%;
 }
 
 .inc {
-	width: 30px;
-	height: 30px;
+	height:35px;
 	background-color: #006DAA;
 	color: #FFFFFF;
 	font-size: 20px;
 	justify-content: center;
-	align-items: center;
 	display: flex;
 	border-radius: 12px;
 	border-color: transparent;
@@ -20,6 +18,7 @@
 .inc:focus{
 	background-color: #006DAA !important;
 	color: #FFFFFF !important;
+	transition: background-color 0.3s ease;
 }
 
 .inc:hover,
@@ -27,10 +26,26 @@
 	background-color: #00476E !important;
 	color: #FFFFFF ;
 }
+.d{
+	background-image: url('../img/diminue.svg');
+	background-position: center;
+	background-size: cover;
+}
+.a{
+	background-image: url('../img/augmente.svg');
+	background-position: center;
+	background-size: cover;
+}
+.btnplus{
+	justify-self: start;
+}
+.btnmoins{
+	justify-self: end;
+}
 
 .valeur{
-	width: 40px;
-	height: 30px;
+	width: 100%;
+	height:35px;
 	justify-content: center;
 	align-items: center;
 	display: flex;

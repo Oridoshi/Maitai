@@ -1,0 +1,152 @@
+/* Style pour la popup de planification */
+.modal-dialog {
+	max-width: 50%;
+	margin: auto;
+	margin-top: 50px;
+}
+
+.popup {
+	display: grid;
+	grid-template-columns: 50% 50%;
+	height: 600px;
+}
+
+/*Enetete popup*/
+.titrepopup {
+	color: #FFFFFF !important;
+	background-color: #005C8F;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.fonttitre {
+	font-weight: bolder;
+	font-size: clamp(16px, 4vw, 42px);
+}
+
+/*partie gauche*/
+.panelgauche {
+	display: grid;
+	grid-template-rows: 25% 25% 25% 25%;
+	padding-left: 5%;
+	padding-right: 5%;
+	margin-right: 5%;
+}
+
+.btnProduit,
+.btnProduit:focus,
+.btnProduit:active {
+	width: 100%;
+	height: 50%;
+	background-color: #005C8F !important;
+	border: transparent;
+	border-radius: 5px;
+	font-size: clamp(10px, 1vw, 24px);
+	color: #FFFFFF;
+	text-wrap: auto;
+	transition: background-color 0.3s ease;
+}
+
+.btnProduit:hover {
+	background-color: #006DAA;
+}
+
+.lblpopup {
+	padding: 10px;
+}
+
+.ErrorPopUp {
+	color: red;
+	font-weight: bolder;
+	text-align: center;
+	align-self: center;
+}
+
+.panelbas {
+	display: flex;
+	align-items: center;
+	padding-right: 8%;
+}
+
+/*partie droite*/
+.paneldroit {
+	background-color: #ede4dd;
+	border-radius: 20px;
+	margin: 5px;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+	overflow-y: auto;
+	max-height: calc(100% - 20px);
+}
+
+.titredroit {
+	color: #005C8F;
+	margin-top: 5px;
+	text-align: center;
+	font-size: clamp(16px, 4vw, 36px);
+}
+
+.produitResume {
+	display: grid;
+	grid-template-columns: 50% 25% 25%;
+	align-items: center;
+	padding: 15px;
+	padding-left: 5%;
+	padding-right: 5%;
+}
+
+.grpbtn {
+	display: grid;
+	grid-template-columns: 100%;
+	grid-template-rows: 50% 50%;
+	gap: 5px;
+}
+
+.btnResume {
+	justify-self: end;
+}
+
+.qt {
+	width: 80%;
+	height: 30px;
+	border-radius: 10px;
+	justify-self: end;
+	border: transparent;
+	background-color: #f7ede6;
+	text-align: center;
+}
+
+/*pour le responsive au format telephone*/
+@media only screen and (max-width: 700px) {
+	.modal-dialog {
+		max-width: 80%;
+		margin: auto;
+		margin-top: 50px;
+	}
+
+	.popup {
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 50% 50%;
+		height: 600px;
+		gap: 0px;
+	}
+
+	.panelgauche {
+		padding-left: 0%;
+		padding-right: 0%;
+		order: 2;
+		/* Mettre le panel gauche en bas */
+	}
+
+	.paneldroit {
+		order: 1;
+		/* Mettre le panel droit en haut */
+	}
+
+	.btnProduit {
+		width: 100%;
+		height: 50%;
+		font-size: clamp(14px, 2vw, 24px);
+	}
+}
