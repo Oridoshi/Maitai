@@ -80,7 +80,28 @@ export default function PopUpPlanning()
 	{
 		setProduits(produits.filter((_, i) => i !== index));
 	}
+	/*---------------------------------------------------------------------------------------------------------------------------*/
+	//envoie à la bado les modifications du front
 
+	async function getProduits()
+	{
+
+	}
+
+	async function insertProduit()
+	{
+
+	}
+
+	async function updateProduit()
+	{
+
+	}
+
+	async function supprProduit()
+	{
+
+	}
 	/*---------------------------------------------------------------------------------------------------------------------------*/
 	//code html de la popup
 
