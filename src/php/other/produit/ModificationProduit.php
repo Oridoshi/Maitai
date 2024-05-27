@@ -11,7 +11,12 @@ $Prod->setRef($_POST['ref']);
 $Prod->setLibProd($_POST['libProd']);
 if($_POST['prixUni'] != ""){
     $Prod->setPrixUni($_POST['prixUni']);
-} 
+}
+if($_POST['prixUniHT'] != ""){
+    $Prod->setPrixUniHT($_POST['prixUniHT']);
+}
+$Prod->setDispoMatin($_POST['dispoMatin']==="true" ? 1 : 0);
+$Prod->setDispoSoir($_POST['dispoSoir']==="true" ? 1 : 0);
 $Prod->setCategorie($_POST['categorie']);
 
 /**

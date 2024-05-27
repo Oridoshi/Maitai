@@ -8,7 +8,21 @@ include_once '../../inc/DB.inc.php';
  */
 if(isset($_POST['categ']) && $_POST['categ'] != "")
 {
-	$prods=DB::getInstance()->getProduitsParCateg($_POST['categ']);
+	if(isset($_POST['dispo']) && $_POST['dispo'] != "")
+	{
+		if($_POST['dispo'] == "matin")
+		{
+			$prods=DB::getInstance()->getProduitsParCategDispoMatin($_POST['categ']);
+		}
+		else
+		{
+			$prods=DB::getInstance()->getProduitsParCategDispoSoir($_POST['categ']);
+		}
+	}
+	else
+	{
+		$prods=DB::getInstance()->getProduitsParCateg($_POST['categ']);
+	}
 }
 else if(isset($_POST['idprod']) && $_POST['idprod'] != "")
 {
