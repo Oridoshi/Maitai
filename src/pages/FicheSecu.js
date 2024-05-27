@@ -167,11 +167,6 @@ function FicheSecu() {
 							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
 							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau"                      defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()} />
 						</div>
-
-						<div className="d-flex align-items-center mt-3">
-							<label type="text" className="fw-bold" htmlFor="tel"> Nombre plongeurs </label>
-							<input type="number" min="1" className="form-control p-1 m-1" name="nbplong"   id="nbplong"   placeholder="Nombre"  required defaultValue={idHis && formDataObject["nbplong"]}  onChange={() => handleChangeEnTete()}/>
-						</div>
 					</div>
 
 
@@ -316,8 +311,6 @@ function FicheSecu() {
 
 	function generateList(datas, num, cat)
 	{
-		console.log("objet",formDataObject[`p${num}${cat}niv`])
-
 		return (
 			<select name={`p${num}${cat}niv`} id={`p${num}${cat}niv`} className={`form-select ${encadreOuNon[num] && cat ==='A' ? 'bg-secondary text-light' : ''}`} defaultValue={formDataObject[`p${num}${cat}niv`] && formDataObject[`p${num}${cat}niv`]} onChange={() => handleChangePlaquee(num)}>
 				{datas.map((niveau) => (
@@ -409,11 +402,15 @@ function FicheSecu() {
 	{
 		return (
 			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]}  onChange={() => handleChangeRea()}>
-				<option key={"Aire"}>{"Aire"}</option>
-				{ console.log (gazOptions)}
-				{gazOptions.map((niveau) => (
-                    <option key={niveau.idprod} value={niveau.libprod}>{niveau.libprod}</option>
-                ))}
+				{/* Si gazOptions est vide, affiche "Aire" */}
+				{gazOptions.length === 0 ? (
+					<option key={"Aire"}>{"Aire"}</option>
+				) : (
+					/* Sinon, affiche les options de gazOptions */
+					gazOptions.map((niveau) => (
+						<option key={niveau.idprod} value={niveau.libprod}>{niveau.libprod}</option>
+					))
+				)}
 			</select>
 		);
 	}
@@ -429,12 +426,11 @@ function FicheSecu() {
 
 
 		return (
-			<div className='m-5'>
-				La {idHis && 'nouvelle'} fiche à était générer et envoyé a l'administration. <br></br>
-				Vous pourez la modifié jusqu'à sa validation par le.s administateur.euse.s dans de futur fonctionnalités. <br></br>
+			<div className='m-5'>La {idHis && 'nouvelle'} fiche a été générée et envoyée à l'administration. <br></br>
+				Vous pourrez la modifier jusqu'à sa validation par l'administrateur ou les administrateurs. <br></br>
 
-				<button className='btn mt-4 btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Quitter </button>
-				<button id='tele' className='btn ms-4 mt-4 btn-secondary '> Quitter et telecharger un appercue </button>
+				<button className='btn mt-4 btn-primary btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Quitter </button>
+				<button id='tele' className='btn ms-4 mt-4 btn-secondary '> Quitter et telecharger un apperçu </button>
 				{JSpuLaMerde()}
 			</div>
 		);
@@ -579,12 +575,6 @@ function FicheSecu() {
 		worksheet.getCell('C6').value  = formDataObject["club"];
 		worksheet.getCell('C6').border = borderAll;
 
-		worksheet.getCell('B8').value  = 'nombre plongeurs';   
-		worksheet.getCell('B8').font   = { bold: true, size: 12};
-		worksheet.getCell('B8').border = borderAll;
-		worksheet.getCell('C8').value  = formDataObject["nbplong"];
-		worksheet.getCell('C8').border = borderAll;
-
 		worksheet.getCell('M8').border = borderAll; //signature
 		worksheet.getCell('M7').value  = 'signature DP';   
 		worksheet.getCell('M7').font   = {size: 6, italic:true}; 
@@ -676,6 +666,7 @@ function FicheSecu() {
 		});  
 
 
+		let nbplong = 0;
 		//Pour chaque palanqué 
 		Array(nombrePlaques - 1).fill().map((_, index) => {
 
@@ -697,6 +688,10 @@ function FicheSecu() {
 				worksheet.getCell('B' + ((16 + i) + index * 3)).border = borderAll;
 				worksheet.getCell('C' + ((16 + i) + index * 3)).border = borderAll;
 				worksheet.getCell('D' + ((16 + i) + index * 3)).border = borderAll;
+
+
+				if (formDataObject["p" + (index+1) + (ind) + "nom"    ] !== null)
+					nbplong++
 
 
 				if (encadreOuNon[index + 1] && i === 0)
@@ -782,6 +777,15 @@ function FicheSecu() {
 		});
 
 
+		
+		/* NOMBRE DE PLONGEURS CALCULER */
+		worksheet.getCell('B8').value  = 'nombre plongeurs';   
+		worksheet.getCell('B8').font   = { bold: true, size: 12};
+		worksheet.getCell('B8').border = borderAll;
+		worksheet.getCell('C8').value  = nbplong;
+		worksheet.getCell('C8').border = borderAll;
+
+
 
 		/** IMAGE **/
 		/*console.log("WS : ", worksheet)
@@ -818,8 +822,6 @@ function FicheSecu() {
 		
 		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
 		nomFic = nomFic.replace(/-+/g, '-');
-
-		console.log(nomFic)
 
 
 		if (!estInserer)
@@ -1334,14 +1336,14 @@ function FicheSecu() {
 				<div className="m-5 d-flex justify-content-end">
 
 					{etape < etapesLib.length - 2 &&
-						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={() => {setEtape(etape-1); redirigerAuDebut()}}>Annuler</button>
+						<button className="mx-2 col-sm-1 btn btn-primary btnAnnuler" onClick={() => {setEtape(etape-1); redirigerAuDebut()}}>Annuler</button>
 					}
 
 					{etape < etapesLib.length - 2 &&
 						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
 					{etape === etapesLib.length - 2 &&
-						<button className={`mx-2 col-sm-1 btn  ${peutValide ? 'btnAnnuler' : 'btn-secondary'}`} type="submit">Envoyé</button>
+						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Envoyé</button>
 					}
 				</div>
 			
