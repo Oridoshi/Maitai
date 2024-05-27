@@ -11,10 +11,10 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "maitai";
-	private static string $login    = "Admin";
-	private static string $password = "maitai";
-	private static string $host     = "localhost";
+	//  private static string $dbName   = "maitai";
+	//  private static string $login    = "Admin";
+	//  private static string $password = "maitai";
+	//  private static string $host     = "localhost";
 
 
 	// private static string $dbName   = "if0_36460769_maitai";
@@ -348,6 +348,24 @@ class DB {
 		return $this->execQuery($requete,array($categ),'Produit');
 	}
 
+	/** Récuperer les produits disponibles le matin en fonction de la catégorie.
+	 * @param string $categ la catégorie des produits à récupérer
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduitsParCategDispoMatin($categ) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ? AND dispoMatin = 1';
+		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
+	/** Récuperer les produits disponibles le soir en fonction de la catégorie.
+	 * @param string $categ la catégorie des produits à récupérer
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduitsParCategDispoSoir($categ) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ? AND dispoSoir = 1';
+		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
 	/** Récuperer un produit en fonction de son id.
 	 * @param int $idProd l'id du produit à récupérer
 	 * @return Produit le produit récupéré
@@ -361,9 +379,9 @@ class DB {
 	 * @param string $ref la référence du produit à récupérer
 	 * @return Produit le produit récupéré
 	 */
-	public function getProduitByRef($ref) {
-		$requete = 'SELECT * FROM Produit WHERE ref = ?';
-		return $this->execQuery($requete,array($ref),'Produit')[0];
+	public function getProduitByLib($lib) {
+		$requete = 'SELECT * FROM Produit WHERE libProd = ?';
+		return $this->execQuery($requete,array($lib),'Produit')[0];
 	}
 
 	/** Récuperer toute les catégories de produits. 
@@ -378,8 +396,8 @@ class DB {
 	 * @param Produit $produits le produit à modifier.
 	 */
 	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()));
+		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, prixUniHT = ?, categorie = ?, dispoMatin = ?, dispoSoir = ? WHERE idProd = ?';
+		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir(),$produits->getIdProd()));
 	}
 
 	/**
@@ -387,8 +405,8 @@ class DB {
 	 * @param Produit $produits le produit à créer.
 	 */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,categorie) VALUES (?,?,?,?)';
-		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
+		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,prixUniHT,categorie,dispoMatin,dispoSoir) VALUES (?,?,?,?,?,?,?)';
+		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir()));
 	}
 
 	/** Supprimer un produit.
@@ -522,11 +540,12 @@ class DB {
 	/** 
 	 * Insértion d'un historique
 	 * @param Historique $historique l'historique à insérer
-	 * @return void
+	 * @return bool true si l'insertion a réussi, false sinon
 	 */
 	public function insertHistorique(Historique $historique) {
 		$requete = "INSERT INTO Historique (date, chemin, type, iduti) VALUES (NOW(), :chemin, :type, :idUti)";
 		$tparam = array(':chemin' => $historique->getChemin(), ':type' => $historique->getType(), ':idUti' => $historique->getIdUti());
+		return $this->execMaj($requete, $tparam);
 		return $this->execMaj($requete, $tparam);
 	}
 

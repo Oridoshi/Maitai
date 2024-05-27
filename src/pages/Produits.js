@@ -23,6 +23,7 @@ export default function Produits(){
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
+			
 			return response.json();
 		})
 		.then(data => {
@@ -76,12 +77,15 @@ export default function Produits(){
 
 	// En-tête de la table
 	const initialHeader = [
-		{ id: 'id'       , name: 'NB Ligne'           , type:'number' ,              required : true , editable : false, show : false                     },
-		{ id: 'idprod'   , name: 'ID du produit'      , type:'number' ,              required : true , editable : false, show : false                     },
-		{ id: 'ref'      , name: 'Référence'          , type:'text'   ,              required : true , editable : true , show : true , maxLength : 50     },
-		{ id: 'libprod'  , name: 'Libellé'            , type:'text'   ,              required : true , editable : true , show : true , maxLength : 100    },
-		{ id: 'prixuni'  , name: 'Prix Unitaire (TTC)', type:'prix'   , step:'0.01', required : false, editable : true , show : true , maxLength : 12     },
-		{ id: 'categorie', name: 'Catégorie'          , type:'text'   ,              required : true , editable : true , show : true , maxLength : 100 , datalist : datalistCateg}
+		{ id: 'id'        , name: 'NB Ligne'           , type:'number'  ,              required : true , editable : false, show : false                                            },
+		{ id: 'idprod'    , name: 'ID du produit'      , type:'number'  ,              required : true , editable : false, show : false                                            },
+		{ id: 'ref'       , name: 'Référence'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 50                            },
+		{ id: 'libprod'   , name: 'Libellé'            , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100                           },
+		{ id: 'prixuni'   , name: 'Prix Unitaire (TTC)', type:'prix'    , step:'0.01', required : false, editable : true , show : true , maxLength : 12                            },
+		{ id: 'prixuniht' , name: 'Prix Unitaire (HT)' , type:'prix'    , step:'0.01', required : false, editable : true , show : false, maxLength : 12                            },
+		{ id: 'dispomatin', name: 'Disponible le matin', type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
+		{ id: 'disposoir' , name: 'Disponible le soir' , type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
+		{ id: 'categorie' , name: 'Catégorie'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100 , datalist : datalistCateg}
 	];
 
 
@@ -94,7 +98,10 @@ export default function Produits(){
 
 			formData.append('ref'      , nouvItem.ref);
 			formData.append('libProd'  , nouvItem.libprod);
-			formData.append('prixUni'  , nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
+			formData.append('prixUni'  , nouvItem.prixuni===null?"":parseFloat(nouvItem.prixuni));
+			formData.append('prixUniHT', nouvItem.prixuniht===null?"":parseFloat(nouvItem.prixuniht));
+			formData.append('dispoMatin', nouvItem.dispoMatin ? 1 : 0);
+			formData.append('dispoSoir' , nouvItem.dispoSoir  ? 1 : 0);
 			formData.append('categorie', nouvItem.categorie);
 
 			const requestOptions = {
@@ -130,13 +137,14 @@ export default function Produits(){
 	// Fonction pour l'update
 	const funUpdate = async (upItem/*, oldItem*/) => {
 		try {
-
-
 			const formData = new FormData();
 			formData.append('idProd'   , parseInt(upItem.idprod ));
 			formData.append('ref'      , upItem.ref);
 			formData.append('libProd'  , upItem.libprod);
-			formData.append('prixUni'  , upItem.prixuni===""?"":parseFloat(upItem.prixuni));
+			formData.append('prixUni'  , upItem.prixuni===null||upItem.prixuni===""?"":parseFloat(upItem.prixuni));
+			formData.append('prixUniHT', upItem.prixuniht===null||upItem.prixuniht===""?"":parseFloat(upItem.prixuniht));
+			formData.append('dispoMatin', upItem.dispomatin);
+			formData.append('dispoSoir' , upItem.disposoir );
 			formData.append('categorie', upItem.categorie);
 
 			const requestOptions = {

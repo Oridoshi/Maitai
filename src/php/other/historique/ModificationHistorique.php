@@ -1,6 +1,9 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 require_once '../../inc/DB.inc.php';
+require '../../../vendor/autoload.php';
+
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 $idhist = $_POST['idhist'];
 
@@ -10,30 +13,34 @@ $pdo->updateHistorique($idhist);
 
 $hist = $pdo->getHistoriqueById($idhist);
 
-$chemin = $_SERVER['DOCUMENT_ROOT'] ."/SECU/" . $hist->getChemin();
+$file = $hist->getChemin();
 
-addTicket($idcli, $file, $pdo);
+addTicket($hist->getIdUti(), $file, $pdo);
 
-function addTicket($idcli, $file, $pdo) {
+function addTicket($iduti, $file, $pdo) {
     $tab = retournerFichier($file);
     $tab = getProduits($tab);
     foreach($tab as $prod) {
         $ticket = new Ticket();
-        $ticket->setIdCli($idcli);
-        $ticket->setIdProd($pdo->getProduitByRef($prod[0])->getIdProd());
+        $ticket->setIdUti($iduti);
+        $ticket->setIdProd($pdo->getProduitByLib($prod[0])->getIdProd());
+        $ticket->setPrixSpe($pdo->getProduitByLib($prod[0])->getPrixUni());
         $ticket->setQa($prod[1]);
+        $ticket->setPrixTot($ticket->getPrixSpe() * $ticket->getQa());
         $pdo->insertTicket($ticket);
     }
 }
 
-function retournerFichier($tab) {
-    $file = fopen($tab, "r");
+function retournerFichier($chemin) {
+    $file = IOFactory::load($chemin)->getActiveSheet();
     $tab = [];
-    while(!feof($file)) {
-        $line = fgets($file);
-        $tab[] = $line;
+    foreach($file->getRowIterator() as $row) {
+        $tmp = [];
+        foreach($row->getCellIterator() as $cell) {
+            $tmp[] = $cell->getValue();
+        }
+        $tab[] = implode(";", $tmp);
     }
-    fclose($file);
 
     return array_reverse($tab);
 }
@@ -54,20 +61,16 @@ function getProduits($tabinfo) {
     $tabtmp = explode(";", $line);
     $estMaitai = $estMaitai || str_replace("ï", "i", strtolower($tabtmp[6])) == "Maïtaï";
 
+    $cpt = 0;
     if($estMaitai)
         $tab["Maitai"] = ["Sécu/DP/O2 Maïtaï", 1];
-
-
-    //ajout des produits en fonction des informations récupérer
-    $cpt = 0;
-    
-    while($cpt < count($tabinfo)) {
-        $line = $tabinfo[$cpt];
+    while($cpt < $size - 13) {
+        $line = $tabinfo[$cpt++];
         $tabtmp = explode(";", $line);
 
         $palanque[0] = $tabtmp;
-        $palanque[1] = explode(";", $tabinfo[++$cpt]);
-        $palanque[2] = explode(";", $tabinfo[++$cpt]);
+        $palanque[1] = explode(";", $tabinfo[$cpt++]);
+        $palanque[2] = explode(";", $tabinfo[$cpt++]);
 
         //vérification si c'est un baptème
         if(str_contains(str_replace("è", "e", strtolower($palanque[1][3])),"bapteme") ) {
