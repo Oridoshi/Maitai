@@ -49,7 +49,7 @@ function Navbar({ role })
             break;
         case 'Maitai': navLinks = ['Clients', 'Tickets'];
             break;
-        case 'Client': navLinks = ['Fiches de sécurité', 'Planning'];
+        case 'Client': navLinks = ['Fiches de sécurité', 'Planning', 'historique'];
             break;
         default: navLinks = [];
             break;

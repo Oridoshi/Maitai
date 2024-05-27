@@ -4,21 +4,45 @@ import { cheminPHP } from '../components/VarGlobal.js';
 
 export default function Historique(){
 	
-	if(sessionStorage.getItem('droit') !== 'Admin') window.location.href = '/';
+	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
 	const [initialData  , setInitialData  ] = useState([]);
 	const [filterData   , setFilterData   ] = useState([]);
 	const [initialHeader, setInitialHeader] = useState([]);
 	const [type         , setType         ] = useState('Ticket');
+	const [idUti        , setIdUti        ] = useState(-1);
 	
 	// Récupérer l'ID de l'utilisateur au quelle on veut afficher les historiques
-	// console.log(sessionStorage.getItem('idUti'));
-	const idUti = parseInt(sessionStorage.getItem('idUti'));
-
+	
 	
 	// Récupérer les données des produits
 	useEffect(() => {
+		// si l'utilisateur est un client, on récupère son id via son login sinon on récupère dans la session
+		if(sessionStorage.getItem('droit') === 'Admin')
+			sessionStorage.getItem('idUti');
+		else
+		{
+			const formData = new FormData();
+			formData.append('login', sessionStorage.getItem('login'));
+
+
+			fetch(cheminPHP + "client/GetIdClient.php", {
+				method: 'POST',
+				body: formData
+			}).then(response => {
+				if (!response.ok) {
+					throw new Error('Erreur de réseau !');
+				}
+				return response.json();
+			}).then(data => {
+				setIdUti(data);
+			}).catch(error => {
+				console.error('Erreur :', error);
+			});
+		}
+
+
 		// Créer un objet FormData
 		const formData = new FormData();
 		formData.append('iduti', idUti);
@@ -100,18 +124,33 @@ export default function Historique(){
 	*/
 	// En-tête de la table
 	useEffect(() => {
-		setInitialHeader([
-			{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
-			{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
-			{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
-			{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
-			{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
-			{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
-			// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
-			{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
-		]);
+		if(sessionStorage.getItem('droit') === 'Admin')
+		{
+			setInitialHeader([
+				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
+				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
+				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
+				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+			]);
+		}
+		else
+		{
+			setInitialHeader([
+				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
+				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
+				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+			]);
+		}
 	}, []);
-
 
 	// Fonction pour récupérer les données des produits
 	const fetchHistoriqueData = async () => {
@@ -292,17 +331,34 @@ export default function Historique(){
 		if(type === 'Ticket') {
 			setType('Secu');
 
-			setInitialHeader([
-				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
-				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
-				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
-				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false , show : true },
-				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false , show : true },
-				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false , show : true },
-				{ id: 'valide' , name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
-				{ id: 'btnHist', name: 'Historique'       , type:'button'  , required : true , editable : false, show : true, function : modifFiche, btn : 'Modifier'    , className:'btnSauvegarder'},
-				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true , function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
-			]);
+			if(sessionStorage.getItem('droit') === 'Admin')
+				{
+					setInitialHeader([
+						{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+						{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+						{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+						{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
+						{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
+						{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+						{ id: 'valide' , name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true , fastEditable : true },
+						{ id: 'btnHist', name: 'Historique'         , type:'button'  , required : true, editable : false, show : true , function : modifFiche, btn : 'Modifier'    , className:'btnSauvegarder'},
+						{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true , function : funGetFile, btn : 'Export (XLSX)', className:'btnExport'}
+					]);
+				}
+				else
+				{
+					setInitialHeader([
+						{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+						{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+						{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+						{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
+						{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
+						{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+						{ id: 'valide' , name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true , fastEditable : true },
+						{ id: 'btnHist', name: 'Historique'         , type:'button'  , required : true, editable : false, show : true , function : modifFiche, btn : 'Modifier'    , className:'btnSauvegarder'},
+						{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true , function : funGetFile, btn : 'Export (XLSX)', className:'btnExport'}
+					]);
+				}
 
 			const formData = new FormData();
 			formData.append('iduti', idUti);
@@ -332,17 +388,32 @@ export default function Historique(){
 		} else {
 			setType('Ticket');
 
-			setInitialHeader([
-				{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
-				{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
-				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
-				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
-				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
-				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
-				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
-				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
-			]);
-
+			if(sessionStorage.getItem('droit') === 'Admin')
+			{
+				setInitialHeader([
+					{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+					{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+					{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+					{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
+					{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
+					{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+					// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+					{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+				]);
+			}
+			else
+			{
+				setInitialHeader([
+					{ id: 'id'     , name: 'NB Ligne'           , type:'number'  , required : true, editable : false, show : false},
+					{ id: 'idHis'  , name: 'ID de l\'historique', type:'number'  , required : true, editable : false, show : false},
+					{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
+					{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
+					{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
+					{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+					// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+					{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
+				]);
+			}
 			const formData = new FormData();
 			formData.append('iduti', idUti);
 
@@ -391,8 +462,8 @@ export default function Historique(){
 		<Table 
 			header={initialHeader} 
 			data={filterData}
-			funDelete={type === 'Ticket' ? undefined : funDelete}
-			funUpdate={type === 'Ticket' ? undefined : funUpdate}
+			funDelete={type === 'Ticket'||sessionStorage.getItem('droit') === 'Client' ? undefined : funDelete}
+			funUpdate={type === 'Ticket'||sessionStorage.getItem('droit') === 'Client' ? undefined : funUpdate}
 			keyGrayWhenFalse='present'
 		/>
 
