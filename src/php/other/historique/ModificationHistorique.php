@@ -1,10 +1,11 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 require_once '../../inc/DB.inc.php';
+require '../../../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-$idhist = 6;
+$idhist = $_POST['idhist'];
 
 $pdo = DB::getInstance();
 
@@ -22,8 +23,10 @@ function addTicket($iduti, $file, $pdo) {
     foreach($tab as $prod) {
         $ticket = new Ticket();
         $ticket->setIdUti($iduti);
-        $ticket->setIdProd($pdo->getProduitByRef($prod[0])->getIdProd());
+        $ticket->setIdProd($pdo->getProduitByLib($prod[0])->getIdProd());
+        $ticket->setPrixSpe($pdo->getProduitByLib($prod[0])->getPrixUni());
         $ticket->setQa($prod[1]);
+        $ticket->setPrixTot($ticket->getPrixSpe() * $ticket->getQa());
         $pdo->insertTicket($ticket);
     }
 }
@@ -58,15 +61,16 @@ function getProduits($tabinfo) {
     $tabtmp = explode(";", $line);
     $estMaitai = $estMaitai || str_replace("ï", "i", strtolower($tabtmp[6])) == "Maïtaï";
 
+    $cpt = 0;
     if($estMaitai)
-        $tab["Maitai"] = ["Sécu/DP/O2 Maïtaï", 1];$_POST['idhist'];
-    while($cpt < count($tabinfo)) {
-        $line = $tabinfo[$cpt];
+        $tab["Maitai"] = ["Sécu/DP/O2 Maïtaï", 1];
+    while($cpt < $size - 13) {
+        $line = $tabinfo[$cpt++];
         $tabtmp = explode(";", $line);
 
         $palanque[0] = $tabtmp;
-        $palanque[1] = explode(";", $tabinfo[++$cpt]);
-        $palanque[2] = explode(";", $tabinfo[++$cpt]);
+        $palanque[1] = explode(";", $tabinfo[$cpt++]);
+        $palanque[2] = explode(";", $tabinfo[$cpt++]);
 
         //vérification si c'est un baptème
         if(str_contains(str_replace("è", "e", strtolower($palanque[1][3])),"bapteme") ) {

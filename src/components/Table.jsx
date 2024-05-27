@@ -195,7 +195,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 							<div className='modal-footer'>
 								<button type='button' className='btnFermer btn btn-secondary' data-bs-dismiss='modal' onClick={ () => { closeModal(); resetForm(); } }>Fermer</button>
 								{ rowData.id !== undefined && (
-									<button type='submit' className='btn btn-primary'>Modifier</button>
+									<button type='submit' className='btnSauvegarder btn btn-primary'>Modifier</button>
 								) }
 								{ rowData.id === undefined && (
 									<button type='submit' className='btnAjouter btn 0btn-primary'></button>
@@ -233,7 +233,7 @@ function Checkbox({ id, name, defaultValue })
 		<div>
 			<input
 				type="checkbox"
-				className="check form-check-input border-secondary"
+				className="checktable check form-check-input border-secondary"
 				id={ id }
 				name={ name }
 				checked={ isChecked }
@@ -505,7 +505,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 														type='checkbox'
 														checked={item[column.id]}
 														onChange={() => changeThing(item, column.id)}
-														className="check form-check-input border-secondary"
+														className=" checktable check form-check-input border-secondary"
 														style={{ fontSize: '1.2em' }}
 														/>
 													) : (
@@ -513,7 +513,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 														type='checkbox'
 														checked={item[column.id]}
 														readOnly
-														className="check form-check-input border-secondary"
+														className="check checktable form-check-input border-secondary"
 														style={{ fontSize: '1.2em' }}
 														/>
 													)

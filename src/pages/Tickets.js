@@ -894,7 +894,7 @@ export default function Ticket()
 	///code html de la page des tickets
 	return (
 		<div>
-			<h1 className="titre">Gestion des Tickets</h1>
+			<h1 className="titre">Gestion des tickets</h1>
 			<div className="grpRecherche mt-4 d-flex align-items-center">
 				{/* barre de recherche */ }
 				<div className="col-sm-3">
@@ -902,7 +902,7 @@ export default function Ticket()
 				</div>
 				<div className="form-check" style={ { marginLeft: '10em' } }>
 					<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" checked={ checked } onChange={ handleCbChange } />
-					<label className="form-check-label" htmlFor="afficherClients">Afficher seulement clients présents</label>
+					<label className="txtcheck form-check-label" htmlFor="afficherClients">Afficher seulement les clients présents</label>
 				</div>
 			</div>
 			<div className='h-25'>
