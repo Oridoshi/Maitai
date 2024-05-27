@@ -27,6 +27,7 @@
 
 	background-color: #005C8F;
 	transition: background-color 0.3s ease;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 .btnAccueil:hover{
 	background-color: #006DAA;
@@ -47,6 +48,7 @@
 	text-decoration-skip-ink: none;
 	text-underline-offset: 10px;
 }
+
 .elt:focus {
 	color: #000000;
 	text-decoration: underline;
@@ -87,6 +89,7 @@
 	border-radius: 10px;
 	background-color: #005C8F;
 	transition: background-color 0.3s ease;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 .btnLogout:hover{
 	background-color: #DD6565;
@@ -98,6 +101,7 @@
 	color: #FFFFFF;
 	margin-top: 20px;
 	transition: background-color 0.3s ease;
+	box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
 .btnLog:hover,
 .btnLog:focus,
