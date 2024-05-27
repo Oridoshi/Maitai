@@ -2,7 +2,9 @@
 header("Access-Control-Allow-Origin: *");
 require_once '../../inc/DB.inc.php';
 
-$idhist = $_POST['idhist'];
+use PhpOffice\PhpSpreadsheet\IOFactory;
+
+$idhist = 6;
 
 $pdo = DB::getInstance();
 
@@ -10,30 +12,32 @@ $pdo->updateHistorique($idhist);
 
 $hist = $pdo->getHistoriqueById($idhist);
 
-$chemin = $_SERVER['DOCUMENT_ROOT'] ."/SECU/" . $hist->getChemin();
+$file = $hist->getChemin();
 
-addTicket($idcli, $file, $pdo);
+addTicket($hist->getIdUti(), $file, $pdo);
 
-function addTicket($idcli, $file, $pdo) {
+function addTicket($iduti, $file, $pdo) {
     $tab = retournerFichier($file);
     $tab = getProduits($tab);
     foreach($tab as $prod) {
         $ticket = new Ticket();
-        $ticket->setIdCli($idcli);
+        $ticket->setIdUti($iduti);
         $ticket->setIdProd($pdo->getProduitByRef($prod[0])->getIdProd());
         $ticket->setQa($prod[1]);
         $pdo->insertTicket($ticket);
     }
 }
 
-function retournerFichier($tab) {
-    $file = fopen($tab, "r");
+function retournerFichier($chemin) {
+    $file = IOFactory::load($chemin)->getActiveSheet();
     $tab = [];
-    while(!feof($file)) {
-        $line = fgets($file);
-        $tab[] = $line;
+    foreach($file->getRowIterator() as $row) {
+        $tmp = [];
+        foreach($row->getCellIterator() as $cell) {
+            $tmp[] = $cell->getValue();
+        }
+        $tab[] = implode(";", $tmp);
     }
-    fclose($file);
 
     return array_reverse($tab);
 }
@@ -55,12 +59,7 @@ function getProduits($tabinfo) {
     $estMaitai = $estMaitai || str_replace("ï", "i", strtolower($tabtmp[6])) == "Maïtaï";
 
     if($estMaitai)
-        $tab["Maitai"] = ["Sécu/DP/O2 Maïtaï", 1];
-
-
-    //ajout des produits en fonction des informations récupérer
-    $cpt = 0;
-    
+        $tab["Maitai"] = ["Sécu/DP/O2 Maïtaï", 1];$_POST['idhist'];
     while($cpt < count($tabinfo)) {
         $line = $tabinfo[$cpt];
         $tabtmp = explode(";", $line);
