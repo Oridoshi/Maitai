@@ -203,20 +203,19 @@ export default function Planning()
 
 		/** Code HTML du tableau */
 		return (
-			<table className="tabSemaine mb-5">
+			<table className={droit === 'Admin' ? "tabSemaine mb-5" : "tabSemaine tabSemaineClient mb-5"}>
 				<thead>
 					<tr>
 						{
 							// Place chaque jour de la semaine en entête de colonne
-							joursSemaine.map((jour, index) =>
-							{
+							joursSemaine.map((jour, index) => {
 								// Crée une nouvelle date basée sur la date actuelle et ajoute le nombre de jour qu'on a iterre
 								const dateJour = new Date(dateActuelle);
 								dateJour.setDate(dateActuelle.getDate() + index);
 
 								return (
-									<th key={ index }>
-										<div className="rotate">{ jour + " " }{ dateJour.getDate() + " " }{ mois[dateJour.getMonth()] }</div>
+									<th key={index}>
+										<div className="rotate">{jour + " "}{dateJour.getDate() + " "}{mois[dateJour.getMonth()]}</div>
 									</th>
 								);
 							})
@@ -227,20 +226,18 @@ export default function Planning()
 					<tr>
 						{
 							// Place chaque jour de la ligne du Matin
-							joursSemaine.map((jour, index) =>
-							{
-								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 1)
-								else return genererDemiJourUti(dateActuelle, index, 1)
+							joursSemaine.map((jour, index) => {
+								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 1);
+								else return genererDemiJourUti(dateActuelle, index, 1);
 							})
 						}
 					</tr>
 					<tr>
 						{
 							// Place chaque jour de la ligne du Soir
-							joursSemaine.map((jour, index) =>
-							{
-								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 0)
-								else return genererDemiJourUti(dateActuelle, index, 0)
+							joursSemaine.map((jour, index) => {
+								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 0);
+								else return genererDemiJourUti(dateActuelle, index, 0);
 							})
 						}
 					</tr>
@@ -257,8 +254,7 @@ export default function Planning()
 	 * @param {*} matinOuSoir
 	 * @returns
 	 */
-	function genererDemiJourUti(dateActuelle, index, matinOuSoir)
-	{
+	function genererDemiJourUti(dateActuelle, index, matinOuSoir) {
 		const dateJour = new Date(dateActuelle);
 		dateJour.setDate(dateActuelle.getDate() + index);
 
@@ -266,24 +262,21 @@ export default function Planning()
 
 		let qa = 0; // Déclaration de qa en dehors du retour de la fonction
 
-		for (let key in obj)
+		for (let key in obj) {
 			qa += parseInt(obj[key].qa); // Concaténation des valeurs de qa
+		}
 
-
-		const color = matinOuSoir === 0 ? '#B2DADD' : '#DAE9EA';
+		const style = matinOuSoir === 0 ? 'matin' : 'soir';
 
 		return (
-			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
-
-			<td key={ index } onClick={ () => ouvrirPlanning(dateJour, matinOuSoir, index) } className={ 'text-center' } style={ Object.keys(obj).length !== 0 ? { background: color } : {} }>
+			// Pour ouvrir le planning, il faut une date et son horaire (1 = matin / 0 = soir)
+			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir, index)} className={Object.keys(obj).length !== 0 ? style : ''}>
 				<div className="rotate">
-					{ qa !== 0 && "(" + qa + " produit.s)" } {/* Affiche qa seulement si il n'est pas égal à 0 */ }
-
+					{qa !== 0 && "(" + qa + " produit.s)"} {/* Affiche qa seulement si il n'est pas égal à 0 */}
 				</div>
 			</td>
 		);
 	}
-
 
 
 	/**
@@ -303,7 +296,7 @@ export default function Planning()
 		// Récupèrer dans objet l'objet a l'index correpondant
 		const objTaille = Object.keys(obj).length;
 		const indexObj = indexNav["" + index + matinOuSoir];
-		const color = matinOuSoir === 0 ? '#B2DADD' : '#DAE9EA';
+		const style = matinOuSoir === 0 ? 'matin' : 'soir';
 
 		// Récupèrer dans objet l'objet a l'index correpondant
 		const cellContent = objTaille !== 0 && (
@@ -333,7 +326,7 @@ export default function Planning()
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
 
-			<td key={ index } style={ objTaille === 0 ? {} : { background: color } } onClick={ objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined }>
+			<td key={ index } className={Object.keys(obj).length !== 0 ? style : ''} onClick={ objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined }>
 				{ cellContent && <div>{ cellContent }</div> }
 			</td>
 		);
@@ -417,7 +410,7 @@ export default function Planning()
 				</div>
 				{ genererSemaine() }
 			</div>
-			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); } }>
+			<Modal className="pop" show={ modalOpen } onHide={ () => { setModalOpen(false); } }>
 				<PopUpPlanning tabProd={ tabProd } />
 			</Modal>
 		</div>
