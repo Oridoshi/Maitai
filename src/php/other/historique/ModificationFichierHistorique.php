@@ -10,8 +10,8 @@ $fileTmpPath = $file['tmp_name'];
 
 $pdo = DB::getInstance();
 
-$chemin = $_SERVER['DOCUMENT_ROOT'] ."/SECU/";
-// $chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
+// $chemin = $_SERVER['DOCUMENT_ROOT'] ."/SECU/";
+$chemin = "C:\\xampp\\htdocs\\historique\\SECU\\";
 
 $nf = $idhist;
 

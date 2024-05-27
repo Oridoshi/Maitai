@@ -73,6 +73,12 @@ function FicheSecu() {
         }
 
         fetchData();
+
+
+		//Si il y a un fichier, lire le fichier.
+			if(sessionStorage.getItem('idHis')) { lireFiche() } 
+
+
     }, []); // Effectué une seule fois au chargement du composant
 	
 
@@ -193,11 +199,12 @@ function FicheSecu() {
 
 	function generateListEnTete(datas, id)
 	{
-		console.log("Id :",id, "objet", formDataObject[id])
-		console.log("Donnée :", formDataObject[id] && formDataObject[id])
+
+		if (document.getElementById(id) && formDataObject[id])
+			document.getElementById([id]).value = formDataObject[id];
 		
 		return (
-			<select name={id} id={id} className={`form-control p-1 m-1`} defaultValue={formDataObject[id] && formDataObject[id]} required={id !== 'ss2niveau'} onChange={() => handleChangeEnTete()}>
+			<select name={id} id={id} className={`form-control p-1 m-1`} required={id !== 'ss2niveau'} onChange={() => handleChangeEnTete()}>
 				{datas.map((niveau) => (
 					<option key={niveau}>{niveau}</option>
 				))}
@@ -309,6 +316,8 @@ function FicheSecu() {
 
 	function generateList(datas, num, cat)
 	{
+		console.log("objet",formDataObject[`p${num}${cat}niv`])
+
 		return (
 			<select name={`p${num}${cat}niv`} id={`p${num}${cat}niv`} className={`form-select ${encadreOuNon[num] && cat ==='A' ? 'bg-secondary text-light' : ''}`} defaultValue={formDataObject[`p${num}${cat}niv`] && formDataObject[`p${num}${cat}niv`]} onChange={() => handleChangePlaquee(num)}>
 				{datas.map((niveau) => (
@@ -456,6 +465,7 @@ function FicheSecu() {
 
 
 	const ExcelJS = require('exceljs');
+	const fs = require('fs');
 
 	/**
 	 * Création de la fiche de sécurité 
@@ -772,6 +782,28 @@ function FicheSecu() {
 		});
 
 
+
+		/** IMAGE **/
+		/*console.log("WS : ", worksheet)
+		console.log("WB : ", workbook)
+
+		let imageData = { image_file_name: "maitai.png"};
+
+		const imageId = workbook.addImage({
+			filename: `./src/img/maitai.png`,
+			extension: 'png',
+		});
+
+		worksheet.addImage(
+			imageId,
+			'E11:E11',
+			{
+				width: 20,
+				height: 10
+			}
+		);*/
+
+
 		// Générer le fichier Excel
 		const buffer = await workbook.xlsx.writeBuffer();
 
@@ -937,7 +969,6 @@ function FicheSecu() {
 
 	
 	// Si c'est une modification on lit la fiche 
-	if(sessionStorage.getItem('idHis')) { lireFiche() } 
 
 	/**
 	 * Si c'est une modif on lis les dataspour les mettres de base
@@ -1173,6 +1204,14 @@ function FicheSecu() {
 
 
 	function handleChangeEnTete() {
+		const newForm = formDataObject;
+		
+		newForm["dpniveau" ] = document.getElementById("dpniveau" )?.value
+		newForm["ss1niveau"] = document.getElementById("ss1niveau")?.value
+		newForm["ss2niveau"] = document.getElementById("ss2niveau")?.value
+		newForm["telniveau"] = document.getElementById("telniveau")?.value
+
+
 		setValide(formEstRempli());
 	}
 
