@@ -4,42 +4,31 @@
 }
 
 .accueil {
-    display: flex;
-    flex-direction: column;
-    justify-content: center ;
+    height: 100%;
     text-align: center;
-    align-items: left;
     font-size: 4em;
     font-family: 'Water Brush';
 }
 
-.carousel-control-prev-icon
-{
-    background-color: gray;
+.imgcarr {
+    background-size: cover;
+    background-position: center;
 }
 
-.carousel-control-next-icon
-{
-    background-color: gray;
+.carousel-control-prev-icon {
+    background-color: rgba(0, 0, 0, 0.379);
+    border-radius: 10px;
+    height: 40px;
+    width: 40px;
+}
+
+.carousel-control-next-icon {
+    background-color: rgba(0, 0, 0, 0.379);
+    border-radius: 10px;
+    height: 40px;
+    width: 40px;
 }
 
 .slide {
-    height:inherit;
-    justify-content: center ;
-}
-
-.col {
-    height: 70vh;
-}
-
-.f {
-    height: fit-content;
-}
-
-.custom-img {
-    max-width: 100%; /* Ajustez cette valeur selon vos besoins */
-}
-
-.espacement {
-    margin-right: 230px;
+    justify-content: center;
 }
