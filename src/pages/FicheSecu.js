@@ -22,6 +22,8 @@ function FicheSecu() {
 	const [peutValide       , setValide           ] = useState(false);
 	const [formDataObject   , setFormDataObject   ] = useState({});
 
+	const [estInserer   , setInserer   ] = useState(false);
+
 	const [idHis  , setIdHis  ] = useState();
 	
 	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
@@ -112,14 +114,14 @@ function FicheSecu() {
 					<div className="col-sm-5 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="nomFic" className="me-2 fw-bold">Nom du fichier</label>
-							<input type="text" className="form-control" name='nomFic' id="club" required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
+							<input type="text" className="form-control" name='nomFic' id="club" pattern='^[a-zA-Z0-9]+$' required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
 						</div>
 					</div>
 
 					<div className="col-sm-5 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="club" className="me-2 fw-bold">Club</label>
-							<input type="text" className="form-control" name='club' id="club" readOnly value={sessionStorage.getItem('login')}/>
+							<input type="text" className="form-control" name='club' id="club" readOnly value={idHis ? formDataObject["club"] : sessionStorage.getItem('login')}/>
 						</div>
 					</div>
 				</div>
@@ -191,6 +193,9 @@ function FicheSecu() {
 
 	function generateListEnTete(datas, id)
 	{
+		console.log("Id :",id, "objet", formDataObject[id])
+		console.log("Donnée :", formDataObject[id] && formDataObject[id])
+		
 		return (
 			<select name={id} id={id} className={`form-control p-1 m-1`} defaultValue={formDataObject[id] && formDataObject[id]} required={id !== 'ss2niveau'} onChange={() => handleChangeEnTete()}>
 				{datas.map((niveau) => (
@@ -234,6 +239,7 @@ function FicheSecu() {
 					<h5 className='fw-bold col-sm-1 ms-5'> Cocher      </h5>
 					<h5 className='fw-bold col-sm-2 ms-3'> Prevu       </h5>
 				</div>
+
 
 
 				<div className='ms-3'>
@@ -337,7 +343,9 @@ function FicheSecu() {
 	{
 		return (
 			<div className='ms-4 mt-4'>
-				<h3>Palanquée {num}</h3>
+			<h3>
+				{`Palanquée (${formDataObject[`p${num}Anom`]} ${formDataObject[`p${num}Aprenom`]}, ${formDataObject[`p${num}Bnom`]} ${formDataObject[`p${num}Bprenom`]}${formDataObject[`p${num}Cprenom`] ? `, ${formDataObject[`p${num}Cnom`]} ${formDataObject[`p${num}Cprenom`]}` : ''})`}
+			</h3>
 				
 				<div className='ms-3'>
 					<div className='d-flex mb-3'>
@@ -455,13 +463,21 @@ function FicheSecu() {
 
 	async function generateExcel() {
 		// Créer un nouveau classeur Excel
-		const workbook = new ExcelJS.Workbook();
+		var workbook = new ExcelJS.Workbook();
+
 
 		// Ajouter une feuille de calcul
 		const worksheet = workbook.addWorksheet('Sheet1');
 
-		const borderAll = { top: {style:'thin'}, left: {style:'thin'}, bottom: {style:'thin'}, right: {style:'thin'}};
-		const grayFill = {type: 'pattern',pattern:'solid',fgColor:{argb:'FFCCCCCC'}};
+		const borderAll = { top: {style:'thin', color: {argb:'80808080'}}, left: {style:'thin', color: {argb:'80808080'}}, bottom: {style:'thin', color: {argb:'80808080'}}, right: {style:'thin', color: {argb:'80808080'}}};
+		
+		const grayFill = {
+			type: 'pattern',
+			pattern:'solid',
+			fgColor:{argb:'FFFFFF00'},
+			bgColor:{argb:'808080'}
+		};
+
 		const allVCHC = { vertical: 'middle', horizontal: 'center' };
 
 
@@ -536,32 +552,32 @@ function FicheSecu() {
 
 		// EN TETE (DATE LIEU CLUB NB PLONG)
 		worksheet.getCell('B4').value  = 'DATE : ';
-		worksheet.getCell('B4').font   = { bold: true, size: 12, name:'Arial'};
+		worksheet.getCell('B4').font   = { bold: true, size: 12};
 		worksheet.getCell('B4').border = borderAll;
 		worksheet.getCell('C4').value  = formDataObject["date"];
 		worksheet.getCell('C4').border = borderAll;
 
 		worksheet.getCell('D4').value  = 'LIEU : ';
 		worksheet.getCell('D4').border = borderAll;
-		worksheet.getCell('D4').font   = { bold: true, size: 12, name:'Arial'};
+		worksheet.getCell('D4').font   = { bold: true, size: 12};
 		worksheet.getCell('E4').value  = formDataObject["lieu"];
 		worksheet.getCell('E4').border = borderAll;
 
 		worksheet.getCell('B6').value  = 'Nom du club';   
 		worksheet.getCell('B6').border = borderAll;
-		worksheet.getCell('B6').font   = { bold: true, size: 16, name:'Arial'};
+		worksheet.getCell('B6').font   = { bold: true, size: 16};
 		worksheet.getCell('C6').value  = formDataObject["club"];
 		worksheet.getCell('C6').border = borderAll;
 
 		worksheet.getCell('B8').value  = 'nombre plongeurs';   
-		worksheet.getCell('B8').font   = { bold: true, size: 12, name:'Arial'};
+		worksheet.getCell('B8').font   = { bold: true, size: 12};
 		worksheet.getCell('B8').border = borderAll;
 		worksheet.getCell('C8').value  = formDataObject["nbplong"];
 		worksheet.getCell('C8').border = borderAll;
 
 		worksheet.getCell('M8').border = borderAll; //signature
 		worksheet.getCell('M7').value  = 'signature DP';   
-		worksheet.getCell('M7').font   = {size: 6, italic:true, name:'Arial'}; 
+		worksheet.getCell('M7').font   = {size: 6, italic:true}; 
 
 		
 
@@ -570,7 +586,7 @@ function FicheSecu() {
 
 		lib.map((item) => {
 			worksheet.getCell('B' + item.ligne).value  = item.lib;   
-			worksheet.getCell('B' + item.ligne).font   = {size: 12, name:'Arial'};
+			worksheet.getCell('B' + item.ligne).font   = {size: 12};
 			worksheet.getCell('C' + item.ligne).value  = formDataObject[item.key + "nom"]   ;
 			worksheet.getCell('D' + item.ligne).value  = formDataObject[item.key + "prenom"];
 			worksheet.getCell('E' + item.ligne).value  = formDataObject[item.key + "niveau"];
@@ -588,7 +604,7 @@ function FicheSecu() {
 
 		lib.map((item) => {
 			worksheet.getCell('G'+item.ligne).value  = item.lib;   
-			worksheet.getCell('G'+item.ligne).font   = {size: 10, bold : true, name:'Arial'};
+			worksheet.getCell('G'+item.ligne).font   = {size: 10, bold : true};
 			worksheet.getCell('G'+item.ligne).border = borderAll;
 			worksheet.getCell('J'+item.ligne).value  = formDataObject[item.key]    
 			worksheet.getCell('J'+item.ligne).border = borderAll;     
@@ -602,22 +618,22 @@ function FicheSecu() {
 		// PETIT ENTETE 
 
 		worksheet.getCell('B14').value  = 'PALANQUEE';   
-		worksheet.getCell('B14').font   = {size: 6,bold:true, name:'Arial'}; 
+		worksheet.getCell('B14').font   = {size: 6,bold:true}; 
 		worksheet.getCell('B14').border = borderAll;
 		
 		worksheet.getCell('E14').value  = 'cocher';   
-		worksheet.getCell('E14').font   = {size: 6,bold:true, name:'Arial'}; 
+		worksheet.getCell('E14').font   = {size: 6,bold:true}; 
 		worksheet.getCell('E14').border = borderAll;
 		
 		worksheet.getCell('G13').value  = 'PREVU';   
-		worksheet.getCell('G13').font   = {size: 6,bold:true, name:'Arial'}; 
+		worksheet.getCell('G13').font   = {size: 6,bold:true}; 
 		worksheet.getCell('G13').border = borderAll;
 		worksheet.getCell('G13').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
 		worksheet.getCell('G14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
 		worksheet.getCell('H14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
 		
 		worksheet.getCell('I13').value  = 'REALISE';   
-		worksheet.getCell('I13').font   = {size: 6,bold:true, name:'Arial'}; 
+		worksheet.getCell('I13').font   = {size: 6,bold:true}; 
 		worksheet.getCell('I13').border = borderAll;
 
 
@@ -645,7 +661,7 @@ function FicheSecu() {
 
 		lib.map((item) => {
 			worksheet.getCell(item.col + '15').value  = item.lib;   
-			worksheet.getCell(item.col + '15').font   = {size: 8,bold:true, name:'Arial'}; 
+			worksheet.getCell(item.col + '15').font   = {size: 8,bold:true}; 
 			worksheet.getCell(item.col + '15').border = borderAll;
 		});  
 
@@ -655,7 +671,7 @@ function FicheSecu() {
 
 			// INDEX
 			worksheet.getCell('A' + (16 + index * 3)).value = (index+1);
-			worksheet.getCell('A' + (16 + index * 3)).font = {bold:true, vertAlign:'top'}
+			worksheet.getCell('A' + (16 + index * 3)).font = {bold:true}
 			worksheet.getCell('A' + (16 + index * 3)).border = borderAll;
 			worksheet.getCell('A' + (16 + index * 3)).alignment = { vertical: 'top', horizontal: 'right' };
 
@@ -675,9 +691,9 @@ function FicheSecu() {
 
 				if (encadreOuNon[index + 1] && i === 0)
 				{
-					worksheet.getCell('B' + ((16 + i) + index * 3)).fill = grayFill;
-					worksheet.getCell('C' + ((16 + i) + index * 3)).fill = grayFill;
-					worksheet.getCell('D' + ((16 + i) + index * 3)).fill = grayFill;
+					worksheet.getCell('B' + ((16 + i) + index * 3)).fill = {type: 'pattern',pattern:'solid',fgColor:{argb:'808080'}};
+					worksheet.getCell('C' + ((16 + i) + index * 3)).fill = {type: 'pattern',pattern:'solid',fgColor:{argb:'808080'}};
+					worksheet.getCell('D' + ((16 + i) + index * 3)).fill = {type: 'pattern',pattern:'solid',fgColor:{argb:'808080'}};
 				}
 
 			}
@@ -771,92 +787,102 @@ function FicheSecu() {
 		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
 		nomFic = nomFic.replace(/-+/g, '-');
 
-		//SI CEST NOUVEAU 
-		if (idHis === undefined)
+		console.log(nomFic)
+
+
+		if (!estInserer)
 		{
-			let formData = new FormData();
-			formData.append('login'  , sessionStorage.getItem("login"));
+			//SI CEST NOUVEAU 
+			if (idHis === undefined)
+			{
+				let formData = new FormData();
+				formData.append('login'  , sessionStorage.getItem("login"));
 
 
-			//On récupère id du login 
-			let response = await fetch(cheminPHP + "client/GetIdClient.php", {
-				method: 'POST',
-				body: formData
-			});
+				//On récupère id du login 
+				let response = await fetch(cheminPHP + "client/GetIdClient.php", {
+					method: 'POST',
+					body: formData
+				});
 
 
-			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de la récupération de l\'id.');
+				if (!response.ok) {
+					throw new Error('Erreur de réseau lors de la récupération de l\'id.');
+				}
+
+				const id = await response.text();
+
+				// On envoie le fichier Excel au serveur
+				formData = new FormData();
+				formData.append('iduti'  , parseInt(id));
+				formData.append('type'   , 'SECU');
+				formData.append('file'   , blob);
+				formData.append('name'   , nomFic);
+
+				response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
+					method: 'POST',
+					body: formData
+				});
+
+				if (!response.ok) {
+					throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+				}
+
+				const text = await response.text();
+
+			} else {
+
+				// ModificationFichierHistorique
+				// $idhist = $_POST['idhist'];
+				// $file = $_FILES['file'];
+				// $fileName = $_POST['name'];
+
+
+				// On envoie le nouveau fichier Excel au serveur
+				const formData = new FormData();
+				formData.append('idhist', idHis );
+				formData.append('file'  , blob  );
+				formData.append('name'  , nomFic);
+
+				const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
+					method: 'POST',
+					body: formData
+				});
+
+				if (!response.ok) {
+					throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+				}
+
+				const text = await response.text();
 			}
-
-			const id = await response.text();
-
-			// On envoie le fichier Excel au serveur
-			formData = new FormData();
-			formData.append('iduti'  , parseInt(id));
-			formData.append('type'   , 'SECU');
-			formData.append('file'   , blob);
-			formData.append('name'   , nomFic);
-
-			response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
-				method: 'POST',
-				body: formData
-			});
-
-			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
-			}
-
-			const text = await response.text();
-
-			console.log(text);
-		} else {
-
-			// ModificationFichierHistorique
-			// $idhist = $_POST['idhist'];
-			// $file = $_FILES['file'];
-			// $fileName = $_POST['name'];
-
-
-			// On envoie le nouveau fichier Excel au serveur
-			const formData = new FormData();
-			formData.append('idhist', idHis );
-			formData.append('file'  , blob  );
-			formData.append('name'  , nomFic);
-
-			const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
-				method: 'POST',
-				body: formData
-			});
-
-			if (!response.ok) {
-				throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
-			}
-
-			const text = await response.text();
+			setInserer(true);
 		}
 
 		// Fonction pour gérer le téléchargement du blob
 		function telechargerBlob() {
-			// Créer un lien de téléchargement avec le blob
-			const url = window.URL.createObjectURL(blob);
-			const link = document.createElement('a');
-			link.href = url;
+			if (!estInserer)
+			{
+				// Créer un lien de téléchargement avec le blob
+				const url = window.URL.createObjectURL(blob);
+				const link = document.createElement('a');
+				link.href = url;
 
-			// Définir le nom du fichier à télécharger
-			link.download = formDataObject["nomFic"];
+				// Définir le nom du fichier à télécharger
+				link.download = formDataObject["nomFic"];
 
-			// Ajouter le lien au document
-			document.body.appendChild(link);
+				// Ajouter le lien au document
+				document.body.appendChild(link);
 
-			// Simuler un clic sur le lien pour déclencher le téléchargement
-			link.click();
+				// Simuler un clic sur le lien pour déclencher le téléchargement
+				link.click();
 
-			// Supprimer le lien du document une fois le téléchargement terminé
-			document.body.removeChild(link);
-			setEtape(etape)
+				// Supprimer le lien du document une fois le téléchargement terminé
+				document.body.removeChild(link);
+				setEtape(etape)
 
-			redirigerAuDebut();
+				redirigerAuDebut();
+
+			}
 		}
 
 		try {
