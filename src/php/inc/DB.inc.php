@@ -348,6 +348,24 @@ class DB {
 		return $this->execQuery($requete,array($categ),'Produit');
 	}
 
+	/** Récuperer les produits disponibles le matin en fonction de la catégorie.
+	 * @param string $categ la catégorie des produits à récupérer
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduitsParCategDispoMatin($categ) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ? AND dispoMatin = 1';
+		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
+	/** Récuperer les produits disponibles le soir en fonction de la catégorie.
+	 * @param string $categ la catégorie des produits à récupérer
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getProduitsParCategDispoSoir($categ) {
+		$requete = 'SELECT * FROM Produit WHERE categorie = ? AND dispoSoir = 1';
+		return $this->execQuery($requete,array($categ),'Produit');
+	}
+
 	/** Récuperer un produit en fonction de son id.
 	 * @param int $idProd l'id du produit à récupérer
 	 * @return Produit le produit récupéré
@@ -378,8 +396,8 @@ class DB {
 	 * @param Produit $produits le produit à modifier.
 	 */
 	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, categorie = ? WHERE idProd = ?';
-		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie(),$produits->getIdProd()));
+		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, prixUniHT = ?, categorie = ?, dispoMatin = ?, dispoSoir = ? WHERE idProd = ?';
+		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir(),$produits->getIdProd()));
 	}
 
 	/**
@@ -387,8 +405,8 @@ class DB {
 	 * @param Produit $produits le produit à créer.
 	 */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,categorie) VALUES (?,?,?,?)';
-		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getCategorie()));
+		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,prixUniHT,categorie,dispoMatin,dispoSoir) VALUES (?,?,?,?,?,?,?)';
+		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir()));
 	}
 
 	/** Supprimer un produit.

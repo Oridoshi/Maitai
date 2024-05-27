@@ -48,12 +48,14 @@ INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addr
 -- Création de la table produit
 CREATE TABLE Produit
 (
-	idProd    INTEGER       PRIMARY KEY,
-	ref       VARCHAR( 50)  NOT NULL   ,
-	libProd   VARCHAR(100)  NOT NULL   ,
-	prixUni   DECIMAL(12,2)            ,
-	prixUniHT DECIMAL(12,2)            ,
-	categorie VARCHAR(100)   NOT NULL
+	idProd     INTEGER       PRIMARY KEY,
+	ref        VARCHAR( 50)  NOT NULL   ,
+	libProd    VARCHAR(100)  NOT NULL   ,
+	prixUni    DECIMAL(12,2)            ,
+	prixUniHT  DECIMAL(12,2)            ,
+	dispoMatin BOOLEAN       DEFAULT 0  ,
+	dispoSoir  BOOLEAN       DEFAULT 0  ,
+	categorie  VARCHAR(100)   NOT NULL
 );
 
 
