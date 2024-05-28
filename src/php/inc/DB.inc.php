@@ -433,6 +433,18 @@ class DB {
 	/****************/
 
 	/**
+	 * Récupère un ticket en fonction de l'id du produit et de l'id du client.
+	 * @param int $idprod id du produit
+	 * @param int $idUti id du client
+	 * @return Ticket le ticket récupéré
+	 */
+	public function getTicket(int $idprod, int $idUti) {
+		$requete = "SELECT * FROM Ticket WHERE idprod = ? AND iduti = ?";
+		$tparam = array($idprod, $idUti);
+		return $this->execQuery($requete, $tparam, 'Ticket')[0];
+	}
+
+	/**
 	 * Insère un ticket dans la base de données.
 	 * @param Ticket $ticket Ticket à insérer dans la base de données.
 	 * @return void
@@ -489,11 +501,9 @@ class DB {
 	public function getProdTicket(?int $idUti) {
 		if ($idUti == null) {
 			$requete = "SELECT * FROM Ticket";
-			$requete = "SELECT * FROM Ticket";
 			$tparam = null;
 		}
 		else {
-			$requete = "SELECT * FROM Ticket WHERE iduti = ?";
 			$requete = "SELECT * FROM Ticket WHERE iduti = ?";
 			$tparam = array($idUti);
 		}

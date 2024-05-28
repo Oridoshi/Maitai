@@ -54,6 +54,7 @@ function Secu() {
 				return {
 					...item,
 					chemin: nouveauChemin,
+					datePlong : separer[1].replace(/-/g, '/'),
 					id: index + 1
 				};
 			});
@@ -78,7 +79,7 @@ function Secu() {
 	const initialHeader = [
 		{ id: 'id'       , name: 'NB Ligne'             , type:'number'  , required : true , editable : false, show : false                     },
 		{ id: 'chemin'   , name: 'Nom du fichier'       , type:'text'    , required : true , editable : false, show : true                      },
-		{ id: 'date'     , name: 'Date de création'     , type:'text'    , required : true , editable : false, show : true                      },
+		{ id: 'datePlong', name: 'Date de plongé'       , type:'text'    , required : true , editable : false, show : true                      },
 		{ id: 'btnHisto' , name: 'Historique'           , type:'button'  , required : true , editable : false, show : true, function : modifFiche, btn : 'Modifier', className:'btnSauvegarder'},
 	];
 
