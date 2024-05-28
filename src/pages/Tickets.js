@@ -608,11 +608,13 @@ export default function Ticket()
 	{
 		try
 		{
+			
+			const formData = new FormData();
+			formData.append('categ', nomCateg);
+
 			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'text/plain; charset=UTF-8'
-				},
+				method: 'POST',
+				body: formData
 			});
 
 			if (!response.ok)
@@ -621,15 +623,8 @@ export default function Ticket()
 			}
 
 			const data = await response.json();
-			const tabProd = [];
-			data.forEach(prod =>
-			{
-				if (prod.categorie === nomCateg)
-				{
-					tabProd.push(prod);
-				}
-			})
-			return tabProd;
+			return data;
+
 		} catch (error)
 		{
 			console.error('Erreur :', error);

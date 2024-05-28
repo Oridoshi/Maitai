@@ -132,7 +132,7 @@ export default function Historique(){
 				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : true , show : true },
 				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : true , show : true },
-				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
+				// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
 				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
 				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
 			]);
@@ -145,7 +145,7 @@ export default function Historique(){
 				{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 				{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
 				{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
-				{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+				// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
 				{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
 			]);
@@ -339,7 +339,7 @@ export default function Historique(){
 						{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 						{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
 						{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
-						{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+						// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 						{ id: 'valide' , name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true , fastEditable : true },
 						{ id: 'btnHist', name: 'Historique'         , type:'button'  , required : true, editable : false, show : true , function : modifFiche, btn : 'Modifier'    , className:'btnSauvegarder'},
 						{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true , function : funGetFile, btn : 'Export (XLSX)', className:'btnExport'}
@@ -353,7 +353,7 @@ export default function Historique(){
 						{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 						{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
 						{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
-						{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+						// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 						{ id: 'valide' , name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true , fastEditable : true },
 						{ id: 'btnHist', name: 'Historique'         , type:'button'  , required : true, editable : false, show : true , function : modifFiche, btn : 'Modifier'    , className:'btnSauvegarder'},
 						{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true , function : funGetFile, btn : 'Export (XLSX)', className:'btnExport'}
@@ -396,8 +396,8 @@ export default function Historique(){
 					{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 					{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
 					{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
-					{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
-					// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+					/*{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+					// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },*/
 					{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
 				]);
 			}
@@ -409,7 +409,7 @@ export default function Historique(){
 					{ id: 'idUti'  , name: 'ID du client'       , type:'number'  , required : true, editable : false, show : false},
 					{ id: 'date'   , name: 'Date'               , type:'date'    , required : true, editable : false, show : true },
 					{ id: 'chemin' , name: 'Nom du fichier'     , type:'text'    , required : true, editable : false, show : true },
-					{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
+					// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 					// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
 					{ id: 'btnGet' , name: 'Télécharger'        , type:'button'  , required : true, editable : false, show : true, function : funGetFile, btn : 'Export (CSV)', className:'btnExport'}
 				]);
@@ -447,7 +447,7 @@ export default function Historique(){
 	return (
 	<div className="col-sm-12">
 
-		<h1 className='titre mt-1'>Gestion des historiques {type} - {sessionStorage.getItem('nomClub')}</h1>
+		<h1 className='titre mt-1'>Gestion des historiques {type} - {sessionStorage.getItem('droit') === 'Admin' ? sessionStorage.getItem('nomClub') : sessionStorage.getItem('login')}</h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
