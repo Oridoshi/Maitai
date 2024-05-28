@@ -20,7 +20,7 @@ export default function Historique(){
 	useEffect(() => {
 		// si l'utilisateur est un client, on récupère son id via son login sinon on récupère dans la session
 		if(sessionStorage.getItem('droit') === 'Admin')
-			sessionStorage.getItem('idUti');
+			setIdUti(sessionStorage.getItem('idUti'));
 		else
 		{
 			const formData = new FormData();
@@ -41,7 +41,6 @@ export default function Historique(){
 				console.error('Erreur :', error);
 			});
 		}
-
 
 		// Créer un objet FormData
 		const formData = new FormData();
