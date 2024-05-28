@@ -11,10 +11,10 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	// private static string $dbName   = "maitai";
-	// private static string $login    = "Admin";
-	// private static string $password = "maitai";
-	// private static string $host     = "localhost";
+	//private static string $dbName   = "maitai";
+	//private static string $login    = "Admin";
+	//private static string $password = "maitai";
+	//private static string $host     = "localhost";
 
 
 	private static string $dbName   = "if0_36460769_maitai";
@@ -381,7 +381,7 @@ class DB {
 	 */
 	public function getProduitByLib($lib) {
 		$requete = 'SELECT * FROM Produit WHERE libProd = ?';
-		return $this->execQuery($requete,array($lib),'Produit')[0];
+		return ($prod = $this->execQuery($requete,array($lib),'Produit')) == null ? null : $prod[0];
 	}
 
 	/** Récuperer toute les catégories de produits. 
@@ -441,7 +441,7 @@ class DB {
 	public function getTicket(int $idprod, int $idUti) {
 		$requete = "SELECT * FROM Ticket WHERE idprod = ? AND iduti = ?";
 		$tparam = array($idprod, $idUti);
-		return $this->execQuery($requete, $tparam, 'Ticket')[0];
+		return ($ticket = $this->execQuery($requete, $tparam, 'Ticket')) != null ? $ticket[0] : null;
 	}
 
 	/**
