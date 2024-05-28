@@ -21,6 +21,7 @@ function addTicket($iduti, $file, $pdo) {
     $tab = retournerFichier($file);
     $tab = getProduits($tab);
     foreach($tab as $prod) {
+        echo $prod[0] . " : " . $prod[1] . "<br>";
         $produit = $pdo->getProduitByLib($prod[0]);
         $ticket = $pdo->getTicket($iduti, $produit->getIdProd());
             
