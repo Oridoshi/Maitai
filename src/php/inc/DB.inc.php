@@ -392,6 +392,17 @@ class DB {
 		return $this->execQuery($requete,null,'Produit');
 	}
 
+	/** Récuperer toute les catégories de produits disponibles le matin et le soir.
+	 * @return array tableau d'objets de la classe Produit
+	 */
+	public function getCategorieDispo($pourMatin) {
+		if($pourMatin)
+			$requete = 'SELECT DISTINCT categorie FROM Produit WHERE dispoMatin = 1';
+		else
+			$requete = 'SELECT DISTINCT categorie FROM Produit WHERE dispoSoir = 1';
+		return $this->execQuery($requete,null,'Produit');
+	}
+
 	/** Modifier les données d'un produit.
 	 * @param Produit $produits le produit à modifier.
 	 */
