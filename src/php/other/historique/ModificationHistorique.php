@@ -5,7 +5,7 @@ require '../../../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-$idhist = $_POST['idhist'];
+$idhist = $_POST[idhist];
 
 $pdo = DB::getInstance();
 
@@ -21,9 +21,8 @@ function addTicket($iduti, $file, $pdo) {
     $tab = retournerFichier($file);
     $tab = getProduits($tab);
     foreach($tab as $prod) {
-        echo $prod[0] . " : " . $prod[1] . "<br>";
         $produit = $pdo->getProduitByLib($prod[0]);
-        $ticket = $pdo->getTicket($iduti, $produit->getIdProd());
+        $ticket = $pdo->getTicket($produit->getIdProd(), $iduti);
             
         if($ticket != null) {
             $ticket->setQa($ticket->getQa() + $prod[1]);
@@ -32,8 +31,8 @@ function addTicket($iduti, $file, $pdo) {
         } else {
             $ticket = new Ticket();
             $ticket->setIdUti($iduti);
-            $ticket->setIdProd($pdo->getProduitByLib($produit->getIdProd()));
-            $ticket->setPrixSpe($pdo->getProduitByLib($produit)->getPrixUni());
+            $ticket->setIdProd($produit->getIdProd());
+            $ticket->setPrixSpe($produit->getPrixUni());
             $ticket->setQa($prod[1]);
             $ticket->setPrixTot($ticket->getPrixSpe() * $ticket->getQa());
             $pdo->insertTicket($ticket);
@@ -61,12 +60,12 @@ function getProduits($tabinfo) {
     $size = count($tabinfo);
 
     //verification si Sécu/DP/O2 = Maïtaï et récupération de si le DP est maïtaï pour une autre verification plus tard
-    $cpt = $size - 8;
+    $cpt = $size - 9;
     $line = $tabinfo[$cpt];
     $tabtmp = explode(";", $line);
     $estMaitai = str_replace("ï", "i", strtolower($tabtmp[3])) == "maitai" || str_replace("ï", "i", strtolower($tabtmp[6])) == "maitai";
     $DPTrimix = str_replace("ï", "i", strtolower($tabtmp[3])) == "maitai";
-    $cpt++;
+    $cpt--;
 
     $line = $tabinfo[$cpt];
     $tabtmp = explode(";", $line);
@@ -75,13 +74,13 @@ function getProduits($tabinfo) {
     $cpt = 0;
     if($estMaitai)
         $tab["Maitai"] = ["Sécu/DP/O2 Maïtaï", 1];
-    while($cpt < $size - 13) {
+    while($cpt < $size - 16) {
         $line = $tabinfo[$cpt++];
         $tabtmp = explode(";", $line);
 
-        $palanque[0] = $tabtmp;
+        $palanque[2] = $tabtmp;
         $palanque[1] = explode(";", $tabinfo[$cpt++]);
-        $palanque[2] = explode(";", $tabinfo[$cpt++]);
+        $palanque[0] = explode(";", $tabinfo[$cpt++]);
 
         //vérification si c'est un baptème
         if(str_contains(str_replace("è", "e", strtolower($palanque[1][3])),"bapteme") ) {
@@ -130,7 +129,8 @@ function getProduits($tabinfo) {
         }
 
         //vérification de si le DP est un trimix
-        $gaz = $tabtmp[14];
+        $gaz = $palanque[0][14];
+        var_dump($palanque[0]);
         if($DPTrimix && str_contains(strtolower($gaz), "trimix")) {
             $tab["Trimix"] = ["DP Trimix Maïtaï", 1];
         }

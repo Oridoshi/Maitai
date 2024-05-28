@@ -567,7 +567,6 @@ class DB {
 		$requete = "INSERT INTO Historique (date, chemin, type, iduti) VALUES (NOW(), :chemin, :type, :idUti)";
 		$tparam = array(':chemin' => $historique->getChemin(), ':type' => $historique->getType(), ':idUti' => $historique->getIdUti());
 		return $this->execMaj($requete, $tparam);
-		return $this->execMaj($requete, $tparam);
 	}
 
 	/**
