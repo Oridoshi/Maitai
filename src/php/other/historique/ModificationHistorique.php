@@ -5,7 +5,7 @@ require '../../../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-$idhist = $_POST[idhist];
+$idhist = $_POST["idhist"];
 
 $pdo = DB::getInstance();
 
