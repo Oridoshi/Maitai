@@ -389,8 +389,8 @@ function FicheSecu() {
 						</div>
 						
 						<div className='align-items-center '>
-							<label htmlFor={`gaz${num}`} className="me-2">Gaz</label>
-							{generateGaz()}
+							<label htmlFor={`p${num}gaz`} className="me-2">Gaz</label>
+							{generateGaz(num)}
 						</div>
 					</div>
 
@@ -407,6 +407,7 @@ function FicheSecu() {
 
 	function generateGaz(num)
 	{
+		console.log(num)
 		return (
 			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]}  onChange={() => handleChangeRea()}>
 				{/* Si gazOptions est vide, affiche "Aire" */}
@@ -492,6 +493,8 @@ function FicheSecu() {
 		};
 
 		const allVCHC = { vertical: 'middle', horizontal: 'center' };
+
+		console.log(formDataObject)
 
 
 		//TAILLE COLONNE
