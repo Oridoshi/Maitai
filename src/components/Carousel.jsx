@@ -24,7 +24,7 @@ export default function ImageCarousel(){
 		{images.map((url) => (
 				<Carousel.Item key={url}>
 					<img
-						className="d-block col w-100"
+						className="imgcarr"
 						src={url}
 						alt={`${url}`}
 					/>

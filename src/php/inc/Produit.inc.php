@@ -33,7 +33,7 @@ class Produit {
      * @var string $categorie Categorie du produit.
      * Constructeur de la classe Produit.
      */
-    public function __construct(int $idprod = 0, string $ref = "", string $libprod = "", ?float $prixuni = null, ?float $prixuniht, bool $dispomatin = false, bool $disposoir = false, string $categorie = "") {
+    public function __construct(int $idprod = 0, string $ref = "", string $libprod = "", ?float $prixuni = null, ?float $prixuniht = null, bool $dispomatin = false, bool $disposoir = false, string $categorie = "") {
         $this->idprod = $idprod;
         $this->ref = $ref;
         $this->libprod = $libprod;

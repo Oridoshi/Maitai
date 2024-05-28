@@ -22,13 +22,13 @@ export default function Accueil(){
 	// const txt = "Maïtaï, Enfin une carrière à ma taille";
 
 	return(
-		<div className="container">
-			<div className="row justify-content-center align-items-center">
-				<p className="accueil col espacement">{txt}</p>
-				<div className="col">
+		<div className="allaccueil">
+			<div className="accueil">
+				<p className="textAccueil">{txt}</p>
+				<div className="imgAcceuil">
 					<ImageCarousel  />
 				</div>
 			</div>
 		</div>
-	) 
+	)
 }

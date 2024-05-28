@@ -250,10 +250,7 @@ export default function PopUpPlanning({ tabProd })
 		try
 		{
 			const response = await fetch(cheminPHP + "produit/GetCateg.php", {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'text/plain; charset=UTF-8'
-				},
+				method: 'POST'
 			});
 			if (!response.ok)
 			{
@@ -273,11 +270,13 @@ export default function PopUpPlanning({ tabProd })
 	{
 		try
 		{
+			const formData = new FormData();
+			formData.append('categ', nomCateg);
+			formData.append('dispo', horaire);
+
 			const response = await fetch(cheminPHP + "produit/GetProduit.php", {
-				method: 'GET',
-				headers: {
-					'Content-Type': 'text/plain; charset=UTF-8'
-				},
+				method: 'POST',
+				body: formData
 			});
 
 			if (!response.ok)
@@ -286,15 +285,7 @@ export default function PopUpPlanning({ tabProd })
 			}
 
 			const data = await response.json();
-			const tabProd = [];
-			data.forEach(prod =>
-			{
-				if (prod.categorie === nomCateg)
-				{
-					tabProd.push(prod);
-				}
-			})
-			return tabProd;
+			return data;
 		}
 		catch (error)
 		{
