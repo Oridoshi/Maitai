@@ -102,8 +102,8 @@ export default function Produits(){
 			formData.append('libProd'  , nouvItem.libprod);
 			formData.append('prixUni'  , nouvItem.prixuni===null||nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
 			formData.append('prixUniHT', nouvItem.prixuniht===null||nouvItem.prixuniht===""?"":parseFloat(nouvItem.prixuniht));
-			formData.append('dispoMatin', nouvItem.dispoMatin ? 1 : 0);
-			formData.append('dispoSoir' , nouvItem.dispoSoir  ? 1 : 0);
+			formData.append('dispoMatin', nouvItem.dispoMatin);
+			formData.append('dispoSoir' , nouvItem.dispoSoir );
 			formData.append('categorie', nouvItem.categorie);
 
 			const requestOptions = {
