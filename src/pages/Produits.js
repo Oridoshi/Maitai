@@ -7,8 +7,11 @@ export default function Produits(){
 
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
-	const [datalistCateg, setDatalistCateg] = useState([]);
+	const [datalistCateg,setDatalistCateg] = useState([]);
 	const [searchTerm  , setSearchTerm  ] = useState(''); // État pour stocker la valeur de recherche
+	const [checkedM    , setCheckedMatin] = useState(false); // État pour stocker la valeur de la case à cocher
+	const [checkedS    , setCheckedSoir ] = useState(false); // État pour stocker la valeur de la case à cocher
+
 
 
 	// Récupérer les données des produits
@@ -95,15 +98,15 @@ export default function Produits(){
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {
 		try {
-			const formData = new FormData();
+			console.log("Nouvelle donnée",nouvItem)
 
-			console.log(nouvItem.prixuni);
+			const formData = new FormData();
 			formData.append('ref'      , nouvItem.ref);
 			formData.append('libProd'  , nouvItem.libprod);
 			formData.append('prixUni'  , nouvItem.prixuni===null||nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
 			formData.append('prixUniHT', nouvItem.prixuniht===null||nouvItem.prixuniht===""?"":parseFloat(nouvItem.prixuniht));
-			formData.append('dispoMatin', nouvItem.dispoMatin);
-			formData.append('dispoSoir' , nouvItem.dispoSoir );
+			formData.append('dispoMatin', nouvItem.dispomatin ? 1 : 0); // 1 si vrai, 0 si faux
+			formData.append('dispoSoir' , nouvItem.disposoir  ? 1 : 0); // 1 si vrai, 0 si faux
 			formData.append('categorie', nouvItem.categorie);
 
 			const requestOptions = {
@@ -280,23 +283,29 @@ export default function Produits(){
 		}
 	}
 
-	const handleChange   = (e) => {setSearchTerm( e.target.value);};
 
-	const applyFilter = (data, value) => {
+	const handleChange  = (e) => {setSearchTerm(e.target.value);  };
+
+	const applyFilter = (data, value, checkedM, checkedS) => {
 		const filteredData = data.filter((element) => {
-			for (const key of initialHeader) {
-				if (key.show && (element[key.id] + '').toUpperCase().includes(value.toUpperCase())) {
-					return true;
+				// Parcourir les clés de l'en-tête initial
+				for (const key of initialHeader) {
+					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
+					if (key.show ) {
+						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase()) && (element.dispomatin === checkedM || !checkedM) && (element.disposoir === checkedS || !checkedS)) {
+							return true; // Si correspondance, conserver cet élément
+						}
+					}
 				}
-			}
-			return false;
+				return false; // Si aucune correspondance, exclure cet élément
 		});
 		setFilterData(filteredData);
 	}
 
+
 	useEffect(() => {
-		applyFilter(initialData, searchTerm);
-	}, [searchTerm, initialData]);
+		applyFilter(initialData, searchTerm, checkedM, checkedS);
+	}, [initialData, searchTerm, checkedM, checkedS]);
 
 
 
@@ -311,6 +320,18 @@ export default function Produits(){
 			{/* barre de recherche */}
 			<div className="col-sm-3">
 				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
+			</div>
+
+			{/* Bouton checkbox avec style CSS pour la marge gauche */}
+			<div className="form-check" style={{ marginLeft: '10em' }}>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedMatin(e.target.checked)}/>
+				<label className="txtcheck form-check-label" htmlFor="afficherClients">Afficher les produits du matin</label>
+			</div>
+
+			{/* Bouton checkbox avec style CSS pour la marge gauche */}
+			<div className="form-check" style={{ marginLeft: '10em' }}>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedSoir(e.target.checked)}/>
+				<label className="txtcheck form-check-label" htmlFor="afficherClients">Afficher les produits du soir</label>
 			</div>
 		</div>
 
