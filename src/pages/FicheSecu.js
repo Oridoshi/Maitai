@@ -1189,7 +1189,7 @@ function FicheSecu() {
 		var tousRemplis = lignePalanqueeComplete(num, 'A') && lignePalanqueeComplete(num, 'B');
 		setValide(tousRemplis)
 
-		if (tousRemplis && num === nombrePlaques && nombrePlaques < 8)
+		if (tousRemplis && num === nombrePlaques)
 			setNombrePlaques(nombrePlaques+1)
 
 		//Si on avait rien rempli, on enlève celui crée
