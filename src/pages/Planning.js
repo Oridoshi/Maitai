@@ -19,7 +19,6 @@ export default function Planning()
 
 
 
-
 	/*****************************************/
 	/* */
 	/*****************************************/
@@ -149,24 +148,23 @@ export default function Planning()
 
 
 
-
 	/**
 	 * Retourne le numéro de la semaine actuelle
 	 * @param {*} date
 	 * @returns
 	 */
-	function numeroSemaineActuelle(date)
+	function genererTitre()
 	{
-		const joursPassesAnnee = (date - new Date(date.getFullYear(), 0, 1)) / 86400000;
-		const premierJourAnneeAjuste = (new Date(date.getFullYear(), 0, 1).getDay() + 6) % 7; // Ajustement du premier jour de l'année
 
-		// Calcul du numéro de semaine
-		const numeroSemaine = Math.ceil((joursPassesAnnee + premierJourAnneeAjuste + 1) / 7);
-
-		return numeroSemaine;
+		return(
+			<h1 className="titre">
+				Planning du
+				<input className="datetitre" type="date" />
+				au
+				<input className="datetitre" type="date"/>
+			</h1>
+		);
 	}
-
-
 
 	/**
 	 * Retourne la date passe en parametre au format YYYY-MM-DD
@@ -182,7 +180,19 @@ export default function Planning()
 		return `${ year }-${ month }-${ day }`;
 	}
 
-
+	/**
+	 * Retourne la date du lundi de la semaine actuelle
+	 * @param {*} date
+	 * @returns
+	 */
+	function getLundiDeLaSemaine(date)
+	{
+		const jourActuel = date.getDay();
+		const diff = jourActuel === 0 ? 6 : jourActuel - 1; // Si c'est dimanche (0), remonter à lundi (6 jours)
+		const lundi = new Date(date);
+		lundi.setDate(date.getDate() - diff);
+		return lundi;
+	}
 
 	/**
 	 * Affichage du planning en format de tableau
@@ -195,27 +205,27 @@ export default function Planning()
 		const mois = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
 		// Récupère le jour et la date actuelle
-		const jourActuel = new Date().getDay();
 		const dateActuelle = new Date();
 
-		// Réorganise le tableau de jours, si on est mercredi il ira du mercredi au mardi
-		const joursSemaine = [...jours.slice(jourActuel - 1), ...jours.slice(0, jourActuel - 1)];
+		// Obtenez la date du lundi de la semaine actuelle
+		const lundiDeLaSemaine = getLundiDeLaSemaine(dateActuelle);
 
 		/** Code HTML du tableau */
 		return (
-			<table className={droit === 'Admin' ? "tabSemaine mb-5" : "tabSemaine tabSemaineClient mb-5"}>
+			<table className={ droit === 'Admin' ? "tabSemaine mb-5" : "tabSemaine tabSemaineClient mb-5" }>
 				<thead>
 					<tr>
 						{
 							// Place chaque jour de la semaine en entête de colonne
-							joursSemaine.map((jour, index) => {
-								// Crée une nouvelle date basée sur la date actuelle et ajoute le nombre de jour qu'on a iterre
-								const dateJour = new Date(dateActuelle);
-								dateJour.setDate(dateActuelle.getDate() + index);
+							jours.map((jour, index) =>
+							{
+								// Crée une nouvelle date basée sur le lundi de la semaine actuelle et ajoute le nombre de jours qu'on a itéré
+								const dateJour = new Date(lundiDeLaSemaine);
+								dateJour.setDate(lundiDeLaSemaine.getDate() + index);
 
 								return (
-									<th key={index}>
-										<div className="rotate">{jour + " "}{dateJour.getDate() + " "}{mois[dateJour.getMonth()]}</div>
+									<th key={ index }>
+										<div className="rotate">{ jour + " " }{ dateJour.getDate() + " " }{ mois[dateJour.getMonth()] }</div>
 									</th>
 								);
 							})
@@ -226,18 +236,20 @@ export default function Planning()
 					<tr>
 						{
 							// Place chaque jour de la ligne du Matin
-							joursSemaine.map((jour, index) => {
-								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 1);
-								else return genererDemiJourUti(dateActuelle, index, 1);
+							jours.map((jour, index) =>
+							{
+								if (droit === 'Admin') return genererDemiJourAdmin(lundiDeLaSemaine, index, 1);
+								else return genererDemiJourUti(lundiDeLaSemaine, index, 1);
 							})
 						}
 					</tr>
 					<tr>
 						{
 							// Place chaque jour de la ligne du Soir
-							joursSemaine.map((jour, index) => {
-								if (droit === 'Admin') return genererDemiJourAdmin(dateActuelle, index, 0);
-								else return genererDemiJourUti(dateActuelle, index, 0);
+							jours.map((jour, index) =>
+							{
+								if (droit === 'Admin') return genererDemiJourAdmin(lundiDeLaSemaine, index, 0);
+								else return genererDemiJourUti(lundiDeLaSemaine, index, 0);
 							})
 						}
 					</tr>
@@ -254,9 +266,9 @@ export default function Planning()
 	 * @param {*} matinOuSoir
 	 * @returns
 	 */
-	function genererDemiJourUti(dateActuelle, index, matinOuSoir) {
-		const dateJour = new Date(dateActuelle);
-		dateJour.setDate(dateActuelle.getDate() + index);
+	function genererDemiJourUti(date, index, matinOuSoir) {
+		const dateJour = new Date(date);
+		dateJour.setDate(date.getDate() + index);
 
 		const obj = data["" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
 
@@ -268,11 +280,18 @@ export default function Planning()
 
 		const style = matinOuSoir === 0 ? 'matin' : 'soir';
 
+		// Comparer la date de la case avec la date actuelle
+		const dateActuelle = new Date();
+		dateActuelle.setHours(0, 0, 0, 0); // Réinitialiser l'heure de la date actuelle pour ne comparer que les dates
+
+		const estPasse = dateJour < dateActuelle;
+		const classeGris = estPasse ? 'grisee' : '';
+
 		return (
 			// Pour ouvrir le planning, il faut une date et son horaire (1 = matin / 0 = soir)
-			<td key={index} onClick={() => ouvrirPlanning(dateJour, matinOuSoir, index)} className={Object.keys(obj).length !== 0 ? style : ''}>
+			<td key={index} onClick={estPasse ? null : () => ouvrirPlanning(dateJour, matinOuSoir, index)} className={`${Object.keys(obj).length !== 0 ? style : ''} ${classeGris}`}>
 				<div className="rotate">
-					{qa !== 0 && "(" + qa + " produit.s)"} {/* Affiche qa seulement si il n'est pas égal à 0 */}
+					{qa !== 0 && "(" + qa + " produit.s)"}
 				</div>
 			</td>
 		);
@@ -326,7 +345,7 @@ export default function Planning()
 		return (
 			//pour ouvrir le planing il faut un date et son horaire ( 1 = matin / 0 = soir)
 
-			<td key={ index } className={Object.keys(obj).length !== 0 ? style : ''} onClick={ objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined }>
+			<td key={ index } className={ Object.keys(obj).length !== 0 ? style : '' } onClick={ objTaille !== 0 ? () => ouvrirPlanning(dateJour, matinOuSoir) : undefined }>
 				{ cellContent && <div>{ cellContent }</div> }
 			</td>
 		);
@@ -402,7 +421,7 @@ export default function Planning()
 	/** Code html de la page de planning */
 	return (
 		<div>
-			<h1 className="titre">Planning semaine { numeroSemaineActuelle(new Date()) }</h1>
+			{ genererTitre() }
 			<div className='planning-container mb-5'>
 				<div className="legend">
 					<div className="itemlegend">Matin</div>

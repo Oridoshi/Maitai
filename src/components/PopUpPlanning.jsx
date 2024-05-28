@@ -368,7 +368,7 @@ export default function PopUpPlanning({ tabProd })
 					<div className="dropdown itemModal">
 						<button id="btnProdCat" className="btnProduit btn btn-secondary dropdown-toggle" type="button"
 							data-bs-toggle="dropdown" aria-expanded="false" disabled>
-							Produit
+							Produitcharacter
 						</button>
 						<ul className="dropdown-menu">
 							{renderProd()}

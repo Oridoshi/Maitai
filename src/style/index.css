@@ -2,18 +2,19 @@
 	background-color: #FFFFFF;
 	font-family: Popins;
 }
-.accueil{
-	display: grid!important;
+
+.accueil {
+	display: grid !important;
 	grid-template-rows: 100%;
-	grid-template-columns: 50% 50%!important;
+	grid-template-columns: 50% 50% !important;
 	align-items: center;
-	height: 600px!important;
+	height: 600px !important;
 	margin-top: 50px;
 }
-.textAccueil{
 
-}
-.imgAcceuil{
+.textAccueil {}
+
+.imgAcceuil {
 	max-height: 100%;
 }
 
@@ -155,6 +156,18 @@
 	color: red;
 }
 
+.datetitre {
+	width: 150px;
+	height: 40px;
+	border-radius: 15px;
+	border: transparent;
+	text-align: center;
+	color: #005C8F;
+	margin-left: 15px;
+	margin-right: 15px;
+	font-size: 22px;
+}
+
 .tabSemaine {
 	width: 85%;
 	table-layout: fixed;
@@ -180,24 +193,33 @@
 	background-color: #d5cfca;
 	cursor: pointer;
 }
-.matin{
-	background-color: #A4C9CC!important;
+
+.matin {
+	background-color: #A4C9CC !important;
 	text-align: center;
 }
-.matin:hover{
-	background-color: #90afb2!important;
+
+.matin:hover {
+	background-color: #90afb2 !important;
 	text-align: center;
 	cursor: pointer;
 }
 
-.soir{
-	background-color: #DAE9EA!important;
+.soir {
+	background-color: #DAE9EA !important;
 	text-align: center;
 }
-.soir:hover{
-	background-color: #becbcc!important;
+
+.soir:hover {
+	background-color: #becbcc !important;
 	text-align: center;
 	cursor: pointer;
+}
+
+.grisee {
+	background-color: #828282!important;
+	pointer-events: none;
+	cursor: not-allowed;
 }
 
 .legend {
@@ -222,7 +244,8 @@
 	color: #006DAA;
 }
 
-@media only screen and (max-width: 700px),(orientation: portrait) {
+@media only screen and (max-width: 700px),
+(orientation: portrait) {
 	.planning-container {
 		margin-top: 0px;
 		display: flex;
@@ -232,7 +255,7 @@
 	}
 
 	.legend {
-		align-self:center;
+		align-self: center;
 		margin-top: 0px;
 		height: 30px;
 		width: 360px;
@@ -258,20 +281,23 @@
 		height: 120px;
 		width: 81px;
 	}
+
 	.tabSemaine th {
 		width: 83px;
 		height: 120px;
 		font-size: 12px;
 	}
-	.rotate{
+
+	.rotate {
 		transform: rotate(90deg);
 	}
 
-	.accueil{
+	.accueil {
 		grid-template-columns: 100% !important;
 		grid-template-rows: 50% 50% !important;
 	}
 }
+
 input:read-only {
 	background-color: #F2EEEB;
 }
