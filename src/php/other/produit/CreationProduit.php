@@ -12,7 +12,7 @@ if($_POST['prixUni'] != ""){
     $newProd->setPrixUni($_POST['prixUni']);
 }
 if($_POST['prixUniHT'] != ""){
-    $Prod->setPrixUniHT($_POST['prixUniHT']);
+    $newProd->setPrixUniHT($_POST['prixUniHT']);
 }
 $newProd->setDispoMatin($_POST['dispoMatin']);
 $newProd->setDispoSoir($_POST['dispoSoir']);

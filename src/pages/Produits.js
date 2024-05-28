@@ -97,10 +97,11 @@ export default function Produits(){
 		try {
 			const formData = new FormData();
 
+			console.log(nouvItem.prixuni);
 			formData.append('ref'      , nouvItem.ref);
 			formData.append('libProd'  , nouvItem.libprod);
-			formData.append('prixUni'  , nouvItem.prixuni===null?"":parseFloat(nouvItem.prixuni));
-			formData.append('prixUniHT', nouvItem.prixuniht===null?"":parseFloat(nouvItem.prixuniht));
+			formData.append('prixUni'  , nouvItem.prixuni===null||nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
+			formData.append('prixUniHT', nouvItem.prixuniht===null||nouvItem.prixuniht===""?"":parseFloat(nouvItem.prixuniht));
 			formData.append('dispoMatin', nouvItem.dispoMatin ? 1 : 0);
 			formData.append('dispoSoir' , nouvItem.dispoSoir  ? 1 : 0);
 			formData.append('categorie', nouvItem.categorie);
