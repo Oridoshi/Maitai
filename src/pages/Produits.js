@@ -60,6 +60,7 @@ export default function Produits(){
 				if (!response.ok) {
 					throw new Error('Erreur de réseau !');
 				}
+				
 				return response.json();
 			})
 			.then(data => {

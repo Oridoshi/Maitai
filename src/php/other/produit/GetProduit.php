@@ -5,12 +5,15 @@ include_once '../../inc/DB.inc.php';
 
 /**
  * Récupère les produits de la base de donnée en fonction de la catégorie si une catégorie est passée en paramètre
+ * et de la disponibilité si une disponibilité est passée en paramètre
+ * ou de l'id du produit si un id est passé en paramètre
+ * sinon récupère tous les produits
  */
 if(isset($_POST['categ']) && $_POST['categ'] != "")
 {
 	if(isset($_POST['dispo']) && $_POST['dispo'] != "")
 	{
-		if($_POST['dispo'] == "matin")
+		if(strtolower($_POST['dispo']) == "matin")
 		{
 			$prods=DB::getInstance()->getProduitsParCategDispoMatin($_POST['categ']);
 		}
