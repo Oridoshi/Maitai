@@ -21,13 +21,23 @@ function addTicket($iduti, $file, $pdo) {
     $tab = retournerFichier($file);
     $tab = getProduits($tab);
     foreach($tab as $prod) {
-        $ticket = new Ticket();
-        $ticket->setIdUti($iduti);
-        $ticket->setIdProd($pdo->getProduitByLib($prod[0])->getIdProd());
-        $ticket->setPrixSpe($pdo->getProduitByLib($prod[0])->getPrixUni());
-        $ticket->setQa($prod[1]);
-        $ticket->setPrixTot($ticket->getPrixSpe() * $ticket->getQa());
-        $pdo->insertTicket($ticket);
+        $produit = $pdo->getProduitByLib($prod[0]);
+        $ticket = $pdo->getTicket($iduti, $produit->getIdProd());
+            
+        if($ticket != null) {
+            $ticket->setQa($ticket->getQa() + $prod[1]);
+            $ticket->setPrixTot($ticket->getPrixTot() + $ticket->getPrixSpe() * $prod[1]);
+            $pdo->updateTicket($ticket);
+        } else {
+            $ticket = new Ticket();
+            $ticket->setIdUti($iduti);
+            $ticket->setIdProd($pdo->getProduitByLib($produit->getIdProd()));
+            $ticket->setPrixSpe($pdo->getProduitByLib($produit)->getPrixUni());
+            $ticket->setQa($prod[1]);
+            $ticket->setPrixTot($ticket->getPrixSpe() * $ticket->getQa());
+            $pdo->insertTicket($ticket);
+        }
+
     }
 }
 
