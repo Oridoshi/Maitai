@@ -13,10 +13,10 @@ export default function Planning()
 	const [data, setData] = useState({}); // Initialiser les données
 	const [indexNav, setIndex] = useState({}); // Index de page pour l'admin
 	const [tabProd, setTabProd] = useState();
+	const [currentDate, setCurrentDate] = useState(formatDate(getLundiDeLaSemaine(new Date())));
 
 	//sotck les droits de l'utilisateur
 	const droit = sessionStorage.getItem('droit');
-
 
 
 	/*****************************************/
@@ -57,7 +57,8 @@ export default function Planning()
 		// Récuperer les données de la semaines
 		const fetchData = async () =>
 		{
-			const dateActuelle = new Date();
+
+			const dateActuelle = getLundiDeLaSemaine(new Date(currentDate));
 
 			const newData = {};
 			const newIndex = {};
@@ -82,7 +83,8 @@ export default function Planning()
 		};
 
 		fetchData();
-	}, [modalOpen]);
+		genererSemaine();
+	},[modalOpen, currentDate]);
 
 
 	/**
@@ -147,6 +149,7 @@ export default function Planning()
 	};
 
 
+	/*-------------------------------------------------------------------------------------------------------------------------------*/
 
 	/**
 	 * Retourne le numéro de la semaine actuelle
@@ -155,13 +158,23 @@ export default function Planning()
 	 */
 	function genererTitre()
 	{
+		if(currentDate === "NaN-NaN-NaN"){
+			setCurrentDate(formatDate(getLundiDeLaSemaine(new Date())))
+		}
+		const date = new Date(currentDate);
 
-		return(
+		//Calculer la date de fin de semaine (7 jours après la date actuelle)
+		const finSemaine = new Date(currentDate);
+		finSemaine.setDate(finSemaine.getDate() + 6);
+
+		const today = new Date().toISOString().split('T')[0];
+
+
+		return (
 			<h1 className="titre">
 				Planning du
-				<input className="datetitre" type="date" />
-				au
-				<input className="datetitre" type="date"/>
+				<input className="datetitre" type="date" value={ formatDate(new Date(currentDate)) } onChange={ (e) =>{ setCurrentDate(formatDate(getLundiDeLaSemaine(new Date (e.target.value)))) }} />
+				<label>{ "au " + formatDateUsuel(formatDate(finSemaine)) }</label>
 			</h1>
 		);
 	}
@@ -179,6 +192,25 @@ export default function Planning()
 
 		return `${ year }-${ month }-${ day }`;
 	}
+
+	function formatDateUsuel(inputDate)
+	{
+		const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+		const days = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+
+		const dateParts = inputDate.toString().split('-');
+		const year = dateParts[0];
+		const monthIndex = parseInt(dateParts[1]) - 1;
+		const day = parseInt(dateParts[2]);
+
+		const dateObject = new Date(inputDate);
+		const dayIndex = dateObject.getDay();
+
+		const formattedDate = `${ days[dayIndex] } ${ day } ${ months[monthIndex] } ${ year }`;
+
+		return formattedDate;
+	}
+
 
 	/**
 	 * Retourne la date du lundi de la semaine actuelle
@@ -204,11 +236,9 @@ export default function Planning()
 		const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
 		const mois = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
 
-		// Récupère le jour et la date actuelle
-		const dateActuelle = new Date();
 
 		// Obtenez la date du lundi de la semaine actuelle
-		const lundiDeLaSemaine = getLundiDeLaSemaine(dateActuelle);
+		const lundiDeLaSemaine = getLundiDeLaSemaine(new Date(currentDate));
 
 		/** Code HTML du tableau */
 		return (
@@ -266,7 +296,8 @@ export default function Planning()
 	 * @param {*} matinOuSoir
 	 * @returns
 	 */
-	function genererDemiJourUti(date, index, matinOuSoir) {
+	function genererDemiJourUti(date, index, matinOuSoir)
+	{
 		const dateJour = new Date(date);
 		dateJour.setDate(date.getDate() + index);
 
@@ -274,7 +305,8 @@ export default function Planning()
 
 		let qa = 0; // Déclaration de qa en dehors du retour de la fonction
 
-		for (let key in obj) {
+		for (let key in obj)
+		{
 			qa += parseInt(obj[key].qa); // Concaténation des valeurs de qa
 		}
 
@@ -289,9 +321,9 @@ export default function Planning()
 
 		return (
 			// Pour ouvrir le planning, il faut une date et son horaire (1 = matin / 0 = soir)
-			<td key={index} onClick={estPasse ? null : () => ouvrirPlanning(dateJour, matinOuSoir, index)} className={`${Object.keys(obj).length !== 0 ? style : ''} ${classeGris}`}>
+			<td key={ index } onClick={ estPasse ? null : () => ouvrirPlanning(dateJour, matinOuSoir, index) } className={ `${ Object.keys(obj).length !== 0 ? style : '' } ${ classeGris }` }>
 				<div className="rotate">
-					{qa !== 0 && "(" + qa + " produit.s)"}
+					{ qa !== 0 && "(" + qa + " produit.s)" }
 				</div>
 			</td>
 		);
@@ -307,7 +339,7 @@ export default function Planning()
 	 */
 	function genererDemiJourAdmin(dateActuelle, index, matinOuSoir)
 	{
-		const dateJour = new Date(dateActuelle);
+		const dateJour = new Date(currentDate);
 		dateJour.setDate(dateActuelle.getDate() + index);
 
 		const obj = data["" + index + matinOuSoir] || {}; // Provide a default empty object if undefined
@@ -378,7 +410,35 @@ export default function Planning()
 		setIndex(prevIndex => ({ ...prevIndex, ["" + index]: nouvIndex }))
 	}
 
+	function ajouterSemaine()
+	{
+		const date = new Date(currentDate);
+		date.setDate(date.getDate() + 7);
+		setCurrentDate(date);
+	}
 
+	function retirerSemaine()
+	{
+		if(droit === 'Client')
+		{
+			const date = new Date(currentDate);
+			date.setDate(date.getDate() - 7);
+
+			const dateAct = new Date(getLundiDeLaSemaine(new Date()));
+			dateAct.setDate(dateAct.getDate() -1 );
+
+			if(dateAct <= date)
+			{
+				setCurrentDate(date);
+			}
+		}
+		else
+		{
+			const date = new Date(currentDate);
+			date.setDate(date.getDate() - 7);
+			setCurrentDate(date);
+		}
+	}
 
 
 	/**
@@ -418,16 +478,25 @@ export default function Planning()
 		}
 	}
 
+	let classbtn = 'btnSprec';
+	if(new Date(currentDate) < new Date() && droit != "Admin")
+	{
+		classbtn = 'btnSprecGris' ;
+	}
 	/** Code html de la page de planning */
 	return (
 		<div>
 			{ genererTitre() }
-			<div className='planning-container mb-5'>
-				<div className="legend">
-					<div className="itemlegend">Matin</div>
-					<div className="itemlegend">Soir</div>
+			<div className="blocksemaine">
+				<button className={classbtn} onClick={retirerSemaine}></button>
+				<div className='planning-container mb-5 block'>
+					<div className="legend">
+						<div className="itemlegend">Matin</div>
+						<div className="itemlegend">Soir</div>
+					</div>
+					{ genererSemaine() }
 				</div>
-				{ genererSemaine() }
+				<button className="btnSsuiv" onClick={ajouterSemaine} ></button>
 			</div>
 			<Modal className="pop" show={ modalOpen } onHide={ () => { setModalOpen(false); } }>
 				<PopUpPlanning tabProd={ tabProd } />
