@@ -3,7 +3,7 @@ import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';
 
 export default function Historique(){
-	
+
 	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
 
 
@@ -12,10 +12,10 @@ export default function Historique(){
 	const [initialHeader, setInitialHeader] = useState([]);
 	const [type         , setType         ] = useState('Ticket');
 	const [idUti        , setIdUti        ] = useState(-1);
-	
+
 	// Récupérer l'ID de l'utilisateur au quelle on veut afficher les historiques
-	
-	
+
+
 	// Récupérer les données des produits
 	useEffect(() => {
 		// si l'utilisateur est un client, on récupère son id via son login sinon on récupère dans la session
@@ -90,7 +90,7 @@ export default function Historique(){
 			// console.log(await response.text());
 			// Convertir la réponse en blob
 			const blob = await response.blob();
-			
+
 			// Créer une URL pour le blob
 			const url = URL.createObjectURL(blob);
 
@@ -166,7 +166,7 @@ export default function Historique(){
 				if (!response.ok) {
 					throw new Error('Erreur de réseau !');
 				}
-				
+
 				return response.json();
 			})
 			.then(data => {
@@ -189,7 +189,7 @@ export default function Historique(){
 				if (!response.ok) {
 					throw new Error('Erreur de réseau !');
 				}
-				
+
 				return response.json();
 			})
 			.then(data => {
@@ -259,7 +259,7 @@ export default function Historique(){
 
 		return true;
 	};
-			
+
 
 	// Fonction pour afficher les erreurs
 	function afficherError(data) {
@@ -273,7 +273,7 @@ export default function Historique(){
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
 			alert(errorMessageText);
-			
+
 		} else {
 			if (data !== "")
 				alert(data.replace('<br>', ''));
@@ -312,10 +312,10 @@ export default function Historique(){
 		// Mettre à jour les données filtrées
 		setFilterData(filteredData);
 	}
-	
+
 	const modifFiche = (item) => {
-		
-		if(item.valide == true)
+
+		if(item.valide === true)
 		{
 			alert('La fiche a déja était validé, elle ne peut plus être modifié.')
 			return ;
@@ -371,7 +371,7 @@ export default function Historique(){
 				if (!response.ok) {
 					throw new Error('Erreur de réseau !');
 				}
-				
+
 				return response.json();
 			})
 			.then(data => {
@@ -425,7 +425,7 @@ export default function Historique(){
 				if (!response.ok) {
 					throw new Error('Erreur de réseau !');
 				}
-				
+
 				return response.json();
 			})
 			.then(data => {
@@ -446,7 +446,7 @@ export default function Historique(){
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
-	
+
 		<h1 className='titre mt-1'>Gestion des historiques {type} - {sessionStorage.getItem('nomClub')}</h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
@@ -459,8 +459,8 @@ export default function Historique(){
 		</div>
 
 
-		<Table 
-			header={initialHeader} 
+		<Table
+			header={initialHeader}
 			data={filterData}
 			funDelete={type === 'Ticket'||sessionStorage.getItem('droit') === 'Client' ? undefined : funDelete}
 			funUpdate={type === 'Ticket'||sessionStorage.getItem('droit') === 'Client' ? undefined : funUpdate}
