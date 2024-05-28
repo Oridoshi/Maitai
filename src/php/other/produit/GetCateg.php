@@ -7,7 +7,7 @@ include_once '../../inc/DB.inc.php';
  */
 if(isset($_POST['$pourMatin']) && $_POST['$pourMatin'] != "")
 {
-	$categs = DB::getInstance()->getCategorieDispo();
+	$categs = DB::getInstance()->getCategorieDispo($_POST['$pourMatin']);
 }
 else
 {
