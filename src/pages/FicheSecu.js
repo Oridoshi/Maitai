@@ -106,7 +106,8 @@ function FicheSecu() {
 					<div className="col-sm-3 m-2 ">
 						<div className="d-flex align-items-center">
 							<label htmlFor="date" className="me-2 fw-bold">Date</label>
-							<input type="date" className="form-control" name='date' id="date" defaultValue={idHis ? formDataObject["date"] : getCurrentDate()} required/>
+							<input type="date" className="form-control" name='date' id="date" defaultValue={formDataObject["date"] ? formDataObject["date"] : getCurrentDate()} onChange={() => handleChangeEnTete()} required/>
+							{mettreBienDate()}
 						</div>
 					</div>
 
@@ -191,6 +192,12 @@ function FicheSecu() {
 	}
 	
 
+
+	function mettreBienDate()
+	{
+		if (document.getElementById("date") && formDataObject["date"])
+			document.getElementById(["date"]).value = formDataObject["date"];
+	}
 
 	function generateListEnTete(datas, id)
 	{
@@ -1207,12 +1214,16 @@ function FicheSecu() {
 
 	function handleChangeEnTete() {
 		const newForm = formDataObject;
+
+		console.log('Date',document.getElementById("date").value)
 		
 		newForm["dpniveau" ] = document.getElementById("dpniveau" )?.value
 		newForm["ss1niveau"] = document.getElementById("ss1niveau")?.value
 		newForm["ss2niveau"] = document.getElementById("ss2niveau")?.value
 		newForm["telniveau"] = document.getElementById("telniveau")?.value
+		newForm["date"]      = document.getElementById("date")?.value
 
+		setFormDataObject(newForm)
 
 		setValide(formEstRempli());
 	}
