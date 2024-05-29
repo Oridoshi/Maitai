@@ -4,8 +4,8 @@ header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 
 include_once '../../inc/DB.inc.php';
 
-$mail = $_POST['mail'];
+$email = $_POST['email'];
 
 $pdo = DB::getInstance();
 
-echo $pdo->getUtilisateurByMail($mail) != null;
+echo $pdo->getUtilisateurByMail($email) != null;
