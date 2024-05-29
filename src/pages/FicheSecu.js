@@ -969,7 +969,7 @@ function FicheSecu() {
 
 
 		/** IMAGE **/
-		try {
+		/*try {
 			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
 
 			// Ajouter l'image au classeur Excel
@@ -987,7 +987,7 @@ function FicheSecu() {
 			console.log('Fichier Excel avec l\'image généré avec succès.');
 		} catch (error) {
 			console.error('Une erreur est survenue :', error.message);
-		}
+		}*/
 
 
 
