@@ -974,13 +974,13 @@ function FicheSecu() {
 
 			// Ajouter l'image au classeur Excel
 			const imageId = workbook.addImage({
-				buffer: imageUrl,
+				filename: imageUrl,
 				extension: 'png' // Spécifier l'extension de l'image
 			});
 
 			// Insérer l'image dans la feuille de calcul
 			worksheet.addImage(imageId, {
-				tl: { col: 15, row: 3 }, // Position de l'image (colonne, ligne)
+				tl: { col: 16, row: 3 }, // Position de l'image (colonne, ligne)
 				ext: { width: 200, height: 200 } // Taille de l'image en pixels
 			});
 
