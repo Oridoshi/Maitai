@@ -167,9 +167,7 @@ export default function Planning()
 		const finSemaine = new Date(currentDate);
 		finSemaine.setDate(finSemaine.getDate() + 6);
 
-		const today = new Date().toISOString().split('T')[0];
-
-
+		const today = new Date().toISOString().split('T')[0];//pour empêcher de chosir une date dans le passé
 		return (
 			<h1 className="titre">
 				Planning du

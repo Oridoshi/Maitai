@@ -256,6 +256,8 @@
 	background-position: center;
 	transform: rotate(-90deg);
 	margin-left: 20px;
+	pointer-events: none;
+	cursor: not-allowed;
 }
 .btnSsuiv{
 	height: 50px;
