@@ -269,16 +269,16 @@ const Creer = ({ changeEtat }) =>
 		event.preventDefault();
 		if (await logExist( login ) || await mailExist(mail))// il ne faut pas creer 2 compte identique
 		{
-			if (await mailExist(mail))
-			{
-				setMail("");
-				setMailValid(false);
-			}
-			else
+			if (await logExist( login ))
 			{
 				setLogin("");//vide le champs de texte
 				setMessLog("Cette identifiant existe déjà !");
 				setIsValid(false);	//change le style
+			}
+			else
+			{
+				setMail("");
+				setMailValid(false);
 			}
 			document.getElementById("btnSubmit").disabled = true;
 			setTimeout(() =>
