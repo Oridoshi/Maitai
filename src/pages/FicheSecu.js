@@ -641,7 +641,6 @@ function FicheSecu() {
 
 
 	const ExcelJS = require('exceljs');
-	const axios = require('axios');
 
 	/**
 	 * Création de la fiche de sécurité 
