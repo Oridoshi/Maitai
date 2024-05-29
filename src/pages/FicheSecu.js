@@ -971,10 +971,18 @@ function FicheSecu() {
 		/** IMAGE **/
 		try {
 			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
+			
+			// Récupérer l'image sous forme d'ArrayBuffer
+			const response = await fetch(imageUrl);
+			if (!response.ok) {
+				throw new Error('Impossible de récupérer l\'image');
+			}
+			const arrayBuffer = await response.arrayBuffer();
+			const buffer = Buffer.from(arrayBuffer);
 
 			// Ajouter l'image au classeur Excel
 			const imageId = workbook.addImage({
-				filename: imageUrl,
+				buffer: buffer,
 				extension: 'png' // Spécifier l'extension de l'image
 			});
 
@@ -984,9 +992,10 @@ function FicheSecu() {
 				ext: { width: 200, height: 200 } // Taille de l'image en pixels
 			});
 
+			// Code pour gérer le buffer Excel (par exemple, l'enregistrer sur le serveur ou l'envoyer au client)
 			console.log('Fichier Excel avec l\'image généré avec succès.');
 		} catch (error) {
-			console.error('Une erreur est survenue :', error.message);
+			console.error('Une erreur est survenue lors de la récupération de l\'image :', error.message);
 		}
 
 
