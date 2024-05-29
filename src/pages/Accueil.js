@@ -24,7 +24,7 @@ export default function Accueil(){
 	return(
 		<div className="allaccueil">
 			<div className="accueil">
-				<p className="textAccueil">{txt}</p>
+				<div className="textAccueil">{txt}</div>
 				<div className="imgAcceuil">
 					<ImageCarousel  />
 				</div>
