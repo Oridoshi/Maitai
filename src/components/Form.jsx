@@ -495,7 +495,7 @@ const ConfMdp = ({ changeEtat }) =>
 
 	function regexMdp()
 	{
-		const regex = /^(?=.*[A-Z]).{8,}$/;
+		const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&\u00C0-\u017F]{8,}$/;
 		console.log(regex.test(mdp));
 		return false;
 	}
