@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {nivEncadrant, nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
+import "../style/ficheSecuTable.css"
 
 
 function FicheSecu() {
@@ -107,7 +108,6 @@ function FicheSecu() {
 						<div className="d-flex align-items-center">
 							<label htmlFor="date" className="me-2 fw-bold">Date</label>
 							<input type="date" className="form-control" name='date' id="date" defaultValue={formDataObject["date"] ? formDataObject["date"] : getCurrentDate()} onChange={() => handleChangeEnTete()} required/>
-							{mettreBienDate()}
 						</div>
 					</div>
 
@@ -162,11 +162,10 @@ function FicheSecu() {
 							<input type="text" className="form-control p-1 m-1" name="ss2prenom" id="ss2prenom" placeholder="Prenom" defaultValue={idHis && formDataObject["ss2prenom"]} onChange={() => handleChangeEnTete()} />
 							{generateListEnTete(nivSecu, 'ss2niveau')}
 						</div>
-						<div className="d-flex align-items-center">
+						<div className="d-flex align-items-center mt-4">
 							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"    readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="telniveau" id="telniveau"                      defaultValue={idHis && formDataObject["telniveau"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    pattern="0[1-9](\s?\d{2}){4}" defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" pattern="0[1-9](\s?\d{2}){4}" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
 						</div>
 					</div>
 
@@ -178,25 +177,40 @@ function FicheSecu() {
 
 						<div className="d-flex align-items-center">
 							<label htmlFor="secu" className="fw-bold col-sm-4 m-1">Bloc de secu</label>
-							<input type="text"    className="form-control p-1 m-1" defaultValue={idHis && formDataObject["secu"]} onChange={() => handleChangeEnTete()} name='secu' id="secu" required/>
+							<select name='secu' id='secu' className={`form-control p-1 m-1`} required defaultValue={idHis && formDataObject["secu"]} onChange={() => handleChangeEnTete()}>
+								<option key="OK">    OK    </option>
+								<option key="MAITAI">MAITAI</option>
+							</select>
 						</div>
 
 						<div className="d-flex align-items-center">
 							<label htmlFor="o2" className="fw-bold col-sm-4 m-1">O2</label>
-							<input type="text"  className="form-control p-1 m-1" defaultValue={idHis && formDataObject["o2"]} onChange={() => handleChangeEnTete()} name='o2' id="o2" required/>
+							<select name='o2' id='o2' className={`form-control p-1 m-1`} required defaultValue={idHis && formDataObject["o2"]} onChange={() => handleChangeEnTete()}>
+								<option key="OK">    OK    </option>
+								<option key="MAITAI">MAITAI</option>
+							</select>
 						</div>
 					</div>
 				</div>
+				
+				{mettreBienListe()}
+
 			</div>
 		);
 	}
 	
 
 
-	function mettreBienDate()
+	function mettreBienListe()
 	{
 		if (document.getElementById("date") && formDataObject["date"])
 			document.getElementById(["date"]).value = formDataObject["date"];
+
+		if (document.getElementById("o2") && formDataObject["o2"])
+			document.getElementById(["o2"]).value = formDataObject["o2"];
+
+		if (document.getElementById("secu") && formDataObject["secu"])
+			document.getElementById(["secu"]).value = formDataObject["secu"];
 	}
 
 	function generateListEnTete(datas, id)
@@ -434,8 +448,9 @@ function FicheSecu() {
 
 
 		return (
-			<div className='m-5'>La {idHis && 'nouvelle'} fiche a été générée et envoyée à l'administration. <br></br>
-				Vous pourrez la modifier jusqu'à sa validation par l'administrateur ou les administrateurs. <br></br>
+			<div className='mx-5'>
+				
+				{genererTabHTML()}
 
 				<button className='btn mt-4 btn-primary btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Quitter </button>
 				<button id='tele' className='btn ms-4 mt-4 btn-secondary '> Quitter et telecharger un apperçu </button>
@@ -444,7 +459,164 @@ function FicheSecu() {
 		);
 	}
 
+	/**
+	 * Appelle juste la méthode generateExcel
+	 */
 	function JSpuLaMerde () {generateExcel();}
+
+	/**
+	 * Genere le tableau de la fiche de sécurité. Juste un visuel.
+	 * @returns 
+	 */
+	function genererTabHTML()
+	{
+		return (
+			<div className="tableDiv mt-4">
+				<table className='m-2'>
+
+					{/* EN TETE  */}
+					<tr>
+						<td rowSpan={11} className='noBorder'></td>
+						<td colSpan={2} > Date : {formDataObject["date"]}</td>
+						<td colSpan={13}> Lieu : {formDataObject["lieu"]}</td>
+					</tr>
+
+					<tr>
+						<td colSpan={15}>Nom club : {formDataObject["club"]}</td>
+					</tr>
+
+					<tr>
+						<td colSpan={15} className='noBorder'></td>
+					</tr>
+
+					<tr>
+						<td colSpan={4}>Nombre de plongeur : {formDataObject["club"]}</td>
+						<td colSpan={1} className='noBorder'></td>
+						<td colSpan={4} className='bg-warning'>PA 12 NON AUTORISE</td>
+						<td colSpan={6} className='noBorder'></td>
+					</tr>
+
+					<tr>
+						<td>DP </td>
+						<td>{formDataObject["dpnom"]} </td>
+						<td>{formDataObject["dpprenom"]} </td>
+						<td>{formDataObject["dpniveau"]}</td>
+
+						<td className='noBorder'></td>
+
+						<td colSpan={4}>Bloc Secu</td>
+						<td colSpan={3}>{formDataObject["secu"]}</td>
+						<td colSpan={3} className='noBorder'></td>
+					</tr>
+
+					<tr>
+						<td>SECU SURF </td>
+						<td>{formDataObject["ss1nom"]}   </td>
+						<td>{formDataObject["ss1prenom"]}</td>
+						<td>{formDataObject["ss1niveau"]}</td>
+
+						<td className='noBorder'></td>
+
+						<td colSpan={4}>O2</td>
+						<td colSpan={3}>{formDataObject["o2"]}</td>
+						<td colSpan={3} className='noBorder'></td>
+					</tr>
+
+					<tr>
+						<td>SECU SURF </td>
+						<td>{formDataObject["ss2nom"]}   </td>
+						<td>{formDataObject["ss2prenom"]}</td>
+						<td>{formDataObject["ss2niveau"]}</td>
+						<td colSpan={11} className='noBorder'></td>
+					</tr>
+
+					<tr>
+						<td>TELEPHONE </td>
+						<td>{formDataObject["telnom"]}   </td>
+						<td>{formDataObject["telprenom"]}</td>
+						<td>{formDataObject["telniveau"]}</td>
+						<td colSpan={11} className='noBorder'></td>
+					</tr>
+
+
+					<tr>
+						<td colSpan={15} className='noBorder'></td>
+					</tr>
+
+					{/* PALANQUE HEADER */}
+					<tr>
+						<td colSpan={3} className='text-center'>Palanquee</td>
+						<td colSpan={2} className='text-center'>Cocher</td>
+						<td colSpan={2} className='text-center bg-success'>Prevu</td>
+						<td colSpan={6} className='text-center'>Realise</td>
+						<td colSpan={2} className='text-center noBorder'></td>
+					</tr>
+
+					<tr>
+						<td>Nom</td>
+						<td>Prenom</td>
+						<td>PE-PA-PN BREVET</td>
+						<td>tech</td>
+						<td>explo</td>
+						<td className='bg-success'>Prof.</td>
+						<td className='bg-success'>Duree</td>
+						<td >Prof.</td>
+						<td >Duree</td>
+						<td>Palier 3m</td>
+						<td>Palier 6m</td>
+						<td>HD</td>
+						<td>HS</td>
+						<td>GAZ</td>
+						<td>Remarque</td>
+					</tr>
+					
+					{Array(nombrePlaques - 1).fill().map((_, index) => (
+						<React.Fragment key={index}>
+							<tr>
+								<td rowSpan={3}>{index + 1}</td>
+								<td className={encadreOuNon[index + 1] ? 'bg-secondary' : ''}>{formDataObject[`p${index + 1}Anom`]}</td>
+								<td className={encadreOuNon[index + 1] ? 'bg-secondary' : ''}>{formDataObject[`p${index + 1}Aprenom`]}</td>
+								<td className={encadreOuNon[index + 1] ? 'bg-secondary' : ''}>{formDataObject[`p${index + 1}Aniv`]}</td>
+
+								<td rowSpan={3}  className='text-center'>{formDataObject[`p${index + 1}type`] === 'tech' ? 'X' : ''}</td>
+								<td rowSpan={3}  className='text-center'>{formDataObject[`p${index + 1}type`] === 'explo' ? 'X' : ''}</td>
+
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}prof`]}</td>
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}temp`]}</td>
+
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}profrea`]}</td>
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}tempsrea`]}</td>
+
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}3m`]}</td>
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}6m`]}</td>
+
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}HD`]}</td>
+								<td rowSpan={3} className='text-center'>{formDataObject[`p${index + 1}HS`]}</td>
+
+								<td rowSpan={3}className='text-center'>{formDataObject[`p${index + 1}gaz`]}</td>
+								<td rowSpan={3}>{formDataObject[`p${index + 1}rem`]}</td>
+							</tr>
+
+							<tr>
+								<td>{formDataObject[`p${index + 1}Bnom`]}</td>
+								<td>{formDataObject[`p${index + 1}Bprenom`]}</td>
+								<td>{formDataObject[`p${index + 1}Bniv`]}</td>
+							</tr>
+
+							<tr>
+								<td>{formDataObject[`p${index + 1}Cnom`]}</td>
+								<td>{formDataObject[`p${index + 1}Cprenom`]}</td>
+								<td>{formDataObject[`p${index + 1}Cniv`]}</td>
+							</tr>
+						</React.Fragment>
+					))}
+
+				
+				</table>
+			</div>
+		);
+	}
+
 
 	function redirigerAuDebut()
 	{
@@ -469,7 +641,6 @@ function FicheSecu() {
 
 
 	const ExcelJS = require('exceljs');
-	const fs = require('fs');
 
 	/**
 	 * Création de la fiche de sécurité 
@@ -798,24 +969,26 @@ function FicheSecu() {
 
 
 		/** IMAGE **/
-		/*console.log("WS : ", worksheet)
-		console.log("WB : ", workbook)
+		try {
+			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
 
-		let imageData = { image_file_name: "maitai.png"};
+			// Ajouter l'image au classeur Excel
+			const imageId = workbook.addImage({
+				buffer: imageUrl,
+				extension: 'png' // Spécifier l'extension de l'image
+			});
 
-		const imageId = workbook.addImage({
-			filename: `./src/img/maitai.png`,
-			extension: 'png',
-		});
+			// Insérer l'image dans la feuille de calcul
+			worksheet.addImage(imageId, {
+				tl: { col: 15, row: 3 }, // Position de l'image (colonne, ligne)
+				ext: { width: 200, height: 200 } // Taille de l'image en pixels
+			});
 
-		worksheet.addImage(
-			imageId,
-			'E11:E11',
-			{
-				width: 20,
-				height: 10
-			}
-		);*/
+			console.log('Fichier Excel avec l\'image généré avec succès.');
+		} catch (error) {
+			console.error('Une erreur est survenue :', error.message);
+		}
+
 
 
 		// Générer le fichier Excel
@@ -1225,6 +1398,8 @@ function FicheSecu() {
 		newForm["ss2niveau"] = document.getElementById("ss2niveau")?.value
 		newForm["telniveau"] = document.getElementById("telniveau")?.value
 		newForm["date"]      = document.getElementById("date")?.value
+		newForm["o2"]        = document.getElementById("o2")  ?.value
+		newForm["secu"]      = document.getElementById("secu")?.value
 
 		setFormDataObject(newForm)
 
@@ -1347,7 +1522,7 @@ function FicheSecu() {
 				{etapesLib[etape] === 'Réalisé'   && generatehtmlFormApresPlongee()}
 				{etapesLib[etape] === 'Envoie'    && generatehtmlAppercue()        }
 
-				<div className="m-5 d-flex justify-content-end">
+				<div className="me-5 mb-5 d-flex justify-content-end">
 
 					{etape < etapesLib.length - 2 &&
 						<button className="mx-2 col-sm-1 btn btn-primary btnAnnuler" onClick={() => {setEtape(etape-1); redirigerAuDebut()}}>Annuler</button>
