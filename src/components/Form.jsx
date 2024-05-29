@@ -243,6 +243,8 @@ const Creer = ({ changeEtat }) =>
 	const [isValid, setIsValid] = useState(true);
 	const [mailValid, setMailValid] = useState(true);
 
+	const [messLog, setMessLog] = useState("");
+
 	//évènement des zones de texte
 	const changeLogin = (event) =>
 	{
@@ -265,7 +267,7 @@ const Creer = ({ changeEtat }) =>
 	const envoyer = async (event) =>
 	{
 		event.preventDefault();
-		if (await logExist({ login }) || await mailExist(mail))// il ne faut pas creer 2 compte identique
+		if (await logExist( login ) || await mailExist(mail))// il ne faut pas creer 2 compte identique
 		{
 			if (await mailExist(mail))
 			{
@@ -275,6 +277,7 @@ const Creer = ({ changeEtat }) =>
 			else
 			{
 				setLogin("");//vide le champs de texte
+				setMessLog("Cette identifiant existe déjà !");
 				setIsValid(false);	//change le style
 			}
 			document.getElementById("btnSubmit").disabled = true;
@@ -285,7 +288,18 @@ const Creer = ({ changeEtat }) =>
 		}
 		else
 		{
-			if (tel.length === 14)
+			if(login.length < 2)
+			{
+				setLogin("");//vide le champs de texte
+				setMessLog("Au moins 2 caractères");
+				setIsValid(false);	//change le style
+				document.getElementById("btnSubmit").disabled = true;
+				setTimeout(() =>
+				{
+					document.getElementById("btnSubmit").disabled = false;
+				}, 2000)//empêche de faire un grand nombre tantative
+			}
+			else
 			{
 				sessionStorage.setItem('login', login);
 				sessionStorage.setItem('mail', mail);
@@ -328,7 +342,7 @@ const Creer = ({ changeEtat }) =>
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
 	const mailClass = mailValid ? "form-control saisie" : "form-control saisie invalid";
-	const placeholderText = isValid ? "Entrez votre identifiant" : "Cette identifiant existe déjà !";
+	const placeholderText = isValid ? "Entrez votre identifiant" : messLog;
 	const placeholderMail = mailValid ? "Entrez votre mail" : "Ce mail existe déjà !";
 
 
@@ -340,7 +354,7 @@ const Creer = ({ changeEtat }) =>
 					<label htmlFor="exampleInputLogin" className="form-label label">Identifiant</label>
 					<input type="text" required value={ login } className={ inputClass } aria-describedby="emailHelp" placeholder={ placeholderText } onChange={ changeLogin } />
 					<label htmlFor="exampleInputMail" className="form-label label">Mail</label>
-					<input type="email" required value={ mail } className={ mailClass } aria-describedby="emailHelp" placeholder={ placeholderMail } onChange={ changeMail } />
+					<input type="email" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" required value={ mail } className={ mailClass } aria-describedby="emailHelp" placeholder={ placeholderMail } onChange={ changeMail } />
 					<label htmlFor="exampleInputPhone" className="form-label label"> Numéro de téléphone </label>
 					<input type="tel" pattern="0[1-9](\s?\d{2}){4}" required value={ tel } className="form-control saisie"  aria-describedby="emailHelp" placeholder="Entrez votre numéro" onChange={ changeTel } />
 				</div>
@@ -427,6 +441,8 @@ const ConfMdp = ({ changeEtat }) =>
 	//pour changer le style quand les champs sont invalides
 	const [isValid, setIsValid] = useState(true);
 
+	const [messMdp, setMessMdp] = useState("Entrez votre mot de passe");
+
 	//évènement dans les zones de texte
 	const changeMdp = (event) =>
 	{
@@ -444,16 +460,25 @@ const ConfMdp = ({ changeEtat }) =>
 		event.preventDefault();//obligatoire pour un changment de page
 		if (valider())
 		{
-			sessionStorage.setItem('mdpValid', "true");
-			if (sessionStorage.getItem('statut') === 'nouveau')
+			if(regexMdp())
 			{
-				await funInsert(mdp);
+				sessionStorage.setItem('mdpValid', "true");
+				if (sessionStorage.getItem('statut') === 'nouveau')
+				{
+					await funInsert(mdp);
+				}
+				else
+				{
+					await funUpdate(mdp);
+				}
+				window.location.href = "/";//envoie à la page d'accueil
 			}
 			else
 			{
-				await funUpdate(mdp);
+				setMessMdp("au moins 8 caractères dont une Maj !");
+				setMdp("");
+				setIsValid(false);//applique le style invalide
 			}
-			window.location.href = "/";//envoie à la page d'accueil
 		}
 		else
 		{
@@ -468,6 +493,13 @@ const ConfMdp = ({ changeEtat }) =>
 		return mdp === mdpconf;
 	}
 
+	function regexMdp()
+	{
+		const regex = /^(?=.*[A-Z]).{8,}$/;
+		console.log(regex.test(mdp));
+		return false;
+	}
+
 	//classes de style
 	const inputClass = isValid ? "form-control saisie" : "form-control saisie invalid";
 	const placeholderText = isValid ? "Confirmez le mot de passe" : "Les mot de passes sont différents !";
@@ -479,7 +511,7 @@ const ConfMdp = ({ changeEtat }) =>
 				<div className="mb-3">
 					<div className="champs">
 						<label htmlFor="exampleInputPassword1" className="form-label label">Mot de passe</label>
-						<input required type="password" value={ mdp } className="form-control" placeholder="Entrez votre mot de passe" onChange={ changeMdp } />
+						<input required type="password" value={ mdp } className={ inputClass } placeholder={messMdp} onChange={ changeMdp } />
 					</div>
 					<div className="champs">
 						<label htmlFor="exampleInputPassword1" className="form-label label">Confirmer le mot de passe</label>
@@ -632,7 +664,6 @@ const loginExist = async (data) => {
 		}
 
 		const dat = await response.text();
-		console.log(dat);
 		return dat === "1";
 	} catch (error) {
 		console.log("erreur", error);
@@ -702,7 +733,6 @@ const mailInDB = async (data) => {
 		const response = await fetch(cheminPHP + "utilisateur/MailExist.php", {
 			method: 'POST',
 			body: data
-
 		});
 
 		if (!response.ok) {
@@ -710,6 +740,7 @@ const mailInDB = async (data) => {
 		}
 
 		const dat = await response.text();
+
 		return dat === "1";
 	} catch (error) {
 		console.log("erreur", error);
