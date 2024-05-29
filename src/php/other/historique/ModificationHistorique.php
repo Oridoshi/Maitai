@@ -5,7 +5,7 @@ require '../../../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-$idhist = $_POST[idhist];
+$idhist = $_POST['idhist'];
 
 $pdo = DB::getInstance();
 
@@ -130,11 +130,13 @@ function getProduits($tabinfo) {
 
         //vérification de si le DP est un trimix
         $gaz = $palanque[0][14];
-        var_dump($palanque[0]);
         if($DPTrimix && str_contains(strtolower($gaz), "trimix")) {
-            $tab["Trimix"] = ["DP Trimix Maïtaï", 1];
+             if(isset($tab["Trimix"]))
+                $tab["Trimix"][1] ++;
+            else
+                $tab["Trimix"] = ["DP Trimix Maïtaï", 1];
         }
     }
-    
+
     return $tab;
 }
