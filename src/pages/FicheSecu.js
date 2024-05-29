@@ -641,7 +641,7 @@ function FicheSecu() {
 
 
 	const ExcelJS = require('exceljs');
-	const fs = require('fs');
+	const axios = require('axios');
 
 	/**
 	 * Création de la fiche de sécurité 
@@ -970,24 +970,26 @@ function FicheSecu() {
 
 
 		/** IMAGE **/
-		/*console.log("WS : ", worksheet)
-		console.log("WB : ", workbook)
+		try {
+			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
 
-		let imageData = { image_file_name: "maitai.png"};
+			// Ajouter l'image au classeur Excel
+			const imageId = workbook.addImage({
+				buffer: imageUrl,
+				extension: 'png' // Spécifier l'extension de l'image
+			});
 
-		const imageId = workbook.addImage({
-			filename: `./src/img/maitai.png`,
-			extension: 'png',
-		});
+			// Insérer l'image dans la feuille de calcul
+			worksheet.addImage(imageId, {
+				tl: { col: 15, row: 3 }, // Position de l'image (colonne, ligne)
+				ext: { width: 200, height: 200 } // Taille de l'image en pixels
+			});
 
-		worksheet.addImage(
-			imageId,
-			'E11:E11',
-			{
-				width: 20,
-				height: 10
-			}
-		);*/
+			console.log('Fichier Excel avec l\'image généré avec succès.');
+		} catch (error) {
+			console.error('Une erreur est survenue :', error.message);
+		}
+
 
 
 		// Générer le fichier Excel
