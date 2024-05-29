@@ -249,9 +249,15 @@ export default function PopUpPlanning({ tabProd })
 	{
 		try
 		{
-			const response = await fetch(cheminPHP + "produit/GetCateg.php", {
-				method: 'POST'
-			});
+			const formData = new FormData();
+			formData.append('pourMatin', sessionStorage.getItem('pourMatin'));
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "produit/GetCateg.php",requestOptions);
 			if (!response.ok)
 			{
 				throw new Error('Erreur de réseau lors de la récupération des données des clients.');
