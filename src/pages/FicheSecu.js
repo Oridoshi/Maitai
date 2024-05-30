@@ -1427,7 +1427,7 @@ function FicheSecu() {
 			(document.getElementById("ss2nom" )?.value.trim() !== '' && document.getElementById("ss2prenom" )?.value.trim() !== '' && document.getElementById("ss2niveau" )?.value.trim() !== '');
 
 
-		setValide(formEstRempli() && appliquerContourRouge() && ss2CompletementVideRempli);
+		setValide(appliquerContourRouge() && formEstRempli() && ss2CompletementVideRempli);
 		
 	}
 
