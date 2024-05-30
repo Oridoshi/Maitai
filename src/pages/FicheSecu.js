@@ -971,6 +971,8 @@ function FicheSecu() {
 			let formData = new FormData();
 			formData.append('chemin'  , imageUrl);
 
+			console.log(imageUrl)
+
 			//On récupère id du login 
 			let response = await fetch(cheminPHP + "../GetFile.php", {
 				method: 'POST',
