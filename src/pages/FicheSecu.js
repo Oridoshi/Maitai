@@ -965,14 +965,11 @@ function FicheSecu() {
 
 		/** IMAGE **/
 		try {
-			const imageUrl = cheminPHP + '../../config/img/imgLogo/maitai.png';
+			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
 			
-			/*
 			// Récupérer l'image sous forme d'ArrayBuffer
 			let formData = new FormData();
 			formData.append('chemin'  , imageUrl);
-
-			console.log(imageUrl)
 
 			//On récupère id du login 
 			let response = await fetch(cheminPHP + "../GetFile.php", {
@@ -983,12 +980,12 @@ function FicheSecu() {
 			if (!response.ok) {
 				throw new Error('Impossible de récupérer l\'image');
 			}
-
-			const arrayBuffer = await response.arrayBuffer();*/
+			
+			const arrayBuffer = await response.arrayBuffer();
 
 			// Ajouter l'image au classeur Excel
 			const imageId = workbook.addImage({
-				imageUrl: imageUrl,
+				buffer: arrayBuffer,
 				extension: 'png' // Spécifier l'extension de l'image
 			});
 
