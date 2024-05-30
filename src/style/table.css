@@ -17,6 +17,9 @@
 .tableau td.edit {
 	background-color: #DAE9EA!important;
 }
+.tableau{
+	table-layout: fixed!important;
+}
 
 .btnEdit{
 	text-align: center;
@@ -24,7 +27,12 @@
 .cpt{
 	width: 11%;
 }
-
+.tableau td.tablCliqt{
+	text-align: center;
+}
+.tableau td.tablClitotal{
+	text-align:center;
+}
 .celCenter {
 	text-align: center;
 }
