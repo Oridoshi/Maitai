@@ -115,7 +115,7 @@ export default function Ticket()
 		const ligneBtnAdd = document.createElement('tr');//ligne du bouton Ajout
 		ligneBtnAdd.id = 'edit';
 		const colBtnAdd = document.createElement('td');//colonne du bouton Ajout
-		colBtnAdd.colSpan = 5;
+		colBtnAdd.colSpan = 4;
 		colBtnAdd.classList.add('edit');
 		colBtnAdd.classList.add('btnEdit');
 
@@ -137,7 +137,7 @@ export default function Ticket()
 		ligneBtnExport.id = 'edit';
 		ligneBtnExport.classList.add("ligneBtnExport")
 		const colBtnExport = document.createElement('td');	//colonne du bouton d'export
-		colBtnExport.colSpan = 5;
+		colBtnExport.colSpan = 4;
 		colBtnExport.classList.add('edit');
 		colBtnExport.classList.add('btnEdit');
 
@@ -283,7 +283,6 @@ export default function Ticket()
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
-			console.log(idUti)
 			compteurRoot.render(<Compteur
 				valIni={ 0 }
 				updateTotComm={ (idprod, iduti, qa, prixspe) => updateTotComm(idprod, iduti, qa, prixspe) }
@@ -608,7 +607,7 @@ export default function Ticket()
 	{
 		try
 		{
-			
+
 			const formData = new FormData();
 			formData.append('categ', nomCateg);
 
