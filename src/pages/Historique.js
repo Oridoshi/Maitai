@@ -341,8 +341,7 @@ export default function Historique()
 	}
 
 	async function ticketExists() {
-		const ticket = await getTicketEnCours();
-		return ticket && ticket.length > 0;
+		return true;
 	}
 
 	const getNomP = async (idprod) =>
