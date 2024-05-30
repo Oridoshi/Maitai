@@ -121,7 +121,7 @@ function FicheSecu() {
 					<div className="col-sm-5 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="nomFic" className="me-2 fw-bold">Nom du fichier</label>
-							<input type="text" className="form-control" name='nomFic' id="club" pattern='^[a-zA-Z0-9]+$' required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
+							<input type="text" className="form-control" placeholder='Seulement des caractères ou des chiffres' name='nomFic' id="club" pattern='^[a-zA-Z0-9]+$' required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
 						</div>
 					</div>
 
@@ -967,6 +967,7 @@ function FicheSecu() {
 		try {
 			const imageUrl = cheminPHP + '../../config/img/imgLogo/maitai.png';
 			
+			/*
 			// Récupérer l'image sous forme d'ArrayBuffer
 			let formData = new FormData();
 			formData.append('chemin'  , imageUrl);
@@ -983,11 +984,11 @@ function FicheSecu() {
 				throw new Error('Impossible de récupérer l\'image');
 			}
 
-			const arrayBuffer = await response.arrayBuffer();
+			const arrayBuffer = await response.arrayBuffer();*/
 
 			// Ajouter l'image au classeur Excel
 			const imageId = workbook.addImage({
-				buffer: arrayBuffer,
+				imageUrl: imageUrl,
 				extension: 'png' // Spécifier l'extension de l'image
 			});
 
