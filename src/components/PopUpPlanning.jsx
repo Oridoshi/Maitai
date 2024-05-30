@@ -257,7 +257,7 @@ export default function PopUpPlanning({ tabProd })
 				body: formData
 			};
 
-			const response = await fetch(cheminPHP + "produit/GetCateg.php",requestOptions);
+			const response = await fetch(cheminPHP + "produit/GetCateg.php", requestOptions);
 			if (!response.ok)
 			{
 				throw new Error('Erreur de réseau lors de la récupération des données des clients.');

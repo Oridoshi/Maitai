@@ -5,9 +5,9 @@ include_once '../../inc/DB.inc.php';
 /**
  * Récupère les catégories de produits
  */
-if(isset($_POST['$pourMatin']) && $_POST['$pourMatin'] != "")
+if(isset($_POST['pourMatin']) && $_POST['pourMatin'] != "")
 {
-	$categs = DB::getInstance()->getCategorieDispo($_POST['$pourMatin']);
+	$categs = DB::getInstance()->getCategorieDispo($_POST['pourMatin']);
 }
 else
 {
