@@ -492,7 +492,8 @@ function FicheSecu() {
 						<td colSpan={4}>Nombre de plongeur : {formDataObject["club"]}</td>
 						<td colSpan={1} className='noBorder'></td>
 						<td colSpan={4} className='bg-warning'>PA 12 NON AUTORISE</td>
-						<td colSpan={6} className='noBorder'></td>
+						<td colSpan={3} className='noBorder'> </td>
+						<td colSpan={3} rowSpan={5}className='noBorder'> <img className='logo' src={cheminPHP + '../../config/img/imgLogo/maitai.png'}></img></td>
 					</tr>
 
 					<tr>
@@ -505,7 +506,6 @@ function FicheSecu() {
 
 						<td colSpan={4}>Bloc Secu</td>
 						<td colSpan={3}>{formDataObject["secu"]}</td>
-						<td colSpan={3} className='noBorder'></td>
 					</tr>
 
 					<tr>
@@ -518,7 +518,6 @@ function FicheSecu() {
 
 						<td colSpan={4}>O2</td>
 						<td colSpan={3}>{formDataObject["o2"]}</td>
-						<td colSpan={3} className='noBorder'></td>
 					</tr>
 
 					<tr>
@@ -526,7 +525,6 @@ function FicheSecu() {
 						<td>{formDataObject["ss2nom"]}   </td>
 						<td>{formDataObject["ss2prenom"]}</td>
 						<td>{formDataObject["ss2niveau"]}</td>
-						<td colSpan={11} className='noBorder'></td>
 					</tr>
 
 					<tr>
@@ -1381,7 +1379,7 @@ function FicheSecu() {
 			setNombrePlaques(nombrePlaques+1)
 
 		//Si on avait rien rempli, on enlève celui crée
-		if (nombrePlaques > 1 && nombrePlaques !== num && !tousRemplis && ((lignePalanqueeVide(nombrePlaques, 'A') && lignePalanqueeVide(nombrePlaques, 'B') && lignePalanqueeVide(nombrePlaques, 'C') && document.getElementById(`p${nombrePlaques}temp`).value === '' && document.getElementById(`p${nombrePlaques}prof`).value === '' && getValueRB(`p${nombrePlaques}type`) === '')))
+		if (nombrePlaques > 1 && nombrePlaques !== num && ((lignePalanqueeVide(nombrePlaques -1 , 'A') && lignePalanqueeVide(nombrePlaques -1, 'B')  && document.getElementById(`p${nombrePlaques}temp`).value === '' && document.getElementById(`p${nombrePlaques}prof`).value === '' && getValueRB(`p${nombrePlaques}type`) === '')))
 			setNombrePlaques(nombrePlaques - 1)
 
 

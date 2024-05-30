@@ -23,3 +23,9 @@ table td {
 	max-height: 60vh;
 	font-size: 80%;
 }
+
+.logo {
+	height: 2900%;
+	width: auto;
+	margin-left: 30%;
+}
