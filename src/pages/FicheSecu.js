@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {nivEncadrant, nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 import "../style/ficheSecuTable.css"
+import { BsPrefixComponent } from 'react-bootstrap/esm/helpers.js';
 
 
 function FicheSecu() {
@@ -121,7 +122,7 @@ function FicheSecu() {
 					<div className="col-sm-5 m-2 mt-3">
 						<div className="d-flex align-items-center">
 							<label htmlFor="nomFic" className="me-2 fw-bold">Nom du fichier</label>
-							<input type="text" className="form-control" name='nomFic' id="club" pattern='^[a-zA-Z0-9]+$' required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
+							<input type="text" className="form-control" placeholder='Pas de caractères spéciaux (!,?,^,...)' name='nomFic' id="club" pattern='^[a-zA-Z0-9-_ ]+$' required defaultValue={nomFic && nomFic} onChange={() => handleChangeEnTete()}/>
 						</div>
 					</div>
 
@@ -164,8 +165,8 @@ function FicheSecu() {
 						</div>
 						<div className="d-flex align-items-center mt-4">
 							<input type="text" className="form-control p-1 m-1"                  id="tel"       value="TELEPHONE"    readOnly/>
-							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Nom"    pattern="0[1-9](\s?\d{2}){4}" defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()} />
-							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Prenom" pattern="0[1-9](\s?\d{2}){4}" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telnom"    id="telnom"    placeholder="Numéro 1" pattern="0[1-9](\s?\d{2}){4}" defaultValue={idHis && formDataObject["telnom"   ]} onChange={() => handleChangeEnTete()} />
+							<input type="text" className="form-control p-1 m-1" name="telprenom" id="telprenom" placeholder="Numéro 2" pattern="0[1-9](\s?\d{2}){4}" defaultValue={idHis && formDataObject["telprenom"]} onChange={() => handleChangeEnTete()} />
 						</div>
 					</div>
 
@@ -489,7 +490,7 @@ function FicheSecu() {
 					</tr>
 
 					<tr>
-						<td colSpan={4}>Nombre de plongeur : {formDataObject["club"]}</td>
+						<td colSpan={4}>Nombre de plongeur : {formDataObject["nbplong"]}</td>
 						<td colSpan={1} className='noBorder'></td>
 						<td colSpan={4} className='bg-warning'>PA 12 NON AUTORISE</td>
 						<td colSpan={3} className='noBorder'> </td>
@@ -866,8 +867,11 @@ function FicheSecu() {
 				worksheet.getCell('D' + ((16 + i) + index * 3)).border = borderAll;
 
 
-				if (formDataObject["p" + (index+1) + (ind) + "nom"    ] !== null)
+				if (formDataObject["p" + (index+1) + (ind) + "nom"    ] !== undefined && formDataObject["p" + (index+1) + (ind) + "nom"    ] !== null ){
 					nbplong++
+					console.log(formDataObject["p" + (index+1) + (ind) + "nom"    ])
+					console.log(nbplong)
+				}
 
 
 				if (encadreOuNon[index + 1] && i === 0)
@@ -959,19 +963,18 @@ function FicheSecu() {
 		worksheet.getCell('B8').font   = { bold: true, size: 12};
 		worksheet.getCell('B8').border = borderAll;
 		worksheet.getCell('C8').value  = nbplong;
+		formDataObject['nbplong'] = nbplong;
 		worksheet.getCell('C8').border = borderAll;
 
 
 
 		/** IMAGE **/
 		try {
-			const imageUrl = cheminPHP + '../../config/img/imgLogo/maitai.png';
+			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
 			
 			// Récupérer l'image sous forme d'ArrayBuffer
 			let formData = new FormData();
 			formData.append('chemin'  , imageUrl);
-
-			console.log(imageUrl)
 
 			//On récupère id du login 
 			let response = await fetch(cheminPHP + "../GetFile.php", {
@@ -982,7 +985,7 @@ function FicheSecu() {
 			if (!response.ok) {
 				throw new Error('Impossible de récupérer l\'image');
 			}
-
+			
 			const arrayBuffer = await response.arrayBuffer();
 
 			// Ajouter l'image au classeur Excel
@@ -1381,7 +1384,7 @@ function FicheSecu() {
 			setNombrePlaques(nombrePlaques+1)
 
 		//Si on avait rien rempli, on enlève celui crée
-		if (nombrePlaques > 1 && nombrePlaques !== num && ((lignePalanqueeVide(nombrePlaques -1 , 'A') && lignePalanqueeVide(nombrePlaques -1, 'B')  && document.getElementById(`p${nombrePlaques}temp`).value === '' && document.getElementById(`p${nombrePlaques}prof`).value === '' && getValueRB(`p${nombrePlaques}type`) === '')))
+		if (nombrePlaques > 1 && nombrePlaques !== num && ((lignePalanqueeVide(nombrePlaques -1 , 'A') && lignePalanqueeVide(nombrePlaques -1, 'B')  && document.getElementById(`p${nombrePlaques}temp`).value.trim() === '' && document.getElementById(`p${nombrePlaques}prof`).value.trim() === '' && getValueRB(`p${nombrePlaques}type`).trim() === '')))
 			setNombrePlaques(nombrePlaques - 1)
 
 
@@ -1397,10 +1400,13 @@ function FicheSecu() {
 				!(lignePalanqueeVide    (nb, 'A') && lignePalanqueeVide    (nb, 'B') && lignePalanqueeVide    (nb, 'C')))
 				setValide (false);
 		}
+		
 	}
 
 
 	function handleChangeEnTete() {
+
+		/** Permettre de modifier la liste */
 		const newForm = formDataObject;
 
 		newForm["dpniveau" ] = document.getElementById("dpniveau" )?.value
@@ -1413,7 +1419,41 @@ function FicheSecu() {
 
 		setFormDataObject(newForm)
 
-		setValide(formEstRempli());
+		//Si le 2 secu est pas totalement rempli
+		let ss2CompletementVideRempli = 
+			//Completement vide
+			(document.getElementById("ss2nom" )?.value.trim() === '' && document.getElementById("ss2prenom" )?.value.trim() === '' && document.getElementById("ss2niveau" )?.value.trim() === '') ||
+			//Completement rempli
+			(document.getElementById("ss2nom" )?.value.trim() !== '' && document.getElementById("ss2prenom" )?.value.trim() !== '' && document.getElementById("ss2niveau" )?.value.trim() !== '');
+
+
+		setValide(formEstRempli() && appliquerContourRouge() && ss2CompletementVideRempli);
+		
+	}
+
+	function appliquerContourRouge() {
+		// Sélectionner tous les éléments input du formulaire
+		const inputs = document.querySelectorAll('input');
+		let boolean = true;
+
+		// Parcourir chaque input
+		inputs.forEach(input => {
+			// Vérifier si l'input a un attribut pattern
+			const pattern = input.getAttribute('pattern');
+			if (pattern) {
+			// Vérifier si la valeur de l'input ne correspond pas au pattern
+			if (input.value.trim() !== '' && !new RegExp(`^${pattern}$`).test(input.value.trim())) {
+				// Ajouter la classe de Bootstrap pour une bordure rouge
+				input.classList.add('border', 'border-danger');
+				boolean = false;
+			} else {
+				// Retirer la classe de bordure rouge s'il n'y a pas de problème
+				input.classList.remove('border', 'border-danger');
+			}
+			}
+		});
+		
+		return boolean;
 	}
 
 
@@ -1431,7 +1471,7 @@ function FicheSecu() {
 			const checkRequiredFields = (element) => {
 				// Check if the element is an input, textarea, or select field and is required
 				if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA' || element.tagName === 'SELECT') &&
-					element.required && element.value === '' && !element.readOnly) {
+					element.required && element.value.trim() === '' && !element.readOnly) {
 					estRempli = false;
 				}
 
@@ -1505,7 +1545,7 @@ function FicheSecu() {
 	 */
 	function lignePalanqueeComplete(num, car)
 	{
-		return document.getElementById(`p${num}${car}nom`).value !== '' && document.getElementById(`p${num}${car}prenom`).value !== '' && document.getElementById(`p${num}${car}niv`).value !== '' && document.getElementById(`p${num}temp`).value !== '' && document.getElementById(`p${num}prof`).value !== '' && getValueRB(`p${num}type`) !== '' ;
+		return document.getElementById(`p${num}${car}nom`).value.trim() !== '' && document.getElementById(`p${num}${car}prenom`).value.trim() !== '' && document.getElementById(`p${num}${car}niv`).value.trim() !== '' && document.getElementById(`p${num}temp`).value.trim() !== '' && document.getElementById(`p${num}prof`).value.trim() !== '' && getValueRB(`p${num}type`).trim() !== '' ;
 	}
 
 	/**
@@ -1516,7 +1556,7 @@ function FicheSecu() {
 	 */
 	function lignePalanqueeVide(num, car)
 	{
-		return document.getElementById(`p${num}${car}nom`).value === '' && document.getElementById(`p${num}${car}prenom`).value === '' && document.getElementById(`p${num}${car}niv`).value === '';
+		return document.getElementById(`p${num}${car}nom`).value.trim() === '' && document.getElementById(`p${num}${car}prenom`).value.trim() === '' && document.getElementById(`p${num}${car}niv`).value.trim() === '';
 	}
 
 
