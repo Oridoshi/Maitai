@@ -163,9 +163,6 @@ export default function Resume(){
 					// Vérifier si la clé doit être affichée et si la valeur de l'élément correspond à la valeur de recherche
 					if (key.show ) {
 						// Vérifier si la valeur de l'élément correspond à la valeur de recherche
-						console.log(element)
-						console.log("checked : ", checked)
-						console.log("valider : ", element.valider)
 						if ((element[key.id] +'').toUpperCase().includes(value.toUpperCase()) && (checked !== element.valider || !element.valider)) {
 							return true; // Si correspondance, conserver cet élément
 						}

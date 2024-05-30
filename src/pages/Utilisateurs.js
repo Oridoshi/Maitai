@@ -27,7 +27,6 @@ function Utilisateur() {
 					...item,
 					id: index + 1
 				}));
-				console.log(data[0])
 				setInitialData(newData);
 				setFilterData(newData);
 			})
@@ -103,8 +102,6 @@ function Utilisateur() {
 			formData.append('email', nouvItem.email);
 			formData.append('actif', nouvItem.actif ? 1 : 0);
 			formData.append('droit', nouvItem.droit);
-
-			console.log(nouvItem.droit);
 
 			const requestOptions = {
 				method: 'POST',

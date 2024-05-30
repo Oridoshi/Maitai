@@ -283,7 +283,6 @@ export default function Ticket()
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
-			console.log(idUti)
 			compteurRoot.render(<Compteur
 				valIni={ 0 }
 				updateTotComm={ (idprod, iduti, qa, prixspe) => updateTotComm(idprod, iduti, qa, prixspe) }
@@ -376,7 +375,6 @@ export default function Ticket()
 				const nomProduit = await getNomP(ticket.idprod);
 				tabDonneExport.forEach(donnee =>
 				{
-					console.log(client)
 					switch (donnee)
 					{
 						case 'numero de client': contenu += iduti + separateur;
@@ -759,7 +757,6 @@ export default function Ticket()
 	{
 		try
 		{
-			console.log(iduti)
 			const formData = new FormData();
 			formData.append('idprod', idprod);
 			formData.append('iduti', iduti);

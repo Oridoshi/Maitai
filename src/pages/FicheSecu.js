@@ -421,7 +421,6 @@ function FicheSecu() {
 
 	function generateGaz(num)
 	{
-		console.log(num)
 		return (
 			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]}  onChange={() => handleChangeRea()}>
 				{/* Si gazOptions est vide, affiche "Aire" */}
@@ -664,8 +663,6 @@ function FicheSecu() {
 		};
 
 		const allVCHC = { vertical: 'middle', horizontal: 'center' };
-
-		console.log(formDataObject)
 
 
 		//TAILLE COLONNE
@@ -971,7 +968,6 @@ function FicheSecu() {
 		/** IMAGE **/
 		try {
 			const imageUrl = cheminPHP + '../../config/img/imgLogo/maitai.png';
-			console.log("Url :", imageUrl)
 			
 			// Récupérer l'image sous forme d'ArrayBuffer
 			let formData = new FormData();
@@ -1001,8 +997,6 @@ function FicheSecu() {
 				ext: { width: 200, height: 200 } // Taille de l'image en pixels
 			});
 
-			// Code pour gérer le buffer Excel (par exemple, l'enregistrer sur le serveur ou l'envoyer au client)
-			console.log('Fichier Excel avec l\'image généré avec succès.');
 		} catch (error) {
 			console.error('Une erreur est survenue lors de la récupération de l\'image :', error.message);
 		}
@@ -1409,8 +1403,6 @@ function FicheSecu() {
 	function handleChangeEnTete() {
 		const newForm = formDataObject;
 
-		console.log('Date',document.getElementById("date").value)
-		
 		newForm["dpniveau" ] = document.getElementById("dpniveau" )?.value
 		newForm["ss1niveau"] = document.getElementById("ss1niveau")?.value
 		newForm["ss2niveau"] = document.getElementById("ss2niveau")?.value

@@ -98,8 +98,6 @@ export default function Produits(){
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {
 		try {
-			console.log("Nouvelle donnée",nouvItem)
-
 			const formData = new FormData();
 			formData.append('ref'      , nouvItem.ref);
 			formData.append('libProd'  , nouvItem.libprod);

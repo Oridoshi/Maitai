@@ -398,12 +398,6 @@ export default function Planning()
 		if (nouvIndex > taille) nouvIndex = 0;
 		if (nouvIndex < 0) nouvIndex = taille;
 
-		console.log("Taille", taille)
-		console.log("Index nom", index)
-		console.log("Delta", delta)
-		console.log("old index", indexNav["" + index])
-		console.log("Nou index", nouvIndex)
-
 
 		setIndex(prevIndex => ({ ...prevIndex, ["" + index]: nouvIndex }))
 	}
