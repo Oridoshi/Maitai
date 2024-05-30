@@ -970,19 +970,28 @@ function FicheSecu() {
 
 		/** IMAGE **/
 		try {
-			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
+			const imageUrl = cheminPHP + '../../config/img/imgLogo/maitai.png';
+			console.log("Url :", imageUrl)
 			
 			// Récupérer l'image sous forme d'ArrayBuffer
-			const response = await fetch(imageUrl);
+			let formData = new FormData();
+			formData.append('chemin'  , imageUrl);
+
+			//On récupère id du login 
+			let response = await fetch(cheminPHP + "../GetFile.php", {
+				method: 'POST',
+				body: formData
+			});
+
 			if (!response.ok) {
 				throw new Error('Impossible de récupérer l\'image');
 			}
+
 			const arrayBuffer = await response.arrayBuffer();
-			const buffer = Buffer.from(arrayBuffer);
 
 			// Ajouter l'image au classeur Excel
 			const imageId = workbook.addImage({
-				buffer: buffer,
+				buffer: arrayBuffer,
 				extension: 'png' // Spécifier l'extension de l'image
 			});
 
