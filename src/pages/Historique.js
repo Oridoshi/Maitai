@@ -13,23 +13,21 @@ export default function Historique()
 	const [initialHeader, setInitialHeader] = useState([]);
 	const [type, setType] = useState('Ticket');
 	const [idUti, setIdUti] = useState(-1);
+
 	//ticket en cours
 	const [ticketExist, setTicketExist] = useState(false);
 	const [ticketEnCours, setTicketEnCours] = useState([]);
 	const [client, setClient] = useState([]);
 
 	// Récupérer l'ID de l'utilisateur au quelle on veut afficher les historiques
-
-
-	// Récupérer les données des produits
 	useEffect(() =>
 	{
 		// si l'utilisateur est un client, on récupère son id via son login sinon on récupère dans la session
 		async function fetchTicket()
 		{
-			setClient(await getClient());;
-			setTicketExist(await ticketExists());
+			setClient(await getClient());
 			setTicketEnCours(await getTicketEnCours());
+			setTicketExist(await ticketExists());
 		}
 		fetchTicket();
 
@@ -74,7 +72,6 @@ export default function Historique()
 				{
 					throw new Error('Erreur de réseau !');
 				}
-				// console.log(response.text());
 				return response.json();
 			})
 			.then(data =>
@@ -111,7 +108,6 @@ export default function Historique()
 				throw new Error('Une erreur s\'est produite.');
 			}
 
-			// console.log(await response.text());
 			// Convertir la réponse en blob
 			const blob = await response.blob();
 
@@ -147,6 +143,7 @@ export default function Historique()
 		type   VARCHAR(6)   NOT NULL CHECK (type IN ('TICKET', 'SECU')),
 		idUti  INTEGER      NOT NULL REFERENCES Client(idUti)
 	*/
+
 	// En-tête de la table
 	useEffect(() =>
 	{
@@ -341,7 +338,30 @@ export default function Historique()
 	}
 
 	async function ticketExists() {
-		return true;
+		try
+		{
+			const formData = new FormData();
+			formData.append('idUti', idUti);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/GetClientATicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.json();
+
+			return data;
+		} catch (error)
+		{
+			return false;
+		}
 	}
 
 	const getNomP = async (idprod) =>
@@ -610,7 +630,7 @@ export default function Historique()
 
 	function genererTicket()
 	{
-		if (ticketExist)
+		if (ticketExist && type === "Ticket")
 		{
 			const headerTicket = [
 				{ id: 'id', name: 'NB Ligne', type: 'number', required: false, editable: false, show: false },
@@ -641,7 +661,6 @@ export default function Historique()
 	//Gestion des tickets
 	function afficherDetail(ligne)
 	{
-		setIdUti(ligne.id);
 		try
 		{
 			//récupère la ligne qui appel la méthode et celle d'après
@@ -702,7 +721,14 @@ export default function Historique()
 			// Prix Produit
 			const prixtot = document.createElement('td');
 			prixtot.colSpan = 1;
-			prixtot.textContent = "total : " + prod.prixtot + " €";
+			if(prod.prixtot === null)
+			{
+				prixtot.textContent = "total : 0 €";
+			}
+			else
+			{
+				prixtot.textContent = "total : " + prod.prixtot + " €";
+			}
 			prixtot.classList.add('tablClitotal');
 			prixtot.classList.add('edit');
 
