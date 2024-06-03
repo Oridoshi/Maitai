@@ -20,6 +20,8 @@ import '../style/form.css';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
+import { cheminPHP } from '../components/VarGlobal';
+
 function Navbar({ role })
 {
     let navLinks = [];
@@ -203,6 +205,45 @@ function Navbar({ role })
         );
     };
 
+    const installAide = async () =>
+    {
+        const formData = new FormData();
+			formData.append('droit', sessionStorage.getItem('droit')===""?"Client":sessionStorage.getItem('droit'));
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "config/GetManuelUtilisation.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			// console.log(await response.text());
+			// Convertir la réponse en blob
+			const blob = await response.blob();
+
+			// Créer une URL pour le blob
+			const url = URL.createObjectURL(blob);
+
+			// Créer un lien <a> pour télécharger le fichier
+			const link = document.createElement('a');
+			link.href = url;
+			link.download = "Manuel_Utilisation_" + sessionStorage.getItem('droit') + ".pdf"; // Spécifiez le nom de fichier souhaité ici
+
+			// Ajouter le lien à la page
+			document.body.appendChild(link);
+
+			// Simuler le clic sur le lien pour déclencher le téléchargement
+			link.click();
+
+			// Supprimer le lien de la page une fois le téléchargement terminé
+			document.body.removeChild(link);
+    }
+
     return (
         <div>
             <div className="manav container-fluid">
@@ -217,6 +258,7 @@ function Navbar({ role })
                             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                                 { getItem() }
                             </div>
+                            <Link className="nav-link elt" onClick={ installAide }>Aide</Link>
                         </div>
                     </nav>
                 </div>
