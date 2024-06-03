@@ -5,12 +5,14 @@ import Table from '../components/Table';
 import Compteur from '../components/Compteur';
 import { cheminPHP } from '../components/VarGlobal.js';
 
+import imgNotif from '../img/succes.svg';
+
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 export default function Ticket()
 {
-	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
+	if (sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
 
 
 	//donnée tab
@@ -30,6 +32,8 @@ export default function Ticket()
 
 	const [searchTerm, setSearchTerm] = useState(''); // État pour stocker la valeur de recherche
 	const [checked, setChecked] = useState(true); // État pour stocker la valeur de la case à cocher
+
+	const [notification, setNotification] = useState({ message: '', visible: false });
 
 
 	/*TABLEAU DE CLIENT*/
@@ -317,6 +321,32 @@ export default function Ticket()
 			setLblErreur("Erreur ce produit existe déjà !");
 		}
 	}
+
+	////////////////////////////////////////////////// NOTIFICATIONS
+
+	const Notification = ({ message, visible }) => {
+		if (!visible) return null;
+		return (
+			<div className="notif">
+				<img className="imgNotif" src={imgNotif}/>
+				<div className="notiftxt">
+					<div className="messagehaut">
+						EXPORTATION RÉUSSIE
+					</div>
+					<div className="message">
+						{message}
+					</div>
+				</div>
+			</div>
+		);
+	};
+
+	const showNotification = (message) => {
+		setNotification({ message, visible: true });
+		setTimeout(() => {
+			setNotification({ message: '', visible: false });
+		}, 5000);
+	};
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -742,9 +772,9 @@ export default function Ticket()
 			}
 
 			const data = await response.text();
-			afficherError(data);
 
-			return data === ""; // Retourne true si la insert a réussi, sinon false
+			showNotification("Retrouvez le dans l'histrorique du client")
+			return data === "";
 
 		} catch (error)
 		{
@@ -776,7 +806,6 @@ export default function Ticket()
 			}
 
 			const data = await response.text();
-			afficherError(data);
 
 			// Récupérer les nouvelles données des clients après l'insertion réussie
 			const newData = await fetchClientData();
@@ -815,7 +844,6 @@ export default function Ticket()
 			}
 
 			const data = await response.text();
-			afficherError(data);
 
 
 			return data === ""; // Retourne true si la insert a réussi, sinon false
@@ -849,8 +877,6 @@ export default function Ticket()
 			}
 
 			const data = await response.text();
-			afficherError(data);
-
 
 			return data === ""; // Retourne true si la insert a réussi, sinon false
 		} catch (error)
@@ -886,6 +912,7 @@ export default function Ticket()
 	///code html de la page des tickets
 	return (
 		<div>
+			<Notification message={notification.message} visible={notification.visible} />
 			<h1 className="titre">Gestion des tickets</h1>
 			<div className="grpRecherche mt-4 d-flex align-items-center">
 				{/* barre de recherche */ }
