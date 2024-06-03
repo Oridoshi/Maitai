@@ -970,16 +970,10 @@ function FicheSecu() {
 
 		/** IMAGE **/
 		try {
-			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
-			
-			// Récupérer l'image sous forme d'ArrayBuffer
-			let formData = new FormData();
-			formData.append('chemin'  , imageUrl);
 
 			//On récupère id du login 
-			let response = await fetch(cheminPHP + "../GetFile.php", {
-				method: 'POST',
-				body: formData
+			let response = await fetch(cheminPHP + "config/GetImgLogo.php", {
+				method: 'POST'
 			});
 
 			if (!response.ok) {
