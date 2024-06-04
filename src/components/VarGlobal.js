@@ -1,5 +1,6 @@
 export const cheminPHP = "https://maitai-becon.wuaze.com/php/other/";
 //export const cheminPHP = "http://172.26.4.207/Maitai/src/php/other/";
+//export const cheminPHP = "http://192.168.1.65/Maitai/src/php/other/";
 // export const cheminPHP = "http://localhost/Maitai/src/php/other/";
 
 export const nivEncadrant = ['', 'E1', 'E2', 'E3', 'E4', 'N4-GP'];
