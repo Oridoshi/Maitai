@@ -970,16 +970,10 @@ function FicheSecu() {
 
 		/** IMAGE **/
 		try {
-			const imageUrl = 'https://maitai-becon.wuaze.com/config/img/imgLogo/maitai.png';
-			
-			// Récupérer l'image sous forme d'ArrayBuffer
-			let formData = new FormData();
-			formData.append('chemin'  , imageUrl);
 
 			//On récupère id du login 
-			let response = await fetch(cheminPHP + "../GetFile.php", {
-				method: 'POST',
-				body: formData
+			let response = await fetch(cheminPHP + "config/GetImgLogo.php", {
+				method: 'POST'
 			});
 
 			if (!response.ok) {
@@ -1427,7 +1421,7 @@ function FicheSecu() {
 			(document.getElementById("ss2nom" )?.value.trim() !== '' && document.getElementById("ss2prenom" )?.value.trim() !== '' && document.getElementById("ss2niveau" )?.value.trim() !== '');
 
 
-		setValide(formEstRempli() && appliquerContourRouge() && ss2CompletementVideRempli);
+		setValide(appliquerContourRouge() && formEstRempli() && ss2CompletementVideRempli);
 		
 	}
 
