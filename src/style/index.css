@@ -127,7 +127,7 @@
 	border-radius: 10px;
 	height: 40px;
 	text-align: center;
-	width: 48%;
+	width: 223px!important;
 }
 
 .itemModal {
@@ -464,6 +464,13 @@
 	.btnSsuiv:hover {
 		transform: rotate(180deg) scale(1.1);
 		/* Agrandit légèrement l'image à 110% */
+	}
+
+	.notifinvalid{
+		margin-left: 58%;
+	}
+	.notif{
+		margin-left: 58%;
 	}
 }
 
