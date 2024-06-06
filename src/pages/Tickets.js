@@ -6,6 +6,7 @@ import Compteur from '../components/Compteur';
 import { cheminPHP } from '../components/VarGlobal.js';
 
 import imgNotif from '../img/succes.svg';
+import imgNotifError from '../img/refus.svg';
 
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -34,6 +35,8 @@ export default function Ticket()
 	const [checked, setChecked] = useState(true); // État pour stocker la valeur de la case à cocher
 
 	const [notification, setNotification] = useState({ message: '', visible: false });
+	const [messagehaut,setMessageHaut] = useState('');
+	const [notifValid,setNotifValid] = useState(true);
 
 
 	/*TABLEAU DE CLIENT*/
@@ -324,27 +327,43 @@ export default function Ticket()
 
 	////////////////////////////////////////////////// NOTIFICATIONS
 
-	const Notification = ({ message, visible }) => {
+	const Notification = ({ message, visible }) =>
+	{
 		if (!visible) return null;
+		let classNotif = "";
+		let img = "";
+		if(notifValid)
+		{
+			classNotif = "notif"
+			img = imgNotif;
+		}
+		else
+		{
+			classNotif ="notifinvalid"
+			img = imgNotifError;
+		}
+
 		return (
-			<div className="notif">
-				<img className="imgNotif" src={imgNotif}/>
+			<div className={classNotif}>
+				<img className="imgNotif" src={ img } />
 				<div className="notiftxt">
 					<div className="messagehaut">
-						EXPORTATION RÉUSSIE
+						{messagehaut}
 					</div>
 					<div className="message">
-						{message}
+						{ message }
 					</div>
 				</div>
 			</div>
 		);
 	};
 
-	const showNotification = (message) => {
-		setNotification({ message, visible: true });
-		setTimeout(() => {
-			setNotification({ message: '', visible: false });
+	const showNotification = (message) =>
+	{
+		setNotification({message, visible: true });
+		setTimeout(() =>
+		{
+			setNotification({message: '', visible: false });
 		}, 5000);
 	};
 
@@ -355,27 +374,40 @@ export default function Ticket()
 	//gère l'exportation
 	async function exportation(iduti)
 	{
-		//génère le ticket de caisse du client en csv
-		await genereCSV(iduti);
-
-		//récupère tous les boutons et les remets dans la position haute
-		var buttons = document.getElementsByTagName('button');
-		for (var i = 0; i < buttons.length; i++)
+		//test si il a bien un ticket a export
+		if (await ticketCli(iduti))
 		{
-			var button = buttons[i];
-			button.style.transform = 'rotate(0deg)';
+			//génère le ticket de caisse du client en csv
+			await genereCSV(iduti);
+
+			//récupère tous les boutons et les remets dans la position haute
+			var buttons = document.getElementsByTagName('button');
+			for (var i = 0; i < buttons.length; i++)
+			{
+				var button = buttons[i];
+				button.classList.remove('btnreverse');
+			}
+
+			//masque tous les tickets
+			removeElementsByID('edit');
+
+			//supprime le tickets dans la bado
+			await supprTickets(iduti);
+			setNotifValid(true);
+			setMessageHaut("EXPORTATION RÉUSSIE");
+			showNotification("Retrouvez le dans l'histrorique du client");
+
+			//maj des data
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData);
 		}
-
-		//masque tous les tickets
-		removeElementsByID('edit');
-
-		//supprime le tickets dans la bado
-		await supprTickets(iduti);
-
-		//maj des data
-		const newData = await fetchClientData();
-		setInitialData(newData);
-		setFilterData(newData);
+		else
+		{
+			setNotifValid(false);
+			setMessageHaut("EXPORTATION ÉCHOUÉE");
+			showNotification("Vous n'avez pas attribué de produit");
+		}
 	}
 
 	//créer le fichier csv
@@ -752,6 +784,12 @@ export default function Ticket()
 		return tabTicket.some(ticket => ticket.idprod === idprod && ticket.iduti === iduti);
 	}
 
+	const ticketCli = async (iduti) =>
+	{
+		const tabTicket = await getTickets();
+		return tabTicket.some(ticket => ticket.iduti === iduti);
+	}
+
 	const supprTickets = async (iduti) =>
 	{
 		try
@@ -773,7 +811,6 @@ export default function Ticket()
 
 			const data = await response.text();
 
-			showNotification("Retrouvez le dans l'histrorique du client")
 			return data === "";
 
 		} catch (error)
@@ -907,12 +944,26 @@ export default function Ticket()
 		}
 	}
 
+	function submit()
+	{
+		if (prix === null)
+		{
+			setLblErreur("Le prix est requis.");
+			return;
+		}
+		ajtProd();
+		setLblErreur("");
+		setLblCat("");
+		setLblProd("");
+		setPrix("");
+	}
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	///code html de la page des tickets
 	return (
 		<div>
-			<Notification message={notification.message} visible={notification.visible} />
+			<Notification message={ notification.message } visible={ notification.visible } />
 			<h1 className="titre">Gestion des tickets</h1>
 			<div className="grpRecherche mt-4 d-flex align-items-center">
 				{/* barre de recherche */ }
@@ -961,7 +1012,7 @@ export default function Ticket()
 				</Modal.Body>
 				<Modal.Footer>
 					<label className="Error"> { lblErreur }</label>
-					<Button className="btnAjouter btn" onClick={ () => ajtProd() }></Button>
+					<Button className="btnAjouter btn" onClick={ () => submit() }></Button>
 					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblErreur(""); setLblCat(""); setLblProd(""); setPrix(""); } }>
 						Fermer
 					</Button>
