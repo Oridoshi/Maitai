@@ -23,7 +23,7 @@ else
     $utilisateur = $pdo->getUtilisateurByLogin($prevLogin);
 
     // vérification si l'utilisateur est le dernier admin actif
-    if($utilisateur->getDroit() === "Admin" && $pdo->getNbAdminActif() == 1 && ($iddroit != $idDroitAdmin || $actif == 0))
+    if($utilisateur->getDroit() === "Admin" && $pdo->getNbAdminActif() == 1 && "Admin" != $droit && $actif == 0)
         die("SQLSTATE[45000] : erreur perso : 2255 Vous ne pouvez pas modifier les droits du dernier administrateur ! in");
 
     // modification des données de l'utilisateur si non null
