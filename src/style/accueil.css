@@ -13,6 +13,7 @@
 .imgcarr {
     background-size: cover;
     background-position: center;
+    height: 90%;
 }
 
 .carousel-control-prev-icon {

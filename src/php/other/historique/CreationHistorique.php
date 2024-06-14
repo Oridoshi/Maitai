@@ -32,3 +32,5 @@ if(!move_uploaded_file($fileTmpPath, $chemin . $nf . $fileName)) {
     DB::getInstance()->suppHistorique($historique->getIdHis());
     return;
 }
+
+echo $nf;
