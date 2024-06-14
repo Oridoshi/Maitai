@@ -17,6 +17,9 @@ class Produit {
     /** Prix unitaire hors taxe du produit */
     public ?float $prixuniht;
 
+    /** TVA du produit */
+    public ?float $tva;
+
     /** Disponible le matin */
     public bool $dispomatin;
 
@@ -33,12 +36,13 @@ class Produit {
      * @var string $categorie Categorie du produit.
      * Constructeur de la classe Produit.
      */
-    public function __construct(int $idprod = 0, string $ref = "", string $libprod = "", ?float $prixuni = null, ?float $prixuniht = null, bool $dispomatin = false, bool $disposoir = false, string $categorie = "") {
+    public function __construct(int $idprod = 0, string $ref = "", string $libprod = "", ?float $prixuni = null, ?float $prixuniht = null, $tva = null, bool $dispomatin = false, bool $disposoir = false, string $categorie = "") {
         $this->idprod = $idprod;
         $this->ref = $ref;
         $this->libprod = $libprod;
         $this->prixuni = $prixuni;
         $this->prixuniht = $prixuniht;
+        $this->tva = $tva;
         $this->dispomatin = $dispomatin;
         $this->disposoir = $disposoir;
         $this->categorie = $categorie;
@@ -58,6 +62,9 @@ class Produit {
 
     /** Getter du prix unitaire hors taxe du produit */
     public function getPrixUniHt(): ?float {return $this->prixuniht;}
+
+    /** Getter de la TVA */
+    public function getTva(): ?float {return $this->tva;}
 
     /** Getter du diponible matin */
     public function getDispoMatin(): bool {return $this->dispomatin;}
@@ -82,6 +89,9 @@ class Produit {
 
     /** Setter du prix unitaire hors taxe du produit */
     public function setPrixUniHT(?float $prixuniht): void {$this->prixuniht = $prixuniht;}
+
+    /** Setter de la TVA */
+    public function setTva(?float $tva): void {$this->tva = $tva;}
 
     /** Setter du diponible matin */
     public function setDispoMatin(bool $dispomatin): void {$this->dispomatin = $dispomatin;}
