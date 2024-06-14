@@ -144,8 +144,8 @@
 	background-color: transparent;
 	border-color: transparent;
 	width: 20px;
-	height: 20px;
-	background-image: url('../img/chevron.svg');
+	height: 24px;
+	background-image: url('../img/chevrondroite.svg');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -160,5 +160,5 @@
 }
 
 .btnreverse{
-	transform: rotate(180deg);
+	transform: rotate(90deg);
 }
