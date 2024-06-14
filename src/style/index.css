@@ -96,6 +96,26 @@
 	background-color: #005C8F !important;
 }
 
+.btnAperçu,
+.btnAperçu:focus,
+.btnAperçu:active
+{
+	background-color: transparent!important;
+	height: 40px!important;
+	width: 40px!important;
+	border-color: transparent!important;
+
+	background-image: url('../img/aperçu.svg');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.btnAperçu:hover
+{
+	background-image: url('../img/aperçuhover.svg');
+}
+
 .grpRecherche {
 	margin-left: 3%;
 }
