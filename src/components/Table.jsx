@@ -21,6 +21,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 	}, [rowData]);
 
 
+
 	/**
 	 * Modifier l'élément quand on change les valeurs.
 	 * @param {*} e
@@ -31,7 +32,45 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 			...prevState,
 			[id]: value
 		}));
+
+		appliquerContourRouge();
 	};
+
+
+	function appliquerContourRouge() {
+		// Sélectionner tous les éléments input du div modal-body
+		let div = document.getElementById('modal-body')
+		const inputs = div.querySelectorAll('input');
+		let boolean = true;
+
+		// Parcourir chaque input
+		inputs.forEach(input => {
+			const pattern = input.getAttribute('pattern');
+
+			if (input.type !== "hidden") {
+				const value = input.value.trim();
+				const hasPattern = pattern !== null;
+				const patternNotMatched = hasPattern && !new RegExp(`^${pattern}$`).test(value);
+				const isRequiredAndEmpty = input.required && value === '';
+
+				console.log("ID", input.id);
+				console.log("PATTERN NOT MATCHED", patternNotMatched);
+				console.log("REQUIRED AND EMPTY", isRequiredAndEmpty);
+
+				// Si il y a un pattern et que ça ne correspond pas ou si le champ est requis mais non rempli
+				if (patternNotMatched || isRequiredAndEmpty) {
+					// Ajouter la classe de Bootstrap pour une bordure rouge
+					input.classList.add('border', 'border-danger');
+					boolean = false;
+				} else {
+					// Retirer la classe de bordure rouge s'il n'y a pas de problème
+					input.classList.remove('border', 'border-danger');
+				}
+			}
+		});
+		
+		return boolean;
+	}
 
 
 	/**
@@ -50,10 +89,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 		// Formate le numéro de téléphone en insérant un espace tous les deux chiffres
 		const formattedPhoneNumber = formattedValue.replace(/(\d{2})(?=\d)/g, '$1 ');
 
-		setFormValues(prevState => ({
-			...prevState,
-			[id]: formattedPhoneNumber
-		}));
+		handleChange(e)
 	};
 
 	const handleChangeLogin = (e) => {
@@ -64,6 +100,9 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 			...prevState,
 			[id]: login
 		}));
+
+		handleChange(e)
+
 	};
 
 
@@ -84,7 +123,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 					<div className="modal-header">
 					<h4 className="modal-title">{rowData.id ? 'Modifier' : 'Ajouter'}</h4>
 					</div>
-					<div className='modal-body'>
+					<div className='modal-body' id='modal-body'>
 						{header.map((head) => (
 							<div key={head.id}>
 								{head.editable ? (
@@ -198,7 +237,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 									<button type='submit' className='btnSauvegarder btn btn-primary'>Modifier</button>
 								) }
 								{ rowData.id === undefined && (
-									<button type='submit' className='btnAjouter btn 0btn-primary'></button>
+									<button type='submit' className='btnValidation btn 0btn-primary'></button>
 								) }
 							</div>
 						</div>

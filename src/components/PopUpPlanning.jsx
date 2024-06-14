@@ -374,7 +374,7 @@ export default function PopUpPlanning({ tabProd })
 					</div>
 					<div className="panelbas">
 						<Compteur valIni={ qt } setVal={ setQt } />
-						<button className='btnAjouter btn btn-primary m-3' onClick={ () => ajtProd() }></button>
+						<button className='btnValidation btn btn-primary m-3' onClick={ () => ajtProd() }></button>
 					</div>
 				</div>
 				<div className="paneldroit">

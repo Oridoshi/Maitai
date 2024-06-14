@@ -95,6 +95,27 @@
 	background-color: #005C8F!important;
 }
 
+.btnValidation,
+.btnValidation:focus,
+.btnValidation:active {
+	width: 40px;
+	height: 40px;
+
+	background-image: url('../img/validation.svg')!important;
+
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	border-radius: 10px;
+
+	background-color: #006DAA!important;
+	border-color: #006DAA!important;
+	transition: background-color 0.3s ease;
+}
+.btnValidation:hover{
+	background-color: #005C8F!important;
+}
+
 .text-muted td {
 	color: #6c757d !important;
 	/* Couleur grise par défaut */
