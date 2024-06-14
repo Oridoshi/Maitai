@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import "../style/table.css"
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 /**
  * Modal (Pop-up) qui apparait lorsqu'on clique sur ajouter ou modifier
@@ -19,6 +24,8 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 	useEffect(() => {
 		setFormValues(rowData);
 	}, [rowData]);
+	
+
 
 
 	/**
@@ -31,7 +38,52 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 			...prevState,
 			[id]: value
 		}));
+
+
+		header.forEach(head => {
+			if(head.id === id && head.onChange !== undefined)
+				head.onChange(e, formValues)
+		});
+
+
+
+		if (id.onChange !== undefined)
+			id.onChange(e)
+
+		appliquerContourRouge();
 	};
+
+
+	function appliquerContourRouge() {
+		// Sélectionner tous les éléments input du div modal-body
+		let div = document.getElementById('modal-body')
+		const inputs = div.querySelectorAll('input');
+		let boolean = true;
+
+		// Parcourir chaque input
+		inputs.forEach(input => {
+			const pattern = input.getAttribute('pattern');
+
+			if (input.type !== "hidden") {
+				const value = input.value.trim();
+				const hasPattern = pattern !== null;
+				const patternNotMatched = hasPattern && !new RegExp(`^${pattern}$`).test(value);
+				const isRequiredAndEmpty = input.required && value === '';
+
+				// Si il y a un pattern et que ça ne correspond pas ou si le champ est requis mais non rempli
+				if (patternNotMatched || isRequiredAndEmpty) {
+					// Ajouter la classe de Bootstrap pour une bordure rouge
+					input.classList.add('border', 'border-danger');
+					boolean = false;
+				} else {
+					// Retirer la classe de bordure rouge s'il n'y a pas de problème
+					input.classList.remove('border', 'border-danger');
+				}
+			}
+		});
+		
+		return boolean;
+	}
 
 
 	/**
@@ -50,10 +102,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 		// Formate le numéro de téléphone en insérant un espace tous les deux chiffres
 		const formattedPhoneNumber = formattedValue.replace(/(\d{2})(?=\d)/g, '$1 ');
 
-		setFormValues(prevState => ({
-			...prevState,
-			[id]: formattedPhoneNumber
-		}));
+		handleChange(e)
 	};
 
 	const handleChangeLogin = (e) => {
@@ -64,6 +113,9 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 			...prevState,
 			[id]: login
 		}));
+
+		handleChange(e)
+
 	};
 
 
@@ -84,7 +136,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 					<div className="modal-header">
 					<h4 className="modal-title">{rowData.id ? 'Modifier' : 'Ajouter'}</h4>
 					</div>
-					<div className='modal-body'>
+					<div className='modal-body' id='modal-body'>
 						{header.map((head) => (
 							<div key={head.id}>
 								{head.editable ? (
@@ -341,20 +393,35 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 
-	const deleteRow = async (itemDonne) =>
-	{
-		// Créez une copie des données existantes
-		const newData = [...datas];
+	const deleteRow = async (itemDonne) => {
+		confirmAlert({
+		title: 'Confirmation',
+		message: 'Voulez-vous vraiment supprimer ?',
+		buttons: [
+			{
+			label: 'Oui',
+			onClick: async () => {
+				// Créez une copie des données existantes
+				const newData = [...datas];
 
-		// Filtrez la copie des données pour exclure l'élément à supprimer
-		const updatedData = newData.filter(item => item.id !== itemDonne.id);
+				// Filtrez la copie des données pour exclure l'élément à supprimer
+				const updatedData = newData.filter(item => item.id !== itemDonne.id);
 
-		//Seulement si la méthode renvoie vrai on modifie
-
-		if (await funDelete(itemDonne))
-		{
-			setTableData(updatedData);
-		}
+				// Seulement si la méthode renvoie vrai on modifie
+				if (await funDelete(itemDonne)) {
+				setTableData(updatedData);
+				}
+			},
+			},
+			{
+			label: 'Non',
+			onClick: () => {
+				// Action à effectuer si l'utilisateur clique sur "Non"
+			},
+			className: 'btn btn-secondary', // Classe Bootstrap pour le bouton "Non"
+			}
+		]
+		});
 	};
 
 
