@@ -374,32 +374,32 @@ function FicheSecu() {
 					<div className='d-flex mb-3'>
 						<div className='align-items-center col-sm-1'>
 							<label htmlFor={`profRea${num}`} className="me-2">Prof. ({formDataObject[`p${num}prof`]})</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]}/>
 						</div>
 						
 						<div className='align-items-center col-sm-1 me-3'>
 							<label htmlFor={`tempsRea${num}`} className="me-2">Temps ({formDataObject[`p${num}temp`]})</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`palier3m${num}`} className="me-2">Palier 3m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`palier6m${num}`} className="me-2">Palier 6m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`HD${num}`} className="me-2">HD</label>
-							<input type="time" className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]} onChange={() => handleChangeRea()}/>
+							<input type="time" className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`HS${num}`} className="me-2">HS</label>
-							<input type="time" className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]} onChange={() => handleChangeRea()}/>
+							<input type="time" className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]}/>
 						</div>
 						
 						<div className='align-items-center '>
@@ -410,7 +410,7 @@ function FicheSecu() {
 
 					<div className='col-sm-6 mt-3'>
 						<label htmlFor={`remarque${num}`} className="me-2">Remarque</label>
-						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]} onChange={() => handleChangeRea()}/>
+						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]}/>
 					</div>
 				</div>
 
@@ -422,7 +422,7 @@ function FicheSecu() {
 	function generateGaz(num)
 	{
 		return (
-			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]}  onChange={() => handleChangeRea()}>
+			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]} >
 				{/* Si gazOptions est vide, affiche "Aire" */}
 				{gazOptions.length === 0 ? (
 					<option key={"Aire"}>{"Aire"}</option>
@@ -1289,8 +1289,8 @@ function FicheSecu() {
 				setEncadre(prevState => ({
 					...prevState,
 					[index + 1]: ( oldData["p" + (index+1) + "type"] === "tech")       || 
-									( oldData["p" + (index+1) + "Bniv"] === "N1-PE20"     || oldData["p" + (index+1) + "Cniv"] === "N1-PE20") || //Pas la peine de verifier A, car ca serait lui l'intervenant
-									((oldData["p" + (index+1) + "Bniv"] === "N2-PA20PE40" || oldData["p" + (index+1) + "Cniv"] === "N2-PA20PE40") && oldData["p" + (index+1) +"prof"] > 20)
+								 ( oldData["p" + (index+1) + "Bniv"] === "N1-PE20"     || oldData["p" + (index+1) + "Cniv"] === "N1-PE20") || //Pas la peine de verifier A, car ca serait lui l'intervenant
+								 ((oldData["p" + (index+1) + "Bniv"] === "N2-PA20PE40" || oldData["p" + (index+1) + "Cniv"] === "N2-PA20PE40") && oldData["p" + (index+1) +"prof"] > 20)
 				}));
 
 				// }
@@ -1488,43 +1488,6 @@ function FicheSecu() {
 
 		return true;
 	}
-
-
-
-	function handleChangeRea(num)
-	{
-		var estRemplis = false;
-		var tousRemplis = true;
-
-		//On verifie si toutes les cases sont vide, si c'est pas le cas, on met a false...
-		const form = document.querySelector('form');
-
-		if (form) {
-			// Function to check if required input fields are non-empty
-			const checkedFieldsNotEmpty = (element) => {
-				// Check if the element is an input, textarea, or select field and is required
-				if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA')) {
-					if (element.value.trim() !== ''                                  ) estRemplis  = true;
-					if (element.value.trim() === '' && element.tagName !== 'TEXTAREA') tousRemplis = false;
-				}
-
-				// Iterate over child nodes of the element
-				if (element.childNodes && element.childNodes.length > 0) {
-					for (let i = 0; i < element.childNodes.length; i++) {
-						checkedFieldsNotEmpty(element.childNodes[i]);
-					}
-				}
-			};
-
-			// Call checkRequiredFields for each child node of the form
-			form.childNodes.forEach((child) => {
-				checkedFieldsNotEmpty(child);
-			});
-		}
-
-		// Si rien n'est remplis ou si tout est remplis
-		setValide(!estRemplis || tousRemplis);
-	}
 	
 
 
@@ -1583,6 +1546,11 @@ function FicheSecu() {
 		return document.getElementById(`p${num}${car}nom`).value.trim() === '' && document.getElementById(`p${num}${car}prenom`).value.trim() === '' && document.getElementById(`p${num}${car}niv`).value.trim() === '';
 	}
 
+	function enregistrer()
+	{
+		
+	}
+
 
 
 	return (
@@ -1600,6 +1568,10 @@ function FicheSecu() {
 
 					{etape < etapesLib.length - 2 &&
 						<button className="mx-2 col-sm-1 btn btn-primary btnAnnuler" onClick={() => {setEtape(etape-1); redirigerAuDebut()}}>Annuler</button>
+					}
+
+					{etape === 2 &&
+						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={() => {enregistrer()}}>Enregistrer</button>
 					}
 
 					{etape < etapesLib.length - 2 &&
