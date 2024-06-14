@@ -80,26 +80,24 @@ export default function Produits(){
 	}, []);
 
 	// Fonction pour le calcul du prix hors taxe
-	const funChange = (html, item, value) => {
-		console.log(html);
-		console.log(item);
-		console.log(value);
-		// if(key === 'prixuni'){
-		// 	console.log("prixuni");
-		// 	item.prixuni = value;
-		// 	item.prixuniht = (parseFloat(value) * 100 / (100 + parseFloat(item.tva))).toFixed(2);
-		// }
-		// else if(key === 'prixuniht'){
-		// 	console.log("prixuniht");
-		// 	item.prixuniht = value;
-		// 	item.prixuni = (parseFloat(value) * (100 + parseFloat(item.tva)) / 100).toFixed(2);
-		// }
-		// else if(key === 'tva'){
-		// 	console.log("tva");
-		// 	item.tva = value;
-		// 	item.prixuni = (parseFloat(item.prixuniht) * (100 + parseFloat(value)) / 100).toFixed(2);
-		// }
-		// return item;
+	const funChange = (input) => {
+		const nouvValue = input.target.value;
+		const id = input.target.id;
+		console.log(id)
+		if(id === 'prixuni'){
+			console.log("prixuni");
+			console.log(document.getElementById('prixuniht').value)
+			console.log((parseFloat(nouvValue) * 60 / 100).toFixed(2))
+			document.getElementById('prixuniht').innerHTML = (parseFloat(nouvValue) * 60 / 100).toFixed(2);
+		}
+		else if(id === 'prixuniht'){
+			console.log("prixuniht");
+			document.getElementById('prixuni').value = (parseFloat(nouvValue) * 100 / 60).toFixed(2);
+		}
+		else if(id === 'tva'){
+			console.log("tva");
+			document.getElementById('prixuni').value = (parseFloat(nouvValue) * 60 / 100).toFixed(2);
+		}
 	}
 
 	// En-tête de la table
