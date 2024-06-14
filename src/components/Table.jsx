@@ -237,7 +237,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 									<button type='submit' className='btnSauvegarder btn btn-primary'>Modifier</button>
 								) }
 								{ rowData.id === undefined && (
-									<button type='submit' className='btnAjouter btn 0btn-primary'></button>
+									<button type='submit' className='btnValidation btn 0btn-primary'></button>
 								) }
 							</div>
 						</div>
