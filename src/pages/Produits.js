@@ -31,9 +31,9 @@ export default function Produits(){
 		})
 		.then(data => {
 			const newData = data.map((item, index) => ({
-				...item,
-				id: index + 1,
-				tva: (item.prixuniht===null && item.prixuni)||(item.prixuniht==="" && item.prixuni==="")?"":parseFloat(item.prixuni/item.prixuniht).toFixed(2)
+			  ...item,
+			  id: index + 1,
+			  tva: (item.prixuniht===null && item.prixuni)||(item.prixuniht==="" && item.prixuni==="")?"":((item.prixuni - item.prixuniht) * 100 / 60).toFixed(2)
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
