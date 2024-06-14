@@ -644,6 +644,8 @@ function FicheSecu() {
 	 */
 
 	async function generateExcel() {
+
+		console.log("On oasse ici")
 		// Créer un nouveau classeur Excel
 		var workbook = new ExcelJS.Workbook();
 
@@ -868,8 +870,6 @@ function FicheSecu() {
 
 				if (formDataObject["p" + (index+1) + (ind) + "nom"    ] !== undefined && formDataObject["p" + (index+1) + (ind) + "nom"    ] !== null ){
 					nbplong++
-					console.log(formDataObject["p" + (index+1) + (ind) + "nom"    ])
-					console.log(nbplong)
 				}
 
 
@@ -1014,74 +1014,75 @@ function FicheSecu() {
 		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
 		nomFic = nomFic.replace(/-+/g, '-');
 
-
-		if (!estInserer)
+		//SI CEST NOUVEAU 
+		if (idHis === undefined)
 		{
-			//SI CEST NOUVEAU 
-			if (idHis === undefined)
-			{
-				let formData = new FormData();
-				formData.append('login'  , sessionStorage.getItem("login"));
+			let formData = new FormData();
+			formData.append('login'  , sessionStorage.getItem("login"));
 
 
-				//On récupère id du login 
-				let response = await fetch(cheminPHP + "client/GetIdClient.php", {
-					method: 'POST',
-					body: formData
-				});
+			//On récupère id du login 
+			let response = await fetch(cheminPHP + "client/GetIdClient.php", {
+				method: 'POST',
+				body: formData
+			});
 
 
-				if (!response.ok) {
-					throw new Error('Erreur de réseau lors de la récupération de l\'id.');
-				}
-
-				const id = await response.text();
-
-				// On envoie le fichier Excel au serveur
-				formData = new FormData();
-				formData.append('iduti'  , parseInt(id));
-				formData.append('type'   , 'SECU');
-				formData.append('file'   , blob);
-				formData.append('name'   , nomFic);
-
-				response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
-					method: 'POST',
-					body: formData
-				});
-
-				if (!response.ok) {
-					throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
-				}
-
-				const text = await response.text();
-
-			} else {
-
-				// ModificationFichierHistorique
-				// $idhist = $_POST['idhist'];
-				// $file = $_FILES['file'];
-				// $fileName = $_POST['name'];
-
-
-				// On envoie le nouveau fichier Excel au serveur
-				const formData = new FormData();
-				formData.append('idhist', idHis );
-				formData.append('file'  , blob  );
-				formData.append('name'  , nomFic);
-
-				const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
-					method: 'POST',
-					body: formData
-				});
-
-				if (!response.ok) {
-					throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
-				}
-
-				const text = await response.text();
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de la récupération de l\'id.');
 			}
-			setInserer(true);
+
+			const id = await response.text();
+
+			// On envoie le fichier Excel au serveur
+			formData = new FormData();
+			formData.append('iduti'  , parseInt(id));
+			formData.append('type'   , 'SECU');
+			formData.append('file'   , blob);
+			formData.append('name'   , nomFic);
+
+			response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
+				method: 'POST',
+				body: formData
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+			}
+
+			const text = await response.text();
+			setIdHis(text);
+			console.log("On a crée")
+
+
+		} else {
+
+			// ModificationFichierHistorique
+			// $idhist = $_POST['idhist'];
+			// $file = $_FILES['file'];
+			// $fileName = $_POST['name'];
+
+
+			// On envoie le nouveau fichier Excel au serveur
+			const formData = new FormData();
+			formData.append('idhist', idHis );
+			formData.append('file'  , blob  );
+			formData.append('name'  , nomFic);
+
+			const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
+				method: 'POST',
+				body: formData
+			});
+
+			if (!response.ok) {
+				throw new Error('Erreur de réseau lors de l\'envoie du fichier.');
+			}
+
+			const text = await response.text();
+			console.log("On a modif")
 		}
+
+
 
 		// Fonction pour gérer le téléchargement du blob
 		function telechargerBlob() {
@@ -1103,7 +1104,6 @@ function FicheSecu() {
 
 				// Supprimer le lien du document une fois le téléchargement terminé
 				document.body.removeChild(link);
-				setEtape(etape)
 
 				redirigerAuDebut();
 
@@ -1332,7 +1332,7 @@ function FicheSecu() {
 
 		// Afficher les valeurs du formulaire dans la console
 		setEtape(etape + 1);
-		console.log(etape)
+		console.log("Je passe la même si on me la pas demandé", etape)
 		setValide(idHis !== undefined || etape === 1)
 	};
 
@@ -1546,9 +1546,10 @@ function FicheSecu() {
 		return document.getElementById(`p${num}${car}nom`).value.trim() === '' && document.getElementById(`p${num}${car}prenom`).value.trim() === '' && document.getElementById(`p${num}${car}niv`).value.trim() === '';
 	}
 
-	function enregistrer()
+	async function enregistrer()
 	{
-		
+		await generateExcel(); 
+		setEtape(2)
 	}
 
 
@@ -1567,11 +1568,11 @@ function FicheSecu() {
 				<div className="me-5 mb-5 d-flex justify-content-end">
 
 					{etape < etapesLib.length - 2 &&
-						<button className="mx-2 col-sm-1 btn btn-primary btnAnnuler" onClick={() => {setEtape(etape-1); redirigerAuDebut()}}>Annuler</button>
+						<button className="mx-2 col-sm-1 btn btn-primary btnAnnuler" onClick={(e) => {e.preventDefault();redirigerAuDebut()}}>Annuler</button>
 					}
 
 					{etape === 2 &&
-						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={() => {enregistrer()}}>Enregistrer</button>
+						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={(e) => {e.preventDefault();generateExcel();}}>Enregistrer</button>
 					}
 
 					{etape < etapesLib.length - 2 &&
