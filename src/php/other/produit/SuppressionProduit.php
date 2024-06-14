@@ -2,19 +2,21 @@
 header('Access-Control-Allow-Origin: *');
 include_once '../../inc/DB.inc.php';
 
-/**
- * Vérifie si les données POST sont bien définies
- */
-if(!isset($_POST['idProd'])) exit;
+$pdo=DB::getInstance();
+
+$idProd = $_POST['idProd'];
+
+if($pdo->prodDansTicket($idProd))
+    die("SQLSTATE[45000] : erreur perso : 5225 Ce produit est dans un ticket, il ne peut donc pas être supprimé ! in");
 
 /**
  * Crée un nouveau produit avec les données POST
  * la méthode suppProduit() de DB.inc.php attend un objet de type Produit et n'utilise que l'id du produit
  */
 $suppProd = new Produit();
-$suppProd->setIdProd($_POST['idProd']);
+$suppProd->setIdProd($idProd);
 
 /**
  * Supprime le produit avec les même donnés dans la DB
  */
-DB::getInstance()->suppProduit($suppProd);
+$pdo->suppProduit($suppProd);

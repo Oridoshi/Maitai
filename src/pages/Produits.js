@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; // Importez useState ici
 import Table from '../components/Table';
-import { cheminPHP } from '../components/VarGlobal.js';  
+import { cheminPHP } from '../components/VarGlobal.js';
 
 export default function Produits(){
 	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
@@ -26,7 +26,7 @@ export default function Produits(){
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
-			
+
 			return response.json();
 		})
 		.then(data => {
@@ -63,7 +63,7 @@ export default function Produits(){
 				if (!response.ok) {
 					throw new Error('Erreur de réseau !');
 				}
-				
+
 				return response.json();
 			})
 			.then(data => {
@@ -85,8 +85,9 @@ export default function Produits(){
 		{ id: 'idprod'    , name: 'ID du produit'      , type:'number'  ,              required : true , editable : false, show : false                                            },
 		{ id: 'ref'       , name: 'Référence'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 50                            },
 		{ id: 'libprod'   , name: 'Libellé'            , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100                           },
-		{ id: 'prixuni'   , name: 'Prix Unitaire (TTC)', type:'prix'    , step:'0.01', required : false, editable : true , show : true , maxLength : 12                            },
+		{ id: 'prixuni'   , name: 'Prix Unitaire (TTC)', type:'prix'    , step:'0.01', required : false, editable : false, show : true , maxLength : 12                            },
 		{ id: 'prixuniht' , name: 'Prix Unitaire (HT)' , type:'prix'    , step:'0.01', required : false, editable : true , show : false, maxLength : 12                            },
+		{ id: 'tva'       , name: 'TVA'                , type:'number'  , step:'0.01', required : false, editable : true , show : false, maxLength : 12                            },
 		{ id: 'dispomatin', name: 'Disponible le matin', type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
 		{ id: 'disposoir' , name: 'Disponible le soir' , type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
 		{ id: 'categorie' , name: 'Catégorie'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100 , datalist : datalistCateg}
@@ -101,7 +102,7 @@ export default function Produits(){
 			const formData = new FormData();
 			formData.append('ref'      , nouvItem.ref);
 			formData.append('libProd'  , nouvItem.libprod);
-			formData.append('prixUni'  , nouvItem.prixuni===null||nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
+			formData.append('prixUni'  , (nouvItem.tva===null && nouvItem.prixuniht===null)||(nouvItem.prixuniht==="" && nouvItem.tva==="")?"":parseFloat(nouvItem.prixuniht*nouvItem.tva/100 + nouvItem.prixuni));
 			formData.append('prixUniHT', nouvItem.prixuniht===null||nouvItem.prixuniht===""?"":parseFloat(nouvItem.prixuniht));
 			formData.append('dispoMatin', nouvItem.dispomatin ? 1 : 0); // 1 si vrai, 0 si faux
 			formData.append('dispoSoir' , nouvItem.disposoir  ? 1 : 0); // 1 si vrai, 0 si faux
@@ -144,11 +145,13 @@ export default function Produits(){
 			formData.append('idProd'   , parseInt(upItem.idprod ));
 			formData.append('ref'      , upItem.ref);
 			formData.append('libProd'  , upItem.libprod);
-			formData.append('prixUni'  , upItem.prixuni===null||upItem.prixuni===""?"":parseFloat(upItem.prixuni));
+			formData.append('prixUni'  , (upItem.tva===null && upItem.prixuniht===null)||(upItem.prixuniht==="" && upItem.tva==="")?"":parseFloat((upItem.prixuniht*upItem.tva/100) + upItem.prixuni));
 			formData.append('prixUniHT', upItem.prixuniht===null||upItem.prixuniht===""?"":parseFloat(upItem.prixuniht));
 			formData.append('dispoMatin', upItem.dispomatin);
 			formData.append('dispoSoir' , upItem.disposoir );
 			formData.append('categorie', upItem.categorie);
+
+			console.log((upItem.prixuniht*upItem.tva/100) + upItem.prixuni);
 
 			const requestOptions = {
 				method: 'POST',
@@ -274,7 +277,7 @@ export default function Produits(){
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
 			alert(errorMessageText);
-			
+
 		} else {
 			if (data !== "")
 				alert(data.replace('<br>', ''));
@@ -311,7 +314,7 @@ export default function Produits(){
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
-	
+
 		<h1 className='titre mt-1'>Gestion des produits </h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
@@ -322,24 +325,24 @@ export default function Produits(){
 
 			{/* Bouton checkbox avec style CSS pour la marge gauche */}
 			<div className="form-check" style={{ marginLeft: '10em' }}>
-				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedMatin(e.target.checked)}/>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedMatin(!checkedM)}/>
 				<label className="txtcheck form-check-label" htmlFor="afficherClients">Afficher les produits du matin</label>
 			</div>
 
 			{/* Bouton checkbox avec style CSS pour la marge gauche */}
 			<div className="form-check" style={{ marginLeft: '10em' }}>
-				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedSoir(e.target.checked)}/>
-				<label className="txtcheck form-check-label" htmlFor="afficherClients">Afficher les produits du soir</label>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherProd" onChange={(e) => setCheckedSoir(!checkedS)}/>
+				<label className="txtcheck form-check-label" htmlFor="afficherProd">Afficher les produits du soir</label>
 			</div>
 		</div>
 
 
 
-		<Table 
-			header={initialHeader} 
-			data={filterData} 
-			funInsert={funInsert} 
-			funUpdate={funUpdate} 
+		<Table
+			header={initialHeader}
+			data={filterData}
+			funInsert={funInsert}
+			funUpdate={funUpdate}
 			funDelete={funDelete}
 			keyGrayWhenFalse = 'present'
 		/>
