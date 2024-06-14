@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import "../style/table.css"
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 /**
  * Modal (Pop-up) qui apparait lorsqu'on clique sur ajouter ou modifier
@@ -19,6 +24,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 	useEffect(() => {
 		setFormValues(rowData);
 	}, [rowData]);
+	
 
 
 
@@ -36,7 +42,7 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 
 		header.forEach(head => {
 			if(head.id === id && head.onChange !== undefined)
-				head.onChange()
+				head.onChange(e, formValues)
 		});
 
 
@@ -387,20 +393,35 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 
 
 
-	const deleteRow = async (itemDonne) =>
-	{
-		// Créez une copie des données existantes
-		const newData = [...datas];
+	const deleteRow = async (itemDonne) => {
+		confirmAlert({
+		title: 'Confirmation',
+		message: 'Voulez-vous vraiment supprimer ?',
+		buttons: [
+			{
+			label: 'Oui',
+			onClick: async () => {
+				// Créez une copie des données existantes
+				const newData = [...datas];
 
-		// Filtrez la copie des données pour exclure l'élément à supprimer
-		const updatedData = newData.filter(item => item.id !== itemDonne.id);
+				// Filtrez la copie des données pour exclure l'élément à supprimer
+				const updatedData = newData.filter(item => item.id !== itemDonne.id);
 
-		//Seulement si la méthode renvoie vrai on modifie
-
-		if (await funDelete(itemDonne))
-		{
-			setTableData(updatedData);
-		}
+				// Seulement si la méthode renvoie vrai on modifie
+				if (await funDelete(itemDonne)) {
+				setTableData(updatedData);
+				}
+			},
+			},
+			{
+			label: 'Non',
+			onClick: () => {
+				// Action à effectuer si l'utilisateur clique sur "Non"
+			},
+			className: 'btn btn-secondary', // Classe Bootstrap pour le bouton "Non"
+			}
+		]
+		});
 	};
 
 
