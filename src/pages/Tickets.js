@@ -1012,10 +1012,10 @@ export default function Ticket()
 				</Modal.Body>
 				<Modal.Footer>
 					<label className="Error"> { lblErreur }</label>
-					<Button className="btnAjouter btn" onClick={ () => submit() }></Button>
 					<Button className="btn btnAnnuler" onClick={ () => { setModalOpen(false); setLblErreur(""); setLblCat(""); setLblProd(""); setPrix(""); } }>
 						Fermer
 					</Button>
+					<Button className="btnValidation btn" onClick={ () => submit() }></Button>
 				</Modal.Footer>
 			</Modal>
 		</div>
