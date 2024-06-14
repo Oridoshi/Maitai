@@ -366,6 +366,16 @@ class DB {
 		return $this->execQuery($requete,array($categ),'Produit');
 	}
 
+	/**
+	 * Regarde si un produit est dans un ticket.
+	 * @param int $idProd id du produit
+	 * @return bool true si le produit est dans un ticket, false sinon
+	 */
+	public function prodDansTicket($idProd) {
+		$requete = 'SELECT * FROM Ticket WHERE idprod = ?';
+		return $this->execQuery($requete,array($idProd),'Ticket') != null;
+	}
+
 	/** Récuperer un produit en fonction de son id.
 	 * @param int $idProd l'id du produit à récupérer
 	 * @return Produit le produit récupéré

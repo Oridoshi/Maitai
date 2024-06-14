@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {nivEncadrant, nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 import "../style/ficheSecuTable.css"
-import { BsPrefixComponent } from 'react-bootstrap/esm/helpers.js';
 
 
 function FicheSecu() {
@@ -375,32 +374,32 @@ function FicheSecu() {
 					<div className='d-flex mb-3'>
 						<div className='align-items-center col-sm-1'>
 							<label htmlFor={`profRea${num}`} className="me-2">Prof. ({formDataObject[`p${num}prof`]})</label>
-							<input type="number" min="0" required className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center col-sm-1 me-3'>
 							<label htmlFor={`tempsRea${num}`} className="me-2">Temps ({formDataObject[`p${num}temp`]})</label>
-							<input type="number" min="0" required className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]} onChange={() => handleChangeRea()}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`palier3m${num}`} className="me-2">Palier 3m</label>
-							<input type="number" min="0" required className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`palier6m${num}`} className="me-2">Palier 6m</label>
-							<input type="number" min="0" required className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]} onChange={() => handleChangeRea()}/>
+							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]} onChange={() => handleChangeRea()}/>
 						</div>
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`HD${num}`} className="me-2">HD</label>
-							<input type="time" required className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]} onChange={() => handleChangeRea()}/>
+							<input type="time" className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`HS${num}`} className="me-2">HS</label>
-							<input type="time" required className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]} onChange={() => handleChangeRea()}/>
+							<input type="time" className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]} onChange={() => handleChangeRea()}/>
 						</div>
 						
 						<div className='align-items-center '>
@@ -1333,7 +1332,8 @@ function FicheSecu() {
 
 		// Afficher les valeurs du formulaire dans la console
 		setEtape(etape + 1);
-		setValide(idHis !== undefined)
+		console.log(etape)
+		setValide(idHis !== undefined || etape === 1)
 	};
 
 
@@ -1493,7 +1493,37 @@ function FicheSecu() {
 
 	function handleChangeRea(num)
 	{
-		setValide(formEstRempli());
+		var estRemplis = false;
+		var tousRemplis = true;
+
+		//On verifie si toutes les cases sont vide, si c'est pas le cas, on met a false...
+		const form = document.querySelector('form');
+
+		if (form) {
+			// Function to check if required input fields are non-empty
+			const checkedFieldsNotEmpty = (element) => {
+				// Check if the element is an input, textarea, or select field and is required
+				if ((element.tagName === 'INPUT' || element.tagName === 'TEXTAREA')) {
+					if (element.value.trim() !== ''                                  ) estRemplis  = true;
+					if (element.value.trim() === '' && element.tagName !== 'TEXTAREA') tousRemplis = false;
+				}
+
+				// Iterate over child nodes of the element
+				if (element.childNodes && element.childNodes.length > 0) {
+					for (let i = 0; i < element.childNodes.length; i++) {
+						checkedFieldsNotEmpty(element.childNodes[i]);
+					}
+				}
+			};
+
+			// Call checkRequiredFields for each child node of the form
+			form.childNodes.forEach((child) => {
+				checkedFieldsNotEmpty(child);
+			});
+		}
+
+		// Si rien n'est remplis ou si tout est remplis
+		setValide(!estRemplis || tousRemplis);
 	}
 	
 

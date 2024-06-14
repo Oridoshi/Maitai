@@ -85,8 +85,9 @@ export default function Produits(){
 		{ id: 'idprod'    , name: 'ID du produit'      , type:'number'  ,              required : true , editable : false, show : false                                            },
 		{ id: 'ref'       , name: 'Référence'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 50                            },
 		{ id: 'libprod'   , name: 'Libellé'            , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100                           },
-		{ id: 'prixuni'   , name: 'Prix Unitaire (TTC)', type:'prix'    , step:'0.01', required : false, editable : true , show : true , maxLength : 12                            },
+		{ id: 'prixuni'   , name: 'Prix Unitaire (TTC)', type:'prix'    , step:'0.01', required : false, editable : false, show : true , maxLength : 12                            },
 		{ id: 'prixuniht' , name: 'Prix Unitaire (HT)' , type:'prix'    , step:'0.01', required : false, editable : true , show : false, maxLength : 12                            },
+		{ id: 'tva'       , name: 'TVA'                , type:'number'  , step:'0.01', required : false, editable : true , show : false, maxLength : 12                            },
 		{ id: 'dispomatin', name: 'Disponible le matin', type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
 		{ id: 'disposoir' , name: 'Disponible le soir' , type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
 		{ id: 'categorie' , name: 'Catégorie'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100 , datalist : datalistCateg}
@@ -101,7 +102,7 @@ export default function Produits(){
 			const formData = new FormData();
 			formData.append('ref'      , nouvItem.ref);
 			formData.append('libProd'  , nouvItem.libprod);
-			formData.append('prixUni'  , nouvItem.prixuni===null||nouvItem.prixuni===""?"":parseFloat(nouvItem.prixuni));
+			formData.append('prixUni'  , (nouvItem.tva===null && nouvItem.prixuniht===null)||(nouvItem.prixuniht==="" && nouvItem.tva==="")?"":parseFloat(nouvItem.prixuniht*nouvItem.tva/100 + nouvItem.prixuni));
 			formData.append('prixUniHT', nouvItem.prixuniht===null||nouvItem.prixuniht===""?"":parseFloat(nouvItem.prixuniht));
 			formData.append('dispoMatin', nouvItem.dispomatin ? 1 : 0); // 1 si vrai, 0 si faux
 			formData.append('dispoSoir' , nouvItem.disposoir  ? 1 : 0); // 1 si vrai, 0 si faux
@@ -144,11 +145,13 @@ export default function Produits(){
 			formData.append('idProd'   , parseInt(upItem.idprod ));
 			formData.append('ref'      , upItem.ref);
 			formData.append('libProd'  , upItem.libprod);
-			formData.append('prixUni'  , upItem.prixuni===null||upItem.prixuni===""?"":parseFloat(upItem.prixuni));
+			formData.append('prixUni'  , (upItem.tva===null && upItem.prixuniht===null)||(upItem.prixuniht==="" && upItem.tva==="")?"":parseFloat((upItem.prixuniht*upItem.tva/100) + upItem.prixuni));
 			formData.append('prixUniHT', upItem.prixuniht===null||upItem.prixuniht===""?"":parseFloat(upItem.prixuniht));
 			formData.append('dispoMatin', upItem.dispomatin);
 			formData.append('dispoSoir' , upItem.disposoir );
 			formData.append('categorie', upItem.categorie);
+
+			console.log((upItem.prixuniht*upItem.tva/100) + upItem.prixuni);
 
 			const requestOptions = {
 				method: 'POST',
