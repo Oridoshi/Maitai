@@ -151,6 +151,8 @@ export default function Produits(){
 			formData.append('dispoSoir' , upItem.disposoir );
 			formData.append('categorie', upItem.categorie);
 
+			console.log((upItem.prixuniht*upItem.tva/100) + upItem.prixuni);
+
 			const requestOptions = {
 				method: 'POST',
 				body: formData
