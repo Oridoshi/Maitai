@@ -208,6 +208,7 @@ function Navbar({ role })
 	const installAide = async () =>
 	{
 		const formData = new FormData();
+		console.log("DROIT : " + sessionStorage.getItem('droit'));
 		formData.append('droit', sessionStorage.getItem('droit') === "" ? "Client" : sessionStorage.getItem('droit'));
 
 		const requestOptions = {
@@ -232,7 +233,7 @@ function Navbar({ role })
 		// Créer un lien <a> pour télécharger le fichier
 		const link = document.createElement('a');
 		link.href = url;
-		link.download = "Manuel_Utilisation_" + sessionStorage.getItem('droit') === "" ? "Client" : sessionStorage.getItem('droit') + ".pdf"; // Spécifiez le nom de fichier souhaité ici
+		link.download = "Manuel_Utilisation_" + (sessionStorage.getItem('droit') === "" ? "Client" : sessionStorage.getItem('droit')) + ".pdf"; // Spécifiez le nom de fichier souhaité ici
 
 		// Ajouter le lien à la page
 		document.body.appendChild(link);
