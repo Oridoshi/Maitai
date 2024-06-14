@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'; // Importez useState ici
 import Table from '../components/Table';
 import { cheminPHP } from '../components/VarGlobal.js';
+import Modal from 'react-bootstrap/Modal';
+
 
 export default function Historique()
 {
@@ -18,6 +20,11 @@ export default function Historique()
 	const [ticketExist, setTicketExist] = useState(false);
 	const [ticketEnCours, setTicketEnCours] = useState([]);
 	const [client, setClient] = useState([]);
+
+	const [tabProd, setTabProd] = useState([]);
+
+	const [modalOpen, setModalOpen] = useState(false);
+
 
 	// Récupérer l'ID de l'utilisateur au quelle on veut afficher les historiques
 	useEffect(() =>
@@ -91,11 +98,10 @@ export default function Historique()
 
 	async function getCSV(idhis)
 	{
-		console.log(idhis);
 		try
 		{
 			const formData = new FormData();
-			formData.append('idhist', parseInt(idhis));
+			formData.append('idhist', idhis);
 
 			const requestOptions = {
 				method: 'POST',
@@ -109,7 +115,9 @@ export default function Historique()
 				throw new Error('Une erreur s\'est produite.');
 			}
 
-			return true;
+			const data = await response.text();
+
+			return data;
 		} catch (error)
 		{
 			console.log(error);
@@ -119,7 +127,59 @@ export default function Historique()
 
 	async function aperçuFiche(item)
 	{
+		let tabl = [];
 		const csv = await getCSV(item.idhis);
+
+		let lignes = csv.split('\n');
+		let sep = lignes[0].charAt(lignes[0].length - 2);
+		let entete = lignes[0].split(sep);
+
+		let numeroP = entete.indexOf('numero des produits');
+		let indexNomP = entete.indexOf('nom des produits');
+		let prixU = entete.indexOf("prix unitaire des produits");
+		let indexQtP = entete.indexOf('quantite des produits');
+		let prix = entete.indexOf('prix total des produits');
+
+		lignes.forEach(ligne =>
+		{
+			let elt = ligne.split(sep);
+
+			if (!arraysEqual(elt, entete) && elt[0] !== "")
+			{
+				let ligneprod = "";
+
+				if (numeroP !== -1) ligneprod += elt[numeroP] + "\t";
+				if (indexNomP !== -1) ligneprod += elt[indexNomP] + "\t";
+				if (prixU !== -1) ligneprod += elt[prixU] + "\t";
+				if (indexQtP !== -1) ligneprod += elt[indexQtP] + "\t";
+				if (prix !== -1) ligneprod += "TOTAL : " + elt[prix] + "\t";
+
+				tabl.push(ligneprod);
+			}
+		});
+
+		setTabProd(tabl);
+		setModalOpen(true);
+	}
+
+	function arraysEqual(arr1, arr2)
+	{
+		if (arr1.length !== arr2.length)
+		{
+			return false;
+		}
+
+		let sortedArr1 = arr1.slice().sort();
+		let sortedArr2 = arr2.slice().sort();
+
+		for (let i = 0; i < sortedArr1.length; i++)
+		{
+			if (sortedArr1[i] !== sortedArr2[i])
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	const funGetFile = async (item) =>
@@ -371,7 +431,8 @@ export default function Historique()
 		}
 	}
 
-	async function ticketExists() {
+	async function ticketExists()
+	{
 		try
 		{
 			const formData = new FormData();
@@ -714,6 +775,11 @@ export default function Historique()
 		catch (error) { construitTicket(ligne); }//si on clique sur le dernire élément du tableau on a une erreur
 	}
 
+	function afficherTicket()
+	{
+		console.log(tabProd);
+	}
+
 
 	function construitTicket(ligne)
 	{
@@ -755,7 +821,7 @@ export default function Historique()
 			// Prix Produit
 			const prixtot = document.createElement('td');
 			prixtot.colSpan = 1;
-			if(prod.prixtot === null)
+			if (prod.prixtot === null)
 			{
 				prixtot.textContent = "total : 0 €";
 			}
@@ -799,7 +865,6 @@ export default function Historique()
 	//Création du tableau
 	return (
 		<div className="col-sm-12">
-
 			<h1 className='titre mt-1'>Gestion des historiques { type } - { sessionStorage.getItem('droit') === 'Admin' ? sessionStorage.getItem('nomClub') : sessionStorage.getItem('login') }</h1>
 
 
@@ -822,6 +887,16 @@ export default function Historique()
 				keyGrayWhenFalse='present'
 			/>
 
+			<Modal show={ modalOpen } onHide={ () => { setModalOpen(false); } }>
+				<Modal.Header closeButton>
+					<Modal.Title>Ticket</Modal.Title>
+				</Modal.Header>
+				<Modal.Body>
+					{afficherTicket()}
+				</Modal.Body>
+				<Modal.Footer>
+				</Modal.Footer>
+			</Modal>
 		</div>
 	);
 }
