@@ -89,6 +89,39 @@ export default function Historique()
 			})
 	}, [idUti]);
 
+	async function getCSV(idhis)
+	{
+		console.log(idhis);
+		try
+		{
+			const formData = new FormData();
+			formData.append('idhist', parseInt(idhis));
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/GetFileTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			return true;
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	}
+
+	async function aperçuFiche(item)
+	{
+		const csv = await getCSV(item.idhis);
+	}
+
 	const funGetFile = async (item) =>
 	{
 		try
@@ -170,7 +203,8 @@ export default function Historique()
 				{ id: 'chemin', name: 'Nom du fichier', type: 'text', required: true, editable: false, show: true },
 				// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
-				{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' }
+				{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' },
+				{ id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
 			]);
 		}
 	}, []);

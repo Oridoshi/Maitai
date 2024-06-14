@@ -417,8 +417,8 @@ class DB {
 	 * @param Produit $produits le produit à modifier.
 	 */
 	public function updateProduit($produits) {
-		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, prixUniHT = ?, categorie = ?, dispoMatin = ?, dispoSoir = ? WHERE idProd = ?';
-		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir(),$produits->getIdProd()));
+		$requete = 'UPDATE Produit SET ref = ?, libProd = ?, prixUni = ?, prixUniHT = ?, tva = ?, categorie = ?, dispoMatin = ?, dispoSoir = ? WHERE idProd = ?';
+		$this->execMaj($requete,array($produits-> getRef(), $produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getTva() ,$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir(),$produits->getIdProd()));
 	}
 
 	/**
@@ -426,8 +426,8 @@ class DB {
 	 * @param Produit $produits le produit à créer.
 	 */
 	public function insertProduit($produits) {
-		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,prixUniHT,categorie,dispoMatin,dispoSoir) VALUES (?,?,?,?,?,?,?)';
-		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir()));
+		$requete = 'INSERT INTO Produit (ref,libProd,prixUni,prixUniHT,tva,categorie,dispoMatin,dispoSoir) VALUES (?,?,?,?,?,?,?,?)';
+		$this->execMaj($requete,array($produits->getRef(),$produits->getLibProd(),$produits->getPrixUni(),$produits->getPrixUniHT(),$produits->getTva(),$produits->getCategorie(),$produits->getDispoMatin(),$produits->getDispoSoir()));
 	}
 
 	/** Supprimer un produit.

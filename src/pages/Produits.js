@@ -33,7 +33,6 @@ export default function Produits(){
 			const newData = data.map((item, index) => ({
 			  ...item,
 			  id: index + 1,
-			  tva: (item.prixuniht===null && item.prixuni)||(item.prixuniht==="" && item.prixuni==="")?"":((item.prixuni - item.prixuniht) * 100 / 60).toFixed(2)
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
@@ -80,17 +79,38 @@ export default function Produits(){
 		);
 	}, []);
 
+	// Fonction pour le calcul du prix hors taxe
+	const funChange = (input) => {
+		const nouvValue = input.target.value;
+		const id = input.target.id;
+		console.log(id)
+		if(id === 'prixuni'){
+			console.log("prixuni");
+			console.log(document.getElementById('prixuniht').value)
+			console.log((parseFloat(nouvValue) * 60 / 100).toFixed(2))
+			document.getElementById('prixuniht').innerHTML = (parseFloat(nouvValue) * 60 / 100).toFixed(2);
+		}
+		else if(id === 'prixuniht'){
+			console.log("prixuniht");
+			document.getElementById('prixuni').value = (parseFloat(nouvValue) * 100 / 60).toFixed(2);
+		}
+		else if(id === 'tva'){
+			console.log("tva");
+			document.getElementById('prixuni').value = (parseFloat(nouvValue) * 60 / 100).toFixed(2);
+		}
+	}
+
 	// En-tête de la table
 	const initialHeader = [
 		{ id: 'id'        , name: 'NB Ligne'           , type:'number'  ,              required : true , editable : false, show : false                                            },
 		{ id: 'idprod'    , name: 'ID du produit'      , type:'number'  ,              required : true , editable : false, show : false                                            },
 		{ id: 'ref'       , name: 'Référence'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 50                            },
 		{ id: 'libprod'   , name: 'Libellé'            , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100                           },
-		{ id: 'prixuni'   , name: 'Prix TTC', type:'prix'    , step:'0.01', required : false, editable : true , show : true , maxLength : 12                            },
-		{ id: 'prixuniht' , name: 'Prix Hors Taxe'     , type:'prix'    , step:'0.01', required : false, editable : true , show : false, maxLength : 12                            },
-		{ id: 'tva'       , name: 'Taux TVA'           , type:'number'  , step:'0.01', required : false, editable : true , show : false, maxLength : 12                            },
-		{ id: 'dispomatin', name: 'Disponible le matin', type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
-		{ id: 'disposoir' , name: 'Disponible le soir' , type:'checkbox',              required : true , editable : true , show : true , maxLength : 12 , fastEditable : true      },
+		{ id: 'prixuni'   , name: 'Prix TTC'           , type:'prix'    , step:'0.01', required : false, editable : true , show : true , maxLength : 12  , onChange: funChange     },
+		{ id: 'prixuniht' , name: 'Prix Hors Taxe'     , type:'prix'    , step:'0.01', required : false, editable : true , show : false, maxLength : 12  , onChange: funChange     },
+		{ id: 'tva'       , name: 'Taux TVA'           , type:'number'  , step:'0.01', required : false, editable : true , show : false, maxLength : 12  , onChange: funChange     },
+		{ id: 'dispomatin', name: 'Disponible le matin', type:'checkbox',              required : true , editable : true , show : true , maxLength : 12  , fastEditable : true     },
+		{ id: 'disposoir' , name: 'Disponible le soir' , type:'checkbox',              required : true , editable : true , show : true , maxLength : 12  , fastEditable : true     },
 		{ id: 'categorie' , name: 'Catégorie'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100 , datalist : datalistCateg}
 	];
 
@@ -103,8 +123,11 @@ export default function Produits(){
 			const formData = new FormData();
 			formData.append('ref'      , nouvItem.ref);
 			formData.append('libProd'  , nouvItem.libprod);
-			formData.append('prixUni'  , (nouvItem.tva===null && nouvItem.prixuniht===null)||(nouvItem.prixuniht==="" && nouvItem.tva==="")?"":parseFloat((nouvItem.prixuniht*nouvItem.tva/100) + parseFloat(nouvItem.prixuniht)));
-			formData.append('prixUniHT', nouvItem.prixuniht===null||nouvItem.prixuniht===""?"":parseFloat(nouvItem.prixuniht));
+			if(nouvItem.prixuniht !== "" && nouvItem.tva !== "" && nouvItem.prixuni !== "" && nouvItem.prixuniht !== null && nouvItem.tva !== null && nouvItem.prixuni !== null){
+				formData.append('prixUni'  , parseFloat(nouvItem.prixuni));
+				formData.append('prixUniHT', parseFloat(nouvItem.prixuniht));
+				formData.append('tva'      , parseFloat(nouvItem.tva));
+			}
 			formData.append('dispoMatin', nouvItem.dispomatin ? 1 : 0); // 1 si vrai, 0 si faux
 			formData.append('dispoSoir' , nouvItem.disposoir  ? 1 : 0); // 1 si vrai, 0 si faux
 			formData.append('categorie', nouvItem.categorie);
@@ -141,45 +164,44 @@ export default function Produits(){
 
 	// Fonction pour l'update
 	const funUpdate = async (upItem/*, oldItem*/) => {
-		if((upItem.prixuniht !== "" && upItem.tva === "") || (upItem.prixuniht === "" && upItem.tva !== "")){
-			alert("Veuillez remplir les deux champs 'Prix Hors Taxe' et 'Taux TVA' pour modifier le prix TTC");
-		} else {
-			try {
-				const formData = new FormData();
-				formData.append('idProd'    , parseInt(upItem.idprod ));
-				formData.append('ref'       , upItem.ref);
-				formData.append('libProd'   , upItem.libprod);
-				formData.append('prixUni'   , (upItem.tva===null && upItem.prixuniht===null)||(upItem.prixuniht==="" && upItem.tva==="")?"":parseFloat((upItem.prixuniht*upItem.tva/100) + parseFloat(upItem.prixuniht)));
-				formData.append('prixUniHT' , upItem.prixuniht===null||upItem.prixuniht===""?"":parseFloat(upItem.prixuniht));
-				formData.append('dispoMatin', upItem.dispomatin);
-				formData.append('dispoSoir' , upItem.disposoir );
-				formData.append('categorie' , upItem.categorie);
-
-				const requestOptions = {
-					method: 'POST',
-					body: formData
-				};
-
-				const response = await fetch(cheminPHP + "produit/ModificationProduit.php", requestOptions);
-
-				if (!response.ok) {
-					throw new Error('Une erreur s\'est produite.');
-				}
-
-				const data = await response.text();
-				afficherError(data);
-
-				// Récupérer les nouvelles données des produits après l'insertion réussie
-				const newData = await fetchProduitData();
-				setInitialData(newData);
-				setFilterData(newData);
-				await fetchCategData();
-
-				return data === ""; // Retourne true si la suppression a réussi, sinon false
-			} catch (error) {
-				console.log(error);
-				return false; // Retourne false en cas d'erreur
+		try {
+			const formData = new FormData();
+			formData.append('idProd'    , parseInt(upItem.idprod ));
+			formData.append('ref'       , upItem.ref);
+			formData.append('libProd'   , upItem.libprod);
+			if(upItem.prixuniht !== "" && upItem.tva !== "" && upItem.prixuni !== "" && upItem.prixuniht !== null && upItem.tva !== null && upItem.prixuni !== null){
+				formData.append('prixUni'  , parseFloat(upItem.prixuni));
+				formData.append('prixUniHT', parseFloat(upItem.prixuniht));
+				formData.append('tva'      , parseFloat(upItem.tva));
 			}
+			formData.append('dispoMatin', upItem.dispomatin);
+			formData.append('dispoSoir' , upItem.disposoir );
+			formData.append('categorie' , upItem.categorie);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "produit/ModificationProduit.php", requestOptions);
+
+			if (!response.ok) {
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+			afficherError(data);
+
+			// Récupérer les nouvelles données des produits après l'insertion réussie
+			const newData = await fetchProduitData();
+			setInitialData(newData);
+			setFilterData(newData);
+			await fetchCategData();
+
+			return data === ""; // Retourne true si la suppression a réussi, sinon false
+		} catch (error) {
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
 		}
 	};
 
