@@ -14,6 +14,9 @@ if($_POST['prixUni'] != ""){
 if($_POST['prixUniHT'] != ""){
     $newProd->setPrixUniHT($_POST['prixUniHT']);
 }
+if($_POST['tva'] != ""){
+    $newProd->setTva($_POST['tva']);
+}
 $newProd->setDispoMatin($_POST['dispoMatin']);
 $newProd->setDispoSoir($_POST['dispoSoir']);
 $newProd->setCategorie($_POST['categorie']);
