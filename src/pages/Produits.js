@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'; // Importez useState ici
 import Table from '../components/Table';
-import { cheminPHP } from '../components/VarGlobal.js';  
+import { cheminPHP } from '../components/VarGlobal.js';
 
 export default function Produits(){
 	if(sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
@@ -26,7 +26,7 @@ export default function Produits(){
 			if (!response.ok) {
 				throw new Error('Erreur de réseau !');
 			}
-			
+
 			return response.json();
 		})
 		.then(data => {
@@ -63,7 +63,7 @@ export default function Produits(){
 				if (!response.ok) {
 					throw new Error('Erreur de réseau !');
 				}
-				
+
 				return response.json();
 			})
 			.then(data => {
@@ -277,7 +277,7 @@ export default function Produits(){
 
 			console.log("Refuse de la base de donnée, raison : ", errorMessageText, "( SQL STATE[", sqlState,"] error code :", errorCode);
 			alert(errorMessageText);
-			
+
 		} else {
 			if (data !== "")
 				alert(data.replace('<br>', ''));
@@ -314,7 +314,7 @@ export default function Produits(){
 	//Création du tableau
 	return (
 	<div className="col-sm-12">
-	
+
 		<h1 className='titre mt-1'>Gestion des produits </h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
@@ -325,24 +325,24 @@ export default function Produits(){
 
 			{/* Bouton checkbox avec style CSS pour la marge gauche */}
 			<div className="form-check" style={{ marginLeft: '10em' }}>
-				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedMatin(e.target.checked)}/>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedMatin(!checkedM)}/>
 				<label className="txtcheck form-check-label" htmlFor="afficherClients">Afficher les produits du matin</label>
 			</div>
 
 			{/* Bouton checkbox avec style CSS pour la marge gauche */}
 			<div className="form-check" style={{ marginLeft: '10em' }}>
-				<input type='checkbox' className="check form-check-input border-secondary" id="afficherClients" onChange={(e) => setCheckedSoir(e.target.checked)}/>
-				<label className="txtcheck form-check-label" htmlFor="afficherClients">Afficher les produits du soir</label>
+				<input type='checkbox' className="check form-check-input border-secondary" id="afficherProd" onChange={(e) => setCheckedSoir(!checkedS)}/>
+				<label className="txtcheck form-check-label" htmlFor="afficherProd">Afficher les produits du soir</label>
 			</div>
 		</div>
 
 
 
-		<Table 
-			header={initialHeader} 
-			data={filterData} 
-			funInsert={funInsert} 
-			funUpdate={funUpdate} 
+		<Table
+			header={initialHeader}
+			data={filterData}
+			funInsert={funInsert}
+			funUpdate={funUpdate}
 			funDelete={funDelete}
 			keyGrayWhenFalse = 'present'
 		/>
