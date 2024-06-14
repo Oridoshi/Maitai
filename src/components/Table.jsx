@@ -33,6 +33,17 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 			[id]: value
 		}));
 
+
+		header.forEach(head => {
+			if(head.id === id && head.onChange !== undefined)
+				head.onChange()
+		});
+
+
+
+		if (id.onChange !== undefined)
+			id.onChange(e)
+
 		appliquerContourRouge();
 	};
 
@@ -52,10 +63,6 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 				const hasPattern = pattern !== null;
 				const patternNotMatched = hasPattern && !new RegExp(`^${pattern}$`).test(value);
 				const isRequiredAndEmpty = input.required && value === '';
-
-				console.log("ID", input.id);
-				console.log("PATTERN NOT MATCHED", patternNotMatched);
-				console.log("REQUIRED AND EMPTY", isRequiredAndEmpty);
 
 				// Si il y a un pattern et que ça ne correspond pas ou si le champ est requis mais non rempli
 				if (patternNotMatched || isRequiredAndEmpty) {
