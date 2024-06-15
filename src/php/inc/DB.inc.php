@@ -813,4 +813,39 @@ class DB {
 		$tparam = array($idProd, $idUti, $date, $pourMatin);
 		$this->execMaj($requete, $tparam);
 	}
+
+	/*************/
+	// Palanquee //
+	/*************/
+
+	public function insertPalanquee(Palanquee $palanquee) {
+		$requete = "INSERT INTO Palanquee (date, idUti, idMoniteur, profondeur, duree, lieu, commentaire) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		$tparam = array($palanquee->getDate(), $palanquee->getIdUti(), $palanquee->getIdMoniteur(), $palanquee->getProfondeur(), $palanquee->getDuree(), $palanquee->getLieu(), $palanquee->getCommentaire());
+		$this->execMaj($requete, $tparam);
+	}
+
+	public function getPalanquees() {
+		$requete = "SELECT * FROM Palanquee";
+		return $this->execQuery($requete, null, 'Palanquee');
+	}
+
+	public function suppPalanquee(int $idPal) {
+		$requete = "DELETE FROM Palanquee WHERE idPalanquee = ?";
+		$tparam = array($idPal);
+		$this->execMaj($requete, $tparam);
+	}
+
+	/**
+	 * Obtenir l'ID de la dernière palanquee
+	 * @return int l'ID de la dernière palanquee
+	 */
+	public function getCurrentIdPalanquee() {
+		$requete = 'SHOW TABLE STATUS LIKE \'Palanquee\';';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tuple = $stmt->fetch();
+		return $tuple['auto_increment'] - 1;
+	}
+
 } //fin classe DB
