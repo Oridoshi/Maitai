@@ -233,6 +233,26 @@ class DB {
 	}
 
 	/**
+	 * Récupère le mail de tout les admins
+	 * @return array tableau d'email
+	 */
+	public function getEmailsAdmin() {
+		$requete = 'SELECT email FROM Utilisateur WHERE droit = "Admin"';
+		$stmt = $this->connect->prepare($requete);
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_ASSOC);
+		$tab = array();
+		$tuple = $stmt->fetch();
+		if ($tuple) {
+			while ($tuple != false) {
+				$tab[]=$tuple['email'];
+				$tuple = $stmt->fetch();
+			}
+		}
+		return $tab;
+	}
+
+	/**
 	 * Mettre à jour le mot de passe d'un utilisateur.
 	 * @param string $login login de l'utilisateur
 	 * @param string $mdp nouveau mot de passe
