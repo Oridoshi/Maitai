@@ -498,10 +498,12 @@ function FicheSecu() {
 		);
 	}
 
-	function gererHeure(e)
+	async function gererHeure(e)
 	{
 		e.preventDefault()
 		let id = e.target.id;
+
+		console.log(id)
 
 		//Recuperer l'heure
 		const maintenant = new Date();
@@ -526,9 +528,50 @@ function FicheSecu() {
 		
 
 		if (id.endsWith('HD')) {
-			console.log('L\'élément se termine par HD');
+			console.log('La palanquée', id.charAt(1));
+
+			//Récupèrer les plongeurs
+			let plongeurs =        formDataObject['p' +  id.charAt(1) + 'Anom'] + " " + formDataObject['p' +  id.charAt(1) + 'Aprenom'] + "(" + formDataObject['p' +  id.charAt(1) + 'Aniv'] +")"
+			plongeurs    +=  "," + formDataObject['p' +  id.charAt(1) + 'Bnom'] + " " + formDataObject['p' +  id.charAt(1) + 'Bprenom'] + "(" + formDataObject['p' +  id.charAt(1) + 'Bniv'] +")"
+
+			if (formDataObject['p' +  id.charAt(1) + 'Cnom'] !== null)
+				plongeurs    += "," + formDataObject['p' +  id.charAt(1) + 'Cnom'] + " " + formDataObject['p' +  id.charAt(1) + 'Cprenom'] + "(" + formDataObject['p' +  id.charAt(1) + 'Cniv'] +")"
+			
+			/**
+			 * $palanquee->setNomPlongeurs($_POST['nomPlongeurs']);
+			 * $palanquee->setHd($_POST['hd']);
+			 * $palanquee->setDuree($_POST['duree']);
+			 */
+
+
+			let formData = new FormData();
+			formData.append('nomPlongeurs', plongeurs);
+			formData.append('hd'          , heureMin);
+			formData.append('duree'       , formDataObject['p' +  id.charAt(1) + 'temp']);
+
+			let reponses = await fetch(cheminPHP + "palanquee/CreationPalanquee.php", {
+				method: 'POST',
+				body: formData
+			});
+
+
+			let idRen = await reponses.text()
+			console.log(idRen)
+			formDataObject["id" + id.charAt(1)] = idRen;
+
+
+
+
 		} else if (id.endsWith('HS')) {
-			console.log('L\'élément se termine par HS');
+			console.log('La palanqué avec l\'id', formDataObject["id" + id.charAt(1)], "a finis");
+
+			let formData = new FormData();
+			formData.append('idPalanquee',  formDataObject["id" + id.charAt(1)]);
+
+			let reponses = await fetch(cheminPHP + "palanquee/SuppressionPalanquee.php", {
+				method: 'POST',
+				body: formData
+			});
 		}
 
 
@@ -1077,6 +1120,9 @@ function FicheSecu() {
 				worksheet.getCell('S' + (17 + index * 3)).border = borderAll;
 				worksheet.getCell('S' + (18 + index * 3)).border = borderAll;
 
+
+				//Mettre l'id de traitement en blanc
+				worksheet.getCell('T' + (16 + index * 3)).font = {color: { argb: 'FFFFFFFF' }};
 			}
 			
 
@@ -1090,6 +1136,8 @@ function FicheSecu() {
 			worksheet.getCell('N' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"HS"      ]
 			worksheet.getCell('O' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"gaz"     ]
 			worksheet.getCell('P' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"rem"     ]
+
+			worksheet.getCell('T' + (16 + index * 3)).value = formDataObject["id" + (index+1)]
 
 		});
 
@@ -1420,7 +1468,6 @@ function FicheSecu() {
 					oldData["p" + (index+1) + (ind) + "prenom" ] = worksheet.getCell('C' + ((16 + i) + index * 3)).value;
 					oldData["p" + (index+1) + (ind) + "niv"    ] = worksheet.getCell('D' + ((16 + i) + index * 3)).value;
 
-			
 				}
 
 
@@ -1445,6 +1492,8 @@ function FicheSecu() {
 								 ( oldData["p" + (index+1) + "Bniv"] === "N1-PE20"     || oldData["p" + (index+1) + "Cniv"] === "N1-PE20") || //Pas la peine de verifier A, car ca serait lui l'intervenant
 								 ((oldData["p" + (index+1) + "Bniv"] === "N2-PA20PE40" || oldData["p" + (index+1) + "Cniv"] === "N2-PA20PE40") && oldData["p" + (index+1) +"prof"] > 20)
 				}));
+
+				oldData["id" + (index+1)] = worksheet.getCell('T' + (16 + index * 3)).value;
 
 			})
 

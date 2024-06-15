@@ -11,16 +11,16 @@ class DB {
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	// private static string $dbName   = "maitai";
-	// private static string $login    = "Admin";
-	// private static string $password = "maitai";
-	// private static string $host     = "localhost";
+	private static string $dbName   = "maitai";
+	private static string $login    = "Admin";
+	private static string $password = "maitai";
+	private static string $host     = "localhost";
 
 
-	private static string $dbName   = "if0_36460769_maitai";
-	private static string $login    = "if0_36460769";
-	private static string $password = "Sc4ZKSO8sanWyvz";
-	private static string $host     = "sql211.infinityfree.com";
+	//private static string $dbName   = "if0_36460769_maitai";
+	//private static string $login    = "if0_36460769";
+	//private static string $password = "Sc4ZKSO8sanWyvz";
+	//private static string $host     = "sql211.infinityfree.com";
 
 
 	private static string $port     = "3306";
@@ -839,8 +839,8 @@ class DB {
 	/*************/
 
 	public function insertPalanquee(Palanquee $palanquee) {
-		$requete = "INSERT INTO Palanquee (date, idUti, idMoniteur, profondeur, duree, lieu, commentaire) VALUES (?, ?, ?, ?, ?, ?, ?)";
-		$tparam = array($palanquee->getDate(), $palanquee->getIdUti(), $palanquee->getIdMoniteur(), $palanquee->getProfondeur(), $palanquee->getDuree(), $palanquee->getLieu(), $palanquee->getCommentaire());
+		$requete = "INSERT INTO Palanquee (nomPlongeurs,hd,duree) VALUES (?, ?, ?)";
+		$tparam = array($palanquee->getNomPlongeurs(), $palanquee->getHd(), $palanquee->getDuree());
 		$this->execMaj($requete, $tparam);
 	}
 
