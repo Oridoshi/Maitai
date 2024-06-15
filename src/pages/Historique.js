@@ -125,6 +125,7 @@ export default function Historique()
 		}
 	}
 
+	//Pour voir un aperçu du Ticket
 	async function aperçuFiche(item)
 	{
 		let tabl = [];
@@ -134,11 +135,10 @@ export default function Historique()
 		let sep = lignes[0].charAt(lignes[0].length - 2);
 		let entete = lignes[0].split(sep);
 
-		let numeroP = entete.indexOf('numero des produits');
 		let indexNomP = entete.indexOf('nom des produits');
-		let prixU = entete.indexOf("prix unitaire des produits");
-		let indexQtP = entete.indexOf('quantite des produits');
-		let prix = entete.indexOf('prix total des produits');
+		let prixU     = entete.indexOf("prix unitaire des produits");
+		let indexQtP  = entete.indexOf('quantite des produits');
+		let prix      = entete.indexOf('prix total des produits');
 
 		lignes.forEach(ligne =>
 		{
@@ -146,17 +146,54 @@ export default function Historique()
 
 			if (!arraysEqual(elt, entete) && elt[0] !== "")
 			{
-				let ligneprod = "";
+				let ligneprod = [];
+				ligneprod.push("-")
 
-				if (numeroP !== -1) ligneprod += elt[numeroP] + "\t";
-				if (indexNomP !== -1) ligneprod += elt[indexNomP] + "\t";
-				if (prixU !== -1) ligneprod += elt[prixU] + "\t";
-				if (indexQtP !== -1) ligneprod += elt[indexQtP] + "\t";
-				if (prix !== -1) ligneprod += "TOTAL : " + elt[prix] + "\t";
+				if (indexNomP !== -1) ligneprod.push(elt[indexNomP]);
+				if (prixU     !== -1)
+				{
+					ligneprod.push(elt[prixU]);
+					ligneprod.push("€");
+				}
+				if (indexQtP  !== -1) ligneprod.push("x" + elt[indexQtP]);
+				if (prix      !== -1){
+					ligneprod.push("tot : " + elt[prix]);
+					ligneprod.push("€");
+				}
 
 				tabl.push(ligneprod);
 			}
 		});
+
+		//calcul du total
+		if (prixU !== -1 || prix      !== -1)
+		{
+			let lignetotal = [];
+			let total = 0;
+			if (prix !== -1)
+			{
+				lignes.forEach(ligne=>{
+					let elt = ligne.split(sep);
+					if (!arraysEqual(elt, entete) && elt[0] !== "")
+					{
+						total += parseInt(elt[prix]);
+					}
+				});
+			}
+			else
+			{
+				lignes.forEach(ligne=>{
+					let elt = ligne.split(sep);
+					if (!arraysEqual(elt, entete) && elt[0] !== "")
+					{
+						total += elt[prixU];
+					}
+				});
+			}
+
+			lignetotal.push("TOTAL : " + total + " €")
+			tabl.push(lignetotal);
+		}
 
 		setTabProd(tabl);
 		setModalOpen(true);
@@ -250,7 +287,8 @@ export default function Historique()
 				{ id: 'chemin', name: 'Nom du fichier', type: 'text', required: true, editable: true, show: true },
 				// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
 				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
-				{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' }
+				{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' },
+				{ id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
 			]);
 		}
 		else
@@ -775,10 +813,42 @@ export default function Historique()
 		catch (error) { construitTicket(ligne); }//si on clique sur le dernire élément du tableau on a une erreur
 	}
 
-	function afficherTicket()
-	{
-		console.log(tabProd);
+	//afiche un aperçu du ticket
+	function afficherTicket() {
+		// Vérifier si tabProd a au moins une ligne
+		const colCount = tabProd.length > 0 ? tabProd[0].length : 0;
+
+		return (
+			<div>
+				<table className="transparent-table">
+					<tbody>
+					{
+						tabProd.map((prod, prodIndex) => {
+							// Vérifier si c'est la dernière ligne
+							const isLastRow = prodIndex === tabProd.length - 1;
+							return (
+								<tr key={prodIndex}>
+									{
+										// Si c'est la dernière ligne et qu'elle a un seul élément
+										isLastRow && prod.length === 1 ? (
+											<td key={0} colSpan={colCount}>{prod[0]}</td>
+										) : (
+											prod.map((elt, eltIndex) => {
+												return <td key={eltIndex}>{elt}</td>;
+											})
+										)
+									}
+								</tr>
+							);
+						})
+					}
+					</tbody>
+				</table>
+			</div>
+		);
 	}
+
+
 
 
 	function construitTicket(ligne)
@@ -894,8 +964,6 @@ export default function Historique()
 				<Modal.Body>
 					{afficherTicket()}
 				</Modal.Body>
-				<Modal.Footer>
-				</Modal.Footer>
 			</Modal>
 		</div>
 	);

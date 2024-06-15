@@ -41,6 +41,17 @@ CREATE TABLE Utilisateur
 );
 
 
+-- Création de la table Palanquée 
+CREATE TABLE Palanquee
+(
+	idPalanquee  SERIAL       PRIMARY KEY,
+	nomPlongeurs VARCHAR(255) NOT NULL,
+	hd           VARCHAR(5)   NOT NULL,
+	duree        INT          NOT NULL,
+	alerte       BOOLEAN      DEFAULT 0
+);
+
+
 -- Insertion d'un utilisateur admin
 INSERT INTO Utilisateur (login, email, mdp, droit) VALUES ('admin1', 'votre.addresse@gmail.fr', '', 'Admin');
 
