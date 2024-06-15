@@ -25,8 +25,8 @@ export default function Resume(){
 	function dureePrev(item){
 		const tabHeure = item.hd.split(':');
 		const tempsEnSeconde = (parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree);
-		console.log(tempsEnSeconde);
 		console.log(item.duree);
+		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60));
 		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree));
 		const heure = Math.floor(tempsEnSeconde / 3600);
 		const minute = Math.floor((tempsEnSeconde - (heure * 3600)) / 60);
@@ -72,7 +72,7 @@ export default function Resume(){
 		{ id: 'id'          , name: 'NB Ligne'           , type:'number'  , required : true , editable : false, show : false                      },
 		{ id: 'idpalanquee' , name: 'ID Produit'         , type:'number'  , required : true , editable : false, show : false                      },
 		{ id: 'nomplongeurs', name: 'Nom des plongeurs'  , type:'text'    , required : true , editable : false, show : true                       },
-		{ id: 'hd'          , name: 'Heurs d\'entrée'    , type:'text'    , required : true , editable : false, show : true                       },
+		{ id: 'hd'          , name: 'Heurs d\'entrée'    , type:'number'    , required : true , editable : false, show : true                       },
 		{ id: 'duree'       , name: 'Durée prévue'       , type:'number'  , required : true , editable : false, show : true                           },
 		{ id: 'temps'       , name: 'Sortie Prévue'      , type:'number'  , required : true , editable : false, show : true                           }
 	];
