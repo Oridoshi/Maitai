@@ -23,11 +23,12 @@ export default function Resume(){
 	}, []);
 	
 	function dureePrev(item){
-		const tabHeure = item.temps.split(':');
-		const tempsEnSeconde = (parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60);
-		const heure = 8;
-		const minutes = (heure - Math.floor(heure)) * 60;
-		return 12;
+		const tabHeure = item.hd.split(':');
+		const tempsEnSeconde = (parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + item.duree;
+		const heure = Math.floor(tempsEnSeconde / 3600);
+		const minute = Math.floor((tempsEnSeconde - (heure * 3600)) / 60);
+		const minuteFormattee = minute < 10 ? '0' + minute : minute;
+		return heure + ':' + minuteFormattee;
 	}
 
 	// Récupérer les données du resume
