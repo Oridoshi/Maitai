@@ -80,23 +80,34 @@ export default function Produits(){
 	}, []);
 
 	// Fonction pour le calcul du prix hors taxe
-	const funChange = (input) => {
+	const funChange = (input, data) => {
 		const nouvValue = input.target.value;
 		const id = input.target.id;
-		console.log(id)
-		if(id === 'prixuni'){
-			console.log("prixuni");
-			console.log(document.getElementById('prixuniht').value)
-			console.log((parseFloat(nouvValue) * 60 / 100).toFixed(2))
-			document.getElementById('prixuniht').innerHTML = (parseFloat(nouvValue) * 60 / 100).toFixed(2);
-		}
-		else if(id === 'prixuniht'){
-			console.log("prixuniht");
-			document.getElementById('prixuni').value = (parseFloat(nouvValue) * 100 / 60).toFixed(2);
-		}
-		else if(id === 'tva'){
-			console.log("tva");
-			document.getElementById('prixuni').value = (parseFloat(nouvValue) * 60 / 100).toFixed(2);
+		
+		//CALCUL TTC : TTC = prixuniht * (tva + 100) / 100
+		//CALCUL HT  : HT  = prixuni * 100 / (tva + 100)
+		//CALCUL TVA : TVA = (prixuni * 100 / prxuniht) - 100 (pas utilisé ici)
+		if (id === 'prixuni') {
+			data.prixuni = nouvValue;
+			if(nouvValue === ""){
+				data.prixuniht = "";
+			}
+			else if(data.tva !== "" && data.prixuni !== "" && data.tva !== null && data.prixuni !== null)
+				data.prixuniht = parseFloat((data.prixuni * 100 / (parseFloat(data.tva) + 100)).toFixed(2));
+		} else if (id === 'prixuniht') {
+			data.prixuniht = nouvValue;
+			if(nouvValue === ""){
+				data.prixuni = "";
+			}
+			else if(data.tva !== "" && data.prixuniht !== "" && data.tva !== null && data.prixuniht !== null)
+				data.prixuni = parseFloat((data.prixuniht * (parseFloat(data.tva) + 100) / 100).toFixed(2));
+		} else if (id === 'tva') {
+			data.tva = nouvValue;
+			if(nouvValue === ""){
+				data.prixuni = "";
+			}
+			else if(data.tva !== "" && data.prixuniht !== "" && data.tva !== null && data.prixuniht !== null)
+				data.prixuni = parseFloat((data.prixuniht * (parseFloat(data.tva) + 100) / 100).toFixed(2));
 		}
 	}
 
@@ -106,9 +117,9 @@ export default function Produits(){
 		{ id: 'idprod'    , name: 'ID du produit'      , type:'number'  ,              required : true , editable : false, show : false                                            },
 		{ id: 'ref'       , name: 'Référence'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 50                            },
 		{ id: 'libprod'   , name: 'Libellé'            , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100                           },
+		{ id: 'tva'       , name: 'Taux TVA'           , type:'number'  , step:'0.01', required : false, editable : true , show : false, maxLength : 12  , onChange: funChange     },
 		{ id: 'prixuni'   , name: 'Prix TTC'           , type:'prix'    , step:'0.01', required : false, editable : true , show : true , maxLength : 12  , onChange: funChange     },
 		{ id: 'prixuniht' , name: 'Prix Hors Taxe'     , type:'prix'    , step:'0.01', required : false, editable : true , show : false, maxLength : 12  , onChange: funChange     },
-		{ id: 'tva'       , name: 'Taux TVA'           , type:'number'  , step:'0.01', required : false, editable : true , show : false, maxLength : 12  , onChange: funChange     },
 		{ id: 'dispomatin', name: 'Disponible le matin', type:'checkbox',              required : true , editable : true , show : true , maxLength : 12  , fastEditable : true     },
 		{ id: 'disposoir' , name: 'Disponible le soir' , type:'checkbox',              required : true , editable : true , show : true , maxLength : 12  , fastEditable : true     },
 		{ id: 'categorie' , name: 'Catégorie'          , type:'text'    ,              required : true , editable : true , show : true , maxLength : 100 , datalist : datalistCateg}
@@ -119,91 +130,104 @@ export default function Produits(){
 
 	// Fonction pour l'insertion
 	const funInsert = async (nouvItem) => {
-		try {
-			const formData = new FormData();
-			formData.append('ref'      , nouvItem.ref);
-			formData.append('libProd'  , nouvItem.libprod);
-			if(nouvItem.prixuniht !== "" && nouvItem.tva !== "" && nouvItem.prixuni !== "" && nouvItem.prixuniht !== null && nouvItem.tva !== null && nouvItem.prixuni !== null){
-				formData.append('prixUni'  , parseFloat(nouvItem.prixuni));
-				formData.append('prixUniHT', parseFloat(nouvItem.prixuniht));
-				formData.append('tva'      , parseFloat(nouvItem.tva));
+		if(nouvItem.prixuniht !== "" && nouvItem.tva !== "" && nouvItem.prixuni !== "" && nouvItem.prixuniht !== null && nouvItem.tva !== null && nouvItem.prixuni !== null)
+		{
+			try {
+				const formData = new FormData();
+				formData.append('ref'      , nouvItem.ref);
+				formData.append('libProd'  , nouvItem.libprod);
+				if(nouvItem.prixuniht !== "" && nouvItem.tva !== "" && nouvItem.prixuni !== "" && nouvItem.prixuniht !== null && nouvItem.tva !== null && nouvItem.prixuni !== null){
+					formData.append('prixUni'  , parseFloat(nouvItem.prixuni));
+					formData.append('prixUniHT', parseFloat(nouvItem.prixuniht));
+					formData.append('tva'      , parseFloat(nouvItem.tva));
+				}
+				formData.append('dispoMatin', nouvItem.dispomatin ? 1 : 0); // 1 si vrai, 0 si faux
+				formData.append('dispoSoir' , nouvItem.disposoir  ? 1 : 0); // 1 si vrai, 0 si faux
+				formData.append('categorie', nouvItem.categorie);
+
+				const requestOptions = {
+					method: 'POST',
+					body: formData
+				};
+
+				const response = await fetch(cheminPHP + "produit/CreationProduit.php", requestOptions);
+
+				if (!response.ok) {
+					throw new Error('Une erreur s\'est produite.');
+				}
+
+				const data = await response.text();
+				afficherError(data);
+
+				// Récupérer les nouvelles données des produits après l'insertion réussie
+				const newData = await fetchProduitData();
+				setInitialData(newData);
+				setFilterData(newData);
+
+				await fetchCategData();
+
+				return data === ""; // Retourne true si la suppression a réussi, sinon false
+			} catch (error) {
+				console.log(error);
+				return false; // Retourne false en cas d'erreur
 			}
-			formData.append('dispoMatin', nouvItem.dispomatin ? 1 : 0); // 1 si vrai, 0 si faux
-			formData.append('dispoSoir' , nouvItem.disposoir  ? 1 : 0); // 1 si vrai, 0 si faux
-			formData.append('categorie', nouvItem.categorie);
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "produit/CreationProduit.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const data = await response.text();
-			afficherError(data);
-
-			// Récupérer les nouvelles données des produits après l'insertion réussie
-			const newData = await fetchProduitData();
-			setInitialData(newData);
-			setFilterData(newData);
-
-			await fetchCategData();
-
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
 		}
-
+		else
+		{
+			alert("Veuillez remplir les champs Prix TTC, Prix Hors Taxe et Taux TVA, ou tous les vidé si vous ne voulez pas les remplir");
+		}
 	};
 
 
 	// Fonction pour l'update
 	const funUpdate = async (upItem/*, oldItem*/) => {
-		try {
-			const formData = new FormData();
-			formData.append('idProd'    , parseInt(upItem.idprod ));
-			formData.append('ref'       , upItem.ref);
-			formData.append('libProd'   , upItem.libprod);
-			if(upItem.prixuniht !== "" && upItem.tva !== "" && upItem.prixuni !== "" && upItem.prixuniht !== null && upItem.tva !== null && upItem.prixuni !== null){
-				formData.append('prixUni'  , parseFloat(upItem.prixuni));
-				formData.append('prixUniHT', parseFloat(upItem.prixuniht));
-				formData.append('tva'      , parseFloat(upItem.tva));
+		if(upItem.prixuniht !== "" && upItem.tva !== "" && upItem.prixuni !== "" && upItem.prixuniht !== null && upItem.tva !== null && upItem.prixuni !== null)
+		{
+			try {
+				const formData = new FormData();
+				formData.append('idProd'    , parseInt(upItem.idprod ));
+				formData.append('ref'       , upItem.ref);
+				formData.append('libProd'   , upItem.libprod);
+				if(upItem.prixuniht !== "" && upItem.tva !== "" && upItem.prixuni !== "" && upItem.prixuniht !== null && upItem.tva !== null && upItem.prixuni !== null){
+					formData.append('prixUni'  , parseFloat(upItem.prixuni));
+					formData.append('prixUniHT', parseFloat(upItem.prixuniht));
+					formData.append('tva'      , parseFloat(upItem.tva));
+				}
+				formData.append('dispoMatin', upItem.dispomatin);
+				formData.append('dispoSoir' , upItem.disposoir );
+				formData.append('categorie' , upItem.categorie);
+
+				const requestOptions = {
+					method: 'POST',
+					body: formData
+				};
+
+				const response = await fetch(cheminPHP + "produit/ModificationProduit.php", requestOptions);
+
+				if (!response.ok) {
+					throw new Error('Une erreur s\'est produite.');
+				}
+
+				const data = await response.text();
+				afficherError(data);
+
+				// Récupérer les nouvelles données des produits après l'insertion réussie
+				const newData = await fetchProduitData();
+				setInitialData(newData);
+				setFilterData(newData);
+				await fetchCategData();
+
+				return data === ""; // Retourne true si la suppression a réussi, sinon false
+			} catch (error) {
+				console.log(error);
+				return false; // Retourne false en cas d'erreur
 			}
-			formData.append('dispoMatin', upItem.dispomatin);
-			formData.append('dispoSoir' , upItem.disposoir );
-			formData.append('categorie' , upItem.categorie);
-
-			const requestOptions = {
-				method: 'POST',
-				body: formData
-			};
-
-			const response = await fetch(cheminPHP + "produit/ModificationProduit.php", requestOptions);
-
-			if (!response.ok) {
-				throw new Error('Une erreur s\'est produite.');
-			}
-
-			const data = await response.text();
-			afficherError(data);
-
-			// Récupérer les nouvelles données des produits après l'insertion réussie
-			const newData = await fetchProduitData();
-			setInitialData(newData);
-			setFilterData(newData);
-			await fetchCategData();
-
-			return data === ""; // Retourne true si la suppression a réussi, sinon false
-		} catch (error) {
-			console.log(error);
-			return false; // Retourne false en cas d'erreur
 		}
-	};
+		else
+		{
+			alert("Veuillez remplir les champs Prix TTC, Prix Hors Taxe et Taux TVA, ou tous les vidé si vous ne voulez pas les remplir");
+		}
+	}
 
 	// Fonction pour la suppression
 	const funDelete = async (item) => {
@@ -257,7 +281,6 @@ export default function Produits(){
 			return data.map((item, index) => ({
 				...item,
 				id: index + 1,
-				tva: (item.prixuniht===null && item.prixuni)||(item.prixuniht==="" && item.prixuni==="")?"":((item.prixuni - item.prixuniht) * 100 / 60).toFixed(2)
 			}));
 		} catch (error) {
 			console.error('Erreur :', error);
