@@ -212,3 +212,7 @@
 	white-space: nowrap;
 	/* Empêche l'éclatement des cellules pour s'ajuster au contenu */
 }
+
+.danger {
+	background-color: #DD6565 !important;
+}

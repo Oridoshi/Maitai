@@ -24,18 +24,23 @@ export default function Resume(){
 	
 	function dureePrev(item){
 		const tabHeure = item.hd.split(':');
-		const tempsEnSeconde = (parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree);
-		console.log(item.duree);
-		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60));
-		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree));
-		console.log(tempsEnSeconde);
+		const tempsEnSeconde = (parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree * 60);
 		const heure = Math.floor(tempsEnSeconde / 3600);
-		console.log(heure);
 		const minute = Math.floor((tempsEnSeconde - (heure * 3600)) / 60);
-		console.log(minute);
 		const minuteFormattee = minute < 10 ? '0' + minute : minute;
-		console.log(minuteFormattee);
 		return heure + ':' + minuteFormattee;
+	}
+
+	function tempsPlongee(item, index){
+		const tabHeure = item.hd.split(':');
+		const maintenant = new Date();
+		const tempsEnSeconde = (maintenant.getHours() * 3600 + maintenant.getMinutes() * 60) - (parseInt(tabHeure[0]) * 3600 + parseInt(tabHeure[1]) * 60);
+		const duree = Math.floor(tempsEnSeconde / 60);
+
+		if(duree > item.duree)
+			document.getElementById("ligne " + (index + 1)).classList.add('danger');
+
+		return duree + " min";
 	}
 
 	// Récupérer les données du resume
@@ -60,7 +65,9 @@ export default function Resume(){
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1,
-				temps: dureePrev(item)
+				duree: item.duree + " min",
+				hs: dureePrev(item),
+				plongee: tempsPlongee(item, index)
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
@@ -73,16 +80,16 @@ export default function Resume(){
 
 	// En-tête de la table
 	const initialHeader = [
-		{ id: 'id'          , name: 'NB Ligne'           , type:'number'  , required : true , editable : false, show : false                      },
-		{ id: 'idpalanquee' , name: 'ID Produit'         , type:'number'  , required : true , editable : false, show : false                      },
-		{ id: 'nomplongeurs', name: 'Nom des plongeurs'  , type:'text'    , required : true , editable : false, show : true                       },
-		{ id: 'hd'          , name: 'Heurs d\'entrée'    , type:'number'    , required : true , editable : false, show : true                       },
-		{ id: 'duree'       , name: 'Durée prévue'       , type:'number'  , required : true , editable : false, show : true                           },
-		{ id: 'temps'       , name: 'Sortie Prévue'      , type:'number'  , required : true , editable : false, show : true                           }
+		{ id: 'id'          , name: 'NB Ligne'                    , type:'number'  , show : false},
+		{ id: 'idpalanquee' , name: 'ID Produit'                  , type:'number'  , show : false},
+		{ id: 'nomplongeurs', name: 'Nom des plongeurs'           , type:'text'    , show : true },
+		{ id: 'hd'          , name: 'Heure d\'entrée'             , type:'number'  , show : true },
+		{ id: 'hs'          , name: 'Heure de sortie prévue'      , type:'number'  , show : true },
+		{ id: 'duree'       , name: 'Durée prévue'                , type:'number'  , show : true },
+		{ id: 'plongee'     , name: 'Durée de la plongée en cours', type:'number'  , show : true }
 	];
 
 	const handleChange   = (e) => {setSearchTerm( e.target.value);};
-	const handleCbChange = (e) => {setChecked(e.target.checked);};
 
 	const applyFilter = (data, value, checked) => {
 		const filteredData = data.filter((element) => {
