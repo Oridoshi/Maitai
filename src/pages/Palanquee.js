@@ -38,9 +38,18 @@ export default function Resume(){
 		const duree = Math.floor(tempsEnSeconde / 60);
 
 		if(duree > item.duree)
-			document.getElementById("ligne " + (index + 1)).classList.add('danger');
+			item.class = 'dangerPlongee';
 
 		return duree + " min";
+	}
+
+	function formatageNomPlongeurs(item){
+		let nomPlongeurs = '';
+		const tabPlongeurs = item.plongeurs.split(',');
+		tabPlongeurs.forEach((plongeur, index) => {
+			nomPlongeurs += plongeur + (index === tabPlongeurs.length - 1 ? '' : '\n');
+		});
+		return nomPlongeurs;
 	}
 
 	// Récupérer les données du resume
@@ -65,9 +74,11 @@ export default function Resume(){
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1,
+				nomplongeurs: formatageNomPlongeurs(item),
 				duree: item.duree + " min",
 				hs: dureePrev(item),
 				plongee: tempsPlongee(item, index)
+				
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
