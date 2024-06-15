@@ -22,6 +22,12 @@ export default function Resume(){
 		};
 	}, []);
 	
+	function dureePrev(item){
+		const tabHeure = item.temps.split(':');
+		const heure = (tabHeure[0] * 60 + tabHeure[1] + item.duree)/60;
+		const minutes = (heure - Math.floor(heure)) * 60;
+		return Math.floor(heure) + 'h' + (minutes < 10 ? '0' + minutes : minutes);
+	}
 
 	// Récupérer les données du resume
 	useEffect(() => {
@@ -45,12 +51,7 @@ export default function Resume(){
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1,
-				temps: item => {
-					const tabHeure = item.temps.split(':');
-					const heure = (tabHeure[0] * 60 + tabHeure[1] + item.duree)/60
-					const minutes = (heure - Math.floor(heure)) * 60;
-					return Math.floor(heure) + 'h' + (minutes < 10 ? '0' + minutes : minutes);
-				}
+				temps: dureePrev(item)
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
