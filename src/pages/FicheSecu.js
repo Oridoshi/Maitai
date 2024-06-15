@@ -15,7 +15,7 @@ function FicheSecu() {
 	/*                                                                    */
 	/**********************************************************************/
 
-	const etapesLib = ['En tête', 'Palanquée', 'Réalisé', 'Envoie'];
+
 	const [etape, setEtape] = useState(0);
 
 	const [nombrePlaques    , setNombrePlaques    ] = useState(1);
@@ -28,6 +28,12 @@ function FicheSecu() {
 	const [idHis  , setIdHis  ] = useState();
 	
 	if((sessionStorage.getItem('idHis') === null && idHis === undefined) && sessionStorage.getItem('droit') !== 'Client') window.location.href = '/';
+
+	let etapesLib = [];
+	if (sessionStorage.getItem('idHis') === null && idHis === undefined)
+		etapesLib = ['En tête', 'Palanquée', 'Envoie'];
+	else
+		etapesLib = ['Réalisé', 'Envoie'];
 
 	const [nomFic  , setNomFic  ] = useState();
 
@@ -451,7 +457,7 @@ function FicheSecu() {
 				
 				{genererTabHTML()}
 
-				<button className='btn mt-4 btn-primary btnSauvegarder' onClick={() => {redirigerAuDebut()}}> Quitter </button>
+				<button className='btn mt-4 btn-primary btnSauvegarder' onClick={(e) => { e.preventDefault();redirigerAuDebut()}}> Quitter </button>
 				<button id='tele' className='btn ms-4 mt-4 btn-secondary '> Quitter et telecharger un apperçu </button>
 				{JSpuLaMerde()}
 			</div>
@@ -571,9 +577,9 @@ function FicheSecu() {
 						<React.Fragment key={index}>
 							<tr>
 								<td rowSpan={3}>{index + 1}</td>
-								<td className={encadreOuNon[index + 1] ? 'bg-secondary' : ''}>{formDataObject[`p${index + 1}Anom`]}</td>
-								<td className={encadreOuNon[index + 1] ? 'bg-secondary' : ''}>{formDataObject[`p${index + 1}Aprenom`]}</td>
-								<td className={encadreOuNon[index + 1] ? 'bg-secondary' : ''}>{formDataObject[`p${index + 1}Aniv`]}</td>
+								<td className={encadreOuNon[index + 1] ? 'bg-secondary text-white' : ''}>{formDataObject[`p${index + 1}Anom`]}</td>
+								<td className={encadreOuNon[index + 1] ? 'bg-secondary text-white' : ''}>{formDataObject[`p${index + 1}Aprenom`]}</td>
+								<td className={encadreOuNon[index + 1] ? 'bg-secondary text-white' : ''}>{formDataObject[`p${index + 1}Aniv`]}</td>
 
 								<td rowSpan={3}  className='text-center'>{formDataObject[`p${index + 1}type`] === 'tech' ? 'X' : ''}</td>
 								<td rowSpan={3}  className='text-center'>{formDataObject[`p${index + 1}type`] === 'explo' ? 'X' : ''}</td>
@@ -1010,9 +1016,10 @@ function FicheSecu() {
 		/*                      FETCH                      */
 		/***************************************************/
 
-		
-		let nomFic = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + formDataObject["nomFic"].replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
-		nomFic = nomFic.replace(/-+/g, '-');
+		let nomSave = formDataObject["nomFic"] ? formDataObject["nomFic"] : nomFic;
+
+		let nomFichierFinal = "_" + formDataObject["date"] + "_" + sessionStorage.getItem("login").replace(/[_ .]/g, '-') + "_" + nomSave.replace(/[_ ]/g, '-') + "_FICHESECU.xlsx";
+		nomFichierFinal = nomFichierFinal.replace(/-+/g, '-');
 
 		//SI CEST NOUVEAU 
 		if (idHis === undefined)
@@ -1039,7 +1046,7 @@ function FicheSecu() {
 			formData.append('iduti'  , parseInt(id));
 			formData.append('type'   , 'SECU');
 			formData.append('file'   , blob);
-			formData.append('name'   , nomFic);
+			formData.append('name'   , nomFichierFinal);
 
 			response = await fetch(cheminPHP + "historique/CreationHistorique.php", {
 				method: 'POST',
@@ -1051,8 +1058,6 @@ function FicheSecu() {
 			}
 
 			const text = await response.text();
-			setIdHis(text);
-			console.log("On a crée")
 
 
 		} else {
@@ -1067,7 +1072,7 @@ function FicheSecu() {
 			const formData = new FormData();
 			formData.append('idhist', idHis );
 			formData.append('file'  , blob  );
-			formData.append('name'  , nomFic);
+			formData.append('name'  , nomFichierFinal);
 
 			const response = await fetch(cheminPHP + "historique/ModificationFichierHistorique.php", {
 				method: 'POST',
@@ -1094,7 +1099,7 @@ function FicheSecu() {
 				link.href = url;
 
 				// Définir le nom du fichier à télécharger
-				link.download = formDataObject["nomFic"];
+				link.download = formDataObject["nomFichierFinal"];
 
 				// Ajouter le lien au document
 				document.body.appendChild(link);
@@ -1113,6 +1118,9 @@ function FicheSecu() {
 		try {
 			// Ajouter un gestionnaire d'événements au clic sur le bouton
 			const btn = document.getElementById('tele');
+			btn.addEventListener('click', function(e) {
+				e.preventDefault();
+			});
 			btn.addEventListener('click', telechargerBlob);
 		} catch (error) {
 			
@@ -1176,6 +1184,8 @@ function FicheSecu() {
 		const nomFic = sessionStorage.getItem('nomFic');
 		setNomFic(nomFic);   
 		sessionStorage.removeItem("nomFic");  
+
+		etapesLib = ['Réalisé', 'Envoie'];
 
 		// RECUPERER LE FICHIER
 		const formData = new FormData();
@@ -1546,12 +1556,6 @@ function FicheSecu() {
 		return document.getElementById(`p${num}${car}nom`).value.trim() === '' && document.getElementById(`p${num}${car}prenom`).value.trim() === '' && document.getElementById(`p${num}${car}niv`).value.trim() === '';
 	}
 
-	async function enregistrer()
-	{
-		await generateExcel(); 
-		setEtape(2)
-	}
-
 
 
 	return (
@@ -1569,10 +1573,6 @@ function FicheSecu() {
 
 					{etape < etapesLib.length - 2 &&
 						<button className="mx-2 col-sm-1 btn btn-primary btnAnnuler" onClick={(e) => {e.preventDefault();redirigerAuDebut()}}>Annuler</button>
-					}
-
-					{etape === 2 &&
-						<button className="mx-2 col-sm-1 btn btn-primary btnSauvegarder" onClick={(e) => {e.preventDefault();generateExcel();}}>Enregistrer</button>
 					}
 
 					{etape < etapesLib.length - 2 &&
