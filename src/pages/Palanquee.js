@@ -4,7 +4,7 @@ import { cheminPHP } from '../components/VarGlobal.js';
 
 export default function Resume(){
 	
-	if(sessionStorage.getItem('droit') !== 'Admin' || sessionStorage.getItem('date') === null || sessionStorage.getItem('pourMatin') === null) window.location.href = '/';
+	if(sessionStorage.getItem('droit') !== 'Admin') window.location.href = '/';
 
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
@@ -102,18 +102,12 @@ export default function Resume(){
 	return (
 	<div className="col-sm-12">
 	
-		<h1 className='titre mt-1'>Resume des produits demandés pour le {sessionStorage.getItem('pourMatin') == 1 ? 'matin' : 'soir'} du {sessionStorage.getItem('date')}</h1>
+		<h1 className='titre mt-1'>Palanquée en cours de plongée</h1>
 
 		<div className="grpRecherche mt-4 d-flex align-items-center">
 			{/* barre de recherche */}
 			<div className="col-sm-3">
 				<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={handleChange} />
-			</div>
-
-			{/* Bouton checkbox avec style CSS pour la marge gauche */}
-			<div className="form-check" style={{ marginLeft: '10em' }}>
-				<input type='checkbox' className="check form-check-input border-secondary" id="afficherDemandes" checked={checked} onChange={handleCbChange}/>
-				<label className="form-check-label" htmlFor="afficherDemandes">Afficher seulement les demandes non validé</label>
 			</div>
 		</div>
 
