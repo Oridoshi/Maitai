@@ -73,7 +73,7 @@ function palanqueesDansLesTemps() {
             $hActuelle = date('H') * 60 + date('i');
 
             if($hActuelle > $hsPrev) {
-                $alerte .= "<li>La Palanquée " . $palanquee->getNomPlongeurs() . " est rentrée à " . $palanquee->getHd() . " pour " . $palanquee->getDuree() . "</li>";
+                $alerte .= "<li>La Palanquée " . $palanquee->getNomPlongeurs() . " est rentrée à " . $palanquee->getHd() . " pour " . $palanquee->getDuree() . " minutes</li>";
                 $palanquee->setAlerte(1);
                 DB::getInstance()->updatePalanquee($palanquee);
             }
