@@ -440,7 +440,7 @@ function FicheSecu() {
 						
 						<div className='align-items-center col-sm-1 me-3'>
 							<label htmlFor={`tempsRea${num}`} className="me-2">Temps ({formDataObject[`p${num}temp`]})</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={idHis ? formDataObject[`p${num}tempsrea`] : formDataObject[`p${num}temp`]}/>
+							<input type="number" min="0" readOnly className="form-control w-75" name={`p${num}tempsrea`} id={`p${num}tempsrea`} defaultValue={formDataObject[`p${num}tempsrea`]}/>
 						</div>
 
 						<div className='align-items-center me-3'>
@@ -508,7 +508,7 @@ function FicheSecu() {
 		//Recuperer l'heure
 		const maintenant = new Date();
 
-		const heureMin = maintenant.getHours() + ':' + maintenant.getMinutes().toString().padStart(2, '0');
+		const heureMin = maintenant.getHours().toString().padStart(2, '0') + ':' + maintenant.getMinutes().toString().padStart(2, '0');
 
 
 		let btn = document.getElementById(id);
@@ -572,10 +572,44 @@ function FicheSecu() {
 				method: 'POST',
 				body: formData
 			});
+
+			formDataObject[`p${id.charAt(1)}tempsrea`] = calculateMinutesElapsed(formDataObject["p" + id.charAt(1) + "HD" ], heureMin)
+			document.getElementById(`p${id.charAt(1)}tempsrea`).value = formDataObject[`p${id.charAt(1)}tempsrea`];
+			
 		}
 
 
 		formDataObject[id] = heureMin;
+		generateExcel()
+	}
+
+
+	/**
+	 * Calculer lenombre de minute écoulé entre deux truc
+	 * @param {*} startTime 
+	 * @param {*} endTime 
+	 * @returns 
+	 */
+	function calculateMinutesElapsed(startTime, endTime) {
+		// Convert start time to hours and minutes
+		const [startHours, startMinutes] = startTime.split(':').map(Number);
+		
+		// Convert end time to hours and minutes
+		const [endHours, endMinutes] = endTime.split(':').map(Number);
+		
+		// Calculate the total minutes for start and end times
+		const startTotalMinutes = startHours * 60 + startMinutes;
+		const endTotalMinutes = endHours * 60 + endMinutes;
+		
+		// Calculate the difference in minutes
+		let minutesElapsed = endTotalMinutes - startTotalMinutes;
+		
+		// If the time difference is negative, it means the end time is on the next day
+		if (minutesElapsed < 0) {
+			minutesElapsed += 24 * 60; // Add 24 hours in minutes
+		}
+		
+		return minutesElapsed;
 	}
 
 	function generateGaz(num)
@@ -611,7 +645,7 @@ function FicheSecu() {
 				{genererTabHTML()}
 
 				<button className='btn mt-4 btn-primary btnSauvegarder' onClick={(e) => { e.preventDefault();redirigerAuDebut()}}> Quitter </button>
-				<button id='tele' className='btn ms-4 mt-4 btn-secondary '> Quitter et telecharger un apperçu </button>
+				<button id='tele' className='btn ms-4 mt-4 btn-primary btnSauvegarder'> Quitter et telecharger un apperçu </button>
 				{JSpuLaMerde()}
 			</div>
 		);
