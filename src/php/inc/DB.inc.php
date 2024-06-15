@@ -5,6 +5,7 @@ include_once 'Produit.inc.php';
 include_once 'Ticket.inc.php';
 include_once 'Historique.inc.php';
 include_once 'Demande.inc.php';
+include_once 'Palanquee.inc.php';
 
 class DB {
 
