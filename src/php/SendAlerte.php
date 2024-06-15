@@ -75,8 +75,10 @@ function palanqueesDansLesTemps() {
             if($hActuelle > $hsPrev) {
                 $alerte .= "<li>La Palanquée " . $palanquee->getNomPlongeurs() . " est rentrée à " . $palanquee->getHd() . " pour " . $palanquee->getDuree() . "</li>";
                 $palanquee->setAlerte(1);
+                DB::getInstance()->updatePalanquee($palanquee);
             }
         }
     }
+    return $alerte;
 }
 ?>

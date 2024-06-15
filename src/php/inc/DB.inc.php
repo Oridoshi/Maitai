@@ -855,6 +855,12 @@ class DB {
 		$this->execMaj($requete, $tparam);
 	}
 
+	public function updatePalanquee(Palanquee $palanquee) {
+		$requete = "UPDATE Palanquee SET nomPlongeurs = ?, hd = ?, duree = ? WHERE idPalanquee = ?";
+		$tparam = array($palanquee->getNomPlongeurs(), $palanquee->getHd(), $palanquee->getDuree(), $palanquee->getIdPalanquee());
+		$this->execMaj($requete, $tparam);
+	}
+
 	/**
 	 * Obtenir l'ID de la dernière palanquee
 	 * @return int l'ID de la dernière palanquee
