@@ -76,6 +76,7 @@ function palanqueesDansLesTemps() {
                 $alerte .= "<li>La Palanquée " . $palanquee->getNomPlongeurs() . " est rentrée à " . $palanquee->getHd() . " pour " . $palanquee->getDuree() . " minutes</li>";
                 $palanquee->setAlerte(1);
                 DB::getInstance()->updatePalanquee($palanquee);
+                echo $palanquee->getNomPlongeurs();
             }
         }
     }
