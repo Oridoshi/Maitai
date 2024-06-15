@@ -766,8 +766,19 @@ function FicheSecu() {
 		var workbook = new ExcelJS.Workbook();
 
 
+		if (idHis) {
+			// Charger le fichier Excel existant à partir du blob
+			await workbook.xlsx.load(fichierPrec);
+			console.log(`Fichier Excel chargé à partir du blob.`);
+		} else {
+			// Créer un nouveau classeur Excel avec une feuille de calcul
+			workbook = new ExcelJS.Workbook();
+			workbook.addWorksheet('Sheet1');
+			console.log('Nouveau fichier Excel créé.');
+		}
+
 		// Ajouter une feuille de calcul
-		const worksheet = workbook.addWorksheet('Sheet1');
+		const worksheet = workbook.getWorksheet('Sheet1');
 
 		const borderAll = { top: {style:'thin', color: {argb:'80808080'}}, left: {style:'thin', color: {argb:'80808080'}}, bottom: {style:'thin', color: {argb:'80808080'}}, right: {style:'thin', color: {argb:'80808080'}}};
 		
@@ -781,188 +792,194 @@ function FicheSecu() {
 		const allVCHC = { vertical: 'middle', horizontal: 'center' };
 
 
-		//TAILLE COLONNE
-		worksheet.getColumn('A').width = 5;
-		worksheet.getColumn('B').width = 25;
-		worksheet.getColumn('C').width = 20;
-		worksheet.getColumn('D').width = 18;
-		worksheet.getColumn('E').width = 7;
-		worksheet.getColumn('F').width = 7;
-		worksheet.getColumn('G').width = 12;
-		worksheet.getColumn('H').width = 12;
-		worksheet.getColumn('I').width = 12;
-		worksheet.getColumn('J').width = 12;
-		worksheet.getColumn('K').width = 12;
-		worksheet.getColumn('L').width = 12;
-		worksheet.getColumn('M').width = 12;
-		worksheet.getColumn('N').width = 12;
-		worksheet.getColumn('O').width = 12;
-		worksheet.getColumn('P').width = 25;
-		worksheet.getColumn('Q').width = 10;
-		worksheet.getColumn('R').width = 10;
-		worksheet.getColumn('S').width = 10;
+		if (fichierPrec === undefined) 
+		{
 
-		//TAILLE LIGNE
-		worksheet.getRow( 1).height =  5;
-		worksheet.getRow( 2).height =  5;
-		worksheet.getRow( 3).height =  5;
-		worksheet.getRow( 4).height = 15;
-		worksheet.getRow( 5).height = 15;
-		worksheet.getRow( 6).height = 30;
-		worksheet.getRow( 7).height = 15;
-		worksheet.getRow( 8).height = 15;
-		worksheet.getRow( 9).height = 15;
-		worksheet.getRow(10).height = 15;
-		worksheet.getRow(11).height = 15;
-		worksheet.getRow(12).height = 15;
-		worksheet.getRow(13).height = 15;
-		worksheet.getRow(14).height = 10;
-		worksheet.getRow(15).height = 15;
+			//TAILLE COLONNE
+			worksheet.getColumn('A').width = 5;
+			worksheet.getColumn('B').width = 25;
+			worksheet.getColumn('C').width = 20;
+			worksheet.getColumn('D').width = 18;
+			worksheet.getColumn('E').width = 7;
+			worksheet.getColumn('F').width = 7;
+			worksheet.getColumn('G').width = 12;
+			worksheet.getColumn('H').width = 12;
+			worksheet.getColumn('I').width = 12;
+			worksheet.getColumn('J').width = 12;
+			worksheet.getColumn('K').width = 12;
+			worksheet.getColumn('L').width = 12;
+			worksheet.getColumn('M').width = 12;
+			worksheet.getColumn('N').width = 12;
+			worksheet.getColumn('O').width = 12;
+			worksheet.getColumn('P').width = 25;
+			worksheet.getColumn('Q').width = 10;
+			worksheet.getColumn('R').width = 10;
+			worksheet.getColumn('S').width = 10;
 
-		
-		// MERGE
-		worksheet.mergeCells('E4:N4');
-		worksheet.mergeCells('C6:O6');
-		worksheet.mergeCells('M8:O10');
-		worksheet.mergeCells('B14:D14');
-		worksheet.mergeCells('E14:F14');
+			//TAILLE LIGNE
+			worksheet.getRow( 1).height =  5;
+			worksheet.getRow( 2).height =  5;
+			worksheet.getRow( 3).height =  5;
+			worksheet.getRow( 4).height = 15;
+			worksheet.getRow( 5).height = 15;
+			worksheet.getRow( 6).height = 30;
+			worksheet.getRow( 7).height = 15;
+			worksheet.getRow( 8).height = 15;
+			worksheet.getRow( 9).height = 15;
+			worksheet.getRow(10).height = 15;
+			worksheet.getRow(11).height = 15;
+			worksheet.getRow(12).height = 15;
+			worksheet.getRow(13).height = 15;
+			worksheet.getRow(14).height = 10;
+			worksheet.getRow(15).height = 15;
 
-		worksheet.mergeCells('G14:G15');
-		worksheet.mergeCells('H14:H15');
-		worksheet.mergeCells('I14:I15');
-		worksheet.mergeCells('J14:J15');
-		worksheet.mergeCells('K14:K15');
-		worksheet.mergeCells('L14:L15');
-		worksheet.mergeCells('M14:M15');
-		worksheet.mergeCells('N14:N15');
-		worksheet.mergeCells('O14:O15');
-		worksheet.mergeCells('P14:P15');
-		worksheet.mergeCells('Q14:S15');
-
-		worksheet.mergeCells('G8:I8');
-		worksheet.mergeCells('G9:I9');
-		worksheet.mergeCells('G10:I10');
-		worksheet.mergeCells('J8 :K8');
-		worksheet.mergeCells('J9 :K9');
-		worksheet.mergeCells('J10:K10');
-
-		worksheet.mergeCells('G13:H13');
-		worksheet.mergeCells('I13:N13');
-
-
-		// EN TETE (DATE LIEU CLUB NB PLONG)
-		worksheet.getCell('B4').value  = 'DATE : ';
-		worksheet.getCell('B4').font   = { bold: true, size: 12};
-		worksheet.getCell('B4').border = borderAll;
-		worksheet.getCell('C4').value  = formDataObject["date"];
-		worksheet.getCell('C4').border = borderAll;
-
-		worksheet.getCell('D4').value  = 'LIEU : ';
-		worksheet.getCell('D4').border = borderAll;
-		worksheet.getCell('D4').font   = { bold: true, size: 12};
-		worksheet.getCell('E4').value  = formDataObject["lieu"];
-		worksheet.getCell('E4').border = borderAll;
-
-		worksheet.getCell('B6').value  = 'Nom du club';   
-		worksheet.getCell('B6').border = borderAll;
-		worksheet.getCell('B6').font   = { bold: true, size: 16};
-		worksheet.getCell('C6').value  = formDataObject["club"];
-		worksheet.getCell('C6').border = borderAll;
-
-		worksheet.getCell('M8').border = borderAll; //signature
-		worksheet.getCell('M7').value  = 'signature DP';   
-		worksheet.getCell('M7').font   = {size: 6, italic:true}; 
-
-		
-
-		// SURVEILLANT
-		var lib = [{ lib : 'DP', key : 'dp', ligne : 9}, {lib : 'SECU. SURF.', key : 'ss1', ligne : 10}, {lib : 'SECU. SURF.', key : 'ss2', ligne : 11}, { lib : 'TELEPHONE', key : 'tel', ligne : 12}];
-
-		lib.map((item) => {
-			worksheet.getCell('B' + item.ligne).value  = item.lib;   
-			worksheet.getCell('B' + item.ligne).font   = {size: 12};
-			worksheet.getCell('C' + item.ligne).value  = formDataObject[item.key + "nom"]   ;
-			worksheet.getCell('D' + item.ligne).value  = formDataObject[item.key + "prenom"];
-			worksheet.getCell('E' + item.ligne).value  = formDataObject[item.key + "niveau"];
-			worksheet.getCell('B' + item.ligne).border = borderAll;
-			worksheet.getCell('C' + item.ligne).border = borderAll;
-			worksheet.getCell('D' + item.ligne).border = borderAll;
-			worksheet.getCell('E' + item.ligne).border = borderAll;
 			
-		});  
+			// MERGE 
+
+			worksheet.mergeCells('E4:N4');
+			worksheet.mergeCells('C6:O6');
+			worksheet.mergeCells('M8:O10');
+			worksheet.mergeCells('B14:D14');
+			worksheet.mergeCells('E14:F14');
+
+			worksheet.mergeCells('G14:G15');
+			worksheet.mergeCells('H14:H15');
+			worksheet.mergeCells('I14:I15');
+			worksheet.mergeCells('J14:J15');
+			worksheet.mergeCells('K14:K15');
+			worksheet.mergeCells('L14:L15');
+			worksheet.mergeCells('M14:M15');
+			worksheet.mergeCells('N14:N15');
+			worksheet.mergeCells('O14:O15');
+			worksheet.mergeCells('P14:P15');
+			worksheet.mergeCells('Q14:S15');
+
+			worksheet.mergeCells('G8:I8');
+			worksheet.mergeCells('G9:I9');
+			worksheet.mergeCells('G10:I10');
+			worksheet.mergeCells('J8 :K8');
+			worksheet.mergeCells('J9 :K9');
+			worksheet.mergeCells('J10:K10');
+
+			worksheet.mergeCells('G13:H13');
+			worksheet.mergeCells('I13:N13');
+
+
+			// EN TETE (DATE LIEU CLUB NB PLONG)
+			worksheet.getCell('B4').value  = 'DATE : ';
+			worksheet.getCell('B4').font   = { bold: true, size: 12};
+			worksheet.getCell('B4').border = borderAll;
+			worksheet.getCell('C4').value  = formDataObject["date"];
+			worksheet.getCell('C4').border = borderAll;
+
+			worksheet.getCell('D4').value  = 'LIEU : ';
+			worksheet.getCell('D4').border = borderAll;
+			worksheet.getCell('D4').font   = { bold: true, size: 12};
+			worksheet.getCell('E4').value  = formDataObject["lieu"];
+			worksheet.getCell('E4').border = borderAll;
+
+			worksheet.getCell('B6').value  = 'Nom du club';   
+			worksheet.getCell('B6').border = borderAll;
+			worksheet.getCell('B6').font   = { bold: true, size: 16};
+			worksheet.getCell('C6').value  = formDataObject["club"];
+			worksheet.getCell('C6').border = borderAll;
+
+			worksheet.getCell('M8').border = borderAll; //signature
+			worksheet.getCell('M7').value  = 'signature DP';   
+			worksheet.getCell('M7').font   = {size: 6, italic:true}; 
+
+			
+
+			// SURVEILLANT
+			var lib = [{ lib : 'DP', key : 'dp', ligne : 9}, {lib : 'SECU. SURF.', key : 'ss1', ligne : 10}, {lib : 'SECU. SURF.', key : 'ss2', ligne : 11}, { lib : 'TELEPHONE', key : 'tel', ligne : 12}];
+
+			lib.map((item) => {
+				worksheet.getCell('B' + item.ligne).value  = item.lib;   
+				worksheet.getCell('B' + item.ligne).font   = {size: 12};
+				worksheet.getCell('C' + item.ligne).value  = formDataObject[item.key + "nom"]   ;
+				worksheet.getCell('D' + item.ligne).value  = formDataObject[item.key + "prenom"];
+				worksheet.getCell('E' + item.ligne).value  = formDataObject[item.key + "niveau"];
+				worksheet.getCell('B' + item.ligne).border = borderAll;
+				worksheet.getCell('C' + item.ligne).border = borderAll;
+				worksheet.getCell('D' + item.ligne).border = borderAll;
+				worksheet.getCell('E' + item.ligne).border = borderAll;
+				
+			});  
 
 
 
-		// PA12
-		lib = [{ lib : 'PA12: NON AUTORISE', key : 'pa12', ligne : 8}, {lib : 'Bloc de secu', key : 'secu', ligne : 9}, {lib : 'O2', key : 'o2', ligne : 10}];
+			// PA12
+			lib = [{ lib : 'PA12: NON AUTORISE', key : 'pa12', ligne : 8}, {lib : 'Bloc de secu', key : 'secu', ligne : 9}, {lib : 'O2', key : 'o2', ligne : 10}];
 
-		lib.map((item) => {
-			worksheet.getCell('G'+item.ligne).value  = item.lib;   
-			worksheet.getCell('G'+item.ligne).font   = {size: 10, bold : true};
-			worksheet.getCell('G'+item.ligne).border = borderAll;
-			worksheet.getCell('J'+item.ligne).value  = formDataObject[item.key]    
-			worksheet.getCell('J'+item.ligne).border = borderAll;     
-		});  
+			lib.map((item) => {
+				worksheet.getCell('G'+item.ligne).value  = item.lib;   
+				worksheet.getCell('G'+item.ligne).font   = {size: 10, bold : true};
+				worksheet.getCell('G'+item.ligne).border = borderAll;
+				worksheet.getCell('J'+item.ligne).value  = formDataObject[item.key]    
+				worksheet.getCell('J'+item.ligne).border = borderAll;     
+			});  
 
-		worksheet.getCell('G8').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'ffC000'}};
-		
-
-
-
-		// PETIT ENTETE 
-
-		worksheet.getCell('B14').value  = 'PALANQUEE';   
-		worksheet.getCell('B14').font   = {size: 6,bold:true}; 
-		worksheet.getCell('B14').border = borderAll;
-		
-		worksheet.getCell('E14').value  = 'cocher';   
-		worksheet.getCell('E14').font   = {size: 6,bold:true}; 
-		worksheet.getCell('E14').border = borderAll;
-		
-		worksheet.getCell('G13').value  = 'PREVU';   
-		worksheet.getCell('G13').font   = {size: 6,bold:true}; 
-		worksheet.getCell('G13').border = borderAll;
-		worksheet.getCell('G13').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
-		worksheet.getCell('G14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
-		worksheet.getCell('H14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
-		
-		worksheet.getCell('I13').value  = 'REALISE';   
-		worksheet.getCell('I13').font   = {size: 6,bold:true}; 
-		worksheet.getCell('I13').border = borderAll;
+			worksheet.getCell('G8').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'ffC000'}};
+			
 
 
 
-		// GROSSE ENTETE
+			// PETIT ENTETE 
 
-		lib = [
-			{ lib : 'NOM'            , col : 'B'}, 
-			{ lib : 'PRENOM'         , col : 'C'}, 
-			{ lib : 'PE-PA-PN BREVET', col : 'D'}, 
-			{ lib : 'TECH'           , col : 'E'}, 
-			{ lib : 'EXPLO'          , col : 'F'}, 
-			{ lib : 'PROF'           , col : 'G'}, 
-			{ lib : 'DUREE'          , col : 'H'}, 
-			{ lib : 'PROF'           , col : 'I'}, 
-			{ lib : 'DUREE'          , col : 'J'}, 
-			{ lib : 'PALIER 3M'      , col : 'K'}, 
-			{ lib : 'PALIER 6M'      , col : 'L'}, 
-			{ lib : 'HD'             , col : 'M'}, 
-			{ lib : 'HS'             , col : 'N'}, 
-			{ lib : 'GAZ'            , col : 'O'}, 
-			{ lib : 'REMARQUE'       , col : 'P'}, 
-			{ lib : 'MATERIEL'       , col : 'Q'}, 
-		];
+			worksheet.getCell('B14').value  = 'PALANQUEE';   
+			worksheet.getCell('B14').font   = {size: 6,bold:true}; 
+			worksheet.getCell('B14').border = borderAll;
+			
+			worksheet.getCell('E14').value  = 'cocher';   
+			worksheet.getCell('E14').font   = {size: 6,bold:true}; 
+			worksheet.getCell('E14').border = borderAll;
+			
+			worksheet.getCell('G13').value  = 'PREVU';   
+			worksheet.getCell('G13').font   = {size: 6,bold:true}; 
+			worksheet.getCell('G13').border = borderAll;
+			worksheet.getCell('G13').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
+			worksheet.getCell('G14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
+			worksheet.getCell('H14').fill   = {type: 'pattern',pattern:'solid',fgColor:{argb:'92D050'}};
+			
+			worksheet.getCell('I13').value  = 'REALISE';   
+			worksheet.getCell('I13').font   = {size: 6,bold:true}; 
+			worksheet.getCell('I13').border = borderAll;
 
-		lib.map((item) => {
-			worksheet.getCell(item.col + '15').value  = item.lib;   
-			worksheet.getCell(item.col + '15').font   = {size: 8,bold:true}; 
-			worksheet.getCell(item.col + '15').border = borderAll;
-		});  
+
+
+			// GROSSE ENTETE
+
+			lib = [
+				{ lib : 'NOM'            , col : 'B'}, 
+				{ lib : 'PRENOM'         , col : 'C'}, 
+				{ lib : 'PE-PA-PN BREVET', col : 'D'}, 
+				{ lib : 'TECH'           , col : 'E'}, 
+				{ lib : 'EXPLO'          , col : 'F'}, 
+				{ lib : 'PROF'           , col : 'G'}, 
+				{ lib : 'DUREE'          , col : 'H'}, 
+				{ lib : 'PROF'           , col : 'I'}, 
+				{ lib : 'DUREE'          , col : 'J'}, 
+				{ lib : 'PALIER 3M'      , col : 'K'}, 
+				{ lib : 'PALIER 6M'      , col : 'L'}, 
+				{ lib : 'HD'             , col : 'M'}, 
+				{ lib : 'HS'             , col : 'N'}, 
+				{ lib : 'GAZ'            , col : 'O'}, 
+				{ lib : 'REMARQUE'       , col : 'P'}, 
+				{ lib : 'MATERIEL'       , col : 'Q'}, 
+			];
+
+			lib.map((item) => {
+				worksheet.getCell(item.col + '15').value  = item.lib;   
+				worksheet.getCell(item.col + '15').font   = {size: 8,bold:true}; 
+				worksheet.getCell(item.col + '15').border = borderAll;
+			});  
+		}
 
 
 		let nbplong = 0;
 		//Pour chaque palanqué 
 		Array(nombrePlaques - 1).fill().map((_, index) => {
+
 
 			// INDEX
 			worksheet.getCell('A' + (16 + index * 3)).value = (index+1);
@@ -1003,19 +1020,65 @@ function FicheSecu() {
 
 
 			//INFORMATIONS PLONGEE
-			worksheet.mergeCells('A' + (16 + index * 3) + ':' + 'A' + (18 + index * 3));
-			worksheet.mergeCells('E' + (16 + index * 3) + ':' + 'E' + (18 + index * 3));
-			worksheet.mergeCells('F' + (16 + index * 3) + ':' + 'F' + (18 + index * 3));
-			worksheet.mergeCells('G' + (16 + index * 3) + ':' + 'G' + (18 + index * 3));
-			worksheet.mergeCells('H' + (16 + index * 3) + ':' + 'H' + (18 + index * 3));
-			worksheet.mergeCells('I' + (16 + index * 3) + ':' + 'I' + (18 + index * 3));
-			worksheet.mergeCells('J' + (16 + index * 3) + ':' + 'J' + (18 + index * 3));
-			worksheet.mergeCells('K' + (16 + index * 3) + ':' + 'K' + (18 + index * 3));
-			worksheet.mergeCells('L' + (16 + index * 3) + ':' + 'L' + (18 + index * 3));
-			worksheet.mergeCells('M' + (16 + index * 3) + ':' + 'M' + (18 + index * 3));
-			worksheet.mergeCells('N' + (16 + index * 3) + ':' + 'N' + (18 + index * 3));
-			worksheet.mergeCells('O' + (16 + index * 3) + ':' + 'O' + (18 + index * 3));
-			worksheet.mergeCells('P' + (16 + index * 3) + ':' + 'P' + (18 + index * 3));
+			if (fichierPrec === undefined)
+			{
+				worksheet.mergeCells('A' + (16 + index * 3) + ':' + 'A' + (18 + index * 3));
+				worksheet.mergeCells('E' + (16 + index * 3) + ':' + 'E' + (18 + index * 3));
+				worksheet.mergeCells('F' + (16 + index * 3) + ':' + 'F' + (18 + index * 3));
+				worksheet.mergeCells('G' + (16 + index * 3) + ':' + 'G' + (18 + index * 3));
+				worksheet.mergeCells('H' + (16 + index * 3) + ':' + 'H' + (18 + index * 3));
+				worksheet.mergeCells('I' + (16 + index * 3) + ':' + 'I' + (18 + index * 3));
+				worksheet.mergeCells('J' + (16 + index * 3) + ':' + 'J' + (18 + index * 3));
+				worksheet.mergeCells('K' + (16 + index * 3) + ':' + 'K' + (18 + index * 3));
+				worksheet.mergeCells('L' + (16 + index * 3) + ':' + 'L' + (18 + index * 3));
+				worksheet.mergeCells('M' + (16 + index * 3) + ':' + 'M' + (18 + index * 3));
+				worksheet.mergeCells('N' + (16 + index * 3) + ':' + 'N' + (18 + index * 3));
+				worksheet.mergeCells('O' + (16 + index * 3) + ':' + 'O' + (18 + index * 3));
+				worksheet.mergeCells('P' + (16 + index * 3) + ':' + 'P' + (18 + index * 3));
+
+				worksheet.getCell('E' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('F' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('G' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('H' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('I' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('J' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('K' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('L' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('M' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('N' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('O' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('P' + (16 + index * 3)).border = borderAll;
+
+				worksheet.getCell('E' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('F' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('G' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('H' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('I' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('J' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('K' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('L' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('M' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('N' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('O' + (16 + index * 3)).alignment = allVCHC;
+				worksheet.getCell('P' + (16 + index * 3)).alignment = allVCHC;
+
+
+
+
+
+				//Case matériel border
+				worksheet.getCell('Q' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('Q' + (17 + index * 3)).border = borderAll;
+				worksheet.getCell('Q' + (18 + index * 3)).border = borderAll;
+				worksheet.getCell('R' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('R' + (17 + index * 3)).border = borderAll;
+				worksheet.getCell('R' + (18 + index * 3)).border = borderAll;
+				worksheet.getCell('S' + (16 + index * 3)).border = borderAll;
+				worksheet.getCell('S' + (17 + index * 3)).border = borderAll;
+				worksheet.getCell('S' + (18 + index * 3)).border = borderAll;
+
+			}
+			
 
 			worksheet.getCell('G' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"prof"    ]
 			worksheet.getCell('H' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"temp"    ]
@@ -1028,106 +1091,69 @@ function FicheSecu() {
 			worksheet.getCell('O' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"gaz"     ]
 			worksheet.getCell('P' + (16 + index * 3)).value = formDataObject["p" + (index+1) +"rem"     ]
 
-			worksheet.getCell('E' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('F' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('G' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('H' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('I' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('J' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('K' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('L' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('M' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('N' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('O' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('P' + (16 + index * 3)).border = borderAll;
-
-			worksheet.getCell('E' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('F' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('G' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('H' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('I' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('J' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('K' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('L' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('M' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('N' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('O' + (16 + index * 3)).alignment = allVCHC;
-			worksheet.getCell('P' + (16 + index * 3)).alignment = allVCHC;
-
-
-
-
-
-			//Case matériel border
-			worksheet.getCell('Q' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('Q' + (17 + index * 3)).border = borderAll;
-			worksheet.getCell('Q' + (18 + index * 3)).border = borderAll;
-			worksheet.getCell('R' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('R' + (17 + index * 3)).border = borderAll;
-			worksheet.getCell('R' + (18 + index * 3)).border = borderAll;
-			worksheet.getCell('S' + (16 + index * 3)).border = borderAll;
-			worksheet.getCell('S' + (17 + index * 3)).border = borderAll;
-			worksheet.getCell('S' + (18 + index * 3)).border = borderAll;
-
 		});
 
 
 		
 		/* NOMBRE DE PLONGEURS CALCULER */
-		worksheet.getCell('B8').value  = 'nombre plongeurs';   
-		worksheet.getCell('B8').font   = { bold: true, size: 12};
-		worksheet.getCell('B8').border = borderAll;
-		worksheet.getCell('C8').value  = nbplong;
-		formDataObject['nbplong'] = nbplong;
-		worksheet.getCell('C8').border = borderAll;
+		if (fichierPrec === undefined)
+		{
+
+			worksheet.getCell('B8').value  = 'nombre plongeurs';   
+			worksheet.getCell('B8').font   = { bold: true, size: 12};
+			worksheet.getCell('B8').border = borderAll;
+			worksheet.getCell('C8').value  = nbplong;
+			formDataObject['nbplong'] = nbplong;
+			worksheet.getCell('C8').border = borderAll;
 
 
 
-		/** IMAGE **/
+			/** IMAGE **/
 
-		//Logo
-		try {
+			//Logo
+			try {
 
-			//On récupère id du login 
-			let response = await fetch(cheminPHP + "config/GetImgLogo.php", {
-				method: 'POST'
-			});
+				//On récupère id du login 
+				let response = await fetch(cheminPHP + "config/GetImgLogo.php", {
+					method: 'POST'
+				});
 
-			if (!response.ok) {
-				throw new Error('Impossible de récupérer l\'image');
+				if (!response.ok) {
+					throw new Error('Impossible de récupérer l\'image');
+				}
+				
+				const arrayBuffer = await response.arrayBuffer();
+
+				// Ajouter l'image au classeur Excel
+				const imageId = workbook.addImage({
+					buffer: arrayBuffer,
+					extension: 'png' // Spécifier l'extension de l'image
+				});
+
+				// Insérer l'image dans la feuille de calcul
+				worksheet.addImage(imageId, {
+					tl: { col: 16, row: 3 }, // Position de l'image (colonne, ligne)
+					ext: { width: 200, height: 200 } // Taille de l'image en pixels
+				});
+
+			} catch (error) {
+				console.error('Une erreur est survenue lors de la récupération de l\'image :', error.message);
 			}
-			
-			const arrayBuffer = await response.arrayBuffer();
 
-			// Ajouter l'image au classeur Excel
+			// Signature
+			// Ajouter l'image au classeur Excel si nouvelle fiche
+	
 			const imageId = workbook.addImage({
-				buffer: arrayBuffer,
+				base64: signature.split(',')[1],
 				extension: 'png' // Spécifier l'extension de l'image
 			});
 
 			// Insérer l'image dans la feuille de calcul
 			worksheet.addImage(imageId, {
-				tl: { col: 16, row: 3 }, // Position de l'image (colonne, ligne)
-				ext: { width: 200, height: 200 } // Taille de l'image en pixels
+				tl: { col: 12, row: 7 }, // Position de l'image (colonne, ligne)
+				ext: { width: 150, height: 50 } // Taille de l'image en pixels
 			});
-
-		} catch (error) {
-			console.error('Une erreur est survenue lors de la récupération de l\'image :', error.message);
 		}
-
-		// Signature
-		// Ajouter l'image au classeur Excel
-		const imageId = workbook.addImage({
-			base64: signature.split(',')[1],
-			extension: 'png' // Spécifier l'extension de l'image
-		});
-
-		// Insérer l'image dans la feuille de calcul
-		worksheet.addImage(imageId, {
-			tl: { col: 12, row: 7 }, // Position de l'image (colonne, ligne)
-			ext: { width: 300, height: 100 } // Taille de l'image en pixels
-		});
-
 
 
 
@@ -1295,7 +1321,10 @@ function FicheSecu() {
 
 
 	
-	// Si c'est une modification on lit la fiche 
+	// Si c'est une modification on lit la fiche et on la garde
+
+	const [fichierPrec, setFichePrec  ] = useState()
+
 
 	/**
 	 * Si c'est une modif on lis les dataspour les mettres de base
@@ -1330,6 +1359,8 @@ function FicheSecu() {
 		const rep = await response;
 
 		const blob = await rep.blob()
+
+		setFichePrec(blob)
 
 
 		// LIRE LES DONNEES
@@ -1408,20 +1439,6 @@ function FicheSecu() {
 				oldData["p" + (index+1) +"gaz"     ] = worksheet.getCell('O' + (16 + index * 3)).value;
 				oldData["p" + (index+1) +"rem"     ] = worksheet.getCell('P' + (16 + index * 3)).value;
 
-
-
-				//Par rapport au info on détérmine si il fallait un encadrant.
-
-				
-				// Certain navigateur accepteront la couleur, donc on détermine les encadrant comme ca
-				// try 
-				// {
-					// setEncadre(prevState => ({
-					// 	...prevState,
-					// 	[index + 1]: worksheet.getCell('B' + (16 + index * 3)).fill.fgColor.argb === 'FFCCCCCC'
-					// }));
-				// } catch (error) { //Sinon on calcule juste avec les conditions
-
 				setEncadre(prevState => ({
 					...prevState,
 					[index + 1]: ( oldData["p" + (index+1) + "type"] === "tech")       || 
@@ -1429,18 +1446,10 @@ function FicheSecu() {
 								 ((oldData["p" + (index+1) + "Bniv"] === "N2-PA20PE40" || oldData["p" + (index+1) + "Cniv"] === "N2-PA20PE40") && oldData["p" + (index+1) +"prof"] > 20)
 				}));
 
-				// }
 			})
 
 			setFormDataObject(oldData)
 		})
-		.catch(error => {
-			// Gérer les erreurs de chargement du fichier Blob
-			
-			window.location.href = '/fiches-de-securite';
-			console.log("Erreur", error)
-			alert('Le fichier sauvegarder ne semble pas être du bon format ou n\'est plus accessible. Merci de contacter l\'administrateur.');
-		});
 
 	}
 
