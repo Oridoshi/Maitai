@@ -60,7 +60,7 @@ foreach (DB::getInstance()->getEmailsAdmin() as $email) {
 
 $mail->send();
 
-palanqueesDansLesTemps() {
+function palanqueesDansLesTemps() {
     $alerte = '';
     foreach (DB::getInstance()->getPalanquees() as $palanquee) {
         if($palanquee->getAlerte()) {
