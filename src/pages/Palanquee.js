@@ -65,7 +65,7 @@ export default function Resume(){
 	const initialHeader = [
 		{ id: 'id'          , name: 'NB Ligne'           , type:'number'  , required : true , editable : false, show : false                      },
 		{ id: 'idpalanquee' , name: 'ID Produit'         , type:'number'  , required : true , editable : false, show : false                      },
-		{ id: 'nomPlongeurs', name: 'Nom des plongeurs'  , type:'text'    , required : true , editable : false, show : true                       },
+		{ id: 'nomplongeurs', name: 'Nom des plongeurs'  , type:'text'    , required : true , editable : false, show : true                       },
 		{ id: 'hd'          , name: 'Heurs d\'entrée'    , type:'text'    , required : true , editable : false, show : true                       },
 		{ id: 'duree'       , name: 'Durée prévue'       , type:'number'  , required : true , editable : false, show : true                           },
 		{ id: 'temps'       , name: 'Sortie Prévue'      , type:'number'  , required : true , editable : false, show : true                           }
