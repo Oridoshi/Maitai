@@ -25,7 +25,7 @@ $mail->Username = "centremaitaiplongee@gmail.com";// Addresse email de l'expédi
 $mail->Password = "nlftpbdhhdhmqoxc";// Mot de passe de l'adresse email à modifier
 $mail->SetFrom("centremaitaiplongee@gmail.com");// Addresse email de l'expéditeur à modifier
 $mail->Subject = "Alerte sécurité plongée";
-if(isset($_POST['timer'])) {
+if(isset($_GET['timer'])) {
     $alerte = palanqueesDansLesTemps();
     if($alerte == '') return;
 
