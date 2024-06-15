@@ -39,7 +39,6 @@ function Modal({ isOpen, rowData, header, handleSubmit, closeModal })
 			[id]: value
 		}));
 
-
 		header.forEach(head => {
 			if(head.id === id && head.onChange !== undefined)
 				head.onChange(e, formValues)
