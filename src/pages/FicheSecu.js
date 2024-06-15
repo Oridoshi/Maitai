@@ -4,6 +4,9 @@ import "../style/ficheSecuTable.css"
 import "../style/table.css"
 import SignatureModal from '../components/SignatureModal';
 
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 
 
 function FicheSecu() {
@@ -235,7 +238,6 @@ function FicheSecu() {
 	};
 
 	const handleCancel = () => {
-		console.log('Signature action canceled');
 	};
 
 
@@ -435,7 +437,7 @@ function FicheSecu() {
 					<div className='d-flex mb-3'>
 						<div className='align-items-center col-sm-1'>
 							<label htmlFor={`profRea${num}`} className="me-2">Prof. ({formDataObject[`p${num}prof`]})</label>
-							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]}/>
+							<input type="number" min="0" className="form-control w-75" name={`p${num}profrea`} id={`p${num}profrea`} onChange={(e) => {handleChangeAP(e)}} defaultValue={idHis ? formDataObject[`p${num}profrea`] : formDataObject[`p${num}prof`]}/>
 						</div>
 						
 						<div className='align-items-center col-sm-1 me-3'>
@@ -445,12 +447,12 @@ function FicheSecu() {
 
 						<div className='align-items-center me-3'>
 							<label htmlFor={`palier3m${num}`} className="me-2">Palier 3m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}3m`]}/>
+							<input type="number" min="0" className="form-control" name={`p${num}3m`} id={`p${num}3m`} placeholder='En minute' onChange={(e) => {handleChangeAP(e)}} defaultValue={idHis && formDataObject[`p${num}3m`]}/>
 						</div>
 						
 						<div className='align-items-center me-5'>
 							<label htmlFor={`palier6m${num}`} className="me-2">Palier 6m</label>
-							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]}/>
+							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' onChange={(e) => {handleChangeAP(e)}} defaultValue={idHis && formDataObject[`p${num}6m`]}/>
 						</div>
 						
 						<div className='align-items-center me-3'>
@@ -471,11 +473,11 @@ function FicheSecu() {
 							<label htmlFor={`HS${num}`} className="me-2">HS</label>
 							<button
 								type="time"
-								className={`form-control btn btn-primary ${formDataObject[`p${num}HS`] ? 'btn-secondary' : 'btnSauvegarder'}`}
+								className={`form-control btn btn-primary ${formDataObject[`p${num}HS`] || !formDataObject[`p${num}HD`] ? 'btn-secondary' : 'btnSauvegarder'}`}
 								name={`p${num}HS`}
 								id={`p${num}HS`}
 								onClick={(e) => gererHeure(e)}
-								disabled={formDataObject[`p${num}HS`]}
+								disabled={formDataObject[`p${num}HS`] || !formDataObject[`p${num}HD`]}
 							>
 								{formDataObject[`p${num}HS`] ? formDataObject[`p${num}HS`] : 'Terminer'}
 							</button>
@@ -490,7 +492,7 @@ function FicheSecu() {
 
 					<div className='col-sm-6 mt-3'>
 						<label htmlFor={`remarque${num}`} className="me-2">Remarque</label>
-						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} defaultValue={idHis && formDataObject[`p${num}rem`]}/>
+						<textarea type="textarea" className="form-control" name={`p${num}rem`} id={`p${num}rem`} onChange={(e) => {handleChangeAP(e)}} defaultValue={idHis && formDataObject[`p${num}rem`]}/>
 					</div>
 				</div>
 
@@ -498,12 +500,32 @@ function FicheSecu() {
 		);
 	}
 
+	function handleChangeAP(e) 
+	{ 
+		formDataObject[e.target.id] =  e.target.value;
+
+		setValide(verifierDonneeAllPalanquee(formDataObject, nombrePlaques));
+	}
+
+	function verifierDonneeAllPalanquee(donnes, nbPala)
+	{
+		for (let i = 1; i < nbPala; i++)
+		{
+			if(donnes[`p${i}tempsrea`] === undefined || donnes[`p${i}tempsrea`] === '' || donnes[`p${i}tempsrea`] === null || 
+			   donnes[`p${i}profrea` ] === undefined || donnes[`p${i}profrea` ] === '' || donnes[`p${i}profrea`]  === null  )
+			   {
+				return false;
+			   }
+
+		}
+
+		return true;
+	}
+
 	async function gererHeure(e)
 	{
 		e.preventDefault()
 		let id = e.target.id;
-
-		console.log(id)
 
 		//Recuperer l'heure
 		const maintenant = new Date();
@@ -513,14 +535,10 @@ function FicheSecu() {
 
 		let btn = document.getElementById(id);
 		if (btn) {
-
-
 			// Désactiver le bouton
 			btn.disabled = true;
-
 			// Changer le texte du bouton
 			btn.innerText = heureMin; // Ou utilisez btn.textContent si vous avez besoin de manipuler le contenu textuel
-
 			// Changer la classe du bouton pour le rendre gris
 			btn.className = 'form-control btn btn-secondary'; // Assurez-vous d'ajuster les classes selon votre structure CSS
 		}
@@ -528,8 +546,6 @@ function FicheSecu() {
 		
 
 		if (id.endsWith('HD')) {
-			console.log('La palanquée', id.charAt(1));
-
 			//Récupèrer les plongeurs
 			let plongeurs =        formDataObject['p' +  id.charAt(1) + 'Anom'] + " " + formDataObject['p' +  id.charAt(1) + 'Aprenom'] + "(" + formDataObject['p' +  id.charAt(1) + 'Aniv'] +")"
 			plongeurs    +=  "," + formDataObject['p' +  id.charAt(1) + 'Bnom'] + " " + formDataObject['p' +  id.charAt(1) + 'Bprenom'] + "(" + formDataObject['p' +  id.charAt(1) + 'Bniv'] +")"
@@ -556,15 +572,15 @@ function FicheSecu() {
 
 
 			let idRen = await reponses.text()
-			console.log(idRen)
 			formDataObject["id" + id.charAt(1)] = idRen;
 
+
+			document.getElementById('p' +  id.charAt(1) + 'HS').disabled = false;
+			document.getElementById('p' +  id.charAt(1) + 'HS').className = "form-control btn btn-primary btnSauvegarder";
 
 
 
 		} else if (id.endsWith('HS')) {
-			console.log('La palanqué avec l\'id', formDataObject["id" + id.charAt(1)], "a finis");
-
 			let formData = new FormData();
 			formData.append('idPalanquee',  formDataObject["id" + id.charAt(1)]);
 
@@ -582,6 +598,7 @@ function FicheSecu() {
 		formDataObject[id] = heureMin;
 		generateExcel()
 	}
+	
 
 
 	/**
@@ -615,10 +632,10 @@ function FicheSecu() {
 	function generateGaz(num)
 	{
 		return (
-			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]} >
+			<select name={`p${num}gaz`} id={`p${num}gaz`} className={`form-select`} onChange={(e) => {handleChangeAP(e)}} defaultValue={formDataObject[`p${num}gaz`] && formDataObject[`p${num}gaz`]} >
 				{/* Si gazOptions est vide, affiche "Aire" */}
 				{gazOptions.length === 0 ? (
-					<option key={"Aire"}>{"Aire"}</option>
+					<option key={"Air"}>{"Air"}</option>
 				) : (
 					/* Sinon, affiche les options de gazOptions */
 					gazOptions.map((niveau) => (
@@ -814,6 +831,100 @@ function FicheSecu() {
 		else                                              window.location.href = '/fiches-de-securite';
 	}
 
+	function valider(e)
+	{
+		e.preventDefault();
+
+
+		confirmAlert({
+		title: 'Validation',
+		message: 'Attention : Vous vous appretez à valider cette fiche de sécurité. Vous n pourrez pu modifier les informations après la validation de celle-ci. Etes vous sur de vouloir continuer ?',
+		buttons: [
+			{
+				label: 'Oui',
+				onClick: async () => {
+
+					////Valider l'informations
+					//const formData = new FormData();
+					//formData.append('idhist', parseInt(idHis));
+//
+					//const requestOptions = {
+					//	method: 'POST',
+					//	body: formData
+					//};
+//
+					//const response = await fetch(cheminPHP + "historique/ModificationHistorique.php", requestOptions);
+
+
+
+					//Alerter au cas ou
+
+
+					let messError = "<div> <h1> Alerte : Informations inconforme </h1> <br> Des informations inconformes à ce qui était prévu ont était détécté dans la fiche " +
+					                nomFic + " enregistré sous le numéro " + idHis + " réalisé par le client " + sessionStorage.getItem("login") + "<br> Voici le détail précis des informations inconforme : <br>";
+					let aEnvoye = false;
+
+
+					for (let i = 1; i < nombrePlaques; i ++)
+					{
+						
+						//Récupèrer les plongeurs
+						let plongeurs =        formDataObject['p' +  i + 'Anom'] + " " + formDataObject['p' +  i + 'Aprenom'] + "(" + formDataObject['p' +  i + 'Aniv'] +")"
+						plongeurs    +=  "," + formDataObject['p' +  i + 'Bnom'] + " " + formDataObject['p' +  i + 'Bprenom'] + "(" + formDataObject['p' +  i + 'Bniv'] +")"
+
+						if (formDataObject['p' +  i + 'Cnom'] !== null)
+							plongeurs    += "," + formDataObject['p' +  i + 'Cnom'] + " " + formDataObject['p' +  i + 'Cprenom'] + "(" + formDataObject['p' +  i + 'Cniv'] +")"
+			
+
+						//Régarder si il y a des incohérences
+						let detail = "";
+
+
+
+						if (parseInt(formDataObject[`p${i}temp`]) < parseInt(formDataObject[`p${i}tempsrea`])) detail += "- respecté le temp prévue de " + (formDataObject[`p${i}temp`])  + " minutes (" + formDataObject[`p${i}temprea`] + " minutes réalisé) <br>"
+						if (parseInt(formDataObject[`p${i}prof`]) < parseInt(formDataObject[`p${i}profrea`]) ) detail +=  "- respecté la profondeur prévue de " + (formDataObject[`p${i}prof`])  + " mètres (" + formDataObject[`p${i}profrea`] + " mètres réalisé) <br>"
+
+						if (detail !== "")
+						{
+							messError += "La palanquée numéro " + i + " composé de " + plongeurs + " n'as pas : <br>" + detail;
+							aEnvoye = true;
+						}
+					}
+
+
+					if (aEnvoye)
+					{
+						const formData = new FormData();
+						formData.append('alerte', messError);
+
+						const requestOptions = {
+							method: 'POST',
+							body: formData
+						};
+
+						const response = await fetch(cheminPHP + "../SendAlerte.php", requestOptions);
+
+					}
+
+
+
+					//On passe à l'étape suivante
+					// setEtape(etape+1)
+
+
+				},
+			},
+			{
+			label: 'Non',
+			onClick: () => {
+
+			},
+			className: 'btn btn-secondary', // Classe Bootstrap pour le bouton "Non"
+			}
+		]
+		});
+	}
+
 
 
 
@@ -838,7 +949,6 @@ function FicheSecu() {
 
 	async function generateExcel() {
 
-		console.log("On oasse ici")
 		// Créer un nouveau classeur Excel
 		var workbook = new ExcelJS.Workbook();
 
@@ -846,12 +956,10 @@ function FicheSecu() {
 		if (idHis) {
 			// Charger le fichier Excel existant à partir du blob
 			await workbook.xlsx.load(fichierPrec);
-			console.log(`Fichier Excel chargé à partir du blob.`);
 		} else {
 			// Créer un nouveau classeur Excel avec une feuille de calcul
 			workbook = new ExcelJS.Workbook();
 			workbook.addWorksheet('Sheet1');
-			console.log('Nouveau fichier Excel créé.');
 		}
 
 		// Ajouter une feuille de calcul
@@ -1318,7 +1426,6 @@ function FicheSecu() {
 			}
 
 			const text = await response.text();
-			console.log("On a modif")
 		}
 
 
@@ -1456,7 +1563,6 @@ function FicheSecu() {
 			// Parcourir les cellules ou effectuer toute autre opération nécessaire
 			const nbPala = (worksheet.lastRow.number - 15) / 3;
 			setNombrePlaques(nbPala + 1);
-			setValide(true)
 			
 			let oldData = {};
 
@@ -1532,7 +1638,10 @@ function FicheSecu() {
 			})
 
 			setFormDataObject(oldData)
+			setValide(verifierDonneeAllPalanquee(oldData, nbPala +1));
 		})
+
+
 
 	}
 
@@ -1560,7 +1669,6 @@ function FicheSecu() {
 
 		// Afficher les valeurs du formulaire dans la console
 		setEtape(etape + 1);
-		console.log("Je passe la même si on me la pas demandé", etape)
 		setValide(idHis !== undefined || etape === 1)
 	};
 
@@ -1648,7 +1756,6 @@ function FicheSecu() {
 			//Completement rempli
 			(document.getElementById("ss2nom" )?.value.trim() !== '' && document.getElementById("ss2prenom" )?.value.trim() !== '' && document.getElementById("ss2niveau" )?.value.trim() !== '');
 
-		console.log(signature)
 
 		setValide(appliquerContourRouge() && formEstRempli() && ss2CompletementVideRempli && (signature !== '' || sign !== undefined));
 		
@@ -1798,7 +1905,10 @@ function FicheSecu() {
 						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
 					{etape === etapesLib.length - 2 &&
-						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Sauvegarder</button>
+						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide || idHis !== undefined ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Sauvegarder</button>
+					}
+					{etape === etapesLib.length - 2 && idHis &&
+						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btn-danger' : 'btn-secondary'}`} onClick={(e) => valider(e)}>Valider</button>
 					}
 				</div>
 			
