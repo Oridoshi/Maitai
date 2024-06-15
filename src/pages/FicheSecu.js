@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {nivEncadrant, nivGeneral,nivDP, nivSecu, cheminPHP } from '../components/VarGlobal.js';  
 import "../style/ficheSecuTable.css"
+import "../style/table.css"
+import SignatureModal from '../components/SignatureModal';
+
 
 
 function FicheSecu() {
@@ -139,6 +142,22 @@ function FicheSecu() {
 					</div>
 				</div>
 
+				
+				<div className='row ms-4'>
+					<div className="col-sm-5 m-2 mt-3">
+						<div className="d-flex align-items-center">
+							<label htmlFor="club" className="me-2 fw-bold">Signature</label>
+							<button className={`ms-3 btn btn-primary btnModif`} onClick={(e) => {e.preventDefault();setShowModal(true)}}></button>
+							<SignatureModal show={showModal} handleClose={() => setShowModal(false)} handleSave={handleSave} />
+							{signature && (
+								<p className='ms-3 '>
+									Signature enregistrer
+								</p>
+							)}
+						</div>
+					</div>
+				</div>
+
 
 
 				<div className="row ms-4">
@@ -207,6 +226,22 @@ function FicheSecu() {
 	
 
 
+	const [showModal, setShowModal] = useState(false);
+	const [signature, setSignature] = useState('');
+
+	const handleSave = (dataUrl) => {
+		setSignature(dataUrl);
+		handleChangeEnTete(dataUrl)
+	};
+
+	const handleCancel = () => {
+		console.log('Signature action canceled');
+	};
+
+
+	/**
+	 * Mettre bien les éléments pour pouvoir les modifier
+	 */
 	function mettreBienListe()
 	{
 		if (document.getElementById("date") && formDataObject["date"])
@@ -219,6 +254,13 @@ function FicheSecu() {
 			document.getElementById(["secu"]).value = formDataObject["secu"];
 	}
 
+
+	/**
+	 * Génére la liste des niveau
+	 * @param {*} datas 
+	 * @param {*} id 
+	 * @returns 
+	 */
 	function generateListEnTete(datas, id)
 	{
 
@@ -257,7 +299,11 @@ function FicheSecu() {
 
 
 
-
+	/**
+	 * Génére le formulaire pour la palanquée numéro X
+	 * @param {*} num 
+	 * @returns 
+	 */
 	function generatePalanquee (num)
 	{
 		return (
@@ -336,6 +382,13 @@ function FicheSecu() {
 	}
 
 
+	/**
+	 * Genere la liste des niveau possible.
+	 * @param {*} datas 
+	 * @param {*} num 
+	 * @param {*} cat 
+	 * @returns 
+	 */
 	function generateList(datas, num, cat)
 	{
 		return (
@@ -367,6 +420,8 @@ function FicheSecu() {
 	}
 
 
+	
+
 
 	function generatePalanqueeAP(num) 
 	{
@@ -397,16 +452,35 @@ function FicheSecu() {
 							<label htmlFor={`palier6m${num}`} className="me-2">Palier 6m</label>
 							<input type="number" min="0" className="form-control" name={`p${num}6m`} id={`p${num}6m`} placeholder='En minute' defaultValue={idHis && formDataObject[`p${num}6m`]}/>
 						</div>
-
+						
 						<div className='align-items-center me-3'>
 							<label htmlFor={`HD${num}`} className="me-2">HD</label>
-							<input type="time" className="form-control" name={`p${num}HD`} id={`p${num}HD`} defaultValue={idHis && formDataObject[`p${num}HD`]}/>
+							<button
+								type="time"
+								className={`form-control btn btn-primary ${formDataObject[`p${num}HD`] ? 'btn-secondary' : 'btnSauvegarder'}`}
+								name={`p${num}HD`}
+								id={`p${num}HD`}
+								onClick={(e) => gererHeure(e)}
+								disabled={formDataObject[`p${num}HD`]}
+							>
+								{formDataObject[`p${num}HD`] ? formDataObject[`p${num}HD`] : 'Lancer'}
+							</button>
 						</div>
-						
+
 						<div className='align-items-center me-5'>
 							<label htmlFor={`HS${num}`} className="me-2">HS</label>
-							<input type="time" className="form-control" name={`p${num}HS`} id={`p${num}HS`} defaultValue={idHis && formDataObject[`p${num}HS`]}/>
+							<button
+								type="time"
+								className={`form-control btn btn-primary ${formDataObject[`p${num}HS`] ? 'btn-secondary' : 'btnSauvegarder'}`}
+								name={`p${num}HS`}
+								id={`p${num}HS`}
+								onClick={(e) => gererHeure(e)}
+								disabled={formDataObject[`p${num}HS`]}
+							>
+								{formDataObject[`p${num}HS`] ? formDataObject[`p${num}HS`] : 'Terminer'}
+							</button>
 						</div>
+
 						
 						<div className='align-items-center '>
 							<label htmlFor={`p${num}gaz`} className="me-2">Gaz</label>
@@ -424,6 +498,42 @@ function FicheSecu() {
 		);
 	}
 
+	function gererHeure(e)
+	{
+		e.preventDefault()
+		let id = e.target.id;
+
+		//Recuperer l'heure
+		const maintenant = new Date();
+
+		const heureMin = maintenant.getHours() + ':' + maintenant.getMinutes().toString().padStart(2, '0');
+
+
+		let btn = document.getElementById(id);
+		if (btn) {
+
+
+			// Désactiver le bouton
+			btn.disabled = true;
+
+			// Changer le texte du bouton
+			btn.innerText = heureMin; // Ou utilisez btn.textContent si vous avez besoin de manipuler le contenu textuel
+
+			// Changer la classe du bouton pour le rendre gris
+			btn.className = 'form-control btn btn-secondary'; // Assurez-vous d'ajuster les classes selon votre structure CSS
+		}
+
+		
+
+		if (id.endsWith('HD')) {
+			console.log('L\'élément se termine par HD');
+		} else if (id.endsWith('HS')) {
+			console.log('L\'élément se termine par HS');
+		}
+
+
+		formDataObject[id] = heureMin;
+	}
 
 	function generateGaz(num)
 	{
@@ -974,6 +1084,8 @@ function FicheSecu() {
 
 
 		/** IMAGE **/
+
+		//Logo
 		try {
 
 			//On récupère id du login 
@@ -1002,6 +1114,20 @@ function FicheSecu() {
 		} catch (error) {
 			console.error('Une erreur est survenue lors de la récupération de l\'image :', error.message);
 		}
+
+		// Signature
+		// Ajouter l'image au classeur Excel
+		const imageId = workbook.addImage({
+			base64: signature.split(',')[1],
+			extension: 'png' // Spécifier l'extension de l'image
+		});
+
+		// Insérer l'image dans la feuille de calcul
+		worksheet.addImage(imageId, {
+			tl: { col: 12, row: 7 }, // Position de l'image (colonne, ligne)
+			ext: { width: 300, height: 100 } // Taille de l'image en pixels
+		});
+
 
 
 
@@ -1408,7 +1534,7 @@ function FicheSecu() {
 	}
 
 
-	function handleChangeEnTete() {
+	function handleChangeEnTete(sign) {
 
 		/** Permettre de modifier la liste */
 		const newForm = formDataObject;
@@ -1430,8 +1556,9 @@ function FicheSecu() {
 			//Completement rempli
 			(document.getElementById("ss2nom" )?.value.trim() !== '' && document.getElementById("ss2prenom" )?.value.trim() !== '' && document.getElementById("ss2niveau" )?.value.trim() !== '');
 
+		console.log(signature)
 
-		setValide(appliquerContourRouge() && formEstRempli() && ss2CompletementVideRempli);
+		setValide(appliquerContourRouge() && formEstRempli() && ss2CompletementVideRempli && (signature !== '' || sign !== undefined));
 		
 	}
 
@@ -1579,7 +1706,7 @@ function FicheSecu() {
 						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
 					{etape === etapesLib.length - 2 &&
-						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Envoyé</button>
+						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Sauvegarder</button>
 					}
 				</div>
 			
