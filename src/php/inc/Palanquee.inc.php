@@ -5,9 +5,9 @@ class Palanquee {
     public string $nomPlongeurs;
     public string $hd;
     public int $duree;
-    public bool $alerte;
+    public int $alerte;
 
-    public function __construct(int $idPalanquee = 0, string $nomPlongeurs = "", string $hd = "", int $duree = 0, bool $alerte = false) {
+    public function __construct(int $idPalanquee = 0, string $nomPlongeurs = "", string $hd = "", int $duree = 0, int $alerte = 0) {
         $this->idPalanquee = $idPalanquee;
         $this->nomPlongeurs = $nomPlongeurs;
         $this->hd = $hd;
@@ -23,7 +23,7 @@ class Palanquee {
 
     public function getDuree(): int {return $this->duree;}
 
-    public function getAlerte(): bool {return $this->alerte;}
+    public function getAlerte(): int {return $this->alerte;}
 
     public function setIdPalanquee(int $idPalanquee): void {$this->idPalanquee = $idPalanquee;}
 
@@ -33,5 +33,5 @@ class Palanquee {
 
     public function setDuree(int $duree): void {$this->duree = $duree;}
 
-    public function setAlerte(bool $alerte): void {$this->alerte = $alerte;}
+    public function setAlerte(int $alerte): void {$this->alerte = $alerte;}
 }
