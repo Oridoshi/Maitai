@@ -28,9 +28,13 @@ export default function Resume(){
 		console.log(item.duree);
 		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60));
 		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree));
+		console.log(tempsEnSeconde);
 		const heure = Math.floor(tempsEnSeconde / 3600);
+		console.log(heure);
 		const minute = Math.floor((tempsEnSeconde - (heure * 3600)) / 60);
+		console.log(minute);
 		const minuteFormattee = minute < 10 ? '0' + minute : minute;
+		console.log(minuteFormattee);
 		return heure + ':' + minuteFormattee;
 	}
 
