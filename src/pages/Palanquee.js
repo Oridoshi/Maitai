@@ -24,9 +24,10 @@ export default function Resume(){
 	
 	function dureePrev(item){
 		const tabHeure = item.temps.split(':');
-		const heure = (tabHeure[0] * 60 + tabHeure[1] + item.duree)/60;
+		const tempsEnSeconde = (parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60);
+		const heure = 8;
 		const minutes = (heure - Math.floor(heure)) * 60;
-		return Math.floor(heure) + 'h' + (minutes < 10 ? '0' + minutes : minutes);
+		return 12;
 	}
 
 	// Récupérer les données du resume
