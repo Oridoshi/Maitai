@@ -60,9 +60,22 @@ foreach (DB::getInstance()->getEmailsAdmin() as $email) {
 
 $mail->send();
 
-palanqueesDansLesTemps() {
+function palanqueesDansLesTemps() {
     $alerte = '';
-    //TODO : récupérer tout les timers en cours, et vérifier si ils sont dans les temps
-    // si dans les temps, ne rien faire, sinon ajouter à la variable $alerte le nom de la palanquée, l'heure d'entrée et le temps d'immersion (sous forme de <li></li>)
+    foreach (DB::getInstance()->getPalanquees() as $palanquee) {
+        if($palanquee->getAlerte()) {
+            list($heure, $minute) = explode(':', $palanquee->getHd());
+
+            $hdMin = $heure * 60 + $minute;
+
+            $hsPrev = $hdMin + $palanquee->getDuree();
+
+            $hActuelle = date('H') * 60 + date('i');
+
+            if($hActuelle > $hsPrev) {
+                $alerte .= "<li>La Palanquée " . $palanquee->getNomPlongeurs() . " est rentrée à " . $palanquee->getHd() . " pour " . $palanquee->getDuree() . "</li>";
+            }
+        }
+    }
 }
 ?>

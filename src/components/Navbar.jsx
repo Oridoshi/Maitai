@@ -14,6 +14,7 @@ import Historique from "../pages/Historique";
 import FicheSecu from "../pages/FicheSecu";
 import Planning from "../pages/Planning"
 import Resume from "../pages/Resume";
+import Palanquee from "../pages/Palanquee";
 
 import '../style/nav.css';
 import '../style/form.css';
@@ -47,7 +48,7 @@ function Navbar({ role })
 	role = sessionStorage.getItem('droit');
 	switch (role)
 	{
-		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Planning'];
+		case 'Admin': navLinks = ['Clients', 'Utilisateurs', 'Produits', 'Tickets', 'Planning', 'Palanquée'];
 			break;
 		case 'Maitai': navLinks = ['Clients', 'Tickets'];
 			break;
@@ -279,6 +280,7 @@ function Navbar({ role })
 					<Route path="/historique" element={ <Historique /> } />
 					<Route path="/planning" element={ <Planning /> } />
 					<Route path="/resume" element={ <Resume /> } />
+					<Route path="/palanquee" element={ <Palanquee /> } />
 				</Routes>
 				<Modal className="popup d-flex justify-content-center align-items-center" show={ showModal } onHide={ toggleModal }>
 					<Modal.Body>
