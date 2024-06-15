@@ -22,6 +22,21 @@ export default function Resume(){
 		};
 	}, []);
 	
+	function dureePrev(item){
+		const tabHeure = item.hd.split(':');
+		const tempsEnSeconde = (parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree);
+		console.log(item.duree);
+		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60));
+		console.log((parseInt(tabHeure[0]) * 3600) + (parseInt(tabHeure[1]) * 60) + parseInt(item.duree));
+		console.log(tempsEnSeconde);
+		const heure = Math.floor(tempsEnSeconde / 3600);
+		console.log(heure);
+		const minute = Math.floor((tempsEnSeconde - (heure * 3600)) / 60);
+		console.log(minute);
+		const minuteFormattee = minute < 10 ? '0' + minute : minute;
+		console.log(minuteFormattee);
+		return heure + ':' + minuteFormattee;
+	}
 
 	// Récupérer les données du resume
 	useEffect(() => {
@@ -45,12 +60,7 @@ export default function Resume(){
 			const newData = data.map((item, index) => ({
 				...item,
 				id: index + 1,
-				temps: item => {
-					const tabHeure = item.temps.split(':');
-					const heure = (tabHeure[0] * 60 + tabHeure[1] + item.duree)/60
-					const minutes = (heure - Math.floor(heure)) * 60;
-					return Math.floor(heure) + 'h' + (minutes < 10 ? '0' + minutes : minutes);
-				}
+				temps: dureePrev(item)
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
@@ -65,8 +75,8 @@ export default function Resume(){
 	const initialHeader = [
 		{ id: 'id'          , name: 'NB Ligne'           , type:'number'  , required : true , editable : false, show : false                      },
 		{ id: 'idpalanquee' , name: 'ID Produit'         , type:'number'  , required : true , editable : false, show : false                      },
-		{ id: 'nomPlongeurs', name: 'Nom des plongeurs'  , type:'text'    , required : true , editable : false, show : true                       },
-		{ id: 'hd'          , name: 'Heurs d\'entrée'    , type:'text'    , required : true , editable : false, show : true                       },
+		{ id: 'nomplongeurs', name: 'Nom des plongeurs'  , type:'text'    , required : true , editable : false, show : true                       },
+		{ id: 'hd'          , name: 'Heurs d\'entrée'    , type:'number'    , required : true , editable : false, show : true                       },
 		{ id: 'duree'       , name: 'Durée prévue'       , type:'number'  , required : true , editable : false, show : true                           },
 		{ id: 'temps'       , name: 'Sortie Prévue'      , type:'number'  , required : true , editable : false, show : true                           }
 	];

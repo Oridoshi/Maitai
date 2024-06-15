@@ -25,7 +25,7 @@ $mail->Username = "centremaitaiplongee@gmail.com";// Addresse email de l'expédi
 $mail->Password = "nlftpbdhhdhmqoxc";// Mot de passe de l'adresse email à modifier
 $mail->SetFrom("centremaitaiplongee@gmail.com");// Addresse email de l'expéditeur à modifier
 $mail->Subject = "Alerte sécurité plongée";
-if(isset($_POST['timer'])) {
+if(isset($_GET['timer'])) {
     $alerte = palanqueesDansLesTemps();
     if($alerte == '') return;
 
@@ -63,7 +63,7 @@ $mail->send();
 function palanqueesDansLesTemps() {
     $alerte = '';
     foreach (DB::getInstance()->getPalanquees() as $palanquee) {
-        if($palanquee->getAlerte()) {
+        if($palanquee->getAlerte() == 0) {
             list($heure, $minute) = explode(':', $palanquee->getHd());
 
             $hdMin = $heure * 60 + $minute;
@@ -73,9 +73,13 @@ function palanqueesDansLesTemps() {
             $hActuelle = date('H') * 60 + date('i');
 
             if($hActuelle > $hsPrev) {
-                $alerte .= "<li>La Palanquée " . $palanquee->getNomPlongeurs() . " est rentrée à " . $palanquee->getHd() . " pour " . $palanquee->getDuree() . "</li>";
+                $alerte .= "<li>La Palanquée " . $palanquee->getNomPlongeurs() . " est rentrée à " . $palanquee->getHd() . " pour " . $palanquee->getDuree() . " minutes</li>";
+                $palanquee->setAlerte(1);
+                DB::getInstance()->updatePalanquee($palanquee);
+                echo "test" . $palanquee->getNomPlongeurs();
             }
         }
     }
+    return $alerte;
 }
 ?>

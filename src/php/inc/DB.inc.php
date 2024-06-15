@@ -5,22 +5,23 @@ include_once 'Produit.inc.php';
 include_once 'Ticket.inc.php';
 include_once 'Historique.inc.php';
 include_once 'Demande.inc.php';
+include_once 'Palanquee.inc.php';
 
 class DB {
 
 	private static $instance = null; //mémorisation de l'instance de DB pour appliquer le pattern Singleton
 	private $connect=null; //connexion PDO à la base
 
-	private static string $dbName   = "maitai";
-	private static string $login    = "Admin";
-	private static string $password = "maitai";
-	private static string $host     = "localhost";
+	// private static string $dbName   = "maitai";
+	// private static string $login    = "Admin";
+	// private static string $password = "maitai";
+	// private static string $host     = "localhost";
 
 
-	//private static string $dbName   = "if0_36460769_maitai";
-	//private static string $login    = "if0_36460769";
-	//private static string $password = "Sc4ZKSO8sanWyvz";
-	//private static string $host     = "sql211.infinityfree.com";
+	private static string $dbName   = "if0_36460769_maitai";
+	private static string $login    = "if0_36460769";
+	private static string $password = "Sc4ZKSO8sanWyvz";
+	private static string $host     = "sql211.infinityfree.com";
 
 
 	private static string $port     = "3306";
@@ -852,6 +853,12 @@ class DB {
 	public function suppPalanquee(int $idPal) {
 		$requete = "DELETE FROM Palanquee WHERE idPalanquee = ?";
 		$tparam = array($idPal);
+		$this->execMaj($requete, $tparam);
+	}
+
+	public function updatePalanquee(Palanquee $palanquee) {
+		$requete = "UPDATE Palanquee SET alerte = ? WHERE idPalanquee = ?";
+		$tparam = array(1, $palanquee->getIdPalanquee());
 		$this->execMaj($requete, $tparam);
 	}
 
