@@ -548,7 +548,7 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 					{datas.map(item => (
 
 								<tr id={`ligne ${item.id}`}
-									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'}`}
+									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'} ${item.class && item.class}`}
 									key={`${item.id}`}
 								>
 
