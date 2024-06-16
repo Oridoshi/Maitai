@@ -476,7 +476,7 @@ function FicheSecu() {
 								className={`form-control btn btn-primary ${formDataObject[`p${num}HS`] || !formDataObject[`p${num}HD`] ? 'btn-secondary' : 'btnSauvegarder'}`}
 								name={`p${num}HS`}
 								id={`p${num}HS`}
-								onClick={(e) => gererHeure(e)}
+								onClick={(e) => {console.log("click");gererHeure(e)}}
 								disabled={formDataObject[`p${num}HS`] || !formDataObject[`p${num}HD`]}
 							>
 								{formDataObject[`p${num}HS`] ? formDataObject[`p${num}HS`] : 'Terminer'}
@@ -543,6 +543,8 @@ function FicheSecu() {
 			btn.className = 'form-control btn btn-secondary'; // Assurez-vous d'ajuster les classes selon votre structure CSS
 		}
 
+		console.log(id)
+
 		
 
 		if (id.endsWith('HD')) {
@@ -577,10 +579,18 @@ function FicheSecu() {
 
 			document.getElementById('p' +  id.charAt(1) + 'HS').disabled = false;
 			document.getElementById('p' +  id.charAt(1) + 'HS').className = "form-control btn btn-primary btnSauvegarder";
+			document.getElementById('p' + id.charAt(1) + 'HS').addEventListener('click', function(e) {
+				gererHeure(e);
+			});
 
 
+			console.log("finit")
 
 		} else if (id.endsWith('HS')) {
+
+			if (formDataObject["id" + id.charAt(1)] === undefined || formDataObject["id" + id.charAt(1)] === null || formDataObject["id" + id.charAt(1)] === '')
+				return ;
+
 			let formData = new FormData();
 			formData.append('idPalanquee',  formDataObject["id" + id.charAt(1)]);
 
@@ -589,6 +599,9 @@ function FicheSecu() {
 				body: formData
 			});
 
+			let text = reponses.text()
+			console.log(text)
+
 			formDataObject[`p${id.charAt(1)}tempsrea`] = calculateMinutesElapsed(formDataObject["p" + id.charAt(1) + "HD" ], heureMin)
 			document.getElementById(`p${id.charAt(1)}tempsrea`).value = formDataObject[`p${id.charAt(1)}tempsrea`];
 			
@@ -596,6 +609,7 @@ function FicheSecu() {
 
 
 		formDataObject[id] = heureMin;
+		setValide(verifierDonneeAllPalanquee(formDataObject, nombrePlaques));
 		generateExcel()
 	}
 	
@@ -831,14 +845,14 @@ function FicheSecu() {
 		else                                              window.location.href = '/fiches-de-securite';
 	}
 
-	function valider(e)
+	async function valider(e)
 	{
 		e.preventDefault();
 
 
 		confirmAlert({
 		title: 'Validation',
-		message: 'Attention : Vous vous appretez à valider cette fiche de sécurité. Vous n pourrez pu modifier les informations après la validation de celle-ci. Etes vous sur de vouloir continuer ?',
+		message: 'Attention : Vous vous apprêtez à valider cette fiche de sécurité. Vous ne pourrez plus modifier les informations après la validation de celle-ci. Êtes-vous sûr de vouloir continuer ?',
 		buttons: [
 			{
 				label: 'Oui',
@@ -854,6 +868,12 @@ function FicheSecu() {
 					//};
 //
 					//const response = await fetch(cheminPHP + "historique/ModificationHistorique.php", requestOptions);
+
+
+
+					//On passe à l'étape suivante
+					setEtape(etape+1)
+
 
 
 
@@ -894,6 +914,9 @@ function FicheSecu() {
 
 					if (aEnvoye)
 					{
+
+						console.log(messError)
+
 						const formData = new FormData();
 						formData.append('alerte', messError);
 
@@ -908,8 +931,6 @@ function FicheSecu() {
 
 
 
-					//On passe à l'étape suivante
-					// setEtape(etape+1)
 
 
 				},
@@ -1902,13 +1923,13 @@ function FicheSecu() {
 					}
 
 					{etape < etapesLib.length - 2 &&
-						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
+						<button disabled={!peutValide} className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Suivant</button>
 					}
 					{etape === etapesLib.length - 2 &&
-						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide || idHis !== undefined ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">Sauvegarder</button>
+						<button disabled={!(peutValide || idHis !== undefined )} className={`mx-2 col-sm-1 btn btn-primary ${peutValide || idHis !== undefined ? 'btnSauvegarder' : 'btn-secondary'}`} type="submit">{idHis !== undefined ? 'Quitter' : 'Sauvegarder'}</button>
 					}
 					{etape === etapesLib.length - 2 && idHis &&
-						<button className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btn-danger' : 'btn-secondary'}`} onClick={(e) => valider(e)}>Valider</button>
+						<button disabled={!(peutValide)} className={`mx-2 col-sm-1 btn btn-primary ${peutValide ? 'btn-danger' : 'btn-secondary'}`} onClick={(e) => valider(e)}>Valider</button>
 					}
 				</div>
 			
