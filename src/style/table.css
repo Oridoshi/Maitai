@@ -8,6 +8,7 @@
 	background-color: #F2EEEB !important;
 	border: 0px;
 	vertical-align: middle !important;
+	text-wrap: wrap;
 }
 
 .tableau tr:nth-child(even) td:not(.edit) {
