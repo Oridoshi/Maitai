@@ -15,11 +15,11 @@ export default function Ticket()
 {
 	if (sessionStorage.getItem('droit') !== 'Admin' && sessionStorage.getItem('droit') !== 'Maitai') window.location.href = '/';
 
-
 	//donnée tab
 	const [initialData, setInitialData] = useState([]);
 	const [tabCateg, setTabCateg] = useState([]);
 	const [tabProd, setTabProd] = useState([]);
+
 	//modal ajt prod
 	const [modalOpen, setModalOpen] = useState(false);
 	const [lblCat, setLblCat] = useState("");
@@ -174,6 +174,7 @@ export default function Ticket()
 			const ligneProd = document.createElement('tr');
 			ligneProd.id = 'edit';
 			ligneProd.classList.add('ligneProd');
+			ligneProd.classList.add(prod.idprod);
 
 			// Nom Produit
 			const nomP = document.createElement('td');
@@ -187,13 +188,29 @@ export default function Ticket()
 			prix.textContent = prod.prixspe + " €";
 			prix.classList.add('edit');
 
+			// Bouton suppr
+			const div = document.createElement('div');
+			div.classList.add("btnCpt");
+
+			const divBtn = document.createElement('div');
+			const btnSuppr = document.createElement('button');
+			btnSuppr.classList.add("btnSuppr");
+			btnSuppr.addEventListener('click', function ()
+			{
+				supprProdTickets(prod.idprod,ligne.id);
+			});
+			divBtn.appendChild(btnSuppr);
+
 			// Création de l'élément compteur
 			const compteur = document.createElement('td');
 			compteur.colSpan = 1;
 			compteur.classList.add('edit');
 			compteur.classList.add('cpt');
 			const compteurComponent = document.createElement('div');
-			compteur.appendChild(compteurComponent); // Ajoute le compteurComponent au td
+
+			div.appendChild(compteurComponent);
+			div.appendChild(divBtn);
+			compteur.appendChild(div);
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
@@ -268,11 +285,12 @@ export default function Ticket()
 			const ligneProd = document.createElement('tr');
 			ligneProd.id = 'edit';
 			ligneProd.classList.add('ligneProd');
+			ligneProd.classList.add(idProd);
 
 			// Nom Produit
 			const nomP = document.createElement('td');
 			nomP.colSpan = 1;
-			nomP.textContent = lblProd;
+			nomP.textContent = await getNomP(idProd);
 			nomP.classList.add('edit');
 
 			// Prix Produit
@@ -281,12 +299,29 @@ export default function Ticket()
 			lblprix.textContent = prix + " €";
 			lblprix.classList.add('edit');
 
+			// Bouton suppr
+			const div = document.createElement('div');
+			div.classList.add("btnCpt");
+
+			const divBtn = document.createElement('div');
+			const btnSuppr = document.createElement('button');
+			btnSuppr.classList.add("btnSuppr");
+			btnSuppr.addEventListener('click', function ()
+			{
+				supprProdTickets(idProd,idUti);
+			});
+			divBtn.appendChild(btnSuppr);
+
 			// Création de l'élément compteur
 			const compteur = document.createElement('td');
+			compteur.colSpan = 1;
 			compteur.classList.add('edit');
 			compteur.classList.add('cpt');
 			const compteurComponent = document.createElement('div');
-			compteur.appendChild(compteurComponent); // Ajoute le compteurComponent au td
+
+			div.appendChild(compteurComponent);
+			div.appendChild(divBtn);
+			compteur.appendChild(div);
 
 			// Rendu de l'application React dans l'élément compteurComponent
 			const compteurRoot = ReactDOM.createRoot(compteurComponent);
@@ -790,6 +825,43 @@ export default function Ticket()
 		return tabTicket.some(ticket => ticket.iduti === iduti);
 	}
 
+	const supprProdTickets = async (idprod,iduti)=>
+	{
+		const ligne = document.getElementsByClassName(idprod);
+		ligne[0].remove();
+
+		try
+		{
+			const formData = new FormData();
+			formData.append('iduti', iduti);
+			formData.append('idprod', idprod);
+
+			const requestOptions = {
+				method: 'POST',
+				body: formData
+			};
+
+			const response = await fetch(cheminPHP + "ticket/SuppressionTicket.php", requestOptions);
+
+			if (!response.ok)
+			{
+				throw new Error('Une erreur s\'est produite.');
+			}
+
+			const data = await response.text();
+
+			const newData = await fetchClientData();
+			setInitialData(newData);
+			setFilterData(newData)
+
+			return data === "";
+
+		} catch (error)
+		{
+			console.log(error);
+			return false; // Retourne false en cas d'erreur
+		}
+	}
 	const supprTickets = async (iduti) =>
 	{
 		try
