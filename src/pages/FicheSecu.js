@@ -860,8 +860,8 @@ function FicheSecu() {
 					//Alerter au cas ou
 
 
-					let messError = "<div> <h1> Alerte : Informations inconforme </h1> <br> Des informations inconformes à ce qui était prévu ont était détécté dans la fiche " +
-					                nomFic + " enregistré sous le numéro " + idHis + " réalisé par le client " + sessionStorage.getItem("login") + "<br> Voici le détail précis des informations inconforme : <br>";
+					let messError = "<div> <h1> Alerte : Informations non conformes </h1> <br><br> Des informations non conformes à ce qui était prévu ont été détectées dans la fiche <b>" +
+					                nomFic + " enregistré sous le numéro " + idHis + " réalisé par le client " + formDataObject["club"] + "</b>. <br><br> Voici le détail précis des informations non conformes : <br>";
 					let aEnvoye = false;
 
 
@@ -869,11 +869,11 @@ function FicheSecu() {
 					{
 						
 						//Récupèrer les plongeurs
-						let plongeurs =        formDataObject['p' +  i + 'Anom'] + " " + formDataObject['p' +  i + 'Aprenom'] + "(" + formDataObject['p' +  i + 'Aniv'] +")"
-						plongeurs    +=  "," + formDataObject['p' +  i + 'Bnom'] + " " + formDataObject['p' +  i + 'Bprenom'] + "(" + formDataObject['p' +  i + 'Bniv'] +")"
+						let plongeurs =         formDataObject['p' +  i + 'Anom'] + " " + formDataObject['p' +  i + 'Aprenom'] + " (" + formDataObject['p' +  i + 'Aniv'] +")"
+						plongeurs    +=  ", " + formDataObject['p' +  i + 'Bnom'] + " " + formDataObject['p' +  i + 'Bprenom'] + " (" + formDataObject['p' +  i + 'Bniv'] +")"
 
 						if (formDataObject['p' +  i + 'Cnom'] !== null)
-							plongeurs    += "," + formDataObject['p' +  i + 'Cnom'] + " " + formDataObject['p' +  i + 'Cprenom'] + "(" + formDataObject['p' +  i + 'Cniv'] +")"
+							plongeurs    += ", " + formDataObject['p' +  i + 'Cnom'] + " " + formDataObject['p' +  i + 'Cprenom'] + "(" + formDataObject['p' +  i + 'Cniv'] +")"
 			
 
 						//Régarder si il y a des incohérences
@@ -881,12 +881,12 @@ function FicheSecu() {
 
 
 
-						if (parseInt(formDataObject[`p${i}temp`]) < parseInt(formDataObject[`p${i}tempsrea`])) detail += "- respecté le temp prévue de " + (formDataObject[`p${i}temp`])  + " minutes (" + formDataObject[`p${i}temprea`] + " minutes réalisé) <br>"
-						if (parseInt(formDataObject[`p${i}prof`]) < parseInt(formDataObject[`p${i}profrea`]) ) detail +=  "- respecté la profondeur prévue de " + (formDataObject[`p${i}prof`])  + " mètres (" + formDataObject[`p${i}profrea`] + " mètres réalisé) <br>"
+						if (parseInt(formDataObject[`p${i}temp`]) < parseInt(formDataObject[`p${i}tempsrea`])) detail += "<li> respecté le temp prévue de <b>"       + (formDataObject[`p${i}temp`])  + " minutes</b> (<b>" + formDataObject[`p${i}temprea`] + " minutes </b> réalisé)."
+						if (parseInt(formDataObject[`p${i}prof`]) < parseInt(formDataObject[`p${i}profrea`]) ) detail += "<li> respecté la profondeur prévue de <b>" + (formDataObject[`p${i}prof`])  + " mètres </b> (<b>"  + formDataObject[`p${i}profrea`] + " mètres </b> réalisé)."
 
 						if (detail !== "")
 						{
-							messError += "La palanquée numéro " + i + " composé de " + plongeurs + " n'as pas : <br>" + detail;
+							messError += "La palanquée numéro " + i + " composé de " + plongeurs + " n'as pas : <br> <ul>" + detail + "</ul> <br><br>";
 							aEnvoye = true;
 						}
 					}
