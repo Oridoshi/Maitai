@@ -659,7 +659,7 @@ class DB {
 	 * @return array tableau d'objets de la classe Historique
 	 */
 	public function getHistoriquesByClientSecu(int $idUti): array {
-		$requete = "SELECT chemin, idhis, type, date, valide FROM Historique WHERE iduti = ? AND type = 'SECU'";
+		$requete = "SELECT chemin, idhis, type, date, valide FROM Historique WHERE iduti = ? AND type = 'SECU' ORDER BY idhis DESC";
 		$tparam = array($idUti);
 		$stmt = $this->connect->prepare($requete);
 		$stmt->execute($tparam);

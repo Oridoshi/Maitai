@@ -10,7 +10,7 @@
 	vertical-align: middle !important;
 }
 
-.tableau tr:nth-child(even) td:not(.edit) {
+.tableau tr:nth-child(even) td:not(.edit) td:not(.dangerPlongee) {
 	background-color: #ede4dd !important;
 }
 
@@ -213,6 +213,6 @@
 	/* Empêche l'éclatement des cellules pour s'ajuster au contenu */
 }
 
-.dangerPlongee {
+.tableau td.dangerPlongee {
 	background-color: #DD6565 !important;
 }

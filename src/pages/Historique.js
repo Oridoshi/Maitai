@@ -13,7 +13,7 @@ export default function Historique()
 	const [initialData, setInitialData] = useState([]);
 	const [filterData, setFilterData] = useState([]);
 	const [initialHeader, setInitialHeader] = useState([]);
-	const [type, setType] = useState('Ticket');
+	const [type, setType] = useState('Secu');
 	const [idUti, setIdUti] = useState(-1);
 
 	//ticket en cours
@@ -69,7 +69,7 @@ export default function Historique()
 		const formData = new FormData();
 		formData.append('iduti', idUti);
 
-		fetch(cheminPHP + "historique/GetHistoriquesClientTicket.php", {
+		fetch(cheminPHP + "historique/GetHistoriquesClientSecu.php", {
 			method: 'POST',
 			body: formData
 		})
@@ -286,9 +286,9 @@ export default function Historique()
 				{ id: 'date', name: 'Date', type: 'date', required: true, editable: true, show: true },
 				{ id: 'chemin', name: 'Nom du fichier', type: 'text', required: true, editable: true, show: true },
 				// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : true , show : true },
-				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+				{ id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
 				{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' },
-				{ id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
+				// { id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
 			]);
 		}
 		else
@@ -300,9 +300,9 @@ export default function Historique()
 				{ id: 'date', name: 'Date', type: 'date', required: true, editable: false, show: true },
 				{ id: 'chemin', name: 'Nom du fichier', type: 'text', required: true, editable: false, show: true },
 				// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
-				// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+				{ id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
 				{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' },
-				{ id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
+				// { id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
 			]);
 		}
 	}, []);
@@ -621,7 +621,8 @@ export default function Historique()
 					// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 					{ id: 'valide', name: 'Fiche valide', type: 'checkbox', required: true, editable: true, show: true, fastEditable: true },
 					{ id: 'btnHist', name: 'Historique', type: 'button', required: true, editable: false, show: true, function: modifFiche, btn: 'Modifier', className: 'btnSauvegarder' },
-					{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (XLSX)', className: 'btnExport' }
+					{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (XLSX)', className: 'btnExport' },
+					// { id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
 				]);
 			}
 			else
@@ -635,7 +636,8 @@ export default function Historique()
 					// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 					{ id: 'valide', name: 'Fiche valide', type: 'checkbox', required: true, editable: true, show: true, fastEditable: true },
 					{ id: 'btnHist', name: 'Historique', type: 'button', required: true, editable: false, show: true, function: modifFiche, btn: 'Modifier', className: 'btnSauvegarder' },
-					{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (XLSX)', className: 'btnExport' }
+					{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (XLSX)', className: 'btnExport' },
+					// { id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' }
 				]);
 			}
 
@@ -682,6 +684,7 @@ export default function Historique()
 					{ id: 'chemin', name: 'Nom du fichier', type: 'text', required: true, editable: false, show: true },
 					/*{ id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 					// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },*/
+					{ id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' },
 					{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' }
 				]);
 			}
@@ -695,6 +698,7 @@ export default function Historique()
 					{ id: 'chemin', name: 'Nom du fichier', type: 'text', required: true, editable: false, show: true },
 					// { id: 'type'   , name: 'Type'               , type:'text'    , required : true, editable : false, show : true },
 					// { id: 'valide', name: 'Fiche valide'       , type:'checkbox', required : true, editable : true , show : true, fastEditable : true },
+					{ id: 'btnAperçu', name: '', type: 'button', required: true, editable: false, show: true, function: aperçuFiche, btn: '', className: 'btnAperçu' },
 					{ id: 'btnGet', name: 'Télécharger', type: 'button', required: true, editable: false, show: true, function: funGetFile, btn: 'Export (CSV)', className: 'btnExport' }
 				]);
 			}
@@ -944,7 +948,7 @@ export default function Historique()
 					<input className="barre form-control me-2" type="search" placeholder="Rechercher" aria-label="Search" onChange={ handleChange } />
 				</div>
 				{/* Bouton décoché */ }
-				<button id='btnChangerAffichage' className='btnSauvegarder btn-primary btn mx-2' onClick={ affichageAutreFiche }>Afficher fiche SECU</button>
+				<button id='btnChangerAffichage' className='btnSauvegarder btn-primary btn mx-2' onClick={ affichageAutreFiche }>Afficher fiche Ticket</button>
 			</div>
 
 			{ genererTicket() }

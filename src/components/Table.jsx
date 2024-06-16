@@ -548,21 +548,21 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 					{datas.map(item => (
 
 								<tr id={`ligne ${item.id}`}
-									className={`bg-light ${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'} ${item.class && item.class}`}
+									className={`${typeof keyGrayWhenFalse === 'string' && ( item[keyGrayWhenFalse] === false || item[keyGrayWhenFalse] === 0) === false ? '' : 'text-muted'}`}
 									key={`${item.id}`}
 								>
 
 									{header.map(column => (
 										column.show && (
 												<td className={
-														`bg-light ${column.type === 'checkbox' || column.type === 'number' || column.type === 'prix' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'}`
+														`${column.type === 'checkbox' || column.type === 'number' || column.type === 'prix' || column.type === 'tel' || column.type === 'button' ? 'celCenter' : 'celLeft'} ${item.class ? item.class : ''}`
 													}
 													key={`${item.id}-${column.id}`}
 												>
 
-												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && column.type !== 'prix' && (
+												{column.type !== 'checkbox' && column.type !== 'button' && column.type !== 'tel' && column.type !== 'prix' && column.type !== 'txtInterprete' && (
 													// Si ce n'est pas un checkbox ni un button, afficher la valeur de la colonne
-													`${item[column.id]}`
+													<p>{item[column.id]}</p>
 												)}
 
 												{column.type === 'checkbox' && (
@@ -589,6 +589,10 @@ function Table({ header, data, funInsert, funUpdate, funDelete, keyGrayWhenFalse
 												{column.type === 'tel' && (
 													// Si c'est un numéro de téléphone, afficher les numéros avec un espace
 													`${item[column.id].replace(/(..)/g, '$1 ')}` // Retirez le caractère ")" en trop
+												)}
+
+												{column.type === 'txtInterprete' && (
+													<div dangerouslySetInnerHTML={{ __html: item[column.id] }} />
 												)}
 
 												{column.type === 'prix' && (

@@ -9,7 +9,6 @@ export default function Resume(){
 	const [initialData , setInitialData ] = useState([]);
 	const [filterData  , setFilterData  ] = useState([]);
 	const [searchTerm  , setSearchTerm  ] = useState(''); // État pour stocker la valeur de recherche
-	const [checked     , setChecked     ] = useState(true); // État pour stocker la valeur de la case à cocher
 
 	// Rafraîchir la page toutes les minutes
 	useEffect(() => {
@@ -31,23 +30,31 @@ export default function Resume(){
 		return heure + ':' + minuteFormattee;
 	}
 
-	function tempsPlongee(item, index){
+	let tropDeTemps = false;
+
+	function tempsPlongee(item){
 		const tabHeure = item.hd.split(':');
 		const maintenant = new Date();
 		const tempsEnSeconde = (maintenant.getHours() * 3600 + maintenant.getMinutes() * 60) - (parseInt(tabHeure[0]) * 3600 + parseInt(tabHeure[1]) * 60);
 		const duree = Math.floor(tempsEnSeconde / 60);
 
 		if(duree > item.duree)
-			item.class = 'dangerPlongee';
+		{
+			tropDeTemps = true;
+		}
+		else
+		{
+			tropDeTemps = false;
+		}
 
 		return duree + " min";
 	}
 
 	function formatageNomPlongeurs(item){
 		let nomPlongeurs = '';
-		const tabPlongeurs = item.plongeurs.split(',');
+		const tabPlongeurs = item.nomplongeurs.split(',');
 		tabPlongeurs.forEach((plongeur, index) => {
-			nomPlongeurs += plongeur + (index === tabPlongeurs.length - 1 ? '' : '\n');
+			nomPlongeurs += plongeur + (index === tabPlongeurs.length - 1 ? '' : "<br>");
 		});
 		return nomPlongeurs;
 	}
@@ -77,12 +84,11 @@ export default function Resume(){
 				nomplongeurs: formatageNomPlongeurs(item),
 				duree: item.duree + " min",
 				hs: dureePrev(item),
-				plongee: tempsPlongee(item, index)
-				
+				plongee: tempsPlongee(item),
+				class: tropDeTemps ? 'dangerPlongee' : ''
 			}));
 			setInitialData(newData);
 			setFilterData (newData);
-
 		})
 		.catch(error => {
 			console.error('Erreur :', error);
@@ -91,13 +97,13 @@ export default function Resume(){
 
 	// En-tête de la table
 	const initialHeader = [
-		{ id: 'id'          , name: 'NB Ligne'                    , type:'number'  , show : false},
-		{ id: 'idpalanquee' , name: 'ID Produit'                  , type:'number'  , show : false},
-		{ id: 'nomplongeurs', name: 'Nom des plongeurs'           , type:'text'    , show : true },
-		{ id: 'hd'          , name: 'Heure d\'entrée'             , type:'number'  , show : true },
-		{ id: 'hs'          , name: 'Heure de sortie prévue'      , type:'number'  , show : true },
-		{ id: 'duree'       , name: 'Durée prévue'                , type:'number'  , show : true },
-		{ id: 'plongee'     , name: 'Durée de la plongée en cours', type:'number'  , show : true }
+		{ id: 'id'          , name: 'NB Ligne'                    , type:'number'       , show : false},
+		{ id: 'idpalanquee' , name: 'ID Produit'                  , type:'number'       , show : false},
+		{ id: 'nomplongeurs', name: 'Nom des plongeurs'           , type:'txtInterprete', show : true },
+		{ id: 'hd'          , name: 'Heure d\'entrée'             , type:'number'       , show : true },
+		{ id: 'hs'          , name: 'Heure de sortie prévue'      , type:'number'       , show : true },
+		{ id: 'duree'       , name: 'Durée prévue'                , type:'number'       , show : true },
+		{ id: 'plongee'     , name: 'Durée de la plongée en cours', type:'number'       , show : true }
 	];
 
 	const handleChange   = (e) => {setSearchTerm( e.target.value);};
@@ -120,8 +126,8 @@ export default function Resume(){
 	}
 
 	useEffect(() => {
-		applyFilter(initialData, searchTerm, checked);
-	}, [searchTerm, initialData, checked]);
+		applyFilter(initialData, searchTerm);
+	}, [searchTerm, initialData]);
 
 
 
