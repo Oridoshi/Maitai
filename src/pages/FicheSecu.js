@@ -1868,10 +1868,16 @@ function FicheSecu() {
 	function needEncadrant(num) {
 
 		let value = getValueRB(`p${num}type`)
+		const regex20 = /PA20/;
+
+		console.log("Contient PA20")
+		console.log(document.getElementById(`p${num}Aniv`).value,regex20.test(document.getElementById(`p${num}Aniv`).value))
+		console.log(document.getElementById(`p${num}Bniv`).value,regex20.test(document.getElementById(`p${num}Bniv`).value))
+		console.log(document.getElementById(`p${num}Cniv`).value,regex20.test(document.getElementById(`p${num}Cniv`).value))
 
 		return value === 'tech' ||
-			( document.getElementById(`p${num}Aniv`).value === 'N1-PE20'     || document.getElementById(`p${num}Bniv`).value === 'N1-PE20'     || document.getElementById(`p${num}Cniv`).value === 'N1-PE20') ||
-			((document.getElementById(`p${num}Aniv`).value === 'N2-PA20PE40' || document.getElementById(`p${num}Bniv`).value === 'N2-PA20PE40' || document.getElementById(`p${num}Cniv`).value === 'N2-PA20PE40') && parseInt(document.getElementById(`p${num}prof`).value) > 20);
+			( document.getElementById(`p${num}Aniv`).value === 'N1-PE20'|| document.getElementById(`p${num}Bniv`).value === 'N1-PE20' || document.getElementById(`p${num}Cniv`).value === 'N1-PE20') ||
+			((regex20.test(document.getElementById(`p${num}Aniv`).value) || regex20.test(document.getElementById(`p${num}Bniv`).value) || regex20.test(document.getElementById(`p${num}Cniv`).value)) && parseInt(document.getElementById(`p${num}prof`).value) > 20);
 	}
 
 
