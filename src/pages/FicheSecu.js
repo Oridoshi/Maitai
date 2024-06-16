@@ -881,7 +881,7 @@ function FicheSecu() {
 
 
 					let messError = "<div> <h1> Alerte : Informations non conformes </h1> <br><br> Des informations non conformes à ce qui était prévu ont été détectées dans la fiche <b>" +
-					                nomFic + " enregistré sous le numéro " + idHis + " réalisé par le client " + formDataObject["club"] + "</b>. <br><br> Voici le détail précis des informations non conformes : <br>";
+					                nomFic + " enregistré sous le numéro " + idHis + " réalisé par le client " + formDataObject["club"] + "</b>. <br><br> Voici le détail précis des informations non conformes : <br> <br>";
 					let aEnvoye = false;
 
 
@@ -899,9 +899,7 @@ function FicheSecu() {
 						//Régarder si il y a des incohérences
 						let detail = "";
 
-
-
-						if (parseInt(formDataObject[`p${i}temp`]) < parseInt(formDataObject[`p${i}tempsrea`])) detail += "<li> respecté le temp prévue de <b>"       + (formDataObject[`p${i}temp`])  + " minutes</b> (<b>" + formDataObject[`p${i}temprea`] + " minutes </b> réalisé)."
+						if (parseInt(formDataObject[`p${i}temp`]) < parseInt(formDataObject[`p${i}tempsrea`])) detail += "<li> respecté le temp prévue de <b>"       + (formDataObject[`p${i}temp`])  + " minutes</b> (<b>" + formDataObject[`p${i}tempsrea`] + " minutes </b> réalisé)."
 						if (parseInt(formDataObject[`p${i}prof`]) < parseInt(formDataObject[`p${i}profrea`]) ) detail += "<li> respecté la profondeur prévue de <b>" + (formDataObject[`p${i}prof`])  + " mètres </b> (<b>"  + formDataObject[`p${i}profrea`] + " mètres </b> réalisé)."
 
 						if (detail !== "")
