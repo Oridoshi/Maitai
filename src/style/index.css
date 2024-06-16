@@ -80,7 +80,7 @@
 	color: #FFFFFF !important;
 	font-weight: bolder;
 	border: 0px;
-	width: 200px;
+	width: 160px;
 
 	background-image: url('../img/Export.svg');
 	background-size: 30px;
@@ -387,6 +387,11 @@
 .imgNotif {
 	width: 50px;
 	height: 50px;
+}
+
+.btnCpt{
+	display: flex;
+	justify-content: space-around;
 }
 
 @media only screen and (max-width: 700px),
